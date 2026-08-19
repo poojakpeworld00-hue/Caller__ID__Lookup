@@ -204,14 +204,14 @@
                 android:layout_height="@dimen/_16sdp"
                 android:contentDescription="@string/quick_dialer"
                 android:src="@drawable/sym_dialpad"
-                app:tint="@color/white" />
+                app:tint="@color/cid_g_050" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:text="@string/quick_dialer"
-                android:textColor="@color/white"
+                android:textColor="@color/cid_g_050"
                 android:textSize="@dimen/_12ssp"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -139,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="summaryStrip,tvHeaderBlocked,rvBlocklist,fabAdd" />
+            app:constraint_referenced_ids="summaryStripVw,lblHeaderBlocked,rollBlocklist,fabAddVw" />
 
         
         <androidx.core.widget.NestedScrollView

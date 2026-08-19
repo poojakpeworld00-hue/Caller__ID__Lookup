@@ -105,7 +105,10 @@
       "phone_state": {
         "enabled": true,
         "activities": [
-          "HelloStepActivity"
+          "HelloStepActivity",
+          "LaunchGateActivity",
+          "AppHomeActivity",
+          "HomeBoardActivity"
         ],
         "delay": 0,
         "priority": 2
@@ -405,7 +408,10 @@
       "phone_state": {
         "enabled": true,
         "activities": [
-          "HelloStepActivity"
+          "HelloStepActivity",
+          "LaunchGateActivity",
+          "AppHomeActivity",
+          "HomeBoardActivity"
         ],
         "delay": 0,
         "priority": 2
