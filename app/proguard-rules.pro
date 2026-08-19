@@ -38,7 +38,7 @@
 
 # -------------------------------------------------------------
 # App models — serialized by Gson (Retrofit) & parsed from
-# Firebase Remote Config JSON. Field names must survive.
+# Firebase Remote LauncherPrefs JSON. Field names must survive.
 # -------------------------------------------------------------
 -keep class com.callerid.number.lookup.home.models.** { *; }
 -keep class com.callerid.admesh.data.** { *; }
@@ -107,14 +107,14 @@
 -dontwarn com.facebook.**
 # LightHouse push SDK ships its own consumer ProGuard rules in the AAR; the
 # Firebase + Gson keeps below cover its FCM + JSON needs. (Replaced OneSignal.)
-# Ad module — AdBeaconActivity is the open base every CanvasActivity extends and
-# the class that drives Remote Config init / ad loading. It is declared in the
+# Ad module — PromoAnchorActivity is the open base every FrameActivity extends and
+# the class that drives Remote LauncherPrefs init / ad loading. It is declared in the
 # manifest, so R8 already keeps the class name; this keeps its members too, so a
 # subclass reaching one reflectively can never be stripped.
--keep class com.callerid.admesh.presentation.AdBeaconActivity { *; }
+-keep class com.callerid.admesh.presentation.PromoAnchorActivity { *; }
 
 # -------------------------------------------------------------
-# Firebase / Crashlytics / Remote Config
+# Firebase / Crashlytics / Remote LauncherPrefs
 # -------------------------------------------------------------
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
@@ -176,19 +176,19 @@
 # (com.callerid.number.lookup.home.permission.**)
 #
 # Most of this package needs NO rules:
-#  • FsiPortalActivity and FullScreenWatchService are declared in the manifest,
+#  • FsiGateActivity and FsiPollService are declared in the manifest,
 #    so R8 keeps them (and their entry points) automatically.
-#  • FullScreenConfig, PermissionModels and the AccessSource / FirebaseAccessParser
-#    Remote Config parsers read org.json with literal string keys — no Gson, no
+#  • FsiSettings, PermissionModels and the PermitSource / FirebasePermitParser
+#    Remote LauncherPrefs parsers read org.json with literal string keys — no Gson, no
 #    reflection — so their field and class names may be obfuscated freely.
-#  • AccessEngine, AccessQueue, AccessScheduler, AccessVault and
-#    FullScreenReturnWatcher are called or registered directly in code, so they
+#  • PermitEngine, PermitQueue, PermitScheduler, PermitVault and
+#    FsiReturnGuard are called or registered directly in code, so they
 #    are kept as reachable.
 #
 # The one reflective surface is the FragmentManager re-instantiating a Fragment
 # BY NAME after a configuration change or process death. That applies to every
-# Fragment in the app, not just this package's two (AccessLauncher and
-# AccessSheetDialog), so the rule is written against the base class: naming
+# Fragment in the app, not just this package's two (PermitLauncher and
+# PermitSheetDialog), so the rule is written against the base class: naming
 # individual Fragments here has already gone stale once — the Stage 3 rename left
 # these pointing at classes that no longer existed, and R8 accepts rules for
 # missing classes silently, so nothing surfaced it.

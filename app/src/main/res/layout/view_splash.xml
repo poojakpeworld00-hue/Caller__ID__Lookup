@@ -22,7 +22,7 @@
         android:background="@drawable/shape_splash_hero"
         android:clipChildren="false"
         android:clipToPadding="false"
-        tools:context=".ui.splash.StartupActivity">
+        tools:context=".ui.splash.LaunchGateActivity">
 
         <!-- ===== Ambient orbs + twinkling stars ===== -->
         <ImageView

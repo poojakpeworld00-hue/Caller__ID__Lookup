@@ -1,7 +1,7 @@
 # Permission Bottom-Sheet Flow
 
 How the runtime-permission bottom sheet is shown, gated, and managed — including
-the Firebase Remote Config → `AdsPreferance` pipeline that drives its
+the Firebase Remote LauncherPrefs → `AdsPreferance` pipeline that drives its
 **On/Off + frequency** behaviour.
 
 ---
@@ -16,7 +16,7 @@ There are **two ways** the sheet opens:
 
 | Trigger | Where | Gated by |
 |---|---|---|
-| **Auto-launch** on app open | `MainActivity.initView()` | `hasPending()` **AND** the Remote-Config frequency gate (`shouldAutoShow`) |
+| **Auto-launch** on app open | `MainActivity.initView()` | `hasPending()` **AND** the Remote-LauncherPrefs frequency gate (`shouldAutoShow`) |
 | **Manual "Manage"** tap | Home hint button (`HomeFragment.btnPermManage`) | `hasPending()` only — frequency is ignored |
 
 The frequency gate is what lets you control, from the server, **whether** and
@@ -37,9 +37,9 @@ The frequency gate is what lets you control, from the server, **whether** and
 
 ---
 
-## 3. Configuration pipeline (Remote Config → AdsPreferance)
+## 3. Configuration pipeline (Remote LauncherPrefs → AdsPreferance)
 
-The app does **not** use one Remote Config parameter per flag. It ships a single
+The app does **not** use one Remote LauncherPrefs parameter per flag. It ships a single
 JSON blob:
 
 - `GET_DATA_LIST` — release builds
@@ -51,7 +51,7 @@ app then reads them synchronously via `AdsPreferance.getBoolean/getString/getInt
 
 ```mermaid
 flowchart LR
-    RC["Firebase Remote Config<br/>GET_DATA_LIST (JSON blob)"]
+    RC["Firebase Remote LauncherPrefs<br/>GET_DATA_LIST (JSON blob)"]
     SPLASH["ADHomeActivity.setResponceInPref()<br/>(whitelist copy)"]
     ADS["AdsPreferance<br/>(SharedPreferences)"]
     GATE["PermissionSheetDialog.shouldAutoShow()"]
@@ -66,7 +66,7 @@ whitelists in `ADHomeActivity` so they flow through this exact path.
 
 ---
 
-## 4. Remote Config parameters
+## 4. Remote LauncherPrefs parameters
 
 Add these **inside the `GET_DATA_LIST` (and `DEBUG_GET_DATA_LIST`) JSON object**:
 

@@ -3,10 +3,10 @@ package com.callerid.number.lookup.home.util
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import com.callerid.admesh.domain.AdsVault
-import com.callerid.number.lookup.home.util.AppVault.THEME_DARK
-import com.callerid.number.lookup.home.util.AppVault.THEME_LIGHT
-import com.callerid.number.lookup.home.util.AppVault.THEME_SYSTEM
+import com.callerid.admesh.domain.PromoVault
+import com.callerid.number.lookup.home.util.AppPrefs.THEME_DARK
+import com.callerid.number.lookup.home.util.AppPrefs.THEME_LIGHT
+import com.callerid.number.lookup.home.util.AppPrefs.THEME_SYSTEM
 import org.json.JSONObject
 
 private const val TAG = "NativeTheme"
@@ -21,14 +21,14 @@ private const val TAG = "NativeTheme"
  * a screen that renders natives without calling this shows them in whatever mode some earlier
  * screen left behind, or unset entirely on a cold boot (dark-on-dark, effectively invisible).
  *
- * Called by [com.callerid.number.lookup.home.base.CanvasActivity] for every normal screen, and
+ * Called by [com.callerid.number.lookup.home.base.FrameActivity] for every normal screen, and
  * separately by the launcher home — which does not extend it, yet is the device HOME and so is
  * often the first screen after a reboot.
  */
 fun Context.applyNativeAdTheme(
-    theme: String = AppVault.selectedTheme(this).ifEmpty { THEME_SYSTEM }
+    theme: String = AppPrefs.selectedTheme(this).ifEmpty { THEME_SYSTEM }
 ) {
-    val adsPref = AdsVault.getInstance(this)
+    val adsPref = PromoVault.getInstance(this)
     val modeKey = when (theme) {
         THEME_LIGHT -> "NativeLight"
         THEME_DARK -> "NativeDark"
@@ -54,7 +54,7 @@ fun Context.applyNativeAdTheme(
             defaultJson.optJSONObject(modeKey)
 
         if (themeJson == null) {
-            // No palette to copy — Remote Config has not landed yet (the launcher is the device
+            // No palette to copy — Remote LauncherPrefs has not landed yet (the launcher is the device
             // HOME, so it can run before any fetch has ever happened) or the key is absent. Say
             // so rather than logging a write that did not occur.
             Log.d(TAG, "No $modeKey palette in NativeTheme_* — native colors left unchanged")

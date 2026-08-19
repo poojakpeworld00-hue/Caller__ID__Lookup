@@ -3,7 +3,7 @@
     Full-Screen-Intent intro Activity (design: FSI Intro Activity). Radial hero
     (navy dark / light-blue light), the incoming-call card floating in a halo of
     glow + pulsing orbit rings, value copy, a 3-benefit card, and the glowing
-    Enable Now CTA. Title / desc / button copy set from Remote Config at runtime.
+    Enable Now CTA. Title / desc / button copy set from Remote LauncherPrefs at runtime.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

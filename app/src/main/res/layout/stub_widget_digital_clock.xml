@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Home screen clock: the time on top, the weekday underneath. Both are plain TextViews,
-    PseudoClockWidget fills them in and keeps them current off the system minute tick.
+    FauxClockWidget fills them in and keeps them current off the system minute tick.
 
     They hug the bottom of the cell rather than centering in it: that keeps the block
     sitting right above the search pill and out of the way of the "set as default
     launcher" banner, which is drawn underneath the top of the grid.
 -->
-<com.callerid.number.lookup.home.launcher.views.PseudoClockWidget xmlns:android="http://schemas.android.com/apk/res/android"
+<com.callerid.number.lookup.home.launcher.views.FauxClockWidget xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,4 +51,4 @@
         android:textSize="13sp"
         tools:text="Wednesday" />
 
-</com.callerid.number.lookup.home.launcher.views.PseudoClockWidget>
+</com.callerid.number.lookup.home.launcher.views.FauxClockWidget>

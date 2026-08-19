@@ -5,7 +5,7 @@
     actions, the native ad demoted to a labelled card below them, then Recent
     activity. Everything below the header scrolls as one; only the title row and
     its settings button stay pinned. Bottom nav + AdMob banner live in
-    HomeStageActivity (unchanged).
+    HomeBoardActivity (unchanged).
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +15,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <!-- Compact header (pads the status-bar inset from OverviewFragment) -->
+    <!-- Compact header (pads the status-bar inset from HomeMainFragment) -->
     <LinearLayout
         android:id="@+id/heroHeader"
         android:layout_width="match_parent"

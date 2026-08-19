@@ -11,7 +11,7 @@
     <!-- The illustration is the elastic part of the page: 210sdp when there is room,
          less when there is not. A native ad below can take nearly half the screen, and a
          fixed-height illustration would push the body copy off the bottom of the pager
-         and clip it mid-line. IntroAdapter scales the artwork inside to whatever height
+         and clip it mid-line. SlideAdapter scales the artwork inside to whatever height
          this ends up with, so the composition shrinks instead of overflowing. -->
     <FrameLayout
         android:id="@+id/artContainer"

@@ -1,6 +1,6 @@
-# Remote Config — `docs/remote-config.json`
+# Remote LauncherPrefs — `docs/remote-config.json`
 
-The whole file is the value of **one** Remote Config parameter, not one parameter
+The whole file is the value of **one** Remote LauncherPrefs parameter, not one parameter
 per key:
 
 | Build | Parameter |
@@ -8,30 +8,30 @@ per key:
 | release | `GET_DATA_LIST` |
 | debug (`BuildConfig.DEBUG`) | `DEBUG_GET_DATA_LIST` |
 
-Both are read as a string and parsed as JSON — `AdBeaconActivity.setResponceInPref`
-at splash, `LiveConfigWatcher` again whenever Realtime Remote Config pushes a
+Both are read as a string and parsed as JSON — `PromoAnchorActivity.setResponceInPref`
+at splash, `LiveConfigListener` again whenever Realtime Remote LauncherPrefs pushes a
 change. To publish, paste the file's contents into that parameter's value in the
 Firebase console for **caller-id-phone-home** and publish.
 
 ## Audience split
 
-The top level is `marketing` / `organic`. `AdConfigIngest.audienceRoot` picks one
+The top level is `marketing` / `organic`. `PromoConfigLoader.audienceRoot` picks one
 using the install-referrer verdict (`OnMaketing`), falling back to the other
 audience and then to the flat top level. Both blocks must carry the same key set —
 the ingest reads whichever block it lands in and nothing merges them.
 
 ## `ScreenAds` — which keys are legal
 
-`CanvasActivity.onCreate` calls `ScreenPromoConfig.showAd(this::class.java.simpleName, …)`,
-so a key is legal exactly when it is the simple name of a `CanvasActivity` subclass:
+`FrameActivity.onCreate` calls `PerScreenPromo.showAd(this::class.java.simpleName, …)`,
+so a key is legal exactly when it is the simple name of a `FrameActivity` subclass:
 
 ```
-AppCoreActivity     BeamToolActivity    BlockVaultActivity  CallReportActivity
-ChargeToolActivity  CountryDeckActivity GadgetsActivity     LangChooserActivity
-LapTimerActivity    LumenToolActivity   My_Shell_Screen     NeedleToolActivity
-NumPadActivity      PaceToolActivity    PlumbToolActivity   PrefsHubActivity
-PrimerActivity      SandTimerActivity   SearchBriefActivity SearchLogActivity
-SimHubActivity      SoundToolActivity   StartupActivity     TermsGateActivity
+AppHomeActivity     TorchToolActivity    BlockCenterActivity  CallDetailActivity
+BatteryToolActivity  CountryPickActivity ToolboxActivity     LanguageSelectActivity
+StopwatchActivity    LightMeterActivity   ShellSurfaceScreen     CompassToolActivity
+DialPadActivity      SpeedToolActivity    LevelToolActivity   SettingsHubActivity
+SlideIntroActivity      CountdownActivity   LookupResultActivity LookupHistoryActivity
+SimInfoActivity      NoiseToolActivity   LaunchGateActivity     ConsentGateActivity
 ```
 
 Plus the `default` entry, which supplies ids when `screen_wise_default` is true and
@@ -39,10 +39,10 @@ supplies `show` for any screen without its own entry.
 
 Notes:
 
-- `CallDeckFragment` draws its banner under the key `AppCoreActivity`
+- `CallPanel` draws its banner under the key `AppHomeActivity`
   (`BANNER_SCREEN_KEY`), deliberately sharing that screen's entry rather than
   taking one of its own.
-- **`HomeStageActivity` is not legal here.** It extends `ShellDeckActivity`, which
+- **`HomeBoardActivity` is not legal here.** It extends `ShellBaseActivity`, which
   never calls `showAd`, so an entry for it is inert — the launcher home's ads come
   from `launcher_ads` instead. An entry was removed for this reason; adding one
   back has no effect.
@@ -51,17 +51,17 @@ Notes:
 
 ## Keys deliberately absent
 
-`AdConfigIngest` reads a few keys this file does not carry. That is correct, not an
+`PromoConfigLoader` reads a few keys this file does not carry. That is correct, not an
 omission:
 
 | Key(s) | Why absent |
 |---|---|
-| `MarketInterCounter`, `MarketBackCounter`, `MarketNativeCounter`, `MarketBannerCounter`, `MarketAppopenCounter` | Only promoted into the live counters when the config is **not** audience-split (`AdBeaconActivity`: `if (isMarketingOn && !isSplitConfig)`). This config is split, so the `marketing` block already holds the final counters; adding the `Market*` keys would zero them. |
+| `MarketInterCounter`, `MarketBackCounter`, `MarketNativeCounter`, `MarketBannerCounter`, `MarketAppopenCounter` | Only promoted into the live counters when the config is **not** audience-split (`PromoAnchorActivity`: `if (isMarketingOn && !isSplitConfig)`). This config is split, so the `marketing` block already holds the final counters; adding the `Market*` keys would zero them. |
 | `NativeBgColor`, `NativebtnColor`, `NativetxtColor`, `NativebtntxtColor` | Derived from `NativeTheme` by `applyNativeTheme`, which runs after the string ingest and overwrites them. Setting them at top level is a legacy path that the theme wins over — and if `NativeTheme` were ever absent, empty strings here would be used as real colours. |
-| `Perm_Sheet_Show`, `Perm_Sheet_Mode` | Superseded by `intro_display.permission_sheet` (`enabled` + `prompt_frequency`); see `IntroRevealConfig.permissionSheet`. Nothing outside the ingest list reads them. `Perm_Sheet_Interval_Days` is still carried but is likewise superseded by `prompt_interval`. |
+| `Perm_Sheet_Show`, `Perm_Sheet_Mode` | Superseded by `intro_display.permission_sheet` (`enabled` + `prompt_frequency`); see `RevealConfig.permissionSheet`. Nothing outside the ingest list reads them. `Perm_Sheet_Interval_Days` is still carried but is likewise superseded by `prompt_interval`. |
 
 `permission_engine` is the reverse case: the ads ingest does not read it, but
-`AccessSource` and `FullScreenConfig` do — either from a dedicated
+`PermitSource` and `FsiSettings` do — either from a dedicated
 `permission_engine` parameter or from this blob. Keeping it here avoids a second
 parameter.
 

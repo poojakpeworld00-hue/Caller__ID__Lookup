@@ -2,14 +2,14 @@
 <!--
      The launcher's "−1" side panel. Parked at x = -screenWidth and slid in on a fling RIGHT
      over the home grid, Discover-style. Its whole content is the caller-ID app's own four-tab
-     home UI, committed into callerPanelContainer as a HomeCoreFragment — the same fragment
-     AppCoreActivity hosts, so the panel and the standalone home can never drift apart.
+     home UI, committed into callerPanelContainer as a HomeShellFragment — the same fragment
+     AppHomeActivity hosts, so the panel and the standalone home can never drift apart.
 
-     The bottom banner mirrors AppCoreActivity's: same include, same ScreenAds key, loaded by
-     CallDeckFragment on first open (the launcher is not a CanvasActivity, so nothing loads
+     The bottom banner mirrors AppHomeActivity's: same include, same ScreenAds key, loaded by
+     CallPanel on first open (the launcher is not a FrameActivity, so nothing loads
      it automatically here).
 -->
-<com.callerid.number.lookup.home.launcher.fragments.CallDeckFragment
+<com.callerid.number.lookup.home.launcher.fragments.CallPanel
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/caller_panel_holder"
     android:layout_width="match_parent"
@@ -38,4 +38,4 @@
         android:layout_height="match_parent"
         android:layout_above="@id/callerAdBannerDivider" />
 
-</com.callerid.number.lookup.home.launcher.fragments.CallDeckFragment>
+</com.callerid.number.lookup.home.launcher.fragments.CallPanel>

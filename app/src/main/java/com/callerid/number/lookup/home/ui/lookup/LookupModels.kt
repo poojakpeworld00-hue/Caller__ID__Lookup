@@ -1,7 +1,7 @@
 package com.callerid.number.lookup.home.ui.lookup
 
 /** Result of identifying a phone number (on-device + optional online metadata). */
-data class IdentifyResult(
+data class LookupResult(
     val name: String?,        // contact name, or null if unknown
     val number: String,       // formatted number
     val rawNumber: String,    // original digits for dialing / saving
@@ -19,7 +19,7 @@ data class IdentifyResult(
 )
 
 /** A persisted recent lookup shown in the history list. */
-data class TraceEntry(
+data class TraceRow(
     val rawNumber: String,
     val number: String,
     val name: String?,
@@ -27,8 +27,8 @@ data class TraceEntry(
 )
 
 /** UI state for the Lookup screen. */
-sealed interface IdentifyState {
-    data object Idle : IdentifyState
-    data object Loading : IdentifyState
-    data class Result(val result: IdentifyResult) : IdentifyState
+sealed interface LookupState {
+    data object Idle : LookupState
+    data object Loading : LookupState
+    data class Result(val result: LookupResult) : LookupState
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     The app's four-tab home UI. Hosted twice: by AppCoreActivity, where it is the screen, and
+     The app's four-tab home UI. Hosted twice: by AppHomeActivity, where it is the screen, and
      by the launcher's swipe-right side panel (see caller_panel_fragment.xml), so the two
      surfaces can never drift apart.
 
@@ -14,7 +14,7 @@
     android:id="@+id/shellRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeCoreFragment">
+    tools:context=".ui.home.HomeShellFragment">
 
     <FrameLayout
         android:id="@+id/fragmentContainer"

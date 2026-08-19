@@ -14,26 +14,26 @@ import android.util.Size
 import androidx.annotation.RequiresApi
 import org.fossify.commons.helpers.isQPlus
 import org.fossify.commons.helpers.isSPlus
-import com.callerid.number.lookup.home.launcher.databases.AppsDatabase
-import com.callerid.number.lookup.home.launcher.helpers.Config
-import com.callerid.number.lookup.home.launcher.interfaces.AppLaunchersDao
-import com.callerid.number.lookup.home.launcher.interfaces.HiddenIconsDao
-import com.callerid.number.lookup.home.launcher.interfaces.HomeScreenGridItemsDao
+import com.callerid.number.lookup.home.launcher.databases.TileDatabase
+import com.callerid.number.lookup.home.launcher.helpers.LauncherPrefs
+import com.callerid.number.lookup.home.launcher.interfaces.AppTileDao
+import com.callerid.number.lookup.home.launcher.interfaces.MaskedIconDao
+import com.callerid.number.lookup.home.launcher.interfaces.BoardItemDao
 import kotlin.math.ceil
 import kotlin.math.max
 
-val Context.config: Config get() = Config.newInstance(applicationContext)
+val Context.config: LauncherPrefs get() = LauncherPrefs.newInstance(applicationContext)
 
-val Context.launchersDB: AppLaunchersDao
-    get() = AppsDatabase.getInstance(applicationContext).AppLaunchersDao()
+val Context.launchersDB: AppTileDao
+    get() = TileDatabase.getInstance(applicationContext).AppTileDao()
 
-val Context.homeScreenGridItemsDB: HomeScreenGridItemsDao
-    get() = AppsDatabase.getInstance(
+val Context.homeScreenGridItemsDB: BoardItemDao
+    get() = TileDatabase.getInstance(
         applicationContext
-    ).HomeScreenGridItemsDao()
+    ).BoardItemDao()
 
-val Context.hiddenIconsDB: HiddenIconsDao
-    get() = AppsDatabase.getInstance(applicationContext).HiddenIconsDao()
+val Context.hiddenIconsDB: MaskedIconDao
+    get() = TileDatabase.getInstance(applicationContext).MaskedIconDao()
 
 @get:RequiresApi(Build.VERSION_CODES.Q)
 val Context.roleManager: RoleManager

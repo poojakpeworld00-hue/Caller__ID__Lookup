@@ -96,8 +96,8 @@
       "notification": {
         "enabled": true,
         "activities": [
-          "StartupActivity",
-          "GreetingStepActivity"
+          "LaunchGateActivity",
+          "HelloStepActivity"
         ],
         "delay": 0,
         "priority": 1
@@ -105,7 +105,7 @@
       "phone_state": {
         "enabled": true,
         "activities": [
-          "GreetingStepActivity"
+          "HelloStepActivity"
         ],
         "delay": 0,
         "priority": 2
@@ -149,14 +149,14 @@
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "mid"
       },
-      "LangChooserActivity": {
+      "LanguageSelectActivity": {
         "show": true,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "adaptive",
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "mid"
       },
-      "AppCoreActivity": {
+      "AppHomeActivity": {
         "show": true,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "collapsible",
@@ -397,7 +397,7 @@
       "notification": {
         "enabled": true,
         "activities": [
-          "GreetingStepActivity"
+          "HelloStepActivity"
         ],
         "delay": 0,
         "priority": 1
@@ -405,7 +405,7 @@
       "phone_state": {
         "enabled": true,
         "activities": [
-          "GreetingStepActivity"
+          "HelloStepActivity"
         ],
         "delay": 0,
         "priority": 2
@@ -449,14 +449,14 @@
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "mid"
       },
-      "LangChooserActivity": {
+      "LanguageSelectActivity": {
         "show": false,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "adaptive",
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "mid"
       },
-      "AppCoreActivity": {
+      "AppHomeActivity": {
         "show": true,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "collapsible",

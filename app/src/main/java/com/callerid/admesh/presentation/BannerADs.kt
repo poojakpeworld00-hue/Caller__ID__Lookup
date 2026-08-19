@@ -14,9 +14,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
-import com.callerid.admesh.data.AdKind
-import com.callerid.admesh.domain.AdRevenueMeter
-import com.callerid.admesh.domain.AdsVault
+import com.callerid.admesh.data.PromoKind
+import com.callerid.admesh.domain.PromoRevenueGauge
+import com.callerid.admesh.domain.PromoVault
 import com.callerid.admesh.domain.logKeyEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.facebook.ads.AdView as FbAdView
@@ -24,13 +24,13 @@ import com.facebook.ads.AdView as FbAdView
 // --------------------------------------------------------------
 // ENUMS
 // --------------------------------------------------------------
-enum class BannerScale { ADAPTIVE, INLINE, NORMAL }
-enum class BannerKind { AUTO, GOOGLE, FACEBOOK, CUSTOM }
+enum class StripScale { ADAPTIVE, INLINE, NORMAL }
+enum class StripKind { AUTO, GOOGLE, FACEBOOK, CUSTOM }
 
 // --------------------------------------------------------------
 // OBSERVER
 // --------------------------------------------------------------
-interface BannerAdWatcher {
+interface StripWatcher {
     fun onAdLoaded() {}
     fun onAdFailed() {}
 }
@@ -38,7 +38,7 @@ interface BannerAdWatcher {
 // --------------------------------------------------------------
 // BANNER ADS MANAGER
 // --------------------------------------------------------------
-class BannerPromo {
+class StripPromo {
 
     private var googleBanner: AdView? = null
     private var facebookBanner: FbAdView? = null
@@ -53,15 +53,15 @@ class BannerPromo {
     fun showBanner(
         activity: Activity,
         container: FrameLayout,
-        type: BannerKind = BannerKind.AUTO,
-        size: BannerScale = BannerScale.ADAPTIVE,
+        type: StripKind = StripKind.AUTO,
+        size: StripScale = StripScale.ADAPTIVE,
         isCollapsable: Boolean = false,
         shimmer: ShimmerFrameLayout? = null,
-        observer: BannerAdWatcher? = null,
+        observer: StripWatcher? = null,
         customAdUnitId: String? = null,
         disableInternalFallback: Boolean = false
     ) {
-        val pref = AdsVault.getInstance(activity)
+        val pref = PromoVault.getInstance(activity)
 
         // Ads OFF
         if (!isNetworkConnected(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds")) {
@@ -80,9 +80,9 @@ class BannerPromo {
         bannerCounter = 0
 
         when (type) {
-            BannerKind.AUTO -> {
-                when (AdKind.fromString(pref.getString("IsAdType"))) {
-                    AdKind.GOOGLE -> loadGoogleBanner(
+            StripKind.AUTO -> {
+                when (PromoKind.fromString(pref.getString("IsAdType"))) {
+                    PromoKind.GOOGLE -> loadGoogleBanner(
                         activity,
                         container,
                         size,
@@ -93,25 +93,25 @@ class BannerPromo {
                         disableInternalFallback
                     )
 
-                    AdKind.FACEBOOK -> loadFacebookBanner(
+                    PromoKind.FACEBOOK -> loadFacebookBanner(
                         activity, container, shimmer, observer, disableInternalFallback
                     )
 
-                    AdKind.CUSTOM, AdKind.UNKNOWN -> {
+                    PromoKind.CUSTOM, PromoKind.UNKNOWN -> {
                         if (disableInternalFallback) {
                             observer?.onAdFailed()
                         } else {
-                            CustomAdsRegistry().loadCustomAd(
+                            InHouseRegistry().loadCustomAd(
                                 activity,
                                 container,
-                                CustomAdsRegistry.CustomAdType.BANNER
+                                InHouseRegistry.CustomAdType.BANNER
                             )
                         }
                     }
                 }
             }
 
-            BannerKind.GOOGLE -> loadGoogleBanner(
+            StripKind.GOOGLE -> loadGoogleBanner(
                 activity,
                 container,
                 size,
@@ -122,18 +122,18 @@ class BannerPromo {
                 disableInternalFallback
             )
 
-            BannerKind.FACEBOOK -> loadFacebookBanner(
+            StripKind.FACEBOOK -> loadFacebookBanner(
                 activity, container, shimmer, observer, disableInternalFallback
             )
 
-            BannerKind.CUSTOM -> {
+            StripKind.CUSTOM -> {
                 if (disableInternalFallback) {
                     observer?.onAdFailed()
                 } else {
-                    CustomAdsRegistry().loadCustomAd(
+                    InHouseRegistry().loadCustomAd(
                         activity,
                         container,
-                        CustomAdsRegistry.CustomAdType.BANNER
+                        InHouseRegistry.CustomAdType.BANNER
                     )
                 }
             }
@@ -146,14 +146,14 @@ class BannerPromo {
     private fun loadGoogleBanner(
         activity: Activity,
         container: FrameLayout,
-        size: BannerScale,
+        size: StripScale,
         isCollapsable: Boolean,
         shimmer: ShimmerFrameLayout? = null,
-        observer: BannerAdWatcher?,
+        observer: StripWatcher?,
         customAdUnitId: String? = null,
         disableInternalFallback: Boolean = false
     ) {
-        val pref = AdsVault.getInstance(activity)
+        val pref = PromoVault.getInstance(activity)
         val adUnitId = customAdUnitId ?: pref.getString("googleBanner")
 
         if (adUnitId.isNullOrEmpty()) {
@@ -190,10 +190,10 @@ class BannerPromo {
                 // Log load
                 activity.logKeyEvent("Banner_Load")
 
-                if (BuildConfig.DEBUG) AdRevenueMeter.simulateDebugRevenue(activity)
+                if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
 
                 googleBanner!!.setOnPaidEventListener {
-                    AdRevenueMeter.logPaidEvent(activity, it)
+                    PromoRevenueGauge.logPaidEvent(activity, it)
                 }
 
 
@@ -214,7 +214,7 @@ class BannerPromo {
                     activity.logKeyEvent("Banner_fail_Load")
                 } catch (_: Exception) {
                 }
-                Log.e("BannerPromo", "Google Banner Failed: ${error.message}")
+                Log.e("StripPromo", "Google Banner Failed: ${error.message}")
                 observer?.onAdFailed()
                 if (!disableInternalFallback) {
                     fallbackToFBOrCustom(activity, container, shimmer, observer)
@@ -254,17 +254,17 @@ class BannerPromo {
     private fun getGoogleSize(
         activity: Activity,
         container: FrameLayout,
-        size: BannerScale,
+        size: StripScale,
         isCollapsable: Boolean
     ): AdSize {
         return when (size) {
-            BannerScale.NORMAL -> AdSize.BANNER
-            BannerScale.INLINE -> AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
+            StripScale.NORMAL -> AdSize.BANNER
+            StripScale.INLINE -> AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
                 activity,
                 getWidthDp(activity)
             )
 
-            BannerScale.ADAPTIVE -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            StripScale.ADAPTIVE -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
                 activity,
                 getWidthDp(activity)
             )
@@ -284,20 +284,20 @@ class BannerPromo {
         activity: Activity,
         container: FrameLayout,
         shimmer: ShimmerFrameLayout? = null,
-        observer: BannerAdWatcher?,
+        observer: StripWatcher?,
         disableInternalFallback: Boolean = false
     ) {
-        val pref = AdsVault.getInstance(activity)
+        val pref = PromoVault.getInstance(activity)
         val fbId = pref.getString("faceB_BannerAds")
 
         if (fbId.isNullOrEmpty()) {
             if (disableInternalFallback) {
                 observer?.onAdFailed()
             } else {
-                CustomAdsRegistry().loadCustomAd(
+                InHouseRegistry().loadCustomAd(
                     activity,
                     container,
-                    CustomAdsRegistry.CustomAdType.BANNER
+                    InHouseRegistry.CustomAdType.BANNER
                 )
             }
             return
@@ -335,12 +335,12 @@ class BannerPromo {
                         shimmer?.stopShimmer()
                         shimmer?.visibility = View.GONE
                         observer?.onAdFailed()
-                        Log.e("BannerPromo", "FB Banner Failed: ${error?.errorMessage}")
+                        Log.e("StripPromo", "FB Banner Failed: ${error?.errorMessage}")
                         if (!disableInternalFallback) {
-                            CustomAdsRegistry().loadCustomAd(
+                            InHouseRegistry().loadCustomAd(
                                 activity,
                                 container,
-                                CustomAdsRegistry.CustomAdType.BANNER
+                                InHouseRegistry.CustomAdType.BANNER
                             )
                         }
                     }
@@ -361,20 +361,20 @@ class BannerPromo {
         activity: Activity,
         container: FrameLayout,
         shimmer: ShimmerFrameLayout? = null,
-        observer: BannerAdWatcher?
+        observer: StripWatcher?
     ) {
-        val pref = AdsVault.getInstance(activity)
+        val pref = PromoVault.getInstance(activity)
         if (pref.getBoolean("IsFail_FB")) {
             // Pass shimmer to Facebook banner loader
             loadFacebookBanner(activity, container, shimmer, observer)
         } else {
-            // Optionally, you can show shimmer for custom ads if CustomAdsRegistry supports it
+            // Optionally, you can show shimmer for custom ads if InHouseRegistry supports it
             shimmer?.startShimmer()
             shimmer?.visibility = View.VISIBLE
-            CustomAdsRegistry().loadCustomAd(
+            InHouseRegistry().loadCustomAd(
                 activity,
                 container,
-                CustomAdsRegistry.CustomAdType.BANNER
+                InHouseRegistry.CustomAdType.BANNER
             )
         }
     }

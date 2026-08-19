@@ -15,7 +15,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Process
 import android.provider.Settings
-import com.callerid.number.lookup.home.util.GuardRail
+import com.callerid.number.lookup.home.util.LogRail
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.Menu
@@ -33,15 +33,15 @@ import org.fossify.commons.extensions.showErrorToast
 import org.fossify.commons.helpers.isQPlus
 import org.fossify.commons.helpers.isSPlus
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.launcher.activities.StageSettingsActivity
+import com.callerid.number.lookup.home.launcher.activities.BoardSettingsActivity
 import com.callerid.number.lookup.home.launcher.helpers.ITEM_TYPE_FOLDER
 import com.callerid.number.lookup.home.launcher.helpers.ITEM_TYPE_ICON
 import com.callerid.number.lookup.home.launcher.helpers.ITEM_TYPE_WIDGET
 import com.callerid.number.lookup.home.launcher.helpers.REQUEST_SET_DEFAULT
 import com.callerid.number.lookup.home.launcher.helpers.UNINSTALL_APP_REQUEST_CODE
-import com.callerid.number.lookup.home.launcher.interfaces.ItemMenuListener
-import com.callerid.number.lookup.home.launcher.models.HomeScreenGridItem
-import com.callerid.admesh.presentation.HintSheetActivity
+import com.callerid.number.lookup.home.launcher.interfaces.TileMenuListener
+import com.callerid.number.lookup.home.launcher.models.BoardItem
+import com.callerid.admesh.presentation.TipSheetActivity
 
 fun Activity.launchApp(packageName: String, activityName: String) {
     try {
@@ -91,7 +91,7 @@ fun Activity.requestSetAsDefaultLauncher() {
         try {
             startActivityForResult(intent, REQUEST_SET_DEFAULT)
             if (isListPage) {
-                HintSheetActivity.show(this, HintSheetActivity.MODE_HOME)
+                TipSheetActivity.show(this, TipSheetActivity.MODE_HOME)
             }
             return
         } catch (_: ActivityNotFoundException) {
@@ -117,9 +117,9 @@ fun Activity.uninstallApp(packageName: String) {
 
 fun Activity.handleGridItemPopupMenu(
     anchorView: View,
-    gridItem: HomeScreenGridItem,
+    gridItem: BoardItem,
     isOnAllAppsFragment: Boolean,
-    listener: ItemMenuListener,
+    listener: TileMenuListener,
 ): PopupMenu {
     val contextTheme = ContextThemeWrapper(this, getPopupMenuTheme())
     return PopupMenu(contextTheme, anchorView, Gravity.TOP or Gravity.END).apply {
@@ -234,6 +234,6 @@ fun Activity.excludeAppFromRecents() {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return
         manager.appTasks.forEach { task -> task.setExcludeFromRecents(true) }
     } catch (e: Exception) {
-        GuardRail.error("Recents", "could not exclude task from recents", e)
+        LogRail.error("Recents", "could not exclude task from recents", e)
     }
 }

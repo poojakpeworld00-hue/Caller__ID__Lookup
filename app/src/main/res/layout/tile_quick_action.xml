@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Quick action — Claude Design "actions 3" cell: a per-action tinted icon
-     circle (background/icon tint set per-instance in OverviewFragment.bindQuick)
+     circle (background/icon tint set per-instance in HomeMainFragment.bindQuick)
      and a label beneath it. No per-tile card — the shared card is the parent
      row's own background in fragment_home.xml. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

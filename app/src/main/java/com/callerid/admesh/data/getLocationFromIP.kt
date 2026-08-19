@@ -17,7 +17,7 @@ private val locationClient: OkHttpClient by lazy {
         .build()
 }
 
-fun getLocationFromIP(): GeoInfo? {
+fun getLocationFromIP(): GeoSnapshot? {
     return try {
         val client = locationClient
         val request = Request.Builder()
@@ -27,7 +27,7 @@ fun getLocationFromIP(): GeoInfo? {
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) return null
             val json = JSONObject(response.body!!.string())
-            GeoInfo(
+            GeoSnapshot(
                 country = json.optString("country"),         // "India"
                 countryCode = json.optString("countryCode"), // "IN"
                 regionName = json.optString("regionName"),   // "Karnataka"

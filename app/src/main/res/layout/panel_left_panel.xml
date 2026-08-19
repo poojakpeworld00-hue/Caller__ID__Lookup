@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.callerid.number.lookup.home.launcher.fragments.SidePanelFragment xmlns:android="http://schemas.android.com/apk/res/android"
+<com.callerid.number.lookup.home.launcher.fragments.LeftPanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/left_panel_holder"
     android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                 app:spanCount="4" />
 
             <!-- Second panel slot, under the suggested apps —
-                 `launcher_ads.right_panel.suggested_banner`, off unless Remote Config asks
+                 `launcher_ads.right_panel.suggested_banner`, off unless Remote LauncherPrefs asks
                  for it. It scrolls with the panel content; the frame at the bottom of the
                  panel is the pinned one. -->
             <FrameLayout
@@ -230,7 +230,7 @@
          The app list scrolls above it (panel_scroll is layout_above this frame), so the ad
          stays put rather than riding along with the results. showMidNative2 empties and hides
          the frame when ads are off, the network is down, or the counter says skip, and the
-         ScrollView then takes the space back. HomeStageActivity pads this frame for the navigation
+         ScrollView then takes the space back. HomeBoardActivity pads this frame for the navigation
          bar via setupEdgeToEdge. -->
     <FrameLayout
         android:id="@+id/ad_native_frame"
@@ -249,4 +249,4 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
 
-</com.callerid.number.lookup.home.launcher.fragments.SidePanelFragment>
+</com.callerid.number.lookup.home.launcher.fragments.LeftPanel>

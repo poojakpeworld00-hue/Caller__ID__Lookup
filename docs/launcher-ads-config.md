@@ -1,7 +1,7 @@
-# `launcher_ads` — Remote Config schema (v2)
+# `launcher_ads` — Remote LauncherPrefs schema (v2)
 
-One Remote Config string parameter, `launcher_ads`, owning everything the launcher does
-around ads, hints and the first-run route. Stored as JSON text in AdsVault by
+One Remote LauncherPrefs string parameter, `launcher_ads`, owning everything the launcher does
+around ads, hints and the first-run route. Stored as JSON text in PromoVault by
 `ADDashboardActivity.ingestConfig` and read back with `JSONObject`, same as `intro_display`
 and `ScreenAds`.
 
@@ -129,7 +129,7 @@ So: change one field inside either block and only that field flips. That is the
 `swipe_left` is the new one: the left fling that slides the app-search panel in from the
 right. Same shape, its own independent counter.
 
-Gate order is unchanged — these sit on top of `InterstitialNormal.showInterAds`, which still
+Gate order is unchanged — these sit on top of `FlowInterstitial.showInterAds`, which still
 applies the network check, `IsAdsON`, `InterAds` and the global `InterCounter`. The gesture
 always completes: the ad callback fires on every path (shown, skipped, no fill, no network).
 
@@ -147,8 +147,8 @@ always completes: the ad callback fires on every path (shown, skipped, no fill, 
 makes that swipe; the next entry appears once they are back on the bare home screen (returning
 from the caller-ID app, closing the panel or the drawer), and so on until the list is done.
 Any other gesture leaves the hint where it is. How far the run has got lives in
-`Config.swipeHintIndex`, so an interrupted `once` run resumes rather than starting over, and
-`Config.wasSwipeHintShown` latches only when the whole list has been taught.
+`LauncherPrefs.swipeHintIndex`, so an interrupted `once` run resumes rather than starting over, and
+`LauncherPrefs.wasSwipeHintShown` latches only when the whole list has been taught.
 
 A chevron trio plus caption, drifting the way it is teaching. The captions are
 `swipe_right_hint` / `swipe_left_hint` / `swipe_up_hint` / `swipe_down_hint`.
@@ -159,7 +159,7 @@ A chevron trio plus caption, drifting the way it is teaching. The captions are
 |---|---|---|
 | `enabled` | bool | off → frame stays gone, nothing preloaded. |
 | `ad_type` | `native` \| `banner` \| `none` | which unit fills the frame. |
-| `native_type` | `mid2` \| `mid` \| `big` \| `native_banner` | maps to `NativePromo.showMidNative2` / `showMidNative` / `showBigNative` / `NativePromoBanner.showNativeBannerNative`. Current behaviour = `mid2`. |
+| `native_type` | `mid2` \| `mid` \| `big` \| `native_banner` | maps to `InlinePromo.showMidNative2` / `showMidNative` / `showBigNative` / `InlinePromoStrip.showNativeBannerNative`. Current behaviour = `mid2`. |
 | `banner_type` | `adaptive` \| `inline` \| `normal` \| `collapsible` | used when `ad_type` is `banner`, same vocabulary as `ScreenAds.bannerType`. |
 | `ad_unit_id` | string | **banner only.** The native renderers draw from one preloaded pool and take no per-call unit, so a native slot always uses the global `googleNative` (or its screen-wise id). Blank inherits the global `googleBanner`. |
 
@@ -237,9 +237,9 @@ Screens: `welcome`, `set_default`, `intro`, `language`.
   console.
 - A missing block resolves to everything-off for that surface, and a missing key falls back to
   the default in the tables above — so a partial JSON never crashes the launcher.
-- In DEBUG every resolution is logged under `LauncherAdsConfig`, including which variant
+- In DEBUG every resolution is logged under `ShellPromoConfig`, including which variant
   (`defaultHome` / `notDefaultHome`) was merged; the first-run routing logs under
-  `LauncherFlow`.
+  `OnboardRouter`.
 
 ## The two audience flows
 
@@ -318,9 +318,9 @@ Two things in these funnels live outside `launcher_ads`:
 
 | part | code |
 |---|---|
-| parsing, variant merge, pacing, slot rendering | `admesh/domain/LauncherAdsConfig.kt` |
+| parsing, variant merge, pacing, slot rendering | `admesh/domain/ShellPromoConfig.kt` |
 | gesture hooks | `MainActivity.onFlingRight` / `onFlingLeft`, `AllAppsFragment`, `LeftPanelFragment` |
 | coach mark | `MainActivity.maybeShowSwipeHint` + `res/layout/item_swipe_hint.xml` |
 | panel slot | `LeftPanelFragment.onPanelShown` |
-| first-run order | `launcher/helpers/LauncherFlow.kt` (step index in `Config.onboardingStep`) |
+| first-run order | `launcher/helpers/OnboardRouter.kt` (step index in `LauncherPrefs.onboardingStep`) |
 | onboarding screens | `OnboardingWelcomeActivity`, `OnboardingDefaultLauncherActivity`, `IntroActivity`, `LocaleActivity` |
