@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/batteryRoot"
+        android:id="@+id/batteryRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -48,8 +48,8 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,13 +69,13 @@
                     android:textSize="@dimen/_11ssp" />
                 <!-- Mid native (scrolls with content) -->
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -139,7 +139,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tvLevel"
+                                android:id="@+id/lblLevel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/on_surface"
@@ -186,7 +186,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_voltage" />
 
                             <TextView
-                                android:id="@+id/tvVoltage"
+                                android:id="@+id/lblVoltage"
                                 style="@style/BatteryStatValue"
                                 tools:text="3.8V" />
                         </LinearLayout>
@@ -196,7 +196,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_temp" />
 
                             <TextView
-                                android:id="@+id/tvTemp"
+                                android:id="@+id/lblTemp"
                                 style="@style/BatteryStatValue"
                                 tools:text="32°C" />
                         </LinearLayout>
@@ -206,7 +206,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_health" />
 
                             <TextView
-                                android:id="@+id/tvHealth"
+                                android:id="@+id/lblHealth"
                                 style="@style/BatteryStatValue"
                                 android:textColor="@color/primary"
                                 tools:text="Great" />
@@ -226,7 +226,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_status" />
 
                             <TextView
-                                android:id="@+id/tvStatus"
+                                android:id="@+id/lblStatus"
                                 style="@style/BatteryStatValue"
                                 tools:text="Charging" />
                         </LinearLayout>
@@ -236,7 +236,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_plugged" />
 
                             <TextView
-                                android:id="@+id/tvPlugged"
+                                android:id="@+id/lblPlugged"
                                 style="@style/BatteryStatValue"
                                 tools:text="AC" />
                         </LinearLayout>
@@ -246,7 +246,7 @@
                             <TextView style="@style/BatteryStatLabel" android:text="@string/battery_tech" />
 
                             <TextView
-                                android:id="@+id/tvTech"
+                                android:id="@+id/lblTech"
                                 style="@style/BatteryStatValue"
                                 tools:text="Li-ion" />
                         </LinearLayout>
@@ -258,10 +258,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

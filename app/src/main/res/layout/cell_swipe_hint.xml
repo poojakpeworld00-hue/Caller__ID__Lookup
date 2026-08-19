@@ -15,7 +15,7 @@
     android:paddingVertical="@dimen/_10sdp">
 
     <LinearLayout
-        android:id="@+id/hint_chevrons"
+        android:id="@+id/tip_chevrons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clipChildren="false"
@@ -44,7 +44,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/hint_label"
+        android:id="@+id/tip_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"

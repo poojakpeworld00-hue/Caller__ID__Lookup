@@ -2,17 +2,17 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_coordinator"
+    android:id="@+id/settings_coordinatorVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <org.fossify.commons.views.MyAppBarLayout
-        android:id="@+id/settings_appbar"
+        android:id="@+id/settings_appbarVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/settings_toolbar"
+            android:id="@+id/settings_toolbarVw"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/color_primary"
@@ -23,7 +23,7 @@
     </org.fossify.commons.views.MyAppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/settings_nested_scrollview"
+        android:id="@+id/settings_nested_scrollviewVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
@@ -31,26 +31,26 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:id="@+id/settings_holder"
+            android:id="@+id/settings_holderVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/settings_color_customization_section_label"
+                android:id="@+id/settings_color_customization_section_labelVw"
                 style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/color_customization" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/settings_color_customization_holder"
+                android:id="@+id/settings_color_customization_holderVw"
                 style="@style/SettingsHolderTextViewOneLinerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_color_customization_label"
+                    android:id="@+id/settings_color_customization_labelVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,30 +61,30 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
-                android:id="@+id/settings_color_customization_divider"
+                android:id="@+id/settings_color_customization_dividerVw"
                 layout="@layout/divider" />
 
             <TextView
-                android:id="@+id/settings_general_settings_label"
+                android:id="@+id/settings_general_settings_labelVw"
                 style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/general_settings" />
 
             <org.fossify.commons.views.PurchaseThankYouItem
-                android:id="@+id/settings_purchase_thank_you_holder"
+                android:id="@+id/settings_purchase_thank_you_holderVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <RelativeLayout
-                android:id="@+id/settings_use_english_holder"
+                android:id="@+id/settings_use_english_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_use_english"
+                    android:id="@+id/settings_use_englishVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,38 +93,38 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_language_holder"
+                android:id="@+id/settings_language_holderVw"
                 style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_language_label"
+                    android:id="@+id/settings_language_labelVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/language" />
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_language"
+                    android:id="@+id/settings_languageVw"
                     style="@style/SettingsTextValueStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/settings_language_label"
+                    android:layout_below="@+id/settings_language_labelVw"
                     tools:text="English" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_manage_hidden_icons_holder"
+                android:id="@+id/settings_manage_hidden_icons_holderVw"
                 style="@style/SettingsHolderTextViewOneLinerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_manage_hidden_icons"
+                    android:id="@+id/settings_manage_hidden_iconsVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,14 +133,14 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_double_tap_to_lock_holder"
+                android:id="@+id/settings_double_tap_to_lock_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_double_tap_to_lock"
+                    android:id="@+id/settings_double_tap_to_lockVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,49 +149,49 @@
             </RelativeLayout>
 
             <include
-                android:id="@+id/settings_general_settings_divider"
+                android:id="@+id/settings_general_settings_dividerVw"
                 layout="@layout/divider" />
 
             <TextView
-                android:id="@+id/settings_drawer_settings_label"
+                android:id="@+id/settings_drawer_settings_labelVw"
                 style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_drawer_settings" />
 
             <RelativeLayout
-                android:id="@+id/settings_drawer_column_count_holder"
+                android:id="@+id/settings_drawer_column_count_holderVw"
                 style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_drawer_column_count_label"
+                    android:id="@+id/settings_drawer_column_count_labelVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/column_count" />
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_drawer_column_count"
+                    android:id="@+id/settings_drawer_column_countVw"
                     style="@style/SettingsTextValueStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/settings_drawer_column_count_label"
+                    android:layout_below="@+id/settings_drawer_column_count_labelVw"
                     tools:text="3" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_drawer_search_holder"
+                android:id="@+id/settings_drawer_search_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_show_search_bar"
+                    android:id="@+id/settings_show_search_barVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -200,14 +200,14 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_open_keyboard_on_app_drawer_holder"
+                android:id="@+id/settings_open_keyboard_on_app_drawer_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_open_keyboard_on_app_drawer"
+                    android:id="@+id/settings_open_keyboard_on_app_drawerVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -216,14 +216,14 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_close_app_drawer_on_other_app_holder"
+                android:id="@+id/settings_close_app_drawer_on_other_app_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_close_app_drawer_on_other_app"
+                    android:id="@+id/settings_close_app_drawer_on_other_appVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -232,14 +232,14 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_show_drawer_app_labels_holder"
+                android:id="@+id/settings_show_drawer_app_labels_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_show_drawer_app_labels"
+                    android:id="@+id/settings_show_drawer_app_labelsVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -248,73 +248,73 @@
             </RelativeLayout>
 
             <include
-                android:id="@+id/settings_drawer_settings_divider"
+                android:id="@+id/settings_drawer_settings_dividerVw"
                 layout="@layout/divider" />
 
             <TextView
-                android:id="@+id/settings_home_screen_label"
+                android:id="@+id/settings_home_screen_labelVw"
                 style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/home_screen_settings" />
 
             <RelativeLayout
-                android:id="@+id/settings_home_screen_row_count_holder"
+                android:id="@+id/settings_home_screen_row_count_holderVw"
                 style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_home_screen_row_count_label"
+                    android:id="@+id/settings_home_screen_row_count_labelVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/row_count" />
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_home_screen_row_count"
+                    android:id="@+id/settings_home_screen_row_countVw"
                     style="@style/SettingsTextValueStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/settings_home_screen_row_count_label"
+                    android:layout_below="@+id/settings_home_screen_row_count_labelVw"
                     tools:text="3" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_home_screen_column_count_holder"
+                android:id="@+id/settings_home_screen_column_count_holderVw"
                 style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_home_screen_column_count_label"
+                    android:id="@+id/settings_home_screen_column_count_labelVw"
                     style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/column_count" />
 
                 <org.fossify.commons.views.MyTextView
-                    android:id="@+id/settings_home_screen_column_count"
+                    android:id="@+id/settings_home_screen_column_countVw"
                     style="@style/SettingsTextValueStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/settings_home_screen_column_count_label"
+                    android:layout_below="@+id/settings_home_screen_column_count_labelVw"
                     tools:text="3" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/settings_show_home_app_labels_holder"
+                android:id="@+id/settings_show_home_app_labels_holderVw"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_background">
 
                 <org.fossify.commons.views.MyMaterialSwitch
-                    android:id="@+id/settings_show_home_app_labels"
+                    android:id="@+id/settings_show_home_app_labelsVw"
                     style="@style/SettingsSwitchStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

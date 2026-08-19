@@ -210,20 +210,20 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         applyNativeAdTheme()
         setupEdgeToEdge(
             padTopSystem = listOf(
-                binding.allAppsFragment.root,
-                binding.widgetsFragment.root,
-                binding.leftPanel.root,
-                binding.defaultLauncherBanner.root
+                binding.allAppsFragmentVw.root,
+                binding.widgetsFragmentVw.root,
+                binding.leftPanelVw.root,
+                binding.defaultLauncherBannerVw.root
             ),
             padBottomImeAndSystem = listOf(
-                binding.allAppsFragment.allAppsGrid,
-                binding.widgetsFragment.widgetsList,
-                binding.leftPanel.panelScroll
+                binding.allAppsFragmentVw.allAppsGridVw,
+                binding.widgetsFragmentVw.widgetsListVw,
+                binding.leftPanelVw.panelScrollVw
             ),
             // the panel's ad is pinned below its scroll area, so it — not the scroll — is what
             // has to clear the navigation bar. System-only, deliberately: padding it for the IME
             // too would make it leap above the keyboard while the user is typing a search.
-            padBottomSystem = listOf(binding.homeScreenGrid.root, binding.leftPanel.adNativeFrame)
+            padBottomSystem = listOf(binding.homeScreenGridVw.root, binding.leftPanelVw.adNativeFrameVw)
         )
 
         mDetector = GestureDetectorCompat(this, MyGestureListener(this))
@@ -235,8 +235,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         mMoveGestureThreshold = resources.getDimensionPixelSize(R.dimen.move_gesture_threshold)
 
         arrayOf(
-            binding.allAppsFragment.root as BasePanel<*>,
-            binding.widgetsFragment.root as BasePanel<*>
+            binding.allAppsFragmentVw.root as BasePanel<*>,
+            binding.widgetsFragmentVw.root as BasePanel<*>
         ).forEach { fragment ->
             fragment.setupFragment(this)
             fragment.y = mScreenHeight.toFloat()
@@ -245,14 +245,14 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
         // The app-search panel is parked off screen to the right and slides in on a left
         // fling. A right fling has no panel of its own — it opens the caller-ID app instead.
-        binding.leftPanel.root.apply {
+        binding.leftPanelVw.root.apply {
             setupFragment(this@HomeBoardActivity)
             x = mScreenWidth.toFloat()
             beVisible()
         }
 
         // The caller panel comes in from the opposite edge, so it parks on the other side.
-        binding.callerPanel.root.apply {
+        binding.callerPanelVw.root.apply {
             setupFragment(this@HomeBoardActivity)
             x = -mScreenWidth.toFloat()
             beVisible()
@@ -267,13 +267,13 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
         handleIntentAction(intent)
 
-        binding.homeScreenGrid.root.itemClickListener = {
+        binding.homeScreenGridVw.root.itemClickListener = {
             performItemClick(it)
         }
 
-        binding.homeScreenGrid.root.itemLongClickListener = {
+        binding.homeScreenGridVw.root.itemLongClickListener = {
             performItemLongClick(
-                x = binding.homeScreenGrid.root.getClickableRect(it).left.toFloat(),
+                x = binding.homeScreenGridVw.root.getClickableRect(it).left.toFloat(),
                 clickedGridItem = it
             )
         }
@@ -281,7 +281,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         // onboarding already asks about this explicitly on first run (with a Skip option). If the
         // user skipped it or later unset us, the "Setup Required" banner below nags instead of a
         // dialog, same as the reference app. It also stays reachable via the long-press menu.
-        binding.defaultLauncherBanner.root.setOnClickListener { requestSetAsDefaultLauncher() }
+        binding.defaultLauncherBannerVw.root.setOnClickListener { requestSetAsDefaultLauncher() }
 
         setupWallpaperColorListener()
 
@@ -369,7 +369,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
      * Any other gesture leaves the index alone — the hint stays until its own swipe is made.
      */
     private fun completeSwipeHint(direction: ShellPromoConfig.HintDirection) {
-        if (!mHintRunActive || !binding.swipeHint.isVisible) {
+        if (!mHintRunActive || !binding.swipeHintVw.isVisible) {
             return
         }
 
@@ -383,7 +383,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         // Swiping down only pulls the shade over us — the home screen is never left, so
         // nothing else will come back to ask for the next hint.
         if (direction == ShellPromoConfig.HintDirection.DOWN) {
-            binding.swipeHint.postDelayed({ showNextSwipeHint() }, SHADE_HINT_RESUME_DELAY)
+            binding.swipeHintVw.postDelayed({ showNextSwipeHint() }, SHADE_HINT_RESUME_DELAY)
         }
     }
 
@@ -396,7 +396,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         // the hint — the search pill, or an app icon. The gesture detector is still fed, so
         // both routes work: the taught swipe as usual, and a tap anywhere doing the same thing
         // (see homeScreenClicked → performHintAction).
-        binding.swipeHint.setOnTouchListener { _, event ->
+        binding.swipeHintVw.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 // the Activity's own ACTION_DOWN bookkeeping never runs for these events
                 mIgnoreXMoveEvents = false
@@ -409,12 +409,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
         mSwipeHintAnimators.forEach { it.cancel() }
         mSwipeHintAnimators.clear()
-        binding.swipeHint.removeCallbacks(mSwipeHintHider)
-        binding.swipeHint.removeAllViews()
+        binding.swipeHintVw.removeCallbacks(mSwipeHintHider)
+        binding.swipeHintVw.removeAllViews()
 
-        val row = layoutInflater.inflate(R.layout.cell_swipe_hint, binding.swipeHint, false)
-        val chevrons = row.findViewById<View>(R.id.hint_chevrons)
-        row.findViewById<TextView>(R.id.hint_label).setText(captionFor(direction))
+        val row = layoutInflater.inflate(R.layout.cell_swipe_hint, binding.swipeHintVw, false)
+        val chevrons = row.findViewById<View>(R.id.tip_chevrons)
+        row.findViewById<TextView>(R.id.tip_label).setText(captionFor(direction))
 
         // The chevrons are drawn pointing right, so each direction is that row rotated — and
         // the drift then runs along the matching axis. Rotation happens in the row's own
@@ -440,7 +440,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             row.setPadding(row.paddingLeft, pad, row.paddingRight, pad)
         }
 
-        binding.swipeHint.addView(row)
+        binding.swipeHintVw.addView(row)
         mSwipeHintAnimators += ObjectAnimator.ofFloat(chevrons, property, 0f, distance).apply {
             duration = SWIPE_HINT_ANIMATION_DURATION
             repeatCount = ValueAnimator.INFINITE
@@ -448,12 +448,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             start()
         }
 
-        binding.swipeHint.beVisible()
+        binding.swipeHintVw.beVisible()
 
         // Auto-hide only takes this hint off the screen; the run stays where it is, so the
         // same one is offered again next time the home screen comes back.
         if (autoHideSec > 0) {
-            binding.swipeHint.postDelayed(mSwipeHintHider, autoHideSec * 1000L)
+            binding.swipeHintVw.postDelayed(mSwipeHintHider, autoHideSec * 1000L)
         }
     }
 
@@ -480,15 +480,15 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun hideSwipeHint() {
-        if (!binding.swipeHint.isVisible) {
+        if (!binding.swipeHintVw.isVisible) {
             return
         }
 
-        binding.swipeHint.removeCallbacks(mSwipeHintHider)
-        binding.swipeHint.setOnTouchListener(null)
+        binding.swipeHintVw.removeCallbacks(mSwipeHintHider)
+        binding.swipeHintVw.setOnTouchListener(null)
         mSwipeHintAnimators.forEach { it.cancel() }
         mSwipeHintAnimators.clear()
-        binding.swipeHint.beGone()
+        binding.swipeHintVw.beGone()
     }
 
     private fun setupWallpaperColorListener() {
@@ -536,10 +536,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         val wasAnyFragmentOpen = isAllAppsFragmentExpanded() || isWidgetsFragmentExpanded()
         if (wasJustPaused) {
             if (isAllAppsFragmentExpanded()) {
-                hideFragment(binding.allAppsFragment)
+                hideFragment(binding.allAppsFragmentVw)
             }
             if (isWidgetsFragmentExpanded()) {
-                hideFragment(binding.widgetsFragment)
+                hideFragment(binding.widgetsFragmentVw)
             }
         } else {
             closeAppDrawer()
@@ -557,12 +557,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             hideCallerPanel()
         }
 
-        binding.allAppsFragment.searchBar.closeSearch()
+        binding.allAppsFragmentVw.searchBarVw.closeSearch()
 
         // scroll to first page when home button is pressed
         val alreadyOnHome = intent.flags and FLAG_ACTIVITY_BROUGHT_TO_FRONT == 0
         if (alreadyOnHome && !wasAnyFragmentOpen) {
-            binding.homeScreenGrid.root.skipToPage(0)
+            binding.homeScreenGridVw.root.skipToPage(0)
         }
 
         handleIntentAction(intent)
@@ -570,7 +570,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     override fun onStart() {
         super.onStart()
-        binding.homeScreenGrid.root.appWidgetHost.startListening()
+        binding.homeScreenGridVw.root.appWidgetHost.startListening()
     }
 
     override fun onResume() {
@@ -594,10 +594,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         // first show too, since onResume always follows onCreate.
         showNextSwipeHint()
 
-        with(binding.mainHolder) {
+        with(binding.mainHolderVw) {
             onGlobalLayout {
-                binding.allAppsFragment.root.setupViews()
-                binding.widgetsFragment.root.setupViews()
+                binding.allAppsFragmentVw.root.setupViews()
+                binding.widgetsFragmentVw.root.setupViews()
             }
         }
 
@@ -619,25 +619,25 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 }.toMutableList() as ArrayList<AppTile>
             }
 
-            binding.allAppsFragment.root.gotLaunchers(IconStore.launchers)
-            binding.leftPanel.root.gotLaunchers(IconStore.launchers)
+            binding.allAppsFragmentVw.root.gotLaunchers(IconStore.launchers)
+            binding.leftPanelVw.root.gotLaunchers(IconStore.launchers)
             refreshLaunchers()
         }
 
-        binding.defaultLauncherBanner.root.beVisibleIf(!isDefaultLauncher())
+        binding.defaultLauncherBannerVw.root.beVisibleIf(!isDefaultLauncher())
 
-        binding.homeScreenGrid.root.resizeGrid(
+        binding.homeScreenGridVw.root.resizeGrid(
             newRowCount = config.homeRowCount,
             newColumnCount = config.homeColumnCount
         )
-        binding.homeScreenGrid.root.updateColors()
-        binding.allAppsFragment.root.onResume()
+        binding.homeScreenGridVw.root.updateColors()
+        binding.allAppsFragmentVw.root.onResume()
     }
 
     override fun onStop() {
         super.onStop()
         try {
-            binding.homeScreenGrid.root.appWidgetHost.stopListening()
+            binding.homeScreenGridVw.root.appWidgetHost.stopListening()
         } catch (_: Exception) {
         }
 
@@ -652,7 +652,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         // the infinite chevron animators hold hard references to the rows they drive
-        binding.swipeHint.removeCallbacks(mSwipeHintHider)
+        binding.swipeHintVw.removeCallbacks(mSwipeHintHider)
         mSwipeHintAnimators.forEach { it.cancel() }
         mSwipeHintAnimators.clear()
 
@@ -666,8 +666,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     override fun onBackPressedCompat(): Boolean {
         return if (isLeftPanelExpanded()) {
-            if (binding.leftPanel.root.hasQuery()) {
-                binding.leftPanel.root.resetSearch()
+            if (binding.leftPanelVw.root.hasQuery()) {
+                binding.leftPanelVw.root.resetSearch()
             } else {
                 hideLeftPanel()
             }
@@ -677,26 +677,26 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             // drawer below. This handler runs *before* the shell's OnBackPressedCallback (the
             // Fossify base registers its callback after ours), so without asking, one back
             // press would close the panel from whichever tab the user was on.
-            if (binding.callerPanel.root.shell()?.onBackPressed() != true) {
+            if (binding.callerPanelVw.root.shell()?.onBackPressed() != true) {
                 hideCallerPanel()
             }
             true
         } else if (isAllAppsFragmentExpanded()) {
-            if (!binding.allAppsFragment.root.onBackPressed()) {
-                hideFragment(binding.allAppsFragment)
+            if (!binding.allAppsFragmentVw.root.onBackPressed()) {
+                hideFragment(binding.allAppsFragmentVw)
                 true
             } else {
                 true
             }
         } else if (isWidgetsFragmentExpanded()) {
-            if (binding.widgetsFragment.searchBar.isSearchOpen) {
+            if (binding.widgetsFragmentVw.searchBarVw.isSearchOpen) {
                 clearWidgetsSearch()
             } else {
-                hideFragment(binding.widgetsFragment)
+                hideFragment(binding.widgetsFragmentVw)
             }
             true
-        } else if (binding.homeScreenGrid.resizeFrame.isVisible) {
-            binding.homeScreenGrid.root.hideResizeLines()
+        } else if (binding.homeScreenGridVw.resizeFrameVw.isVisible) {
+            binding.homeScreenGridVw.root.hideResizeLines()
             true
         } else {
             // this is a home launcher app, prevent back press from doing anything
@@ -740,8 +740,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        binding.allAppsFragment.root.onConfigurationChanged()
-        binding.widgetsFragment.root.onConfigurationChanged()
+        binding.allAppsFragmentVw.root.onConfigurationChanged()
+        binding.widgetsFragmentVw.root.onConfigurationChanged()
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -762,8 +762,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             MotionEvent.ACTION_DOWN -> {
                 mTouchDownX = event.x.toInt()
                 mTouchDownY = event.y.toInt()
-                mAllAppsFragmentY = binding.allAppsFragment.root.y.toInt()
-                mWidgetsFragmentY = binding.widgetsFragment.root.y.toInt()
+                mAllAppsFragmentY = binding.allAppsFragmentVw.root.y.toInt()
+                mWidgetsFragmentY = binding.widgetsFragmentVw.root.y.toInt()
                 mIgnoreUpEvent = false
             }
 
@@ -780,12 +780,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 if (mLongPressedIcon != null && (mOpenPopupMenu != null) && hasFingerMoved) {
                     mOpenPopupMenu?.dismiss()
                     mOpenPopupMenu = null
-                    binding.homeScreenGrid.root.itemDraggingStarted(mLongPressedIcon!!)
-                    hideFragment(binding.allAppsFragment)
+                    binding.homeScreenGridVw.root.itemDraggingStarted(mLongPressedIcon!!)
+                    hideFragment(binding.allAppsFragmentVw)
                 }
 
                 if (mLongPressedIcon != null && hasFingerMoved) {
-                    binding.homeScreenGrid.root.draggedItemMoved(event.x.toInt(), event.y.toInt())
+                    binding.homeScreenGridVw.root.draggedItemMoved(event.x.toInt(), event.y.toInt())
                 }
 
                 if (hasFingerMoved && !mIgnoreMoveEvents) {
@@ -796,18 +796,18 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                         mIgnoreXMoveEvents = true
                         if (isWidgetsFragmentExpanded()) {
                             val newY = mWidgetsFragmentY - diffY
-                            binding.widgetsFragment.root.y = min(
+                            binding.widgetsFragmentVw.root.y = min(
                                 a = max(0f, newY), b = mScreenHeight.toFloat()
                             )
                         } else if (mLongPressedIcon == null) {
                             val newY = mAllAppsFragmentY - diffY
-                            binding.allAppsFragment.root.y = min(
+                            binding.allAppsFragmentVw.root.y = min(
                                 a = max(0f, newY), b = mScreenHeight.toFloat()
                             )
                         }
                     } else if (abs(diffX) > abs(diffY) && !mIgnoreXMoveEvents) {
                         mIgnoreYMoveEvents = true
-                        binding.homeScreenGrid.root.setSwipeMovement(diffX)
+                        binding.homeScreenGridVw.root.setSwipeMovement(diffX)
                     }
                 }
 
@@ -822,25 +822,25 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 mLongPressedIcon = null
                 mLastTouchCoords = Pair(-1f, -1f)
                 resetFragmentTouches()
-                binding.homeScreenGrid.root.itemDraggingStopped()
+                binding.homeScreenGridVw.root.itemDraggingStopped()
 
                 if (!mIgnoreUpEvent) {
                     if (!mIgnoreYMoveEvents) {
-                        if (binding.allAppsFragment.root.y < mScreenHeight * 0.5) {
-                            showFragment(binding.allAppsFragment)
+                        if (binding.allAppsFragmentVw.root.y < mScreenHeight * 0.5) {
+                            showFragment(binding.allAppsFragmentVw)
                         } else if (isAllAppsFragmentExpanded()) {
-                            hideFragment(binding.allAppsFragment)
+                            hideFragment(binding.allAppsFragmentVw)
                         }
 
-                        if (binding.widgetsFragment.root.y < mScreenHeight * 0.5) {
-                            showFragment(binding.widgetsFragment)
+                        if (binding.widgetsFragmentVw.root.y < mScreenHeight * 0.5) {
+                            showFragment(binding.widgetsFragmentVw)
                         } else if (isWidgetsFragmentExpanded()) {
-                            hideFragment(binding.widgetsFragment)
+                            hideFragment(binding.widgetsFragmentVw)
                         }
                     }
 
                     if (!mIgnoreXMoveEvents) {
-                        binding.homeScreenGrid.root.finalizeSwipe()
+                        binding.homeScreenGridVw.root.finalizeSwipe()
                     }
                 }
 
@@ -860,7 +860,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState.getBoolean(APP_DRAWER_STATE)) {
-            showFragment(binding.allAppsFragment, 0L)
+            showFragment(binding.allAppsFragmentVw, 0L)
         }
     }
 
@@ -900,14 +900,14 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 )
 
                 runOnUiThread {
-                    binding.homeScreenGrid.root.skipToPage(page)
+                    binding.homeScreenGridVw.root.skipToPage(page)
                 }
                 // delay showing the shortcut both to let the user see adding it in realtime and hackily avoid concurrent modification exception at BoardGrid
                 Thread.sleep(2000)
 
                 try {
                     item.accept()
-                    binding.homeScreenGrid.root.storeAndShowGridItem(gridItem)
+                    binding.homeScreenGridVw.root.storeAndShowGridItem(gridItem)
                 } catch (_: IllegalStateException) {
                 }
             }
@@ -956,9 +956,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     private fun refreshLaunchers() {
         val launchers = getAllAppLaunchers()
-        binding.allAppsFragment.root.gotLaunchers(launchers)
-        binding.leftPanel.root.gotLaunchers(launchers)
-        binding.widgetsFragment.root.getAppWidgets()
+        binding.allAppsFragmentVw.root.gotLaunchers(launchers)
+        binding.leftPanelVw.root.gotLaunchers(launchers)
+        binding.widgetsFragmentVw.root.getAppWidgets()
 
         IconStore.launchers.map { it.packageName }.forEach { packageName ->
             if (!launchers.map { it.packageName }.contains(packageName)) {
@@ -974,29 +974,29 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 getDefaultAppPackages(launchers)
                 config.wasHomeScreenInit = true
                 seedHomeWidgetsIfNeeded()
-                binding.homeScreenGrid.root.fetchGridItems()
+                binding.homeScreenGridVw.root.fetchGridItems()
             }
         } else if (!config.wasSearchBarSeeded || !config.wasClockSeeded) {
             ensureBackgroundThread {
                 seedHomeWidgetsIfNeeded()
-                binding.homeScreenGrid.root.fetchGridItems()
+                binding.homeScreenGridVw.root.fetchGridItems()
             }
         } else {
-            binding.homeScreenGrid.root.fetchGridItems()
+            binding.homeScreenGridVw.root.fetchGridItems()
         }
     }
 
-    fun isAllAppsFragmentExpanded() = binding.allAppsFragment.root.y != mScreenHeight.toFloat()
+    fun isAllAppsFragmentExpanded() = binding.allAppsFragmentVw.root.y != mScreenHeight.toFloat()
 
     private fun isWidgetsFragmentExpanded() =
-        binding.widgetsFragment.root.y != mScreenHeight.toFloat()
+        binding.widgetsFragmentVw.root.y != mScreenHeight.toFloat()
 
-    fun isLeftPanelExpanded() = binding.leftPanel.root.x != mScreenWidth.toFloat()
+    fun isLeftPanelExpanded() = binding.leftPanelVw.root.x != mScreenWidth.toFloat()
 
     private fun showLeftPanel() {
         // ask for the ad before the slide starts, so it is in place by the time the panel lands
-        binding.leftPanel.root.onPanelShown()
-        showSidePanel(binding.leftPanel.root)
+        binding.leftPanelVw.root.onPanelShown()
+        showSidePanel(binding.leftPanelVw.root)
     }
 
     /**
@@ -1008,7 +1008,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         showLeftPanel()
         Handler(Looper.getMainLooper()).postDelayed({
             if (isLeftPanelExpanded()) {
-                binding.leftPanel.root.focusSearch()
+                binding.leftPanelVw.root.focusSearch()
             }
         }, ANIMATION_DURATION)
     }
@@ -1050,8 +1050,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     fun hideLeftPanel() {
         // clear the query only once it is off screen, else the sections visibly swap mid slide
-        hideSidePanel(binding.leftPanel.root, mScreenWidth.toFloat()) {
-            binding.leftPanel.root.resetSearch()
+        hideSidePanel(binding.leftPanelVw.root, mScreenWidth.toFloat()) {
+            binding.leftPanelVw.root.resetSearch()
             showNextSwipeHint()
         }
     }
@@ -1064,9 +1064,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         hideSwipeHint()
         animateSidePanelTo(panel, 0f)
         window.navigationBarColor = resources.getColor(R.color.semitransparent_navigation)
-        binding.homeScreenGrid.root.fragmentExpanded()
-        binding.homeScreenGrid.root.hideResizeLines()
-        binding.homeScreenGrid.root.animate()
+        binding.homeScreenGridVw.root.fragmentExpanded()
+        binding.homeScreenGridVw.root.hideResizeLines()
+        binding.homeScreenGridVw.root.animate()
             .alpha(0f)
             .setDuration(ANIMATION_DURATION)
             .start()
@@ -1095,7 +1095,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             onParked?.invoke()
         }
         window.navigationBarColor = Color.TRANSPARENT
-        binding.homeScreenGrid.root.fragmentCollapsed()
+        binding.homeScreenGridVw.root.fragmentCollapsed()
         updateStatusBarIcons()
         hideKeyboard()
     }
@@ -1116,8 +1116,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun startHandlingTouches(touchDownY: Int) {
         mLongPressedIcon = null
         mTouchDownY = touchDownY
-        mAllAppsFragmentY = binding.allAppsFragment.root.y.toInt()
-        mWidgetsFragmentY = binding.widgetsFragment.root.y.toInt()
+        mAllAppsFragmentY = binding.allAppsFragmentVw.root.y.toInt()
+        mWidgetsFragmentY = binding.widgetsFragmentVw.root.y.toInt()
         mIgnoreUpEvent = false
     }
 
@@ -1132,8 +1132,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         window.navigationBarColor = resources.getColor(R.color.semitransparent_navigation)
-        binding.homeScreenGrid.root.fragmentExpanded()
-        binding.homeScreenGrid.root.hideResizeLines()
+        binding.homeScreenGridVw.root.fragmentExpanded()
+        binding.homeScreenGridVw.root.hideResizeLines()
 
         @SuppressLint("AccessibilityFocus")
         fragment.root.performAccessibilityAction(
@@ -1148,13 +1148,13 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
             if (config.showSearchBar && config.autoShowKeyboardInAppDrawer) {
                 fragment.root.post {
-                    showKeyboard(fragment.searchBar.binding.topToolbarSearch)
+                    showKeyboard(fragment.searchBarVw.binding.topToolbarSearch)
                 }
             }
         }
 
         // fade the grid out behind the fragment, fragmentCollapsed() cancels this and restores it
-        binding.homeScreenGrid.root.animate()
+        binding.homeScreenGridVw.root.animate()
             .alpha(0f)
             .setDuration(animationDuration)
             .start()
@@ -1172,17 +1172,17 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         window.navigationBarColor = Color.TRANSPARENT
-        binding.homeScreenGrid.root.fragmentCollapsed()
+        binding.homeScreenGridVw.root.fragmentCollapsed()
         updateStatusBarIcons()
         if (fragment is BoardWidgetsBinding) {
             clearWidgetsSearch()
         }
         Handler(Looper.getMainLooper()).postDelayed({
             if (fragment is BoardAllAppsBinding) {
-                fragment.allAppsGrid.scrollToPosition(0)
+                fragment.allAppsGridVw.scrollToPosition(0)
                 fragment.root.touchDownY = -1
             } else if (fragment is BoardWidgetsBinding) {
-                fragment.widgetsList.scrollToPosition(0)
+                fragment.widgetsListVw.scrollToPosition(0)
                 fragment.root.touchDownY = -1
             }
             // the home screen is bare again, so the next hint can have it
@@ -1191,19 +1191,19 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun homeScreenLongPressed(eventX: Float, eventY: Float) {
-        if (isAllAppsFragmentExpanded() || isWidgetsFragmentExpanded() || binding.swipeHint.isVisible) {
+        if (isAllAppsFragmentExpanded() || isWidgetsFragmentExpanded() || binding.swipeHintVw.isVisible) {
             return
         }
 
-        val (x, y) = binding.homeScreenGrid.root.intoViewSpaceCoords(eventX, eventY)
+        val (x, y) = binding.homeScreenGridVw.root.intoViewSpaceCoords(eventX, eventY)
         mIgnoreMoveEvents = true
-        val clickedGridItem = binding.homeScreenGrid.root.isClickingGridItem(x.toInt(), y.toInt())
+        val clickedGridItem = binding.homeScreenGridVw.root.isClickingGridItem(x.toInt(), y.toInt())
         if (clickedGridItem != null) {
             performItemLongClick(x, clickedGridItem)
             return
         }
 
-        binding.mainHolder.performHapticFeedback()
+        binding.mainHolderVw.performHapticFeedback()
         showMainLongPressMenu(x, y)
     }
 
@@ -1211,29 +1211,29 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         // While the coach mark is up a tap belongs to it, not to the icon underneath: it does
         // whatever the hint is teaching, so the panel (or the drawer, or the caller-ID app)
         // opens by tap just as it does by swipe.
-        if (binding.swipeHint.isVisible) {
+        if (binding.swipeHintVw.isVisible) {
             performHintAction()
             return
         }
 
-        binding.homeScreenGrid.root.hideResizeLines()
-        val (x, y) = binding.homeScreenGrid.root.intoViewSpaceCoords(eventX, eventY)
-        val clickedGridItem = binding.homeScreenGrid.root.isClickingGridItem(x.toInt(), y.toInt())
+        binding.homeScreenGridVw.root.hideResizeLines()
+        val (x, y) = binding.homeScreenGridVw.root.intoViewSpaceCoords(eventX, eventY)
+        val clickedGridItem = binding.homeScreenGridVw.root.isClickingGridItem(x.toInt(), y.toInt())
         if (clickedGridItem != null) {
             performItemClick(clickedGridItem)
         }
         if (clickedGridItem?.type != ITEM_TYPE_FOLDER) {
-            binding.homeScreenGrid.root.closeFolder(redraw = true)
+            binding.homeScreenGridVw.root.closeFolder(redraw = true)
         }
     }
 
     fun homeScreenDoubleTapped(eventX: Float, eventY: Float) {
-        if (binding.swipeHint.isVisible) {
+        if (binding.swipeHintVw.isVisible) {
             return
         }
 
-        val (x, y) = binding.homeScreenGrid.root.intoViewSpaceCoords(eventX, eventY)
-        val clickedGridItem = binding.homeScreenGrid.root.isClickingGridItem(x.toInt(), y.toInt())
+        val (x, y) = binding.homeScreenGridVw.root.intoViewSpaceCoords(eventX, eventY)
+        val clickedGridItem = binding.homeScreenGridVw.root.isClickingGridItem(x.toInt(), y.toInt())
         if (clickedGridItem != null) {
             return
         }
@@ -1251,10 +1251,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun closeAppDrawer(delayed: Boolean = false) {
         if (isAllAppsFragmentExpanded()) {
             val close = {
-                binding.allAppsFragment.root.y = mScreenHeight.toFloat()
-                binding.allAppsFragment.allAppsGrid.scrollToPosition(0)
-                binding.allAppsFragment.root.touchDownY = -1
-                binding.homeScreenGrid.root.fragmentCollapsed()
+                binding.allAppsFragmentVw.root.y = mScreenHeight.toFloat()
+                binding.allAppsFragmentVw.allAppsGridVw.scrollToPosition(0)
+                binding.allAppsFragmentVw.root.touchDownY = -1
+                binding.homeScreenGridVw.root.fragmentCollapsed()
                 updateStatusBarIcons()
             }
             if (delayed) {
@@ -1268,11 +1268,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun closeWidgetsFragment(delayed: Boolean = false) {
         if (isWidgetsFragmentExpanded()) {
             val close = {
-                binding.widgetsFragment.root.y = mScreenHeight.toFloat()
-                binding.widgetsFragment.widgetsList.scrollToPosition(0)
+                binding.widgetsFragmentVw.root.y = mScreenHeight.toFloat()
+                binding.widgetsFragmentVw.widgetsListVw.scrollToPosition(0)
                 clearWidgetsSearch()
-                binding.widgetsFragment.root.touchDownY = -1
-                binding.homeScreenGrid.root.fragmentCollapsed()
+                binding.widgetsFragmentVw.root.touchDownY = -1
+                binding.homeScreenGridVw.root.fragmentCollapsed()
                 updateStatusBarIcons()
             }
             if (delayed) {
@@ -1284,7 +1284,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun clearWidgetsSearch() {
-        binding.widgetsFragment.searchBar.closeSearch()
+        binding.widgetsFragmentVw.searchBarVw.closeSearch()
     }
 
     private fun performItemClick(clickedGridItem: BoardItem) {
@@ -1295,7 +1295,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 val id = clickedGridItem.shortcutId
                 val packageName = clickedGridItem.packageName
                 val userHandle = android.os.Process.myUserHandle()
-                val shortcutBounds = binding.homeScreenGrid.root.getClickableRect(clickedGridItem)
+                val shortcutBounds = binding.homeScreenGridVw.root.getClickableRect(clickedGridItem)
                 val launcherApps =
                     applicationContext.getSystemService(LAUNCHER_APPS_SERVICE) as LauncherApps
                 launcherApps.startShortcut(packageName, id, shortcutBounds, null, userHandle)
@@ -1304,16 +1304,16 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun openFolder(folder: BoardItem) {
-        binding.homeScreenGrid.root.openFolder(folder)
+        binding.homeScreenGridVw.root.openFolder(folder)
     }
 
     private fun performItemLongClick(x: Float, clickedGridItem: BoardItem) {
         if (clickedGridItem.type == ITEM_TYPE_ICON || clickedGridItem.type == ITEM_TYPE_SHORTCUT || clickedGridItem.type == ITEM_TYPE_FOLDER) {
-            binding.mainHolder.performHapticFeedback()
+            binding.mainHolderVw.performHapticFeedback()
         }
 
-        val anchorY = binding.homeScreenGrid.root.sideMargins.top +
-                (clickedGridItem.top * binding.homeScreenGrid.root.cellHeight.toFloat())
+        val anchorY = binding.homeScreenGridVw.root.sideMargins.top +
+                (clickedGridItem.top * binding.homeScreenGridVw.root.cellHeight.toFloat())
         showHomeIconMenu(x, anchorY, clickedGridItem, false)
     }
 
@@ -1323,22 +1323,22 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         gridItem: BoardItem,
         isOnAllAppsFragment: Boolean,
     ) {
-        binding.homeScreenGrid.root.hideResizeLines()
+        binding.homeScreenGridVw.root.hideResizeLines()
         mLongPressedIcon = gridItem
         val anchorY = if (isOnAllAppsFragment || gridItem.type == ITEM_TYPE_WIDGET) {
             val iconSize = realScreenSize.x / config.drawerColumnCount
             y - iconSize / 2f
         } else {
-            val clickableRect = binding.homeScreenGrid.root.getClickableRect(gridItem)
-            clickableRect.top.toFloat() - binding.homeScreenGrid.root.getCurrentIconSize() / 2f
+            val clickableRect = binding.homeScreenGridVw.root.getClickableRect(gridItem)
+            clickableRect.top.toFloat() - binding.homeScreenGridVw.root.getCurrentIconSize() / 2f
         }
 
-        binding.homeScreenPopupMenuAnchor.x = x
-        binding.homeScreenPopupMenuAnchor.y = anchorY
+        binding.homeScreenPopupMenuAnchorVw.x = x
+        binding.homeScreenPopupMenuAnchorVw.y = anchorY
 
         if (mOpenPopupMenu == null) {
             mOpenPopupMenu = handleGridItemPopupMenu(
-                anchorView = binding.homeScreenPopupMenuAnchor,
+                anchorView = binding.homeScreenPopupMenuAnchorVw,
                 gridItem = gridItem,
                 isOnAllAppsFragment = isOnAllAppsFragment,
                 listener = menuListener
@@ -1348,29 +1348,29 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     fun widgetLongPressedOnList(gridItem: BoardItem) {
         mLongPressedIcon = gridItem
-        hideFragment(binding.widgetsFragment)
-        binding.homeScreenGrid.root.itemDraggingStarted(mLongPressedIcon!!)
+        hideFragment(binding.widgetsFragmentVw)
+        binding.homeScreenGridVw.root.itemDraggingStarted(mLongPressedIcon!!)
     }
 
     private fun showMainLongPressMenu(x: Float, y: Float) {
-        binding.homeScreenGrid.root.hideResizeLines()
-        binding.homeScreenPopupMenuAnchor.x = x
-        binding.homeScreenPopupMenuAnchor.y =
+        binding.homeScreenGridVw.root.hideResizeLines()
+        binding.homeScreenPopupMenuAnchorVw.x = x
+        binding.homeScreenPopupMenuAnchorVw.y =
             y - resources.getDimension(R.dimen.long_press_anchor_button_offset_y) * 2
         val contextTheme = ContextThemeWrapper(this, getPopupMenuTheme())
         PopupMenu(
             contextTheme,
-            binding.homeScreenPopupMenuAnchor,
+            binding.homeScreenPopupMenuAnchorVw,
             Gravity.TOP or Gravity.END
         ).apply {
             inflate(R.menu.menu_home_screen)
-            menu.findItem(R.id.set_as_default).isVisible = !isDefaultLauncher()
+            menu.findItem(R.id.set_as_defaultVw).isVisible = !isDefaultLauncher()
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.widgets -> showWidgetsFragment()
-                    R.id.wallpapers -> launchWallpapersIntent()
-                    R.id.launcher_settings -> launchSettings()
-                    R.id.set_as_default -> requestSetAsDefaultLauncher()
+                    R.id.widgetsVw -> showWidgetsFragment()
+                    R.id.wallpapersVw -> launchWallpapersIntent()
+                    R.id.launcher_settingsVw -> launchSettings()
+                    R.id.set_as_defaultVw -> requestSetAsDefaultLauncher()
                 }
                 true
             }
@@ -1379,19 +1379,19 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun resetFragmentTouches() {
-        binding.widgetsFragment.root.apply {
+        binding.widgetsFragmentVw.root.apply {
             touchDownY = -1
             ignoreTouches = false
         }
 
-        binding.allAppsFragment.root.apply {
+        binding.allAppsFragmentVw.root.apply {
             touchDownY = -1
             ignoreTouches = false
         }
     }
 
     private fun showWidgetsFragment() {
-        showFragment(binding.widgetsFragment)
+        showFragment(binding.widgetsFragmentVw)
     }
 
     private fun hideIcon(item: BoardItem) {
@@ -1400,14 +1400,14 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             hiddenIconsDB.insert(hiddenIcon)
 
             runOnUiThread {
-                binding.allAppsFragment.root.onIconHidden(item)
+                binding.allAppsFragmentVw.root.onIconHidden(item)
             }
         }
     }
 
     private fun renameItem(homeScreenGridItem: BoardItem) {
         RelabelItemDialog(this, homeScreenGridItem) {
-            binding.homeScreenGrid.root.fetchGridItems()
+            binding.homeScreenGridVw.root.fetchGridItems()
         }
     }
 
@@ -1443,7 +1443,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         override fun resize(gridItem: BoardItem) {
-            binding.homeScreenGrid.root.widgetLongPressed(gridItem)
+            binding.homeScreenGridVw.root.widgetLongPressed(gridItem)
         }
 
         override fun appInfo(gridItem: BoardItem) {
@@ -1451,7 +1451,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         override fun remove(gridItem: BoardItem) {
-            binding.homeScreenGrid.root.removeAppIcon(gridItem)
+            binding.homeScreenGridVw.root.removeAppIcon(gridItem)
         }
 
         override fun uninstall(gridItem: BoardItem) {
@@ -1472,7 +1472,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
             val yOffset =
                 resources.getDimension(R.dimen.long_press_anchor_button_offset_y) * (visibleMenuItems - 1)
-            binding.homeScreenPopupMenuAnchor.y -= yOffset
+            binding.homeScreenPopupMenuAnchorVw.y -= yOffset
         }
     }
 
@@ -1530,7 +1530,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         if (!isWidgetsFragmentExpanded()) {
             mIgnoreUpEvent = true
             completeSwipeHint(ShellPromoConfig.HintDirection.UP)
-            showFragment(binding.allAppsFragment)
+            showFragment(binding.allAppsFragmentVw)
         }
     }
 
@@ -1542,9 +1542,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
         mIgnoreUpEvent = true
         if (isAllAppsFragmentExpanded()) {
-            hideFragment(binding.allAppsFragment)
+            hideFragment(binding.allAppsFragmentVw)
         } else if (isWidgetsFragmentExpanded()) {
-            hideFragment(binding.widgetsFragment)
+            hideFragment(binding.widgetsFragmentVw)
         } else {
             completeSwipeHint(ShellPromoConfig.HintDirection.DOWN)
             try {
@@ -1571,7 +1571,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 showCallerPanel()
             }
         } else {
-            binding.homeScreenGrid.root.prevPage(redraw = true)
+            binding.homeScreenGridVw.root.prevPage(redraw = true)
         }
     }
 
@@ -1589,11 +1589,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 showLeftPanel()
             }
         } else {
-            binding.homeScreenGrid.root.nextPage(redraw = true)
+            binding.homeScreenGridVw.root.nextPage(redraw = true)
         }
     }
 
-    fun isCallerPanelExpanded() = binding.callerPanel.root.x != -mScreenWidth.toFloat()
+    fun isCallerPanelExpanded() = binding.callerPanelVw.root.x != -mScreenWidth.toFloat()
 
     /** Opens the caller panel from outside the fling gesture (deep links, widgets). */
     fun showCallerPanelExternally() = showCallerPanel()
@@ -1604,13 +1604,13 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
      * unwind another task — and the shell keeps its tab and scroll position between opens.
      */
     private fun showCallerPanel() {
-        showSidePanel(binding.callerPanel.root)
+        showSidePanel(binding.callerPanelVw.root)
         // Everything the panel shows *over itself* waits for the slide to finish — fired at
         // the start it would land over the home grid the panel is still covering.
         Handler(Looper.getMainLooper()).postDelayed({
             if (!isCallerPanelExpanded()) return@postDelayed
-            binding.callerPanel.root.onPanelOpened()
-            binding.callerPanel.root.shell()?.setPanelVisible(true)
+            binding.callerPanelVw.root.onPanelOpened()
+            binding.callerPanelVw.root.shell()?.setPanelVisible(true)
             if (OnboardRouter.wasOnboardingCompleted(this)) {
                 homeShellController.startFirstRunPriming()
             }
@@ -1620,9 +1620,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun hideCallerPanel() {
         // Disabling the shell's back callback before the slide keeps it from swallowing the
         // next back press — the drawer and the grid own those again once the panel is gone.
-        binding.callerPanel.root.shell()?.setPanelVisible(false)
+        binding.callerPanelVw.root.shell()?.setPanelVisible(false)
         // Back on the grid: offer the next gesture the user has not been taught yet.
-        hideSidePanel(binding.callerPanel.root, -mScreenWidth.toFloat()) { showNextSwipeHint() }
+        hideSidePanel(binding.callerPanelVw.root, -mScreenWidth.toFloat()) { showNextSwipeHint() }
     }
 
     @SuppressLint("WrongConstant")
@@ -1781,7 +1781,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             title = getString(titleRes),
             type = ITEM_TYPE_WIDGET,
             className = className,
-            widgetId = binding.homeScreenGrid.root.appWidgetHost.allocateAppWidgetId(),
+            widgetId = binding.homeScreenGridVw.root.appWidgetHost.allocateAppWidgetId(),
             shortcutId = "",
             icon = null,
             docked = false,

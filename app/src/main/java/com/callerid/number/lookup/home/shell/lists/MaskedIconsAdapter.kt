@@ -40,7 +40,7 @@ class MaskedIconsAdapter(
 
     override fun actionItemPressed(id: Int) {
         when (id) {
-            R.id.cab_unhide_icon -> unHideSelection()
+            R.id.cab_unhide_iconVw -> unHideSelection()
         }
     }
 
@@ -104,10 +104,10 @@ class MaskedIconsAdapter(
 
     private fun setupView(view: View, icon: MaskedIcon) {
         CellHiddenIconBinding.bind(view).apply {
-            hiddenIconHolder.isSelected = selectedKeys.contains(icon.hashCode())
-            hiddenIconLabel.text = icon.title
-            hiddenIconLabel.setTextColor(textColor)
-            hiddenIcon.setPadding(iconPadding, iconPadding, iconPadding, 0)
+            hiddenIconHolderVw.isSelected = selectedKeys.contains(icon.hashCode())
+            hiddenIconLabelVw.text = icon.title
+            hiddenIconLabelVw.setTextColor(textColor)
+            hiddenIconVw.setPadding(iconPadding, iconPadding, iconPadding, 0)
 
             val factory = DrawableCrossFadeFactory.Builder(150).setCrossFadeEnabled(true).build()
 
@@ -115,7 +115,7 @@ class MaskedIconsAdapter(
                 .load(icon.drawable)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .transition(DrawableTransitionOptions.withCrossFade(factory))
-                .into(hiddenIcon)
+                .into(hiddenIconVw)
         }
     }
 }

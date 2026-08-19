@@ -82,7 +82,7 @@ class IdentOverlayService : Service() {
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val view = LayoutInflater.from(this).inflate(R.layout.part_caller_id, null)
-        view.findViewById<View>(R.id.btnIncallClose).setOnClickListener { stopSelf() }
+        view.findViewById<View>(R.id.padIncallClose).setOnClickListener { stopSelf() }
 
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY

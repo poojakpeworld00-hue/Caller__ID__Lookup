@@ -57,20 +57,20 @@ class GadgetAdapter(
 
     private fun setupListSection(view: View, section: GadgetSection) {
         CellWidgetListSectionBinding.bind(view).apply {
-            widgetAppTitle.text = section.appTitle
-            widgetAppTitle.setTextColor(textColor)
-            widgetAppIcon.setImageDrawable(section.appIcon)
+            widgetAppTitleVw.text = section.appTitle
+            widgetAppTitleVw.setTextColor(textColor)
+            widgetAppIconVw.setImageDrawable(section.appIcon)
         }
     }
 
     private fun setupListItemsHolder(view: View, listItem: GadgetRowHolder) {
         val binding = CellWidgetListItemsHolderBinding.bind(view)
-        binding.widgetListItemsHolder.removeAllViews()
-        binding.widgetListItemsScrollView.scrollX = 0
+        binding.widgetListItemsHolderVw.removeAllViews()
+        binding.widgetListItemsScrollViewVw.scrollX = 0
         listItem.widgets.forEachIndexed { index, widget ->
             val imageSize = activity.resources.getDimension(R.dimen.widget_preview_size).toInt()
             val widgetPreview = CellWidgetPreviewBinding.inflate(LayoutInflater.from(activity))
-            binding.widgetListItemsHolder.addView(widgetPreview.root)
+            binding.widgetListItemsHolderVw.addView(widgetPreview.root)
 
             val endMargin = if (index == listItem.widgets.size - 1) {
                 activity.resources.getDimension(org.fossify.commons.R.dimen.medium_margin).toInt()
@@ -78,12 +78,12 @@ class GadgetAdapter(
                 0
             }
 
-            widgetPreview.widgetTitle.apply {
+            widgetPreview.widgetTitleVw.apply {
                 text = widget.widgetTitle
                 setTextColor(textColor)
             }
 
-            widgetPreview.widgetSize.apply {
+            widgetPreview.widgetSizeVw.apply {
                 text = if (widget.isShortcut) {
                     activity.getString(org.fossify.commons.R.string.shortcut)
                 } else {
@@ -92,7 +92,7 @@ class GadgetAdapter(
                 setTextColor(textColor)
             }
 
-            (widgetPreview.widgetImage.layoutParams as RelativeLayout.LayoutParams).apply {
+            (widgetPreview.widgetImageVw.layoutParams as RelativeLayout.LayoutParams).apply {
                 marginStart = activity.resources.getDimension(org.fossify.commons.R.dimen.activity_margin).toInt()
                 marginEnd = endMargin
                 width = imageSize
@@ -101,7 +101,7 @@ class GadgetAdapter(
 
             Glide.with(activity)
                 .load(widget.widgetPreviewImage)
-                .into(widgetPreview.widgetImage)
+                .into(widgetPreview.widgetImageVw)
 
             widgetPreview.root.setOnClickListener { itemClick() }
 

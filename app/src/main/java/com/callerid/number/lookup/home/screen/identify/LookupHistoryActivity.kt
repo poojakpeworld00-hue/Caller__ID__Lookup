@@ -36,15 +36,15 @@ class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.lookupHistoryRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.lookupHistoryRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
-        binding.btnClearAll.setOnClickListener { viewModel.clear() }
-        binding.rvHistory.layoutManager = LinearLayoutManager(this)
-        binding.rvHistory.adapter = adapter
+        binding.padBack.setOnClickListener { goBack() }
+        binding.padClearAll.setOnClickListener { viewModel.clear() }
+        binding.rollHistory.layoutManager = LinearLayoutManager(this)
+        binding.rollHistory.adapter = adapter
         // Warm up the rewarded ad that gates revealing caller names.
         BonusPromo.preload(this)
     }
@@ -53,8 +53,8 @@ class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
         viewModel.history.observe(this) { items ->
             adapter.submit(items)
             val empty = items.isEmpty()
-            binding.emptyState.visibility = if (empty) View.VISIBLE else View.GONE
-            binding.btnClearAll.visibility = if (empty) View.GONE else View.VISIBLE
+            binding.emptyStateVw.visibility = if (empty) View.VISIBLE else View.GONE
+            binding.padClearAll.visibility = if (empty) View.GONE else View.VISIBLE
         }
     }
 

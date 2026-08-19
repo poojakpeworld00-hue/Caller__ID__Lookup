@@ -32,7 +32,7 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
 
     /** The shell, once committed. */
     private val shell: HomeShellFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.shellContainer) as? HomeShellFragment
+        get() = supportFragmentManager.findFragmentById(R.id.shellContainerVw) as? HomeShellFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -45,7 +45,7 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         // Bottom/side insets belong to the Activity here: padding the root lifts the shell
         // *and* the bottom ad banner clear of the navigation bar. The shell applies the top
         // inset itself, per tab.
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, 0, bars.right, bars.bottom)
             insets
@@ -54,7 +54,7 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         if (shell == null) {
             supportFragmentManager.beginTransaction()
                 .replace(
-                    R.id.shellContainer,
+                    R.id.shellContainerVw,
                     HomeShellFragment.newInstance(consumeLookupNumber(intent))
                 )
                 .commitNow()

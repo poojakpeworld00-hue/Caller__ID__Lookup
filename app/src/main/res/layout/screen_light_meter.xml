@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lightRoot"
+        android:id="@+id/lightRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.tools.LightMeterActivity">
 
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -48,24 +48,24 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
-                android:id="@+id/content"
+                android:id="@+id/contentVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
                 <!-- Mid native (scrolls with content) -->
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
-                            android:id="@+id/pbLevel"
+                            android:id="@+id/pbLevelVw"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -106,7 +106,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvLux"
+                                android:id="@+id/lblLux"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/on_surface"
@@ -135,7 +135,7 @@
                         android:orientation="horizontal">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCapture"
+                            android:id="@+id/padCapture"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_46sdp"
                             android:layout_marginEnd="@dimen/_6sdp"
@@ -157,7 +157,7 @@
                             app:iconTint="@color/white" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnZero"
+                            android:id="@+id/padZero"
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_46sdp"
@@ -191,21 +191,21 @@
 
                         <TextView style="@style/BatteryStatLabel" android:text="@string/light_min" />
 
-                        <TextView android:id="@+id/tvMin" style="@style/BatteryStatValue" tools:text="120 lx" />
+                        <TextView android:id="@+id/lblMin" style="@style/BatteryStatValue" tools:text="120 lx" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/SimTile" android:layout_marginHorizontal="@dimen/_5sdp">
 
                         <TextView style="@style/BatteryStatLabel" android:text="@string/light_avg" />
 
-                        <TextView android:id="@+id/tvAvg" style="@style/BatteryStatValue" tools:text="412 lx" />
+                        <TextView android:id="@+id/lblAvg" style="@style/BatteryStatValue" tools:text="412 lx" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/SimTile" android:layout_marginStart="@dimen/_5sdp">
 
                         <TextView style="@style/BatteryStatLabel" android:text="@string/light_max" />
 
-                        <TextView android:id="@+id/tvMax" style="@style/BatteryStatValue" tools:text="890 lx" />
+                        <TextView android:id="@+id/lblMax" style="@style/BatteryStatValue" tools:text="890 lx" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -213,7 +213,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <TextView
-            android:id="@+id/tvNoSensor"
+            android:id="@+id/lblNoSensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_24sdp"
@@ -222,17 +222,17 @@
             android:textColor="@color/on_surface_variant"
             android:textSize="@dimen/_12ssp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topBar" />
+            app:layout_constraintTop_toBottomOf="@id/crownBar" />
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

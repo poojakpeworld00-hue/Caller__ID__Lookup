@@ -137,16 +137,16 @@ fun Activity.handleGridItemPopupMenu(
             }
             it.iconTintList = ColorStateList.valueOf(color)
         }
-        menu.findItem(R.id.rename).isVisible =
+        menu.findItem(R.id.renameVw).isVisible =
             (gridItem.type == ITEM_TYPE_ICON || gridItem.type == ITEM_TYPE_FOLDER) && !isOnAllAppsFragment
-        menu.findItem(R.id.hide_icon).isVisible =
+        menu.findItem(R.id.hide_iconVw).isVisible =
             gridItem.type == ITEM_TYPE_ICON && isOnAllAppsFragment
-        menu.findItem(R.id.resize).isVisible = gridItem.type == ITEM_TYPE_WIDGET
-        menu.findItem(R.id.app_info).isVisible = gridItem.type == ITEM_TYPE_ICON
-        menu.findItem(R.id.uninstall).isVisible = gridItem.type == ITEM_TYPE_ICON
+        menu.findItem(R.id.resizeVw).isVisible = gridItem.type == ITEM_TYPE_WIDGET
+        menu.findItem(R.id.app_infoVw).isVisible = gridItem.type == ITEM_TYPE_ICON
+        menu.findItem(R.id.uninstallVw).isVisible = gridItem.type == ITEM_TYPE_ICON
                 && canAppBeUninstalled(gridItem.packageName)
                 && gridItem.packageName != packageName
-        menu.findItem(R.id.remove).isVisible = !isOnAllAppsFragment
+        menu.findItem(R.id.removeVw).isVisible = !isOnAllAppsFragment
 
         val launcherApps =
             applicationContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
@@ -165,7 +165,7 @@ fun Activity.handleGridItemPopupMenu(
 
         val hasShortcuts = !shortcuts.isNullOrEmpty()
         MenuCompat.setGroupDividerEnabled(menu, hasShortcuts)
-        menu.setGroupVisible(R.id.group_shortcuts, hasShortcuts)
+        menu.setGroupVisible(R.id.group_shortcutsVw, hasShortcuts)
         if (hasShortcuts) {
             val iconSize = resources.getDimensionPixelSize(R.dimen.menu_icon_size)
             shortcuts?.forEach { shortcutInfo ->
@@ -173,7 +173,7 @@ fun Activity.handleGridItemPopupMenu(
                     shortcutInfo, resources.displayMetrics.densityDpi
                 )
 
-                menu.add(R.id.group_shortcuts, Menu.NONE, Menu.NONE, shortcutInfo.getLabel())
+                menu.add(R.id.group_shortcutsVw, Menu.NONE, Menu.NONE, shortcutInfo.getLabel())
                     .setIcon(
                         (iconDrawable ?: Color.TRANSPARENT.toDrawable())
                             .toBitmap(width = iconSize, height = iconSize)
@@ -193,12 +193,12 @@ fun Activity.handleGridItemPopupMenu(
         setOnMenuItemClickListener { item ->
             listener.onAnyClick()
             when (item.itemId) {
-                R.id.hide_icon -> listener.hide(gridItem)
-                R.id.rename -> listener.rename(gridItem)
-                R.id.resize -> listener.resize(gridItem)
-                R.id.app_info -> listener.appInfo(gridItem)
-                R.id.remove -> listener.remove(gridItem)
-                R.id.uninstall -> listener.uninstall(gridItem)
+                R.id.hide_iconVw -> listener.hide(gridItem)
+                R.id.renameVw -> listener.rename(gridItem)
+                R.id.resizeVw -> listener.resize(gridItem)
+                R.id.app_infoVw -> listener.appInfo(gridItem)
+                R.id.removeVw -> listener.remove(gridItem)
+                R.id.uninstallVw -> listener.uninstall(gridItem)
             }
             true
         }

@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/speedRoot"
+        android:id="@+id/speedRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.tools.SpeedToolActivity">
 
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -48,8 +48,8 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,13 +58,13 @@
                 android:orientation="vertical">
                 <!-- Mid native (scrolls with content) -->
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -118,7 +118,7 @@
                         android:layout_marginTop="@dimen/_14sdp">
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
-                            android:id="@+id/pbGauge"
+                            android:id="@+id/pbGaugeVw"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -136,7 +136,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvSpeed"
+                                android:id="@+id/lblSpeed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/on_surface"
@@ -167,7 +167,7 @@
                             android:background="@drawable/form_circle_primary" />
 
                         <TextView
-                            android:id="@+id/tvStatus"
+                            android:id="@+id/lblStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"
@@ -185,12 +185,12 @@
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_upload" />
 
                     <TextView
-                        android:id="@+id/tvUpload"
+                        android:id="@+id/lblUpload"
                         style="@style/SpeedStatValue"
                         tools:text="12.4 Mbps" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/barUpload"
+                        android:id="@+id/barUploadVw"
                         style="@style/SpeedStatBar" />
                 </LinearLayout>
 
@@ -200,12 +200,12 @@
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_latency" />
 
                     <TextView
-                        android:id="@+id/tvLatency"
+                        android:id="@+id/lblLatency"
                         style="@style/SpeedStatValue"
                         tools:text="24 ms" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/barLatency"
+                        android:id="@+id/barLatencyVw"
                         style="@style/SpeedStatBar" />
                 </LinearLayout>
 
@@ -215,17 +215,17 @@
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_jitter" />
 
                     <TextView
-                        android:id="@+id/tvJitter"
+                        android:id="@+id/lblJitter"
                         style="@style/SpeedStatValue"
                         tools:text="2 ms" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/barJitter"
+                        android:id="@+id/barJitterVw"
                         style="@style/SpeedStatBar" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRetest"
+                    android:id="@+id/padRetest"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_48sdp"
                     android:layout_marginTop="@dimen/_12sdp"
@@ -245,10 +245,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

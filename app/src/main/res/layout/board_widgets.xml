@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.callerid.number.lookup.home.shell.panels.WidgetPanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/widgets_holder"
+    android:id="@+id/widgets_holderVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <org.fossify.commons.views.MySearchMenu
-        android:id="@+id/search_bar"
+        android:id="@+id/search_barVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:applyWindowInsets="false" />
 
     <com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
-        android:id="@+id/widgets_fastscroller"
+        android:id="@+id/widgets_fastscrollerVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar"
+        android:layout_below="@id/search_barVw"
         app:fastScrollEnabled="false">
 
         <org.fossify.commons.views.MyRecyclerView
-            android:id="@+id/widgets_list"
+            android:id="@+id/widgets_listVw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"

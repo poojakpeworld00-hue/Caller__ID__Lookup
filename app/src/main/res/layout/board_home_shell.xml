@@ -11,16 +11,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/shellRoot"
+    android:id="@+id/shellRootVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeShellFragment">
 
     <FrameLayout
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/fragContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/overlayBanner"
+        app:layout_constraintBottom_toTopOf="@id/overlayBannerVw"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +28,7 @@
     <!-- Overlay-permission prompt: sits directly above the bottom nav once
          call-log & contacts are granted but the overlay permission isn't. -->
     <LinearLayout
-        android:id="@+id/overlayBanner"
+        android:id="@+id/overlayBannerVw"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/primary_container"
@@ -37,7 +37,7 @@
         android:paddingHorizontal="@dimen/_8sdp"
         android:paddingVertical="@dimen/_5sdp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintBottom_toTopOf="@id/footerBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible">
@@ -58,7 +58,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/btnEnableOverlay"
+            android:id="@+id/padEnableOverlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
@@ -73,7 +73,7 @@
 
     <!-- Custom bottom navigation built with LinearLayout -->
     <LinearLayout
-        android:id="@+id/bottomBar"
+        android:id="@+id/footerBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/surface"
@@ -88,28 +88,28 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <include
-            android:id="@+id/navHome"
+            android:id="@+id/navHomeVw"
             layout="@layout/cell_nav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <include
-            android:id="@+id/navRecents"
+            android:id="@+id/navRecentsVw"
             layout="@layout/cell_nav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <include
-            android:id="@+id/navContacts"
+            android:id="@+id/navContactsVw"
             layout="@layout/cell_nav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <include
-            android:id="@+id/navLookup"
+            android:id="@+id/navLookupVw"
             layout="@layout/cell_nav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -9,7 +9,7 @@
     android:paddingVertical="@dimen/_10sdp">
 
     <ImageView
-        android:id="@+id/ivType"
+        android:id="@+id/picType"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
         android:contentDescription="@null"
@@ -23,7 +23,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/lblName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -34,7 +34,7 @@
            />
 
         <TextView
-            android:id="@+id/tvNumber"
+            android:id="@+id/lblNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/btnCall"
+        android:id="@+id/padCall"
         android:layout_width="@dimen/_34sdp"
         android:layout_height="@dimen/_34sdp"
         android:layout_marginStart="@dimen/_8sdp"

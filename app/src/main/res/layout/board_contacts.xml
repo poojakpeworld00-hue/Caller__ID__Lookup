@@ -15,7 +15,7 @@
 
     <!-- Compact header (pads the status-bar inset from ContactsFragment) -->
     <LinearLayout
-        android:id="@+id/heroHeader"
+        android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -39,7 +39,7 @@
                 android:textSize="@dimen/_16ssp" />
 
             <TextView
-                android:id="@+id/tvContactsCount"
+                android:id="@+id/lblContactsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/on_surface_variant"
@@ -49,7 +49,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/btnContactsAdd"
+            android:id="@+id/padContactsAdd"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:background="@drawable/form_onb_circle_lavender"
@@ -82,7 +82,7 @@
             app:tint="@color/on_surface_variant" />
 
         <EditText
-            android:id="@+id/etSearch"
+            android:id="@+id/inpSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
@@ -97,7 +97,7 @@
             android:textSize="@dimen/_11ssp" />
 
         <ImageView
-            android:id="@+id/btnClearSearch"
+            android:id="@+id/padClearSearch"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -124,25 +124,25 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tabAll"
+                android:id="@+id/segAll"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/sym_group"
                 android:text="@string/contacts_tab_all" />
 
             <TextView
-                android:id="@+id/tabFavorites"
+                android:id="@+id/segFavorites"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/sym_rate_contact"
                 android:text="@string/contacts_tab_favorites" />
 
             <TextView
-                android:id="@+id/tabRecents"
+                android:id="@+id/segRecents"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/sym_history"
                 android:text="@string/contacts_tab_recents" />
 
             <TextView
-                android:id="@+id/tabGroups"
+                android:id="@+id/segGroups"
                 style="@style/RecentFilterTab"
                 android:layout_marginEnd="0dp"
                 android:drawableStart="@drawable/sym_group"
@@ -152,20 +152,20 @@
 
     <!-- Full-bleed hairline separating the filters from the ad below -->
     <View
-        android:id="@+id/adNativeDivider"
+        android:id="@+id/adNativeDividerVw"
         android:layout_marginTop="@dimen/_10sdp"
         style="@style/AdDivider" />
 
     <!-- Native ad -->
     <FrameLayout
-        android:id="@+id/adNativeFrame"
+        android:id="@+id/adNativeFrameVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
        >
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/adShimmer"
+            android:id="@+id/adShimmerVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ccc">
@@ -175,7 +175,7 @@
     </FrameLayout>
     <!-- Full-bleed hairline separating the filters from the ad below -->
     <View
-        android:id="@+id/adNativeDivider1"
+        android:id="@+id/adNativeDivider1Vw"
         style="@style/AdDivider" />
     <FrameLayout
         android:layout_width="match_parent"
@@ -183,7 +183,7 @@
         android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvContacts"
+            android:id="@+id/rollContacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_4sdp"
@@ -195,7 +195,7 @@
 
         <!-- Alphabet fast-scroll index -->
         <LinearLayout
-            android:id="@+id/alphaIndex"
+            android:id="@+id/alphaIndexVw"
             android:layout_width="@dimen/_18sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
@@ -204,7 +204,7 @@
             android:paddingVertical="@dimen/_4sdp" />
 
         <TextView
-            android:id="@+id/letterBubble"
+            android:id="@+id/letterBubbleVw"
             android:layout_width="@dimen/_48sdp"
             android:layout_height="@dimen/_48sdp"
             android:layout_gravity="center"
@@ -218,7 +218,7 @@
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/tvEmpty"
+            android:id="@+id/lblEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -229,7 +229,7 @@
 
         <!-- Permission state -->
         <LinearLayout
-            android:id="@+id/permState"
+            android:id="@+id/permStateVw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -265,7 +265,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <TextView
-                android:id="@+id/btnGrant"
+                android:id="@+id/padGrant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"

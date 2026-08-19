@@ -97,21 +97,21 @@ class LeftPanel(
         resultsAdapter = DrawerAppsAdapter(R.layout.cell_panel_result, ::launchLauncher)
         searchInAdapter = DrawerAppsAdapter(R.layout.cell_panel_search_in, ::searchInApp)
 
-        binding.panelSuggestedGrid.adapter = suggestedAdapter
-        binding.panelRecentGrid.adapter = recentAdapter
-        binding.panelResultsList.adapter = resultsAdapter
-        binding.panelSearchInList.adapter = searchInAdapter
+        binding.panelSuggestedGridVw.adapter = suggestedAdapter
+        binding.panelRecentGridVw.adapter = recentAdapter
+        binding.panelResultsListVw.adapter = resultsAdapter
+        binding.panelSearchInListVw.adapter = searchInAdapter
 
-        binding.panelSearch.doAfterTextChanged {
+        binding.panelSearchVw.doAfterTextChanged {
             resultsCap = COLLAPSED_RESULTS
             updateSections()
         }
 
-        binding.panelSearchClear.setOnClickListener {
-            binding.panelSearch.setText("")
+        binding.panelSearchClearVw.setOnClickListener {
+            binding.panelSearchVw.setText("")
         }
 
-        binding.panelSeeMore.setOnClickListener {
+        binding.panelSeeMoreVw.setOnClickListener {
             resultsCap = if (resultsCap == COLLAPSED_RESULTS) {
                 EXPANDED_RESULTS
             } else {
@@ -120,7 +120,7 @@ class LeftPanel(
             updateSections()
         }
 
-        binding.panelSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.panelSearchVw.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE,
                 EditorInfo.IME_ACTION_SEARCH,
@@ -151,19 +151,19 @@ class LeftPanel(
             }
         }
 
-        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrame, binding.adShimmer)
+        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
         ShellPromoConfig.showSlot(
             activity = activity,
             slot = suggestedSlot,
-            container = binding.adSuggestedFrame,
-            shimmer = binding.adSuggestedShimmer,
+            container = binding.adSuggestedFrameVw,
+            shimmer = binding.adSuggestedShimmerVw,
         )
     }
 
     /** Called when the panel is opened from the search pill rather than by a fling. */
     fun focusSearch() {
-        binding.panelSearch.requestFocus()
-        activity?.showKeyboard(binding.panelSearch)
+        binding.panelSearchVw.requestFocus()
+        activity?.showKeyboard(binding.panelSearchVw)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -182,12 +182,12 @@ class LeftPanel(
     fun hasQuery() = getQuery().isNotEmpty()
 
     fun resetSearch() {
-        binding.panelSearch.setText("")
-        binding.panelSearch.clearFocus()
-        binding.panelScroll.scrollTo(0, 0)
+        binding.panelSearchVw.setText("")
+        binding.panelSearchVw.clearFocus()
+        binding.panelScrollVw.scrollTo(0, 0)
     }
 
-    private fun getQuery() = binding.panelSearch.text.toString().trim()
+    private fun getQuery() = binding.panelSearchVw.text.toString().trim()
 
     private fun matchingLaunchers(query: String) = launchers.filter {
         it.title.normalizeString().contains(query.normalizeString(), ignoreCase = true)
@@ -209,38 +209,38 @@ class LeftPanel(
         val query = getQuery()
         val hasQuery = query.isNotEmpty()
 
-        binding.panelSearchClear.beVisibleIf(hasQuery)
-        binding.panelSuggestedHeader.beVisibleIf(!hasQuery)
-        binding.panelSuggestedGrid.beVisibleIf(!hasQuery)
+        binding.panelSearchClearVw.beVisibleIf(hasQuery)
+        binding.panelSuggestedHeaderVw.beVisibleIf(!hasQuery)
+        binding.panelSuggestedGridVw.beVisibleIf(!hasQuery)
 
         if (hasQuery) {
             val results = matchingLaunchers(query)
 
-            binding.panelRecentHeader.beGone()
-            binding.panelRecentGrid.beGone()
-            binding.panelResultsHeader.beVisibleIf(results.isNotEmpty())
-            binding.panelResultsList.beVisibleIf(results.isNotEmpty())
-            binding.panelNoResults.beVisibleIf(results.isEmpty())
-            binding.panelSeeMore.beVisibleIf(results.size > COLLAPSED_RESULTS)
-            binding.panelSeeMore.setText(
+            binding.panelRecentHeaderVw.beGone()
+            binding.panelRecentGridVw.beGone()
+            binding.panelResultsHeaderVw.beVisibleIf(results.isNotEmpty())
+            binding.panelResultsListVw.beVisibleIf(results.isNotEmpty())
+            binding.panelNoResultsVw.beVisibleIf(results.isEmpty())
+            binding.panelSeeMoreVw.beVisibleIf(results.size > COLLAPSED_RESULTS)
+            binding.panelSeeMoreVw.setText(
                 if (resultsCap == COLLAPSED_RESULTS) R.string.see_more else R.string.see_less
             )
             resultsAdapter.submitList(results.take(resultsCap))
 
             // still offered when no app matched, searching the web for it is the point
             val searchTargets = launchers.filter { it.packageName in SEARCH_IN_PACKAGES }
-            binding.panelSearchInHeader.beVisibleIf(searchTargets.isNotEmpty())
-            binding.panelSearchInList.beVisibleIf(searchTargets.isNotEmpty())
+            binding.panelSearchInHeaderVw.beVisibleIf(searchTargets.isNotEmpty())
+            binding.panelSearchInListVw.beVisibleIf(searchTargets.isNotEmpty())
             searchInAdapter.submitList(searchTargets)
         } else {
             val recent = launchers.drop(SUGGESTED_COUNT).take(RECENT_COUNT)
-            binding.panelResultsHeader.beGone()
-            binding.panelResultsList.beGone()
-            binding.panelNoResults.beGone()
-            binding.panelSearchInHeader.beGone()
-            binding.panelSearchInList.beGone()
-            binding.panelRecentHeader.beVisibleIf(recent.isNotEmpty())
-            binding.panelRecentGrid.beVisibleIf(recent.isNotEmpty())
+            binding.panelResultsHeaderVw.beGone()
+            binding.panelResultsListVw.beGone()
+            binding.panelNoResultsVw.beGone()
+            binding.panelSearchInHeaderVw.beGone()
+            binding.panelSearchInListVw.beGone()
+            binding.panelRecentHeaderVw.beVisibleIf(recent.isNotEmpty())
+            binding.panelRecentGridVw.beVisibleIf(recent.isNotEmpty())
 
             suggestedAdapter.submitList(launchers.take(SUGGESTED_COUNT))
             recentAdapter.submitList(recent)

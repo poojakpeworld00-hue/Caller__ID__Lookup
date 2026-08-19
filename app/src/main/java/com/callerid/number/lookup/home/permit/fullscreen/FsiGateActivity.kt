@@ -113,15 +113,15 @@ class FsiGateActivity : AppCompatActivity() {
         setContentView(R.layout.screen_fsi_permission)
         setupSystemBars()
 
-        findViewById<TextView>(R.id.fsScreenTitle).text = config.screen.title
-        findViewById<TextView>(R.id.fsScreenDesc).text = config.screen.desc
-        findViewById<TextView>(R.id.fsScreenButton).text = config.screen.button
+        findViewById<TextView>(R.id.fsScreenTitleVw).text = config.screen.title
+        findViewById<TextView>(R.id.fsScreenDescVw).text = config.screen.desc
+        findViewById<TextView>(R.id.fsScreenButtonVw).text = config.screen.button
 
         FsiPermit.markScreenShown(this)
         logKeyEvent("FSI_Screen_Show")
         returnWatcher.register()
 
-        findViewById<TextView>(R.id.fsScreenButton).setOnClickListener {
+        findViewById<TextView>(R.id.fsScreenButtonVw).setOnClickListener {
             // Ask notification FIRST (targeted request — works even though this
             // Activity isn't in notification's `activities` list), THEN open FSI.
             PermitEngine.request(this, "notification") {
@@ -138,14 +138,14 @@ class FsiGateActivity : AppCompatActivity() {
                 // have actually left for the FSI Settings page.
                 pendingFsiSettings = true
                 pendingNext = intent.getStringExtra(EXTRA_NEXT)
-                findViewById<View>(R.id.fsScreenRoot).visibility = View.INVISIBLE
+                findViewById<View>(R.id.fsScreenRootVw).visibility = View.INVISIBLE
                 FsiPermit.openSettings(this, fsiSettingsLauncher)
                 // Reliable grant detection from the Activity itself (the background
                 // service can't start on the way to Settings on Android 12+/16).
                 startGrantPoll()
             }
         }
-        findViewById<TextView>(R.id.fsScreenSkip).setOnClickListener {
+        findViewById<TextView>(R.id.fsScreenSkipVw).setOnClickListener {
             logKeyEvent("FSI_Screen_Skip")
             continueToNext()
         }
@@ -163,13 +163,13 @@ class FsiGateActivity : AppCompatActivity() {
         playIntroAnimation()
 
         // Mid native ad above the CTA (self-gates on IsAdsON/NativeAd/network/counter).
-        val adFrame = findViewById<FrameLayout>(R.id.adNativeFrame)
+        val adFrame = findViewById<FrameLayout>(R.id.adNativeFrameVw)
         InlinePromo().showMidNative(
             this,
             adFrame,
-            findViewById<ShimmerFrameLayout>(R.id.adShimmer),
+            findViewById<ShimmerFrameLayout>(R.id.adShimmerVw),
         )
-        findViewById<View>(R.id.adNativeDivider).followAdContainer(adFrame)
+        findViewById<View>(R.id.adNativeDividerVw).followAdContainer(adFrame)
     }
 
     /**
@@ -190,7 +190,7 @@ class FsiGateActivity : AppCompatActivity() {
             isAppearanceLightNavigationBars = !isNight
         }
 
-        val root = findViewById<View>(R.id.fsScreenRoot)
+        val root = findViewById<View>(R.id.fsScreenRootVw)
         val basePaddingBottom = root.paddingBottom
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -205,10 +205,10 @@ class FsiGateActivity : AppCompatActivity() {
      * benefits cascade up; the CTA has a gentle idle pulse.
      */
     private fun playIntroAnimation() {
-        val hero = findViewById<View>(R.id.fsHero)
-        val glow = findViewById<View>(R.id.fsGlow)
-        val preview = findViewById<View>(R.id.fsCallPreview)
-        val cta = findViewById<View>(R.id.fsScreenButton)
+        val hero = findViewById<View>(R.id.fsHeroVw)
+        val glow = findViewById<View>(R.id.fsGlowVw)
+        val preview = findViewById<View>(R.id.fsCallPreviewVw)
+        val cta = findViewById<View>(R.id.fsScreenButtonVw)
 
         // Incoming-call card: pop in (fade + rise + overshoot scale).
         preview.alpha = 0f
@@ -225,17 +225,17 @@ class FsiGateActivity : AppCompatActivity() {
         // Continuous loops (all self-cancel via the isFinishing/isDestroyed guard).
         loopFloat(hero)
         loopGlow(glow)
-        loopRing(findViewById(R.id.fsOrbit1), 0L, 0.85f, 1.75f, 0.6f, 2600L)
-        loopRing(findViewById(R.id.fsOrbit2), 900L, 0.85f, 1.75f, 0.6f, 2600L)
-        loopRing(findViewById(R.id.fsAvatarRing1), 300L, 0.9f, 1.4f, 0.7f, 2200L)
-        loopRing(findViewById(R.id.fsAvatarRing2), 1000L, 0.9f, 1.4f, 0.7f, 2200L)
+        loopRing(findViewById(R.id.fsOrbit1Vw), 0L, 0.85f, 1.75f, 0.6f, 2600L)
+        loopRing(findViewById(R.id.fsOrbit2Vw), 900L, 0.85f, 1.75f, 0.6f, 2600L)
+        loopRing(findViewById(R.id.fsAvatarRing1Vw), 300L, 0.9f, 1.4f, 0.7f, 2200L)
+        loopRing(findViewById(R.id.fsAvatarRing2Vw), 1000L, 0.9f, 1.4f, 0.7f, 2200L)
         loopCta(cta)
 
         // Copy + benefits: staggered cascade up.
         listOf(
-            findViewById<View>(R.id.fsScreenTitle),
-            findViewById<View>(R.id.fsScreenDesc),
-            findViewById<View>(R.id.fsScreenFeatures),
+            findViewById<View>(R.id.fsScreenTitleVw),
+            findViewById<View>(R.id.fsScreenDescVw),
+            findViewById<View>(R.id.fsScreenFeaturesVw),
         ).forEachIndexed { i, v ->
             v.alpha = 0f
             v.translationY = dp(20f)

@@ -32,20 +32,20 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.timerRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.timerRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrame, binding.adShimmer)
-        binding.btnStartPause.setOnClickListener { if (running) pause() else start() }
-        binding.btnReset.setOnClickListener { reset() }
-        binding.btnAddMin.setOnClickListener { add(60_000) }
-        binding.btnAddTenSec.setOnClickListener { add(10_000) }
-        binding.btnAddSec.setOnClickListener { add(1_000) }
+        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.padStartPause.setOnClickListener { if (running) pause() else start() }
+        binding.padReset.setOnClickListener { reset() }
+        binding.padAddMin.setOnClickListener { add(60_000) }
+        binding.padAddTenSec.setOnClickListener { add(10_000) }
+        binding.padAddSec.setOnClickListener { add(1_000) }
 
         renderTime()
     }
@@ -65,8 +65,8 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         if (remainingMs <= 0L) return
         running = true
         endRealtime = SystemClock.elapsedRealtime() + remainingMs
-        binding.btnStartPause.setText(R.string.action_pause)
-        binding.btnStartPause.setIconResource(R.drawable.sym_pause)
+        binding.padStartPause.setText(R.string.action_pause)
+        binding.padStartPause.setIconResource(R.drawable.sym_pause)
         setPresetsEnabled(false)
         handler.post(tick)
     }
@@ -75,8 +75,8 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         running = false
         handler.removeCallbacks(tick)
         remainingMs = (endRealtime - SystemClock.elapsedRealtime()).coerceAtLeast(0)
-        binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.sym_play)
+        binding.padStartPause.setText(R.string.action_start)
+        binding.padStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         renderTime()
     }
@@ -85,8 +85,8 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         running = false
         handler.removeCallbacks(tick)
         remainingMs = 0L
-        binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.sym_play)
+        binding.padStartPause.setText(R.string.action_start)
+        binding.padStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         renderTime()
     }
@@ -108,26 +108,26 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
 
     private fun onFinished() {
         running = false
-        binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.sym_play)
+        binding.padStartPause.setText(R.string.action_start)
+        binding.padStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         vibrate()
     }
 
     private fun renderTime() {
         val totalSec = (remainingMs + 999) / 1000 // round up while counting down
-        binding.tvTime.text =
+        binding.lblTime.text =
             String.format(Locale.getDefault(), "%02d:%02d", totalSec / 60, totalSec % 60)
     }
 
     private fun setPresetsEnabled(enabled: Boolean) {
-        binding.btnAddMin.isEnabled = enabled
-        binding.btnAddTenSec.isEnabled = enabled
-        binding.btnAddSec.isEnabled = enabled
+        binding.padAddMin.isEnabled = enabled
+        binding.padAddTenSec.isEnabled = enabled
+        binding.padAddSec.isEnabled = enabled
         val alpha = if (enabled) 1f else 0.5f
-        binding.btnAddMin.alpha = alpha
-        binding.btnAddTenSec.alpha = alpha
-        binding.btnAddSec.alpha = alpha
+        binding.padAddMin.alpha = alpha
+        binding.padAddTenSec.alpha = alpha
+        binding.padAddSec.alpha = alpha
     }
 
     private fun vibrate() {

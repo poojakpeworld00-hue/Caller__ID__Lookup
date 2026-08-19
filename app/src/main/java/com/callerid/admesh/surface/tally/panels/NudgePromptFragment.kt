@@ -44,9 +44,9 @@ class NudgePromptFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.board_reminder, container, false)
 
-        recyclerView = view.findViewById(R.id.recyclerReminders)
-        fab = view.findViewById(R.id.fabAddReminder)
-        emptyLayout = view.findViewById(R.id.emptyLayout)
+        recyclerView = view.findViewById(R.id.rollReminders)
+        fab = view.findViewById(R.id.fabAddReminderVw)
+        emptyLayout = view.findViewById(R.id.emptyLayoutVw)
 
         reminderList = mutableListOf()
         adapter = PingCardAdapter(reminderList, ::deleteReminder)
@@ -80,7 +80,7 @@ class NudgePromptFragment : Fragment() {
     private fun showAddReminderDialog() {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dlg_add_reminder, null)
 
-        val etTitle = dialogView.findViewById<EditText>(R.id.edit_reminder).apply {
+        val etTitle = dialogView.findViewById<EditText>(R.id.edit_reminderVw).apply {
             hint = "e.g. Birthday, Meeting, Call back..."
             setHintTextColor(Color.parseColor("#999999"))
             setBackgroundResource(R.drawable.form_btn)
@@ -94,10 +94,10 @@ class NudgePromptFragment : Fragment() {
             imm?.showSoftInput(etTitle, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
         }
 
-        val npMonth = dialogView.findViewById<NumberPicker>(R.id.npMonth)
-        val npDay = dialogView.findViewById<NumberPicker>(R.id.npDay)
-        val npHour = dialogView.findViewById<NumberPicker>(R.id.npHour)
-        val npMinute = dialogView.findViewById<NumberPicker>(R.id.npMinute)
+        val npMonth = dialogView.findViewById<NumberPicker>(R.id.npMonthVw)
+        val npDay = dialogView.findViewById<NumberPicker>(R.id.npDayVw)
+        val npHour = dialogView.findViewById<NumberPicker>(R.id.npHourVw)
+        val npMinute = dialogView.findViewById<NumberPicker>(R.id.npMinuteVw)
         val cal = Calendar.getInstance()
 
         npMonth.minValue = 1
@@ -128,8 +128,8 @@ class NudgePromptFragment : Fragment() {
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
 
-        val btnSave = dialogView.findViewById<TextView>(R.id.btnSave)
-        val btnCancel = dialogView.findViewById<TextView>(R.id.btnCancel)
+        val btnSave = dialogView.findViewById<TextView>(R.id.padSave)
+        val btnCancel = dialogView.findViewById<TextView>(R.id.padCancel)
 
         btnSave.triggerClick {
             val title = etTitle.text.toString().trim()

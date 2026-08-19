@@ -38,18 +38,18 @@ class DigitClockProvider : AppWidgetProvider() {
 
         val views = RemoteViews(context.packageName, R.layout.gizmo_digital_clock).apply {
             setInt(
-                R.id.widget_holder,
+                R.id.widget_holderVw,
                 "setBackgroundColor",
                 context.getWidgetBackgroundColor(appWidgetId)
             )
 
             // TextClock has no single "show 12/24 hours" switch, keep one of the two around
-            setViewVisibility(R.id.widget_text_clock_24, if (is24Hours) View.VISIBLE else View.GONE)
-            setViewVisibility(R.id.widget_text_clock_12, if (is24Hours) View.GONE else View.VISIBLE)
+            setViewVisibility(R.id.widget_text_clock_24Vw, if (is24Hours) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_text_clock_12Vw, if (is24Hours) View.GONE else View.VISIBLE)
 
-            setTextColor(R.id.widget_text_clock_24, textColor)
-            setTextColor(R.id.widget_text_clock_12, textColor)
-            setTextColor(R.id.widget_date, textColor)
+            setTextColor(R.id.widget_text_clock_24Vw, textColor)
+            setTextColor(R.id.widget_text_clock_12Vw, textColor)
+            setTextColor(R.id.widget_dateVw, textColor)
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, views)

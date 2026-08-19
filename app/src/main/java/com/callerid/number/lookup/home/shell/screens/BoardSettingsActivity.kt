@@ -31,13 +31,13 @@ class BoardSettingsActivity : ShellBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        setupEdgeToEdge(padBottomSystem = listOf(binding.settingsNestedScrollview))
-        setupMaterialScrollListener(binding.settingsNestedScrollview, binding.settingsAppbar)
+        setupEdgeToEdge(padBottomSystem = listOf(binding.settingsNestedScrollviewVw))
+        setupMaterialScrollListener(binding.settingsNestedScrollviewVw, binding.settingsAppbarVw)
     }
 
     override fun onResume() {
         super.onResume()
-        setupTopAppBar(binding.settingsAppbar, NavigationIcon.Arrow)
+        setupTopAppBar(binding.settingsAppbarVw, NavigationIcon.Arrow)
 
         setupCustomizeColors()
         setupUseEnglish()
@@ -52,20 +52,20 @@ class BoardSettingsActivity : ShellBaseActivity() {
         setupShowHomeAppLabels()
         setupLanguage()
         setupManageHiddenIcons()
-        updateTextColors(binding.settingsHolder)
+        updateTextColors(binding.settingsHolderVw)
 
         arrayOf(
-            binding.settingsColorCustomizationSectionLabel,
-            binding.settingsGeneralSettingsLabel,
-            binding.settingsDrawerSettingsLabel,
-            binding.settingsHomeScreenLabel
+            binding.settingsColorCustomizationSectionLabelVw,
+            binding.settingsGeneralSettingsLabelVw,
+            binding.settingsDrawerSettingsLabelVw,
+            binding.settingsHomeScreenLabelVw
         ).forEach {
             it.setTextColor(getProperPrimaryColor())
         }
     }
 
     private fun setupCustomizeColors() {
-        binding.settingsColorCustomizationHolder.setOnClickListener {
+        binding.settingsColorCustomizationHolderVw.setOnClickListener {
             // see ShellBaseActivity.withFossifyPackageNameSpoofed — startCustomizationActivity()
             // carries its own copy of the anti-rebrand check, separate from the one in onCreate()
             withFossifyPackageNameSpoofed { startCustomizationActivity() }
@@ -73,26 +73,26 @@ class BoardSettingsActivity : ShellBaseActivity() {
     }
 
     private fun setupUseEnglish() {
-        binding.settingsUseEnglishHolder.beVisibleIf(
+        binding.settingsUseEnglishHolderVw.beVisibleIf(
             beVisible = (config.wasUseEnglishToggled || Locale.getDefault().language != "en")
                     && !isTiramisuPlus()
         )
 
-        binding.settingsUseEnglish.isChecked = config.useEnglish
-        binding.settingsUseEnglishHolder.setOnClickListener {
-            binding.settingsUseEnglish.toggle()
-            config.useEnglish = binding.settingsUseEnglish.isChecked
+        binding.settingsUseEnglishVw.isChecked = config.useEnglish
+        binding.settingsUseEnglishHolderVw.setOnClickListener {
+            binding.settingsUseEnglishVw.toggle()
+            config.useEnglish = binding.settingsUseEnglishVw.isChecked
             exitProcess(0)
         }
     }
 
     private fun setupDoubleTapToLock() {
         val devicePolicyManager = getSystemService(DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        binding.settingsDoubleTapToLock.isChecked = devicePolicyManager.isAdminActive(
+        binding.settingsDoubleTapToLockVw.isChecked = devicePolicyManager.isAdminActive(
             ComponentName(this, ScreenLockAdminReceiver::class.java)
         )
 
-        binding.settingsDoubleTapToLockHolder.setOnClickListener {
+        binding.settingsDoubleTapToLockHolderVw.setOnClickListener {
             val isLockDeviceAdminActive = devicePolicyManager.isAdminActive(
                 ComponentName(this, ScreenLockAdminReceiver::class.java)
             )
@@ -116,26 +116,26 @@ class BoardSettingsActivity : ShellBaseActivity() {
     }
 
     private fun setupOpenKeyboardOnAppDrawer() {
-        binding.settingsOpenKeyboardOnAppDrawerHolder.beVisibleIf(config.showSearchBar)
-        binding.settingsOpenKeyboardOnAppDrawer.isChecked = config.autoShowKeyboardInAppDrawer
-        binding.settingsOpenKeyboardOnAppDrawerHolder.setOnClickListener {
-            binding.settingsOpenKeyboardOnAppDrawer.toggle()
-            config.autoShowKeyboardInAppDrawer = binding.settingsOpenKeyboardOnAppDrawer.isChecked
+        binding.settingsOpenKeyboardOnAppDrawerHolderVw.beVisibleIf(config.showSearchBar)
+        binding.settingsOpenKeyboardOnAppDrawerVw.isChecked = config.autoShowKeyboardInAppDrawer
+        binding.settingsOpenKeyboardOnAppDrawerHolderVw.setOnClickListener {
+            binding.settingsOpenKeyboardOnAppDrawerVw.toggle()
+            config.autoShowKeyboardInAppDrawer = binding.settingsOpenKeyboardOnAppDrawerVw.isChecked
         }
     }
 
     private fun setupCloseAppDrawerOnOtherAppOpen() {
-        binding.settingsCloseAppDrawerOnOtherApp.isChecked = config.closeAppDrawer
-        binding.settingsCloseAppDrawerOnOtherAppHolder.setOnClickListener {
-            binding.settingsCloseAppDrawerOnOtherApp.toggle()
-            config.closeAppDrawer = binding.settingsCloseAppDrawerOnOtherApp.isChecked
+        binding.settingsCloseAppDrawerOnOtherAppVw.isChecked = config.closeAppDrawer
+        binding.settingsCloseAppDrawerOnOtherAppHolderVw.setOnClickListener {
+            binding.settingsCloseAppDrawerOnOtherAppVw.toggle()
+            config.closeAppDrawer = binding.settingsCloseAppDrawerOnOtherAppVw.isChecked
         }
     }
 
     private fun setupDrawerColumnCount() {
         val currentColumnCount = config.drawerColumnCount
-        binding.settingsDrawerColumnCount.text = currentColumnCount.toString()
-        binding.settingsDrawerColumnCountHolder.setOnClickListener {
+        binding.settingsDrawerColumnCountVw.text = currentColumnCount.toString()
+        binding.settingsDrawerColumnCountHolderVw.setOnClickListener {
             val items = ArrayList<RadioItem>()
             for (i in 1..MAX_COLUMN_COUNT) {
                 items.add(
@@ -160,26 +160,26 @@ class BoardSettingsActivity : ShellBaseActivity() {
 
     private fun setupDrawerSearchBar() {
         val showSearchBar = config.showSearchBar
-        binding.settingsShowSearchBar.isChecked = showSearchBar
-        binding.settingsDrawerSearchHolder.setOnClickListener {
-            binding.settingsShowSearchBar.toggle()
-            config.showSearchBar = binding.settingsShowSearchBar.isChecked
-            binding.settingsOpenKeyboardOnAppDrawerHolder.beVisibleIf(config.showSearchBar)
+        binding.settingsShowSearchBarVw.isChecked = showSearchBar
+        binding.settingsDrawerSearchHolderVw.setOnClickListener {
+            binding.settingsShowSearchBarVw.toggle()
+            config.showSearchBar = binding.settingsShowSearchBarVw.isChecked
+            binding.settingsOpenKeyboardOnAppDrawerHolderVw.beVisibleIf(config.showSearchBar)
         }
     }
 
     private fun setupShowDrawerAppLabels() {
-        binding.settingsShowDrawerAppLabels.isChecked = config.showDrawerAppLabels
-        binding.settingsShowDrawerAppLabelsHolder.setOnClickListener {
-            binding.settingsShowDrawerAppLabels.toggle()
-            config.showDrawerAppLabels = binding.settingsShowDrawerAppLabels.isChecked
+        binding.settingsShowDrawerAppLabelsVw.isChecked = config.showDrawerAppLabels
+        binding.settingsShowDrawerAppLabelsHolderVw.setOnClickListener {
+            binding.settingsShowDrawerAppLabelsVw.toggle()
+            config.showDrawerAppLabels = binding.settingsShowDrawerAppLabelsVw.isChecked
         }
     }
 
     private fun setupHomeRowCount() {
         val currentRowCount = config.homeRowCount
-        binding.settingsHomeScreenRowCount.text = currentRowCount.toString()
-        binding.settingsHomeScreenRowCountHolder.setOnClickListener {
+        binding.settingsHomeScreenRowCountVw.text = currentRowCount.toString()
+        binding.settingsHomeScreenRowCountHolderVw.setOnClickListener {
             val items = ArrayList<RadioItem>()
             for (i in MIN_ROW_COUNT..MAX_ROW_COUNT) {
                 items.add(
@@ -204,8 +204,8 @@ class BoardSettingsActivity : ShellBaseActivity() {
 
     private fun setupHomeColumnCount() {
         val currentColumnCount = config.homeColumnCount
-        binding.settingsHomeScreenColumnCount.text = currentColumnCount.toString()
-        binding.settingsHomeScreenColumnCountHolder.setOnClickListener {
+        binding.settingsHomeScreenColumnCountVw.text = currentColumnCount.toString()
+        binding.settingsHomeScreenColumnCountHolderVw.setOnClickListener {
             val items = ArrayList<RadioItem>()
             for (i in MIN_COLUMN_COUNT..MAX_COLUMN_COUNT) {
                 items.add(
@@ -229,24 +229,24 @@ class BoardSettingsActivity : ShellBaseActivity() {
     }
 
     private fun setupShowHomeAppLabels() {
-        binding.settingsShowHomeAppLabels.isChecked = config.showHomeAppLabels
-        binding.settingsShowHomeAppLabelsHolder.setOnClickListener {
-            binding.settingsShowHomeAppLabels.toggle()
-            config.showHomeAppLabels = binding.settingsShowHomeAppLabels.isChecked
+        binding.settingsShowHomeAppLabelsVw.isChecked = config.showHomeAppLabels
+        binding.settingsShowHomeAppLabelsHolderVw.setOnClickListener {
+            binding.settingsShowHomeAppLabelsVw.toggle()
+            config.showHomeAppLabels = binding.settingsShowHomeAppLabelsVw.isChecked
         }
     }
 
     @SuppressLint("NewApi")
     private fun setupLanguage() {
-        binding.settingsLanguage.text = Locale.getDefault().displayLanguage
-        binding.settingsLanguageHolder.beVisibleIf(isTiramisuPlus())
-        binding.settingsLanguageHolder.setOnClickListener {
+        binding.settingsLanguageVw.text = Locale.getDefault().displayLanguage
+        binding.settingsLanguageHolderVw.beVisibleIf(isTiramisuPlus())
+        binding.settingsLanguageHolderVw.setOnClickListener {
             launchChangeAppLanguageIntent()
         }
     }
 
     private fun setupManageHiddenIcons() {
-        binding.settingsManageHiddenIconsHolder.setOnClickListener {
+        binding.settingsManageHiddenIconsHolderVw.setOnClickListener {
             startActivity(Intent(this, MaskedAppsActivity::class.java))
         }
     }

@@ -34,15 +34,15 @@ class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.batteryRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.batteryRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
     override fun onResume() {
@@ -58,18 +58,18 @@ class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
     private fun render(intent: Intent) {
         val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        binding.tvLevel.text = if (level >= 0 && scale > 0) (level * 100 / scale).toString() else "—"
+        binding.lblLevel.text = if (level >= 0 && scale > 0) (level * 100 / scale).toString() else "—"
 
-        binding.tvStatus.text = statusText(intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1))
-        binding.tvPlugged.text = pluggedText(intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1))
+        binding.lblStatus.text = statusText(intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1))
+        binding.lblPlugged.text = pluggedText(intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1))
 
         val tempC = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f
-        binding.tvTemp.text = String.format(Locale.getDefault(), "%d°C", tempC.roundToInt())
+        binding.lblTemp.text = String.format(Locale.getDefault(), "%d°C", tempC.roundToInt())
 
         val voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0) / 1000f
-        binding.tvVoltage.text = String.format(Locale.getDefault(), "%.1fV", voltage)
+        binding.lblVoltage.text = String.format(Locale.getDefault(), "%.1fV", voltage)
 
-        binding.tvTech.text = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "—"
+        binding.lblTech.text = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "—"
 
         bindHealth(intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1))
     }
@@ -84,8 +84,8 @@ class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
             BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> R.string.battery_health_over to R.color.danger
             else -> R.string.common_unknown to R.color.on_surface
         }
-        binding.tvHealth.setText(textRes)
-        binding.tvHealth.setTextColor(ContextCompat.getColor(this, colorRes))
+        binding.lblHealth.setText(textRes)
+        binding.lblHealth.setTextColor(ContextCompat.getColor(this, colorRes))
     }
 
     private fun statusText(status: Int) = when (status) {

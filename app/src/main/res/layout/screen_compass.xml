@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/compassRoot"
+        android:id="@+id/compassRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,14 +57,14 @@
                 android:orientation="vertical">
 
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginVertical="@dimen/_10sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -74,23 +74,23 @@
                 </FrameLayout>
 
                 <LinearLayout
-                    android:id="@+id/content"
+                    android:id="@+id/contentVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-                    app:layout_constraintTop_toBottomOf="@id/topBar">
+                    app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+                    app:layout_constraintTop_toBottomOf="@id/crownBar">
 
                     <!-- Compass dial -->
                     <FrameLayout
-                        android:id="@+id/compassArea"
+                        android:id="@+id/compassAreaVw"
                         android:layout_width="@dimen/_280sdp"
                         android:layout_height="@dimen/_280sdp">
 
                         <!-- Decorative blue-dot diamond pattern (rotates with the needle) -->
                         <ImageView
-                            android:id="@+id/ivDots"
+                            android:id="@+id/picDots"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
@@ -118,7 +118,7 @@
                             android:background="@drawable/form_compass_square" />
 
                         <ImageView
-                            android:id="@+id/ivNeedle"
+                            android:id="@+id/picNeedle"
                             android:layout_width="@dimen/_150sdp"
                             android:layout_height="@dimen/_150sdp"
                             android:layout_gravity="center"
@@ -135,7 +135,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvHeading"
+                                android:id="@+id/lblHeading"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/primary"
@@ -144,7 +144,7 @@
                                 tools:text="308°" />
 
                             <TextView
-                                android:id="@+id/tvDirection"
+                                android:id="@+id/lblDirection"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:letterSpacing="0.12"
@@ -157,7 +157,7 @@
                         <!-- Cardinal labels ride on their own layer that rotates with the
                              dial, so N always points to magnetic north. -->
                         <FrameLayout
-                            android:id="@+id/dialLabels"
+                            android:id="@+id/dialLabelsVw"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center">
@@ -206,7 +206,7 @@
 
                     <!-- Signal strength pill -->
                     <LinearLayout
-                        android:id="@+id/signalPill"
+                        android:id="@+id/signalPillVw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_24sdp"
@@ -223,7 +223,7 @@
                             android:background="@drawable/form_circle_primary" />
 
                         <TextView
-                            android:id="@+id/tvSignal"
+                            android:id="@+id/lblSignal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"
@@ -239,7 +239,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <TextView
-            android:id="@+id/tvNoSensor"
+            android:id="@+id/lblNoSensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_24sdp"
@@ -248,17 +248,17 @@
             android:textColor="@color/on_surface_variant"
             android:textSize="@dimen/_12ssp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topBar" />
+            app:layout_constraintTop_toBottomOf="@id/crownBar" />
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

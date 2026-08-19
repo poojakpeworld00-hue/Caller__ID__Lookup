@@ -30,9 +30,9 @@ class DrawerAppsAdapter(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bindView(launcher: AppTile) {
-            itemView.findViewById<TextView>(R.id.item_title).text = launcher.title
+            itemView.findViewById<TextView>(R.id.item_titleVw).text = launcher.title
             // the icons are already loaded in memory by the drawer, no need for Glide here
-            itemView.findViewById<ImageView>(R.id.item_icon).setImageDrawable(launcher.drawable)
+            itemView.findViewById<ImageView>(R.id.item_iconVw).setImageDrawable(launcher.drawable)
             itemView.setOnClickListener { itemClick(launcher) }
         }
     }

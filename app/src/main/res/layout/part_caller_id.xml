@@ -3,7 +3,7 @@
      (device locked). Plain layout (no data-binding) — bound via findViewById. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/incallCard"
+    android:id="@+id/incallCardVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/form_card"
@@ -39,7 +39,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/btnIncallClose"
+            android:id="@+id/padIncallClose"
             android:layout_width="@dimen/_28sdp"
             android:layout_height="@dimen/_28sdp"
             android:contentDescription="@string/action_close"
@@ -57,7 +57,7 @@
         android:padding="@dimen/_14sdp">
 
         <TextView
-            android:id="@+id/tvIncallAvatar"
+            android:id="@+id/lblIncallAvatar"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
             android:background="@drawable/form_avatar"
@@ -75,7 +75,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvIncallName"
+                android:id="@+id/lblIncallName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -86,7 +86,7 @@
                 tools:text="Unknown" />
 
             <TextView
-                android:id="@+id/tvIncallNumber"
+                android:id="@+id/lblIncallNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -95,7 +95,7 @@
                 tools:text="+91 70967 04911" />
 
             <TextView
-                android:id="@+id/tvIncallStatus"
+                android:id="@+id/lblIncallStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_6sdp"
@@ -141,7 +141,7 @@
                 android:tint="@color/on_surface_variant" />
 
             <TextView
-                android:id="@+id/tvIncallWhen"
+                android:id="@+id/lblIncallWhen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
@@ -164,7 +164,7 @@
                 android:tint="@color/on_surface_variant" />
 
             <TextView
-                android:id="@+id/tvIncallCalls"
+                android:id="@+id/lblIncallCalls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
@@ -187,7 +187,7 @@
                 android:tint="@color/on_surface_variant" />
 
             <TextView
-                android:id="@+id/tvIncallNetwork"
+                android:id="@+id/lblIncallNetwork"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"

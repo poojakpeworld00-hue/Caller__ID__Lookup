@@ -58,7 +58,7 @@ class AppDrawerPanel(
         this.activity = activity
         this.binding = BoardAllAppsBinding.bind(this)
 
-        binding.allAppsGrid.setOnTouchListener { _, event ->
+        binding.allAppsGridVw.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
                 touchDownY = -1
             }
@@ -76,17 +76,17 @@ class AppDrawerPanel(
         // The frame is declared in the layout for the view binding, but it belongs to the app
         // list: lifted out here and handed to the adapter as row 0, so it scrolls away with the
         // apps instead of holding a strip of the drawer permanently.
-        (binding.adNativeFrame.parent as? ViewGroup)?.removeView(binding.adNativeFrame)
+        (binding.adNativeFrameVw.parent as? ViewGroup)?.removeView(binding.adNativeFrameVw)
     }
 
     /** The ad frame the adapter carries as a list row — null when the slot is switched off. */
-    private fun adHeaderView(): View? = binding.adNativeFrame.takeIf { adSlot.visible }
+    private fun adHeaderView(): View? = binding.adNativeFrameVw.takeIf { adSlot.visible }
 
     /** Called every time the drawer is flung open. */
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
-        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrame, binding.adShimmer)
+        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
     /**
@@ -105,7 +105,7 @@ class AppDrawerPanel(
 
         adSlot = fresh
         if (adSlot.needsNativePreload) nativePromo.loadNativeADs(activity)
-        (binding.allAppsGrid.adapter as? AppTileAdapter)?.setAdSlot(adHeaderView(), adSlot.position)
+        (binding.allAppsGridVw.adapter as? AppTileAdapter)?.setAdSlot(adHeaderView(), adSlot.position)
     }
 
     override fun onAttachedToWindow() {
@@ -115,24 +115,24 @@ class AppDrawerPanel(
 
     @SuppressLint("NotifyDataSetChanged")
     fun onResume() {
-        if (binding.allAppsGrid.layoutManager == null || binding.allAppsGrid.adapter == null) {
+        if (binding.allAppsGridVw.layoutManager == null || binding.allAppsGridVw.adapter == null) {
             return
         }
 
-        val layoutManager = binding.allAppsGrid.layoutManager as MyGridLayoutManager
+        val layoutManager = binding.allAppsGridVw.layoutManager as MyGridLayoutManager
         if (layoutManager.spanCount != context.config.drawerColumnCount) {
             onConfigurationChanged()
             // Force redraw due to changed item size
-            (binding.allAppsGrid.adapter as AppTileAdapter).notifyDataSetChanged()
+            (binding.allAppsGridVw.adapter as AppTileAdapter).notifyDataSetChanged()
         }
     }
 
     fun onConfigurationChanged() {
-        binding.allAppsGrid.scrollToPosition(0)
-        binding.allAppsFastscroller.resetManualScrolling()
+        binding.allAppsGridVw.scrollToPosition(0)
+        binding.allAppsFastscrollerVw.resetManualScrolling()
         setupViews()
 
-        val layoutManager = binding.allAppsGrid.layoutManager as MyGridLayoutManager
+        val layoutManager = binding.allAppsGridVw.layoutManager as MyGridLayoutManager
         layoutManager.spanCount = context.config.drawerColumnCount
         setupAdapter(launchers)
     }
@@ -162,10 +162,10 @@ class AppDrawerPanel(
                 if (touchDownY != -1) {
                     val distance = event.y.toInt() - touchDownY
                     shouldIntercept =
-                        distance > 0 && binding.allAppsGrid.computeVerticalScrollOffset() == 0
+                        distance > 0 && binding.allAppsGridVw.computeVerticalScrollOffset() == 0
                     if (shouldIntercept) {
                         // Hiding is expensive, only do it if focused
-                        if (binding.searchBar.hasFocus()) {
+                        if (binding.searchBarVw.hasFocus()) {
                             activity?.hideKeyboard()
                         }
                         activity?.startHandlingTouches(touchDownY)
@@ -185,11 +185,11 @@ class AppDrawerPanel(
         setupAdapter(launchers)
     }
 
-    private fun getAdapter() = binding.allAppsGrid.adapter as? AppTileAdapter
+    private fun getAdapter() = binding.allAppsGridVw.adapter as? AppTileAdapter
 
     private fun setupAdapter(launchers: List<AppTile>) {
         activity?.runOnUiThread {
-            val layoutManager = binding.allAppsGrid.layoutManager as MyGridLayoutManager
+            val layoutManager = binding.allAppsGridVw.layoutManager as MyGridLayoutManager
             layoutManager.spanCount = context.config.drawerColumnCount
 
             if (getAdapter() == null) {
@@ -213,8 +213,8 @@ class AppDrawerPanel(
                     else ShellPromoConfig.run(host, ShellPromoConfig.Surface.APP_CLICK) { openApp() }
                 }.apply {
                     setAdSlot(adHeaderView(), adSlot.position)
-                    binding.allAppsGrid.itemAnimator = null
-                    binding.allAppsGrid.adapter = this
+                    binding.allAppsGridVw.itemAnimator = null
+                    binding.allAppsGridVw.adapter = this
                 }
             }
 
@@ -251,11 +251,11 @@ class AppDrawerPanel(
             return
         }
 
-        binding.allAppsFastscroller.updateColors(context.getProperPrimaryColor())
-        binding.allAppsGrid.addOnScrollListener(object : OnScrollListener() {
+        binding.allAppsFastscrollerVw.updateColors(context.getProperPrimaryColor())
+        binding.allAppsGridVw.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 // Hiding is expensive, only do it if focused
-                if (binding.searchBar.hasFocus() && dy > 0 && binding.allAppsGrid.computeVerticalScrollOffset() > 0) {
+                if (binding.searchBarVw.hasFocus() && dy > 0 && binding.allAppsGridVw.computeVerticalScrollOffset() > 0) {
                     activity?.hideKeyboard()
                 }
             }
@@ -263,18 +263,18 @@ class AppDrawerPanel(
 
         setupDrawerBackground(context.getColor(R.color.all_app_bg))
 
-        binding.searchBar.beVisibleIf(context.config.showSearchBar)
-        binding.searchBar.requireToolbar().beGone()
-        binding.searchBar.updateColors()
-        binding.searchBar.applyDrawerSkin()
-        binding.searchBar.setupMenu()
+        binding.searchBarVw.beVisibleIf(context.config.showSearchBar)
+        binding.searchBarVw.requireToolbar().beGone()
+        binding.searchBarVw.updateColors()
+        binding.searchBarVw.applyDrawerSkin()
+        binding.searchBarVw.setupMenu()
 
-        binding.searchBar.onSearchTextChangedListener = {
+        binding.searchBarVw.onSearchTextChangedListener = {
             submitList(launchers)
         }
 
-        binding.searchBar.binding.topToolbarSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (binding.searchBar.getCurrentQuery().isEmpty()) return@setOnEditorActionListener false
+        binding.searchBarVw.binding.topToolbarSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (binding.searchBarVw.getCurrentQuery().isEmpty()) return@setOnEditorActionListener false
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE,
                 EditorInfo.IME_ACTION_SEARCH,
@@ -286,7 +286,7 @@ class AppDrawerPanel(
 
     private fun showNoResultsPlaceholderIfNeeded() {
         val itemCount = getAdapter()?.itemCount
-        binding.noResultsPlaceholder.beVisibleIf(itemCount != null && itemCount == 0)
+        binding.noResultsPlaceholderVw.beVisibleIf(itemCount != null && itemCount == 0)
     }
 
     override fun onAppLauncherLongPressed(x: Float, y: Float, appLauncher: AppTile) {
@@ -313,12 +313,12 @@ class AppDrawerPanel(
         activity?.showHomeIconMenu(x, y, gridItem, true)
         ignoreTouches = true
 
-        binding.searchBar.closeSearch()
+        binding.searchBarVw.closeSearch()
     }
 
     fun onBackPressed(): Boolean {
-        if (binding.searchBar.isSearchOpen) {
-            binding.searchBar.closeSearch()
+        if (binding.searchBarVw.isSearchOpen) {
+            binding.searchBarVw.closeSearch()
             return true
         }
 
@@ -326,7 +326,7 @@ class AppDrawerPanel(
     }
 
     private fun submitList(items: List<AppTile>) {
-        val searchQuery = binding.searchBar.getCurrentQuery()
+        val searchQuery = binding.searchBarVw.getCurrentQuery()
         val filtered = if (searchQuery.isNotEmpty()) {
             items.filter {
                 it.title.normalizeString()

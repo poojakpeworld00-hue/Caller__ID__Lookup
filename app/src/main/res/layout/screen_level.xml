@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/levelRoot"
+        android:id="@+id/levelRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,14 +56,14 @@
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginVertical="@dimen/_10sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -77,12 +77,12 @@
                     android:orientation="vertical"
                     android:paddingHorizontal="@dimen/_16sdp"
                     android:paddingBottom="@dimen/_16sdp"
-                    app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-                    app:layout_constraintTop_toBottomOf="@id/topBar">
+                    app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+                    app:layout_constraintTop_toBottomOf="@id/crownBar">
 
                     <!-- Tilt readout -->
                     <TextView
-                        android:id="@+id/tvTilt"
+                        android:id="@+id/lblTilt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -111,7 +111,7 @@
                         android:layout_weight="1">
 
                         <FrameLayout
-                            android:id="@+id/dialArea"
+                            android:id="@+id/dialAreaVw"
                             android:layout_width="@dimen/_200sdp"
                             android:layout_height="@dimen/_200sdp"
                             android:layout_gravity="center">
@@ -148,7 +148,7 @@
                                 android:background="@drawable/form_ring" />
 
                             <View
-                                android:id="@+id/bubble"
+                                android:id="@+id/bubbleVw"
                                 android:layout_width="@dimen/_38sdp"
                                 android:layout_height="@dimen/_38sdp"
                                 android:layout_gravity="center"
@@ -182,7 +182,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tvStatus"
+                                android:id="@+id/lblStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/form_pill"
@@ -217,7 +217,7 @@
                                     android:textSize="@dimen/_9ssp" />
 
                                 <TextView
-                                    android:id="@+id/tvX"
+                                    android:id="@+id/lblX"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -241,7 +241,7 @@
                                     android:textSize="@dimen/_9ssp" />
 
                                 <TextView
-                                    android:id="@+id/tvY"
+                                    android:id="@+id/lblY"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -254,7 +254,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/btnCalibrate"
+                        android:id="@+id/padCalibrate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -282,10 +282,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

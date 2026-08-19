@@ -58,7 +58,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         // Pad the root by the system-bar insets to keep all content visible, and
         // fold in the IME inset so the bottom message input rides above the
         // keyboard instead of being hidden behind it (with or without an ad).
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             v.setPadding(bars.left, bars.top, bars.right, maxOf(bars.bottom, ime.bottom))
@@ -67,10 +67,10 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
         if (getHD_VBC_Type() == "n") {
             Log.w("987654321", "Native called")
-            SheetInlineAds().BS_showBigNative(this, binding.adContainer)
+            SheetInlineAds().BS_showBigNative(this, binding.adContainerVw)
         } else {
             Log.w("987654321", "Banner called")
-            SheetInlineAds().showBannerAd(this, binding.adContainer)
+            SheetInlineAds().showBannerAd(this, binding.adContainerVw)
         }
 
         val phone = intent.getStringExtra("phone") ?: "Private Number"
@@ -82,29 +82,29 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         val callerName = if (phone.isNotBlank() && !phone.equals("Private Number", ignoreCase = true))
             ContactSource(this).lookupNameByNumber(phone)?.takeIf { it.isNotBlank() }
         else null
-        binding.txtCallerName.text = callerName ?: phone
-        binding.txtCallType.text = getCallTypeText(callType)
+        binding.txtCallerNameVw.text = callerName ?: phone
+        binding.txtCallTypeVw.text = getCallTypeText(callType)
 
         // Duration — format as MM:SS
         val durationSec = if (startTimeMillis > 0 && endTimeMillis > startTimeMillis)
             ((endTimeMillis - startTimeMillis) / 1000).toInt() else 0
         val minutes = durationSec / 60
         val seconds = durationSec % 60
-        binding.txtDuration.text = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        binding.txtDurationVw.text = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 
         // Time — show end time if available
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        binding.txtTime.text = timeFormat.format(
+        binding.txtTimeVw.text = timeFormat.format(
             if (endTimeMillis > 0) Date(endTimeMillis) else Date()
         )
 
         // Recent-call list is the default ("first") tab of the post-call screen.
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, CallStreamFragment())
+            .replace(R.id.frag_container, CallStreamFragment())
             .commit()
-        selectTab(binding.imgRecent, getAllTabs())
+        selectTab(binding.picRecent, getAllTabs())
 
-        binding.callIcon.triggerClick {
+        binding.callIconVw.triggerClick {
             val number = callerNumber
             if (!number.isNullOrBlank()) callNumber(number)
             else Toast.makeText(this, "No number to call", Toast.LENGTH_SHORT).show()
@@ -113,17 +113,17 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         setupClickListeners()
 
         onBackPressedDispatcher.addCallback(this) {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.frag_container)
             when (currentFragment) {
                 // The recents list is "home" — back from it closes the screen.
                 is CallStreamFragment -> finish()
                 else -> {
                     if (!isFinishing && !isDestroyed) {
                         supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, CallStreamFragment())
+                            .replace(R.id.frag_container, CallStreamFragment())
                             .commitAllowingStateLoss()
                     }
-                    selectTab(binding.imgRecent, getAllTabs())
+                    selectTab(binding.picRecent, getAllTabs())
                 }
             }
         }
@@ -137,7 +137,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
     }
 
     private fun getAllTabs() = listOf(
-        binding.imgRecent, binding.imgMes, binding.imgReminder, binding.imgWhatsapp
+        binding.picRecent, binding.picMes, binding.picReminder, binding.picWhatsapp
     )
 
     /** The caller's number from the launching intent, or null for private/unknown. */
@@ -157,9 +157,9 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         val allTabs = getAllTabs()
 
         val fragmentTabs = listOf(
-            binding.imgRecent to { CallStreamFragment() as Fragment },
-            binding.imgMes to { ConvoFragment.newInstance(callerNumber) as Fragment },
-            binding.imgReminder to { NudgePromptFragment() as Fragment }
+            binding.picRecent to { CallStreamFragment() as Fragment },
+            binding.picMes to { ConvoFragment.newInstance(callerNumber) as Fragment },
+            binding.picReminder to { NudgePromptFragment() as Fragment }
         )
 
         fragmentTabs.forEach { (tab, fragmentFactory) ->
@@ -167,16 +167,16 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
                 if (isFinishing || isDestroyed) return@triggerClick
                 selectTab(tab, allTabs)
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragmentFactory())
+                    .replace(R.id.frag_container, fragmentFactory())
                     .addToBackStack(null)
                     .commitAllowingStateLoss()
             }
         }
 
         // WhatsApp tab — opens a chat directly with the caller's number.
-        binding.imgWhatsapp.triggerClick {
+        binding.picWhatsapp.triggerClick {
             if (isFinishing || isDestroyed) return@triggerClick
-            selectTab(binding.imgWhatsapp, allTabs)
+            selectTab(binding.picWhatsapp, allTabs)
             openWhatsApp(callerNumber)
         }
     }
@@ -228,19 +228,19 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
     private val tabIcons by lazy {
         mapOf(
-            binding.imgRecent to Pair(
+            binding.picRecent to Pair(
                 R.drawable.ring_recent_selected,
                 R.drawable.ring_recent_unselected
             ),
-            binding.imgMes to Pair(
+            binding.picMes to Pair(
                 R.drawable.ring_message_selected,
                 R.drawable.ring_message_unselected
             ),
-            binding.imgReminder to Pair(
+            binding.picReminder to Pair(
                 R.drawable.ring_reminder_selected,
                 R.drawable.ring_reminder_unselected
             ),
-            binding.imgWhatsapp to Pair(
+            binding.picWhatsapp to Pair(
                 R.drawable.ring_wa_selected,
                 R.drawable.ring_wa_unselected
             )
@@ -249,10 +249,10 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
     private val tabImageViews by lazy {
         mapOf(
-            binding.imgRecent to binding.ivTabRecent,
-            binding.imgMes to binding.ivTabMessage,
-            binding.imgReminder to binding.ivTabReminder,
-            binding.imgWhatsapp to binding.ivTabWhatsapp
+            binding.picRecent to binding.picTabRecent,
+            binding.picMes to binding.picTabMessage,
+            binding.picReminder to binding.picTabReminder,
+            binding.picWhatsapp to binding.picTabWhatsapp
         )
     }
 

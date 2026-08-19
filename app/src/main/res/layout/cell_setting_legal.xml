@@ -16,14 +16,14 @@
         android:padding="@dimen/_12sdp">
 
         <ImageView
-            android:id="@+id/ivIcon"
+            android:id="@+id/picIcon"
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_36sdp"
             tools:src="@drawable/sym_policy"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/lblTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"

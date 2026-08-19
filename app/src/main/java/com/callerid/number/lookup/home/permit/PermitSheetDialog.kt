@@ -101,21 +101,21 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         val root = inflater.inflate(R.layout.dlg_permission_sheet, container, false)
         rows = buildRows()
 
-        val rowsContainer = root.findViewById<LinearLayout>(R.id.containerRows)
+        val rowsContainer = root.findViewById<LinearLayout>(R.id.holderRows)
         rows.forEach { row ->
             val rowView = inflater.inflate(R.layout.cell_permission_row, rowsContainer, false)
             rowView.tag = row.key
-            rowView.findViewById<ImageView>(R.id.ivIcon).setImageResource(row.icon)
-            rowView.findViewById<TextView>(R.id.tvTitle).setText(row.title)
-            rowView.findViewById<TextView>(R.id.tvDesc).setText(row.desc)
-            rowView.findViewById<TextView>(R.id.btnAllow).setOnClickListener { requestSingle(row) }
+            rowView.findViewById<ImageView>(R.id.picIcon).setImageResource(row.icon)
+            rowView.findViewById<TextView>(R.id.lblTitle).setText(row.title)
+            rowView.findViewById<TextView>(R.id.lblDesc).setText(row.desc)
+            rowView.findViewById<TextView>(R.id.padAllow).setOnClickListener { requestSingle(row) }
             // Granted (and permanently-denied engine rows) are hidden entirely.
             rowView.visibility = if (shouldHideRow(row)) View.GONE else View.VISIBLE
             rowsContainer.addView(rowView)
         }
 
-        root.findViewById<TextView>(R.id.btnContinue).setOnClickListener { onContinueClicked() }
-        root.findViewById<TextView>(R.id.btnNotNow).setOnClickListener {
+        root.findViewById<TextView>(R.id.padContinue).setOnClickListener { onContinueClicked() }
+        root.findViewById<TextView>(R.id.padNotNow).setOnClickListener {
             context?.logKeyEvent("PermissionSheet_NotNow")
             finishFlow()
         }
@@ -134,7 +134,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
         // Keep the sheet compact: cap the scrollable row area to ~half the screen
         // so many rows scroll instead of stretching the sheet full-height.
-        view?.findViewById<View>(R.id.rowsScroll)?.let { scroll ->
+        view?.findViewById<View>(R.id.rowsScrollVw)?.let { scroll ->
             scroll.post {
                 // The sheet may have been dismissed before this runnable fires
                 // (e.g. a quick Not-now/swipe) — bail if we're already detached,
@@ -207,7 +207,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
     private fun refreshRows() {
         val root = view ?: return
-        val rowsContainer = root.findViewById<LinearLayout>(R.id.containerRows)
+        val rowsContainer = root.findViewById<LinearLayout>(R.id.holderRows)
         rows.forEach { row ->
             val rowView = rowsContainer.findViewWithTag<View>(row.key) ?: return@forEach
             // Once granted (or permanently denied for engine rows) the row disappears.

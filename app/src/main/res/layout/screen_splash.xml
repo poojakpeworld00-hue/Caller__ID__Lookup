@@ -16,7 +16,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/splashRoot"
+        android:id="@+id/splashRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/form_splash_hero"
@@ -26,7 +26,7 @@
 
         <!-- ===== Ambient orbs + twinkling stars ===== -->
         <ImageView
-            android:id="@+id/orb1"
+            android:id="@+id/orb1Vw"
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_150sdp"
             android:contentDescription="@null"
@@ -37,7 +37,7 @@
             app:layout_constraintVertical_bias="0.10" />
 
         <ImageView
-            android:id="@+id/orb2"
+            android:id="@+id/orb2Vw"
             android:layout_width="@dimen/_190sdp"
             android:layout_height="@dimen/_190sdp"
             android:contentDescription="@null"
@@ -49,7 +49,7 @@
 
         <!-- Scattered organically across the upper "sky" (not one-per-corner). -->
         <View
-            android:id="@+id/star1"
+            android:id="@+id/star1Vw"
             android:layout_width="@dimen/_4sdp"
             android:layout_height="@dimen/_4sdp"
             android:background="@drawable/form_splash_star"
@@ -59,7 +59,7 @@
             app:layout_constraintVertical_bias="0.13" />
 
         <View
-            android:id="@+id/star2"
+            android:id="@+id/star2Vw"
             android:layout_width="@dimen/_3sdp"
             android:layout_height="@dimen/_3sdp"
             android:background="@drawable/form_splash_star"
@@ -69,7 +69,7 @@
             app:layout_constraintVertical_bias="0.08" />
 
         <View
-            android:id="@+id/star3"
+            android:id="@+id/star3Vw"
             android:layout_width="@dimen/_4sdp"
             android:layout_height="@dimen/_4sdp"
             android:background="@drawable/form_splash_star"
@@ -79,7 +79,7 @@
             app:layout_constraintVertical_bias="0.19" />
 
         <View
-            android:id="@+id/star4"
+            android:id="@+id/star4Vw"
             android:layout_width="@dimen/_3sdp"
             android:layout_height="@dimen/_3sdp"
             android:background="@drawable/form_splash_star"
@@ -90,13 +90,13 @@
 
         <!-- ===== Caller-info composition (icon + rings + orbiting elements) ===== -->
         <FrameLayout
-            android:id="@+id/composition"
+            android:id="@+id/compositionVw"
             android:layout_width="@dimen/_300sdp"
             android:layout_height="@dimen/_300sdp"
             android:alpha="0"
             android:clipChildren="false"
             android:clipToPadding="false"
-            app:layout_constraintBottom_toTopOf="@id/tvAppName"
+            app:layout_constraintBottom_toTopOf="@id/lblAppName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -104,7 +104,7 @@
 
             <!-- Dashed orbit ring -->
             <ImageView
-                android:id="@+id/orbitRing"
+                android:id="@+id/orbitRingVw"
                 android:layout_width="@dimen/_240sdp"
                 android:layout_height="@dimen/_240sdp"
                 android:layout_gravity="center"
@@ -113,7 +113,7 @@
 
             <!-- Blue AI-scan ring around the icon -->
             <ImageView
-                android:id="@+id/scanRing"
+                android:id="@+id/scanRingVw"
                 android:layout_width="@dimen/_134sdp"
                 android:layout_height="@dimen/_134sdp"
                 android:layout_gravity="center"
@@ -123,7 +123,7 @@
 
             <!-- Centred app icon tile -->
             <FrameLayout
-                android:id="@+id/iconTile"
+                android:id="@+id/iconTileVw"
                 android:layout_width="@dimen/_72sdp"
                 android:layout_height="@dimen/_72sdp"
                 android:layout_gravity="center"
@@ -141,7 +141,7 @@
 
             <!-- Orbit layer: rotates as a whole; children counter-rotate to stay upright -->
             <FrameLayout
-                android:id="@+id/orbitLayer"
+                android:id="@+id/orbitLayerVw"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -150,13 +150,13 @@
 
                 <!-- Incoming call pill (upper-left) -->
                 <FrameLayout
-                    android:id="@+id/incomingWrap"
+                    android:id="@+id/incomingWrapVw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
                     <LinearLayout
-                        android:id="@+id/chipIncoming"
+                        android:id="@+id/flagIncoming"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0"
@@ -196,13 +196,13 @@
 
                 <!-- Fraud blocked pill (lower-left) -->
                 <FrameLayout
-                    android:id="@+id/fraudWrap"
+                    android:id="@+id/fraudWrapVw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
                     <LinearLayout
-                        android:id="@+id/chipFraud"
+                        android:id="@+id/flagFraud"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0"
@@ -234,13 +234,13 @@
 
                 <!-- Verified caller avatar (right) -->
                 <FrameLayout
-                    android:id="@+id/avatarWrap"
+                    android:id="@+id/avatarWrapVw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
                     <FrameLayout
-                        android:id="@+id/avatarInner"
+                        android:id="@+id/avatarInnerVw"
                         android:layout_width="@dimen/_54sdp"
                         android:layout_height="@dimen/_54sdp"
                         android:alpha="0"
@@ -277,7 +277,7 @@
 
         <!-- ===== Title + tagline ===== -->
         <TextView
-            android:id="@+id/tvAppName"
+            android:id="@+id/lblAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
@@ -287,13 +287,13 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_28ssp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvTagline"
+            app:layout_constraintBottom_toTopOf="@id/lblTagline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/composition" />
+            app:layout_constraintTop_toBottomOf="@id/compositionVw" />
 
         <TextView
-            android:id="@+id/tvTagline"
+            android:id="@+id/lblTagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
@@ -306,32 +306,32 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAppName" />
+            app:layout_constraintTop_toBottomOf="@id/lblAppName" />
 
         <!-- ===== Progress bar (fills as the app boots) ===== -->
         <View
-            android:id="@+id/progressTrack"
+            android:id="@+id/progTrack"
             android:layout_width="@dimen/_110sdp"
             android:layout_height="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             android:alpha="0"
             android:background="@drawable/form_splash_bar_track"
-            app:layout_constraintBottom_toTopOf="@id/footer"
+            app:layout_constraintBottom_toTopOf="@id/footerVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
-            android:id="@+id/progressFill"
+            android:id="@+id/progFill"
             android:layout_width="@dimen/_8sdp"
             android:layout_height="@dimen/_4sdp"
             android:background="@drawable/form_splash_bar_fill"
-            app:layout_constraintBottom_toBottomOf="@id/progressTrack"
-            app:layout_constraintStart_toStartOf="@id/progressTrack"
-            app:layout_constraintTop_toTopOf="@id/progressTrack" />
+            app:layout_constraintBottom_toBottomOf="@id/progTrack"
+            app:layout_constraintStart_toStartOf="@id/progTrack"
+            app:layout_constraintTop_toTopOf="@id/progTrack" />
 
         <!-- ===== Ad disclosure + secure version footer ===== -->
         <LinearLayout
-            android:id="@+id/footer"
+            android:id="@+id/footerVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_16sdp"
@@ -364,7 +364,7 @@
                     android:src="@drawable/sym_shield_check" />
 
                 <TextView
-                    android:id="@+id/tvSecureVersion"
+                    android:id="@+id/lblSecureVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"

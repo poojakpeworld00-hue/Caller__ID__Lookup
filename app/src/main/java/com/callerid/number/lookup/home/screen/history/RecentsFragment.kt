@@ -43,30 +43,30 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
 
     override fun initView() {
         // Hero bleeds under the status bar; pad its content down by the inset.
-        val baseTop = binding.heroHeader.paddingTop
-        ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeader) { v, insets ->
+        val baseTop = binding.heroHeaderVw.paddingTop
+        ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeaderVw) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             v.updatePadding(top = baseTop + top)
             insets
         }
-        binding.btnRecentsDial.setOnClickListener {
+        binding.padRecentsDial.setOnClickListener {
             requireActivity().openActivity<DialPadActivity>()
         }
-        binding.btnRecentsFilter.setOnClickListener { showSortMenu(it) }
+        binding.padRecentsFilter.setOnClickListener { showSortMenu(it) }
 
-        binding.rvRecents.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvRecents.adapter = adapter
+        binding.rollRecents.layoutManager = LinearLayoutManager(requireContext())
+        binding.rollRecents.adapter = adapter
 
         // Native banner at the bottom of the recents screen.
-        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adNativeFrame, binding.adShimmer)
-        binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
-        binding.adNativeDivider1.followAdContainer(binding.adNativeFrame)
+        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
+        binding.adNativeDivider1Vw.followAdContainer(binding.adNativeFrameVw)
 
-        binding.tabAll.setOnClickListener { viewModel.setFilter(LogScope.ALL) }
-        binding.tabIncoming.setOnClickListener { viewModel.setFilter(LogScope.INCOMING) }
-        binding.tabOutgoing.setOnClickListener { viewModel.setFilter(LogScope.OUTGOING) }
-        binding.tabMissed.setOnClickListener { viewModel.setFilter(LogScope.MISSED) }
-        binding.btnGrant.setOnClickListener {
+        binding.segAll.setOnClickListener { viewModel.setFilter(LogScope.ALL) }
+        binding.segIncoming.setOnClickListener { viewModel.setFilter(LogScope.INCOMING) }
+        binding.segOutgoing.setOnClickListener { viewModel.setFilter(LogScope.OUTGOING) }
+        binding.segMissed.setOnClickListener { viewModel.setFilter(LogScope.MISSED) }
+        binding.padGrant.setOnClickListener {
             requestPermissionChain(
                 listOf(Manifest.permission.READ_CALL_LOG)
             ) {
@@ -75,16 +75,16 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
             }
         }
 
-        binding.etSearch.addTextChangedListener(object : android.text.TextWatcher {
+        binding.inpSearch.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
             override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) {
                 val text = s?.toString().orEmpty()
                 viewModel.setQuery(text)
-                binding.btnClearSearch.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
+                binding.padClearSearch.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
             }
         })
-        binding.btnClearSearch.setOnClickListener { binding.etSearch.setText("") }
+        binding.padClearSearch.setOnClickListener { binding.inpSearch.setText("") }
 
         if (hasCallLogPermission()) onPermissionGranted() else showPermissionState()
     }
@@ -101,14 +101,14 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
     override fun initObservers() {
         viewModel.rows.observe(viewLifecycleOwner) { rows ->
             adapter.submit(rows)
-            binding.tvEmpty.visibility =
+            binding.lblEmpty.visibility =
                 if (rows.isEmpty() && hasCallLogPermission()) View.VISIBLE else View.GONE
         }
         viewModel.filter.observe(viewLifecycleOwner) { active ->
-            highlightTab(binding.tabAll, active == LogScope.ALL)
-            highlightTab(binding.tabIncoming, active == LogScope.INCOMING)
-            highlightTab(binding.tabOutgoing, active == LogScope.OUTGOING)
-            highlightTab(binding.tabMissed, active == LogScope.MISSED)
+            highlightTab(binding.segAll, active == LogScope.ALL)
+            highlightTab(binding.segIncoming, active == LogScope.INCOMING)
+            highlightTab(binding.segOutgoing, active == LogScope.OUTGOING)
+            highlightTab(binding.segMissed, active == LogScope.MISSED)
         }
     }
 
@@ -152,7 +152,7 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
 
         val inflater = LayoutInflater.from(requireContext())
         val content = inflater.inflate(R.layout.popup_sort, null) as LinearLayout
-        val container = content.findViewById<LinearLayout>(R.id.sortContainer)
+        val container = content.findViewById<LinearLayout>(R.id.sortContainerVw)
 
         val popup = PopupWindow(
             content,
@@ -166,8 +166,8 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
 
         options.forEach { (titleRes, sort) ->
             val row = inflater.inflate(R.layout.cell_sort_option, container, false)
-            row.findViewById<TextView>(R.id.tvSortLabel).setText(titleRes)
-            row.findViewById<ImageView>(R.id.ivSortCheck).visibility =
+            row.findViewById<TextView>(R.id.lblSortLabel).setText(titleRes)
+            row.findViewById<ImageView>(R.id.picSortCheck).visibility =
                 if (sort == current) View.VISIBLE else View.INVISIBLE
             row.setOnClickListener {
                 viewModel.setSort(sort)
@@ -181,15 +181,15 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
     }
 
     private fun onPermissionGranted() {
-        binding.permState.visibility = View.GONE
-        binding.rvRecents.visibility = View.VISIBLE
+        binding.permStateVw.visibility = View.GONE
+        binding.rollRecents.visibility = View.VISIBLE
         viewModel.load()
     }
 
     private fun showPermissionState() {
-        binding.permState.visibility = View.VISIBLE
-        binding.rvRecents.visibility = View.GONE
-        binding.tvEmpty.visibility = View.GONE
+        binding.permStateVw.visibility = View.VISIBLE
+        binding.rollRecents.visibility = View.GONE
+        binding.lblEmpty.visibility = View.GONE
     }
 
     private fun dialNumber(number: String) = placeCall(number)

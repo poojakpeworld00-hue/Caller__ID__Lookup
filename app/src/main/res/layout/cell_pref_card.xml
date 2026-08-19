@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/ivIcon"
+                android:id="@+id/picIcon"
                 android:layout_width="@dimen/_36sdp"
                 android:layout_height="@dimen/_36sdp"
                 android:layout_alignParentStart="true"
@@ -27,7 +27,7 @@
                 tools:ignore="ContentDescription" />
 
             <ImageView
-                android:id="@+id/ivChevron"
+                android:id="@+id/picChevron"
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_alignParentEnd="true"
@@ -38,7 +38,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/lblTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
@@ -48,7 +48,7 @@
             tools:text="Theme" />
 
         <TextView
-            android:id="@+id/tvSub"
+            android:id="@+id/lblSub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"

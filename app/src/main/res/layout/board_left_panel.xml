@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.callerid.number.lookup.home.shell.panels.LeftPanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/left_panel_holder"
+    android:id="@+id/left_panel_holderVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/all_app_bg"
@@ -9,7 +9,7 @@
     android:focusable="true">
 
     <RelativeLayout
-        android:id="@+id/panel_search_holder"
+        android:id="@+id/panel_search_holderVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -18,7 +18,7 @@
         android:background="@drawable/form_search_board">
 
         <ImageView
-            android:id="@+id/panel_search_icon"
+            android:id="@+id/panel_search_iconVw"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
@@ -29,7 +29,7 @@
             android:src="@drawable/sym_pseudo_search_vector" />
 
         <ImageView
-            android:id="@+id/panel_search_clear"
+            android:id="@+id/panel_search_clearVw"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
@@ -42,11 +42,11 @@
             android:visibility="gone" />
 
         <EditText
-            android:id="@+id/panel_search"
+            android:id="@+id/panel_searchVw"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_toStartOf="@+id/panel_search_clear"
-            android:layout_toEndOf="@+id/panel_search_icon"
+            android:layout_toStartOf="@+id/panel_search_clearVw"
+            android:layout_toEndOf="@+id/panel_search_iconVw"
             android:background="@null"
             android:ellipsize="end"
             android:gravity="start|center_vertical"
@@ -65,11 +65,11 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/panel_scroll"
+        android:id="@+id/panel_scrollVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ad_native_frame"
-        android:layout_below="@+id/panel_search_holder"
+        android:layout_above="@+id/ad_native_frameVw"
+        android:layout_below="@+id/panel_search_holderVw"
         android:clipToPadding="false"
         android:paddingBottom="50dp">
 
@@ -81,7 +81,7 @@
             android:paddingEnd="10dp">
 
             <RelativeLayout
-                android:id="@+id/panel_results_header"
+                android:id="@+id/panel_results_headerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -97,7 +97,7 @@
                     android:textSize="@dimen/smaller_text_size" />
 
                 <TextView
-                    android:id="@+id/panel_see_more"
+                    android:id="@+id/panel_see_moreVw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -110,7 +110,7 @@
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_results_list"
+                android:id="@+id/panel_results_listVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
@@ -121,7 +121,7 @@
 
             <!-- nothing matched the query, shown instead of the results list -->
             <TextView
-                android:id="@+id/panel_no_results"
+                android:id="@+id/panel_no_resultsVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -135,7 +135,7 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/panel_suggested_header"
+                android:id="@+id/panel_suggested_headerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -146,7 +146,7 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_suggested_grid"
+                android:id="@+id/panel_suggested_gridVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/form_search_board"
@@ -161,14 +161,14 @@
                  for it. It scrolls with the panel content; the frame at the bottom of the
                  panel is the pinned one. -->
             <FrameLayout
-                android:id="@+id/ad_suggested_frame"
+                android:id="@+id/ad_suggested_frameVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:visibility="gone">
 
                 <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/ad_suggested_shimmer"
+                    android:id="@+id/ad_suggested_shimmerVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#ccc">
@@ -179,7 +179,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/panel_recent_header"
+                android:id="@+id/panel_recent_headerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -190,7 +190,7 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_recent_grid"
+                android:id="@+id/panel_recent_gridVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/form_search_board"
@@ -201,7 +201,7 @@
                 app:spanCount="4" />
 
             <TextView
-                android:id="@+id/panel_search_in_header"
+                android:id="@+id/panel_search_in_headerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -212,7 +212,7 @@
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_search_in_list"
+                android:id="@+id/panel_search_in_listVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -233,13 +233,13 @@
          ScrollView then takes the space back. HomeBoardActivity pads this frame for the navigation
          bar via setupEdgeToEdge. -->
     <FrameLayout
-        android:id="@+id/ad_native_frame"
+        android:id="@+id/ad_native_frameVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/ad_shimmer"
+            android:id="@+id/ad_shimmerVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ccc">

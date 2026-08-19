@@ -43,9 +43,9 @@ object FsiPrimerDialog {
 
         val view = LayoutInflater.from(activity)
             .inflate(R.layout.dlg_fsi_permission, null, false)
-        view.findViewById<TextView>(R.id.fsDialogTitle).text = config.dialog.title
-        view.findViewById<TextView>(R.id.fsDialogDesc).text = config.dialog.desc
-        view.findViewById<TextView>(R.id.fsDialogButton).text = config.dialog.button
+        view.findViewById<TextView>(R.id.fsDialogTitleVw).text = config.dialog.title
+        view.findViewById<TextView>(R.id.fsDialogDescVw).text = config.dialog.desc
+        view.findViewById<TextView>(R.id.fsDialogButtonVw).text = config.dialog.button
 
         val dialog = Dialog(activity).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -58,7 +58,7 @@ object FsiPrimerDialog {
         // so the dismiss listener can tell Enable apart from Not now / cancel.
         var enableTapped = false
 
-        view.findViewById<TextView>(R.id.fsDialogButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.fsDialogButtonVw).setOnClickListener {
             activity.logKeyEvent("FSI_Dialog_Enable")
             // Close the dialog first, then ask notification (targeted request), and
             // only after that launch FSI settings in-task via the shell controller's
@@ -69,7 +69,7 @@ object FsiPrimerDialog {
                 (activity as? HomeShellOwner)?.homeShellController?.openFsiSettings()
             }
         }
-        view.findViewById<TextView>(R.id.fsDialogLater).setOnClickListener {
+        view.findViewById<TextView>(R.id.fsDialogLaterVw).setOnClickListener {
             activity.logKeyEvent("FSI_Dialog_NotNow")
             dialog.dismiss()
         }
@@ -105,12 +105,12 @@ object FsiPrimerDialog {
             .setDuration(560)
             .start()
 
-        loopGlow(root.findViewById(R.id.fsDialogGlow))
-        loopRing(root.findViewById(R.id.fsDialogOrbit1), 0L, 0.85f, 1.7f, 0.55f, 2600L)
-        loopRing(root.findViewById(R.id.fsDialogOrbit2), 900L, 0.85f, 1.7f, 0.55f, 2600L)
-        loopRing(root.findViewById(R.id.fsAvatarRing1), 0L, 0.9f, 1.4f, 0.7f, 2200L)
-        loopRing(root.findViewById(R.id.fsAvatarRing2), 700L, 0.9f, 1.4f, 0.7f, 2200L)
-        root.findViewById<View>(R.id.fsDialogButton)?.let { loopCta(it) }
+        loopGlow(root.findViewById(R.id.fsDialogGlowVw))
+        loopRing(root.findViewById(R.id.fsDialogOrbit1Vw), 0L, 0.85f, 1.7f, 0.55f, 2600L)
+        loopRing(root.findViewById(R.id.fsDialogOrbit2Vw), 900L, 0.85f, 1.7f, 0.55f, 2600L)
+        loopRing(root.findViewById(R.id.fsAvatarRing1Vw), 0L, 0.9f, 1.4f, 0.7f, 2200L)
+        loopRing(root.findViewById(R.id.fsAvatarRing2Vw), 700L, 0.9f, 1.4f, 0.7f, 2200L)
+        root.findViewById<View>(R.id.fsDialogButtonVw)?.let { loopCta(it) }
     }
 
     /** Expanding ring pulse (scale up + fade out), repeating while the dialog is showing. */

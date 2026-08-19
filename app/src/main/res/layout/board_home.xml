@@ -17,7 +17,7 @@
 
     <!-- Compact header (pads the status-bar inset from HomeMainFragment) -->
     <LinearLayout
-        android:id="@+id/heroHeader"
+        android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -50,7 +50,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/btnSettings"
+            android:id="@+id/padSettings"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:background="@drawable/form_onb_circle_lavender"
@@ -78,7 +78,7 @@
                  above the search pill) while keeping the header/search/hint's existing
                  non-scrolling behavior. -->
             <LinearLayout
-                android:id="@+id/cardProtection"
+                android:id="@+id/panelProtection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -114,7 +114,7 @@
                         android:textSize="@dimen/_13ssp" />
 
                     <TextView
-                        android:id="@+id/tvProtectionSub"
+                        android:id="@+id/lblProtectionSub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_1sdp"
@@ -136,7 +136,7 @@
 
             <!-- Search pill with the +91 country selector -->
             <LinearLayout
-                android:id="@+id/searchBar"
+                android:id="@+id/searchBarVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -152,7 +152,7 @@
                 android:paddingVertical="@dimen/_6sdp">
 
                 <LinearLayout
-                    android:id="@+id/llHomeCountry"
+                    android:id="@+id/rowHomeCountry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
@@ -163,7 +163,7 @@
                     android:paddingVertical="@dimen/_6sdp">
 
                     <TextView
-                        android:id="@+id/tvHomeFlag"
+                        android:id="@+id/lblHomeFlag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -173,7 +173,7 @@
                         tools:text="🇮🇳" />
 
                     <TextView
-                        android:id="@+id/tvHomeDial"
+                        android:id="@+id/lblHomeDial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -196,7 +196,7 @@
                     android:background="@color/outline" />
 
                 <EditText
-                    android:id="@+id/etHomeSearch"
+                    android:id="@+id/inpHomeSearch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -212,7 +212,7 @@
                     android:textSize="@dimen/_11ssp" />
 
                 <ImageView
-                    android:id="@+id/btnHomeSearch"
+                    android:id="@+id/padHomeSearch"
                     android:layout_width="@dimen/_34sdp"
                     android:layout_height="@dimen/_34sdp"
                     android:background="@drawable/form_circle_primary"
@@ -226,7 +226,7 @@
                  dismissed ("Not now"/swipe) with permissions still pending. "Manage"
                  reopens the sheet. Hidden automatically once everything is granted. -->
             <LinearLayout
-                android:id="@+id/llPermHint"
+                android:id="@+id/rowPermHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -257,7 +257,7 @@
                     android:textSize="@dimen/_10ssp" />
 
                 <TextView
-                    android:id="@+id/btnPermManage"
+                    android:id="@+id/padPermManage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
@@ -272,7 +272,7 @@
 
             <!-- Quick actions — Claude Design "actions 3": one shared card, split cells. -->
             <LinearLayout
-                android:id="@+id/quickActionsRow"
+                android:id="@+id/quickActionsRowVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -288,28 +288,28 @@
                 android:paddingBottom="@dimen/_12sdp">
 
                 <include
-                    android:id="@+id/qaDialer"
+                    android:id="@+id/qaDialerVw"
                     layout="@layout/cell_quick_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <include
-                    android:id="@+id/qaLookup"
+                    android:id="@+id/qaLookupVw"
                     layout="@layout/cell_quick_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <include
-                    android:id="@+id/qaBlocklist"
+                    android:id="@+id/qaBlocklistVw"
                     layout="@layout/cell_quick_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <include
-                    android:id="@+id/qaTools"
+                    android:id="@+id/qaToolsVw"
                     layout="@layout/cell_quick_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -318,20 +318,20 @@
 
             <!-- Full-bleed hairline separating the quick actions from the ad below -->
             <View
-                android:id="@+id/adNativeDivider"
+                android:id="@+id/adNativeDividerVw"
                 android:layout_marginTop="@dimen/_12sdp"
                 style="@style/AdDivider" />
 
             <!-- Native ad, relocated below the quick actions -->
             <FrameLayout
-                android:id="@+id/adRecentBanner"
+                android:id="@+id/adRecentBannerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                >
 
                 <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/adRecentShimmer"
+                    android:id="@+id/adRecentShimmerVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#ccc">
@@ -341,11 +341,11 @@
             </FrameLayout>
             <!-- Full-bleed hairline separating the quick actions from the ad below -->
             <View
-                android:id="@+id/adNativeDivider1"
+                android:id="@+id/adNativeDivider1Vw"
                 style="@style/AdDivider" />
             <!-- Recent activity header -->
             <LinearLayout
-                android:id="@+id/recentHeaderRow"
+                android:id="@+id/recentHeaderRowVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -364,7 +364,7 @@
                     android:textSize="@dimen/_12ssp" />
 
                 <TextView
-                    android:id="@+id/tvSeeAll"
+                    android:id="@+id/lblSeeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -377,7 +377,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvRecent"
+                android:id="@+id/rollRecent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -386,7 +386,7 @@
 
             <!-- Shown when call-log permission is not granted -->
             <LinearLayout
-                android:id="@+id/llRecentPermission"
+                android:id="@+id/rowRecentPermission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_20sdp"
@@ -426,7 +426,7 @@
                     android:textSize="@dimen/_11ssp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAllowCallLog"
+                    android:id="@+id/padAllowCallLog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_14sdp"

@@ -43,9 +43,9 @@ class ConvoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.board_message, container, false)
 
-        radioContainer = view.findViewById(R.id.radioContainer)
-        etCustomMessage = view.findViewById(R.id.etCustomMessage)
-        btnSendMessage = view.findViewById(R.id.btnSendMessage)
+        radioContainer = view.findViewById(R.id.rdoContainer)
+        etCustomMessage = view.findViewById(R.id.inpCustomMessage)
+        btnSendMessage = view.findViewById(R.id.padSendMessage)
 
         setupOptions(inflater)
         setupListeners()
@@ -58,8 +58,8 @@ class ConvoFragment : Fragment() {
 
         options.forEachIndexed { index, text ->
             val itemView = inflater.inflate(R.layout.cell_radio_option, radioContainer, false)
-            val tvOption = itemView.findViewById<TextView>(R.id.tvOption)
-            val imgCheck = itemView.findViewById<ImageView>(R.id.imgCheck)
+            val tvOption = itemView.findViewById<TextView>(R.id.lblOption)
+            val imgCheck = itemView.findViewById<ImageView>(R.id.picCheck)
 
             tvOption.text = text
 
@@ -81,8 +81,8 @@ class ConvoFragment : Fragment() {
 
         for (i in 0 until radioContainer.childCount) {
             val child = radioContainer.getChildAt(i)
-            val tvOption = child.findViewById<TextView>(R.id.tvOption)
-            val imgCheck = child.findViewById<ImageView>(R.id.imgCheck)
+            val tvOption = child.findViewById<TextView>(R.id.lblOption)
+            val imgCheck = child.findViewById<ImageView>(R.id.picCheck)
 
             if (i == selectedIndex) {
                 tvOption.setTextColor(requireContext().getColor(R.color.primary))

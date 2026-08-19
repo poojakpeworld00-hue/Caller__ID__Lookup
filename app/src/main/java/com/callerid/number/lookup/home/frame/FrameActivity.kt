@@ -121,12 +121,12 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
      * Kotlin change needed. Override to customise.
      */
     protected open fun showBottomBanner() {
-        val container = binding.root.findViewById<FrameLayout>(R.id.bannerAdFrame) ?: return
-        val shimmer = binding.root.findViewById<ShimmerFrameLayout>(R.id.bannerShimmer)
+        val container = binding.root.findViewById<FrameLayout>(R.id.bannerAdFrameVw) ?: return
+        val shimmer = binding.root.findViewById<ShimmerFrameLayout>(R.id.bannerShimmerVw)
         PerScreenPromo.showAd(this::class.java.simpleName, this, container, shimmer)
         // The hairline above the slot only exists to fence off an advert — drop it
         // whenever the slot ends up empty (ads off, show:false, load failure).
-        binding.root.findViewById<View>(R.id.adBannerDivider)?.followAdContainer(container)
+        binding.root.findViewById<View>(R.id.adBannerDividerVw)?.followAdContainer(container)
     }
 
     /** Set up views, listeners, adapters. */

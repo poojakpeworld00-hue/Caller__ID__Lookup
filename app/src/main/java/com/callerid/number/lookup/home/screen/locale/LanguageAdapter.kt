@@ -83,8 +83,8 @@ class LanguageAdapter(
         fun cancelAnimations() {
             running?.cancel()
             running = null
-            binding.radio.scaleX = 1f
-            binding.radio.scaleY = 1f
+            binding.rdo.scaleX = 1f
+            binding.rdo.scaleY = 1f
             binding.root.background?.alpha = OPAQUE
         }
 
@@ -96,17 +96,17 @@ class LanguageAdapter(
 
             cancelAnimations()
             binding.root.isActivated = selected
-            binding.radio.isActivated = selected
+            binding.rdo.isActivated = selected
 
             if (!animate) {
-                binding.tvNative.setTextColor(nativeColor)
+                binding.lblNative.setTextColor(nativeColor)
                 return
             }
 
             // Radio pops, the row tint fades in, and the leading label
             // cross-fades to the on-container colour.
             val pop = ObjectAnimator.ofPropertyValuesHolder(
-                binding.radio,
+                binding.rdo,
                 android.animation.PropertyValuesHolder.ofFloat(View.SCALE_X, POP_FROM, 1f),
                 android.animation.PropertyValuesHolder.ofFloat(View.SCALE_Y, POP_FROM, 1f)
             ).apply {
@@ -120,9 +120,9 @@ class LanguageAdapter(
                 addUpdateListener { binding.root.background?.alpha = it.animatedValue as Int }
             }
 
-            val text = ValueAnimator.ofArgb(binding.tvNative.currentTextColor, nativeColor).apply {
+            val text = ValueAnimator.ofArgb(binding.lblNative.currentTextColor, nativeColor).apply {
                 duration = TINT_MS
-                addUpdateListener { binding.tvNative.setTextColor(it.animatedValue as Int) }
+                addUpdateListener { binding.lblNative.setTextColor(it.animatedValue as Int) }
             }
 
             running = AnimatorSet().apply {
@@ -145,9 +145,9 @@ class LanguageAdapter(
         val item = items[position]
         with(holder.binding) {
             val ctx = root.context
-            tvFlag.text = item.flag
-            tvNative.text = item.nativeName
-            tvName.text =
+            lblFlag.text = item.flag
+            lblNative.text = item.nativeName
+            lblName.text =
                 if (item.tag == currentTag) ctx.getString(R.string.language_current)
                 else item.name
         }

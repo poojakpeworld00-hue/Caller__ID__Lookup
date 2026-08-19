@@ -16,7 +16,7 @@
         android:padding="@dimen/_12sdp">
 
         <ImageView
-            android:id="@+id/ivIcon"
+            android:id="@+id/picIcon"
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_36sdp"
             tools:src="@drawable/sym_star"
@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/lblTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/on_surface"
@@ -39,7 +39,7 @@
                 tools:text="Rate Us" />
 
             <TextView
-                android:id="@+id/tvSub"
+                android:id="@+id/lblSub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -49,7 +49,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/ivTrailing"
+            android:id="@+id/picTrailing"
             android:layout_width="@dimen/_18sdp"
             android:layout_height="@dimen/_18sdp"
             android:src="@drawable/sym_chevron_right"

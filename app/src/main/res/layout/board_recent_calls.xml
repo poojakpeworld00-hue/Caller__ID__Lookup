@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRecents"
+        android:id="@+id/rollRecents"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -14,7 +14,7 @@
         android:paddingVertical="@dimen/_4sdp" />
 
     <TextView
-        android:id="@+id/tvEmpty"
+        android:id="@+id/lblEmpty"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

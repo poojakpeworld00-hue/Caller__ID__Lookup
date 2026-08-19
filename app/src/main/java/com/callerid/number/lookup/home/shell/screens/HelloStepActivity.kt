@@ -43,13 +43,13 @@ class HelloStepActivity : ShellBaseActivity() {
         setContentView(binding.root)
         excludeAppFromRecents()
 
-        binding.onboardingContinue.setOnClickListener { requestOnboardingPermissions() }
-        binding.onboardingSkip.setOnClickListener { goToNextStep() }
+        binding.onboardingContinueVw.setOnClickListener { requestOnboardingPermissions() }
+        binding.onboardingSkipVw.setOnClickListener { goToNextStep() }
 
         // `onboarding.welcome.skip_enabled: false` makes the screen a required step —
         // Continue (and Back, which behaves like Skip) are then the only ways on.
         val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.WELCOME)
-        binding.onboardingSkip.beVisibleIf(ui.skipEnabled)
+        binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         // Back moves the flow on rather than out. Onboarding runs once and there is nothing
         // behind this screen worth returning to, so Back behaves like Skip.
@@ -64,10 +64,10 @@ class HelloStepActivity : ShellBaseActivity() {
         ShellPromoConfig.showSlot(
             activity = this,
             slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.WELCOME),
-            container = binding.adNativeFrame,
-            shimmer = binding.adShimmer,
+            container = binding.adNativeFrameVw,
+            shimmer = binding.adShimmerVw,
         )
-        binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
+        binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
         playEntrance()
     }
@@ -75,15 +75,15 @@ class HelloStepActivity : ShellBaseActivity() {
     private fun playEntrance() = with(binding) {
         riseIn(
             listOf(
-                onboardingHero,
-                onboardingTitle,
-                onboardingLead,
-                onboardingFeatures,
-                onboardingFooter,
+                onboardingHeroVw,
+                onboardingTitleVw,
+                onboardingLeadVw,
+                onboardingFeaturesVw,
+                onboardingFooterVw,
             )
         )
-        stampIn(onboardingBadge)
-        shieldPulse = breathe(onboardingShield)
+        stampIn(onboardingBadgeVw)
+        shieldPulse = breathe(onboardingShieldVw)
     }
 
     override fun onDestroy() {

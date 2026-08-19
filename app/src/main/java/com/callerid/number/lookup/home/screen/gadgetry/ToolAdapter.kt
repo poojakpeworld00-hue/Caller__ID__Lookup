@@ -55,7 +55,7 @@ class ToolAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val row = rows[position]) {
-            is ToolRow.Header -> (holder as HeaderVH).binding.tvToolCategory.text = row.title
+            is ToolRow.Header -> (holder as HeaderVH).binding.lblToolCategory.text = row.title
             is ToolRow.Tool -> (holder as ToolVH).bind(row.tool)
         }
         animateIn(holder.itemView, position)
@@ -85,12 +85,12 @@ class ToolAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tool: ToolUi) {
-            binding.ivToolIcon.setBackgroundResource(tool.tileRes)
-            binding.ivToolIcon.setImageResource(tool.iconRes)
-            binding.tvToolTitle.text = tool.name
-            binding.tvToolSub.text = tool.hint
-            binding.toolCard.setOnClickListener {
-                springIcon(binding.ivToolIcon)
+            binding.picToolIcon.setBackgroundResource(tool.tileRes)
+            binding.picToolIcon.setImageResource(tool.iconRes)
+            binding.lblToolTitle.text = tool.name
+            binding.lblToolSub.text = tool.hint
+            binding.toolCardVw.setOnClickListener {
+                springIcon(binding.picToolIcon)
                 onClick(tool)
             }
         }

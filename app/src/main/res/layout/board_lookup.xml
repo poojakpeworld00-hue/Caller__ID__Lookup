@@ -9,7 +9,7 @@
 
     <!-- Compact header (pads the status-bar inset from LookupFragment) -->
     <LinearLayout
-        android:id="@+id/heroHeader"
+        android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -28,7 +28,7 @@
             android:textSize="@dimen/_16ssp" />
 
         <ImageView
-            android:id="@+id/btnLookupHistory"
+            android:id="@+id/padLookupHistory"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:background="@drawable/form_onb_circle_lavender"
@@ -55,7 +55,7 @@
         android:paddingVertical="@dimen/_6sdp">
 
         <LinearLayout
-            android:id="@+id/llCountryPickerSearch"
+            android:id="@+id/rowCountryPickerSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -65,7 +65,7 @@
             android:paddingVertical="@dimen/_6sdp">
 
             <TextView
-                android:id="@+id/tvFlagSearch"
+                android:id="@+id/lblFlagSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -75,7 +75,7 @@
                 tools:text="🇮🇳" />
 
             <TextView
-                android:id="@+id/tvCountrySearch"
+                android:id="@+id/lblCountrySearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -98,7 +98,7 @@
             android:background="@color/outline" />
 
         <EditText
-            android:id="@+id/etNumberInput"
+            android:id="@+id/inpNumberInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -113,7 +113,7 @@
             android:textSize="@dimen/_11ssp" />
 
         <ImageView
-            android:id="@+id/ivClear"
+            android:id="@+id/picClear"
             android:layout_width="@dimen/_26sdp"
             android:layout_height="@dimen/_26sdp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -124,7 +124,7 @@
             app:tint="@color/on_surface_variant" />
 
         <ImageView
-            android:id="@+id/btnSearch"
+            android:id="@+id/padSearch"
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_36sdp"
             android:layout_marginStart="@dimen/_2sdp"
@@ -138,7 +138,7 @@
     <!-- Paste suggestion — shown only when the clipboard holds a phone number.
          40dp lavender pill: clipboard glyph + "Paste" + mono number (per design). -->
     <LinearLayout
-        android:id="@+id/chipPaste"
+        android:id="@+id/flagPaste"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_38sdp"
         android:layout_marginStart="@dimen/_16sdp"
@@ -170,7 +170,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvPasteNumber"
+            android:id="@+id/lblPasteNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_6sdp"
@@ -189,7 +189,7 @@
 
         <!-- Shimmer skeleton shown during search loading -->
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmerResult"
+            android:id="@+id/shmResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -239,7 +239,7 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollContent"
+            android:id="@+id/scrlContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -253,7 +253,7 @@
 
                 <!-- Result Card -->
                 <LinearLayout
-                    android:id="@+id/cvResult"
+                    android:id="@+id/cvResultVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
@@ -272,7 +272,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/llResActions"
+                            android:layout_toStartOf="@+id/rowResActions"
                             android:orientation="vertical">
 
                             <TextView
@@ -292,7 +292,7 @@
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:id="@+id/tvResName"
+                                    android:id="@+id/lblResName"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -302,7 +302,7 @@
                                     tools:text="Unknown" />
 
                                 <ImageView
-                                    android:id="@+id/ivRevealName"
+                                    android:id="@+id/picRevealName"
                                     android:layout_width="@dimen/_22sdp"
                                     android:layout_height="@dimen/_22sdp"
                                     android:layout_marginStart="@dimen/_6sdp"
@@ -314,7 +314,7 @@
                             </LinearLayout>
 
                             <TextView
-                                android:id="@+id/tvResNumber"
+                                android:id="@+id/lblResNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_1sdp"
@@ -325,7 +325,7 @@
                                 tools:text="+1 234 567 890" />
 
                             <TextView
-                                android:id="@+id/tvResValid"
+                                android:id="@+id/lblResValid"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_8sdp"
@@ -344,7 +344,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/llResActions"
+                            android:id="@+id/rowResActions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
@@ -352,7 +352,7 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:id="@+id/btnResShare"
+                                android:id="@+id/padResShare"
                                 android:layout_width="@dimen/_38sdp"
                                 android:layout_height="@dimen/_38sdp"
                                 android:layout_marginEnd="@dimen/_6sdp"
@@ -361,7 +361,7 @@
                                 android:src="@drawable/sym_share" />
 
                             <ImageView
-                                android:id="@+id/btnResCall"
+                                android:id="@+id/padResCall"
                                 android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:layout_margin="@dimen/_5sdp"
@@ -420,7 +420,7 @@
                             </LinearLayout>
 
                             <TextView
-                                android:id="@+id/tvResCountry"
+                                android:id="@+id/lblResCountry"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_6sdp"
@@ -462,7 +462,7 @@
                             </LinearLayout>
 
                             <TextView
-                                android:id="@+id/tvResCarrier"
+                                android:id="@+id/lblResCarrier"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_6sdp"
@@ -505,7 +505,7 @@
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tvResType"
+                            android:id="@+id/lblResType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_6sdp"
@@ -517,7 +517,7 @@
 
                     <!-- Show full detail (full width) -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnShowFullDetail"
+                        android:id="@+id/padShowFullDetail"
                         style="@style/Widget.Material3.Button"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40sdp"
@@ -536,7 +536,7 @@
 
                 <!-- Empty state — animated breathing search icon (no Lottie) -->
                 <LinearLayout
-                    android:id="@+id/llEmptyState"
+                    android:id="@+id/rowEmptyState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_40sdp"
@@ -579,7 +579,7 @@
                         android:textSize="@dimen/_11ssp" />
 
                     <LinearLayout
-                        android:id="@+id/btnEmptySearch"
+                        android:id="@+id/padEmptySearch"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_marginTop="@dimen/_18sdp"
@@ -610,7 +610,7 @@
 
                 <!-- History Header -->
                 <LinearLayout
-                    android:id="@+id/llHistoryHeader"
+                    android:id="@+id/rowHistoryHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_14sdp"
@@ -619,7 +619,7 @@
                     android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/tvHistoryTitle"
+                        android:id="@+id/lblHistoryTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -629,7 +629,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvHistoryClearAll"
+                        android:id="@+id/lblHistoryClearAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -641,7 +641,7 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvHistory"
+                    android:id="@+id/rollHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"

@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/onboardingRoot"
+        android:id="@+id/onboardingRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.onboarding.SlideIntroActivity">
 
         <TextView
-            android:id="@+id/btnSkip"
+            android:id="@+id/padSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_8sdp"
@@ -30,32 +30,32 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
+            android:id="@+id/vuPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/btnNext"
+            app:layout_constraintBottom_toTopOf="@id/padNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnSkip" />
+            app:layout_constraintTop_toBottomOf="@id/padSkip" />
 
         <!-- Dots ride the CTA's row: the button is the taller of the two, so it
              owns the vertical slot and the dots centre on it. -->
         <LinearLayout
-            android:id="@+id/dots"
+            android:id="@+id/dotsVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_16sdp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/btnNext"
+            app:layout_constraintBottom_toBottomOf="@id/padNext"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnNext" />
+            app:layout_constraintTop_toTopOf="@id/padNext" />
 
         <!-- CTA. Anchored to the ad (not to the 8dp dots) so it keeps a real
              10sdp gap above the advert at any system font scale; constrained
              against the dots so a long label can never ride over them. -->
         <TextView
-            android:id="@+id/btnNext"
+            android:id="@+id/padNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -72,25 +72,25 @@
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/adNativeFrame"
+            app:layout_constraintBottom_toTopOf="@id/adNativeFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/dots" />
+            app:layout_constraintStart_toEndOf="@id/dotsVw" />
 
 
 
         <!-- Full-bleed hairline separating the pager content from the ad below -->
         <View
-            android:id="@+id/adNativeDivider"
+            android:id="@+id/adNativeDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/adNativeFrame"
+            app:layout_constraintBottom_toTopOf="@id/adNativeFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Big native ad pinned at the bottom. -->
         <FrameLayout
-            android:id="@+id/adNativeFrame"
+            android:id="@+id/adNativeFrameVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -99,7 +99,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/adShimmer"
+                android:id="@+id/adShimmerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ccc">

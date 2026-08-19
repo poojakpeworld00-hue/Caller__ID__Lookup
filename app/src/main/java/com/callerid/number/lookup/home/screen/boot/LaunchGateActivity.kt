@@ -109,7 +109,7 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
         // insets so the title/footer never sit under the status or navigation bar
         // (incl. the Android 16 gesture pill). The gradient still draws full-bleed
         // because a View's background fills its padding.
-        ViewCompat.setOnApplyWindowInsetsListener(binding.splashRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.splashRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
@@ -117,7 +117,7 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
 
         // Footer "Secure vX.Y" — sourced from the build so it tracks the real
         // app version instead of a hardcoded string.
-        binding.tvSecureVersion.text =
+        binding.lblSecureVersion.text =
             getString(R.string.splash_secure_version, BuildConfig.VERSION_NAME)
 
         // Play the redesigned splash animation, then let it finish before we move
@@ -237,9 +237,9 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
      *  screen edge. */
     private val orbitOffsets by lazy {
         listOf(
-            binding.incomingWrap to (dp(-52f) to dp(-92f)),
-            binding.fraudWrap to (dp(-52f) to dp(92f)),
-            binding.avatarWrap to (dp(96f) to dp(24f)),
+            binding.incomingWrapVw to (dp(-52f) to dp(-92f)),
+            binding.fraudWrapVw to (dp(-52f) to dp(92f)),
+            binding.avatarWrapVw to (dp(96f) to dp(24f)),
         )
     }
 
@@ -260,43 +260,43 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
         if (animationsDisabled()) {
             // Accessibility / "remove animations": jump straight to the final frame.
             listOf(
-                binding.composition, binding.iconTile, binding.chipIncoming,
-                binding.chipFraud, binding.avatarInner, binding.tvAppName,
-                binding.tvTagline, binding.progressTrack, binding.footer
+                binding.compositionVw, binding.iconTileVw, binding.flagIncoming,
+                binding.flagFraud, binding.avatarInnerVw, binding.lblAppName,
+                binding.lblTagline, binding.progTrack, binding.footerVw
             ).forEach { it.alpha = 1f }
-            binding.scanRing.alpha = 0.9f
-            binding.progressTrack.post {
-                if (alive()) setFillWidth((binding.progressTrack.width * 0.94f).toInt())
+            binding.scanRingVw.alpha = 0.9f
+            binding.progTrack.post {
+                if (alive()) setFillWidth((binding.progTrack.width * 0.94f).toInt())
             }
             return
         }
 
         // Composition fades in; the app icon pops + then breathes; the orbit ring pulses.
-        start(fadeIn(binding.composition, delay = 0L, dur = 460L))
-        binding.iconTile.scaleX = 0.8f
-        binding.iconTile.scaleY = 0.8f
-        start(fadeScaleIn(binding.iconTile, delay = 0L, dur = 570L))
-        handler.postDelayed({ if (alive()) start(breathe(binding.iconTile, delay = 0L)) }, 620L)
-        handler.postDelayed({ if (alive()) start(orbitBreathe(binding.orbitRing)) }, 800L)
+        start(fadeIn(binding.compositionVw, delay = 0L, dur = 460L))
+        binding.iconTileVw.scaleX = 0.8f
+        binding.iconTileVw.scaleY = 0.8f
+        start(fadeScaleIn(binding.iconTileVw, delay = 0L, dur = 570L))
+        handler.postDelayed({ if (alive()) start(breathe(binding.iconTileVw, delay = 0L)) }, 620L)
+        handler.postDelayed({ if (alive()) start(orbitBreathe(binding.orbitRingVw)) }, 800L)
 
         // Title + tagline rise in; footer + progress bar fade in and the bar fills.
-        start(riseIn(binding.tvAppName, delay = 250L, dyDp = 14f))
-        start(riseIn(binding.tvTagline, delay = 330L, dyDp = 14f))
-        start(fadeIn(binding.footer, delay = 300L, dur = 520L))
-        start(fadeIn(binding.progressTrack, delay = 300L, dur = 520L))
+        start(riseIn(binding.lblAppName, delay = 250L, dyDp = 14f))
+        start(riseIn(binding.lblTagline, delay = 330L, dyDp = 14f))
+        start(fadeIn(binding.footerVw, delay = 300L, dur = 520L))
+        start(fadeIn(binding.progTrack, delay = 300L, dur = 520L))
         startProgressFill(delay = 340L)
 
         // The caller-info verdicts pop in one after another; the AI scan ring sweeps.
-        popIn(binding.chipIncoming, delay = 630L)
+        popIn(binding.flagIncoming, delay = 630L)
         handler.postDelayed({ if (alive()) startScanSpin() }, 880L)
-        popIn(binding.chipFraud, delay = 2140L)
-        popIn(binding.avatarInner, delay = 2650L)
+        popIn(binding.flagFraud, delay = 2140L)
+        popIn(binding.avatarInnerVw, delay = 2650L)
 
         // Once they've landed, a gentle vertical float keeps the scene alive. (No full
         // orbit — a 360° sweep drags the wide pills off the screen edges.)
-        floatLoop(binding.chipIncoming, delay = 1400L, dyDp = 5f, dur = 3000L)
-        floatLoop(binding.chipFraud, delay = 2700L, dyDp = -5f, dur = 3400L)
-        floatLoop(binding.avatarInner, delay = 3200L, dyDp = 5f, dur = 3800L)
+        floatLoop(binding.flagIncoming, delay = 1400L, dyDp = 5f, dur = 3000L)
+        floatLoop(binding.flagFraud, delay = 2700L, dyDp = -5f, dur = 3400L)
+        floatLoop(binding.avatarInnerVw, delay = 3200L, dyDp = 5f, dur = 3800L)
     }
 
     /** Starts [anim] and tracks it so onDestroy can cancel it. */
@@ -380,9 +380,9 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
 
     /** Blue AI-scan ring: fades in, then spins continuously (the "scanning" beat). */
     private fun startScanSpin() {
-        binding.scanRing.alpha = 0f
-        start(ObjectAnimator.ofFloat(binding.scanRing, View.ALPHA, 0f, 1f).apply { duration = 420L })
-        start(ObjectAnimator.ofFloat(binding.scanRing, View.ROTATION, 0f, 360f).apply {
+        binding.scanRingVw.alpha = 0f
+        start(ObjectAnimator.ofFloat(binding.scanRingVw, View.ALPHA, 0f, 1f).apply { duration = 420L })
+        start(ObjectAnimator.ofFloat(binding.scanRingVw, View.ROTATION, 0f, 360f).apply {
             duration = 2600L
             repeatCount = ValueAnimator.INFINITE
             interpolator = android.view.animation.LinearInterpolator()
@@ -401,19 +401,19 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
 
     /** Sets the progress fill's width in px (keeps its rounded ends crisp). */
     private fun setFillWidth(px: Int) {
-        val lp = binding.progressFill.layoutParams
+        val lp = binding.progFill.layoutParams
         lp.width = px
-        binding.progressFill.layoutParams = lp
+        binding.progFill.layoutParams = lp
     }
 
     /** Grows the progress fill by animating its real width (not scaleX, which would
      *  stretch the rounded ends into a lens) from a nub to ~94% of the track. */
     private fun startProgressFill(delay: Long) {
-        binding.progressTrack.post {
+        binding.progTrack.post {
             if (!alive()) return@post
-            val track = binding.progressTrack.width
+            val track = binding.progTrack.width
             if (track <= 0) return@post
-            val from = binding.progressFill.width.coerceAtLeast(dp(8f).toInt())
+            val from = binding.progFill.width.coerceAtLeast(dp(8f).toInt())
             val to = (track * 0.94f).toInt()
             start(ValueAnimator.ofInt(from, to).apply {
                 startDelay = delay

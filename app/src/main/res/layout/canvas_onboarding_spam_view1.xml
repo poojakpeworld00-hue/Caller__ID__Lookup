@@ -22,21 +22,21 @@
 
     <!-- searching pulse rings (blue, to match this step's theme) -->
     <View
-        android:id="@+id/obRing1"
+        android:id="@+id/obRing1Vw"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_incoming" />
 
     <View
-        android:id="@+id/obRing2"
+        android:id="@+id/obRing2Vw"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_incoming" />
 
     <LinearLayout
-        android:id="@+id/obCard"
+        android:id="@+id/obCardVw"
         android:layout_width="@dimen/_115sdp"
         android:layout_height="@dimen/_184sdp"
         android:layout_gravity="center"
@@ -102,7 +102,7 @@
                 android:background="@drawable/form_onb_ring_scan" />
 
             <ImageView
-                android:id="@+id/obSweep"
+                android:id="@+id/obSweepVw"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
@@ -121,7 +121,7 @@
                 tools:ignore="HardcodedText" />
 
             <View
-                android:id="@+id/obBlip"
+                android:id="@+id/obBlipVw"
                 android:layout_width="@dimen/_7sdp"
                 android:layout_height="@dimen/_7sdp"
                 android:layout_gravity="top|end"
@@ -156,7 +156,7 @@
             android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/obStamp"
+            android:id="@+id/obStampVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/form_chip_identified"

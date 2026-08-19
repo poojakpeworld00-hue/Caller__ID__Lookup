@@ -40,13 +40,13 @@ object BonusReveal {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        db.tvPreviewName.text = blur(fullName)
-        db.tvPreviewNumber.text = number
-        db.btnWatchAd.setOnClickListener {
+        db.lblPreviewName.text = blur(fullName)
+        db.lblPreviewNumber.text = number
+        db.padWatchAd.setOnClickListener {
             dialog.dismiss()
             BonusPromo().show(activity) { onRevealed() }
         }
-        db.btnCancel.setOnClickListener { dialog.dismiss() }
+        db.padCancel.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 }

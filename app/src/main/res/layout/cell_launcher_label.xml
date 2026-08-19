@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/launcher_holder"
+    android:id="@+id/launcher_holderVw"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -11,16 +11,16 @@
     android:paddingBottom="@dimen/small_margin">
 
     <org.fossify.commons.views.MySquareImageView
-        android:id="@+id/launcher_icon"
+        android:id="@+id/launcher_iconVw"
         android:layout_width="match_parent"
         android:layout_height="@dimen/launcher_icon_size"
         android:layout_gravity="center_horizontal|bottom" />
 
     <org.fossify.commons.views.MyTextView
-        android:id="@+id/launcher_label"
+        android:id="@+id/launcher_labelVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/launcher_icon"
+        android:layout_below="@+id/launcher_iconVw"
         android:ellipsize="end"
         android:gravity="center_horizontal|top"
         android:maxLines="1"
@@ -28,7 +28,7 @@
         android:textSize="14sp" />
 
     <View
-        android:id="@+id/popup_anchor"
+        android:id="@+id/popup_anchorVw"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center_horizontal|top" />

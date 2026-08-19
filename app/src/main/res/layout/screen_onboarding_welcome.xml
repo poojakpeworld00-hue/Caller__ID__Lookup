@@ -14,7 +14,7 @@
     android:fitsSystemWindows="true">
 
     <org.fossify.commons.views.MyTextView
-        android:id="@+id/onboarding_skip"
+        android:id="@+id/onboarding_skipVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -37,23 +37,23 @@
          With ads off, showMidNative empties and hides the frame and followAdContainer
          drops the hairline, leaving the screen exactly as it was before. -->
     <LinearLayout
-        android:id="@+id/onboarding_footer"
+        android:id="@+id/onboarding_footerVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <View
-            android:id="@+id/ad_native_divider"
+            android:id="@+id/ad_native_dividerVw"
             style="@style/AdDivider" />
 
         <FrameLayout
-            android:id="@+id/ad_native_frame"
+            android:id="@+id/ad_native_frameVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/ad_shimmer"
+                android:id="@+id/ad_shimmerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ccc">
@@ -64,7 +64,7 @@
         </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/onboarding_continue"
+            android:id="@+id/onboarding_continueVw"
             style="@style/OnboardingButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,8 +81,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/onboarding_footer"
-        android:layout_below="@id/onboarding_skip"
+        android:layout_above="@id/onboarding_footerVw"
+        android:layout_below="@id/onboarding_skipVw"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true">
@@ -98,7 +98,7 @@
 
             <!-- hero · halo, soft slab, ghost handset, shield, verified badge -->
             <RelativeLayout
-                android:id="@+id/onboarding_hero"
+                android:id="@+id/onboarding_heroVw"
                 android:layout_width="match_parent"
                 android:layout_height="206dp"
                 android:clipChildren="false"
@@ -113,7 +113,7 @@
                     android:background="@drawable/form_onb_blob_square" />
 
                 <View
-                    android:id="@+id/onboarding_halo"
+                    android:id="@+id/onboarding_haloVw"
                     android:layout_width="186dp"
                     android:layout_height="186dp"
                     android:layout_centerHorizontal="true"
@@ -133,7 +133,7 @@
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
-                    android:id="@+id/onboarding_shield"
+                    android:id="@+id/onboarding_shieldVw"
                     android:layout_width="92dp"
                     android:layout_height="104dp"
                     android:layout_centerHorizontal="true"
@@ -142,11 +142,11 @@
                     android:src="@drawable/sym_cid_shield_phone" />
 
                 <ImageView
-                    android:id="@+id/onboarding_badge"
+                    android:id="@+id/onboarding_badgeVw"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:layout_alignEnd="@id/onboarding_shield"
-                    android:layout_alignBottom="@id/onboarding_shield"
+                    android:layout_alignEnd="@id/onboarding_shieldVw"
+                    android:layout_alignBottom="@id/onboarding_shieldVw"
                     android:layout_marginEnd="-12dp"
                     android:layout_marginBottom="-4dp"
                     android:background="@drawable/form_onb_check_badge"
@@ -158,7 +158,7 @@
             </RelativeLayout>
 
             <org.fossify.commons.views.MyTextView
-                android:id="@+id/onboarding_title"
+                android:id="@+id/onboarding_titleVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
@@ -170,7 +170,7 @@
                 android:textStyle="bold" />
 
             <org.fossify.commons.views.MyTextView
-                android:id="@+id/onboarding_lead"
+                android:id="@+id/onboarding_leadVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -183,7 +183,7 @@
 
             <!-- three feature tiles -->
             <LinearLayout
-                android:id="@+id/onboarding_features"
+                android:id="@+id/onboarding_featuresVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"

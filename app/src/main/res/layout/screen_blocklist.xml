@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/blocklistRoot"
+        android:id="@+id/blocklistRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -47,7 +47,7 @@
 
         <!-- Slim summary strip (not a hero card celebrating a number) -->
         <LinearLayout
-            android:id="@+id/summaryStrip"
+            android:id="@+id/summaryStripVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_18sdp"
@@ -57,7 +57,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_14sdp"
             android:paddingVertical="@dimen/_10sdp"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <ImageView
                 android:layout_width="@dimen/_34sdp"
@@ -75,7 +75,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvSummaryCount"
+                    android:id="@+id/lblSummaryCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
@@ -95,7 +95,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvHeaderBlocked"
+            android:id="@+id/lblHeaderBlocked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_18sdp"
@@ -106,22 +106,22 @@
             android:textColor="@color/on_surface_variant"
             android:textSize="@dimen/_9ssp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/summaryStrip" />
+            app:layout_constraintTop_toBottomOf="@id/summaryStripVw" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvBlocklist"
+            android:id="@+id/rollBlocklist"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_18sdp"
             android:paddingTop="@dimen/_6sdp"
             android:paddingBottom="@dimen/_88sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/tvHeaderBlocked"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/lblHeaderBlocked"
             tools:listitem="@layout/cell_blocklist" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
+            android:id="@+id/fabAddVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_20sdp"
@@ -129,13 +129,13 @@
             android:src="@drawable/sym_add"
             app:backgroundTint="@color/primary"
             app:elevation="@dimen/_6sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Fab.Rounded"
             app:tint="@color/white" />
 
         <androidx.constraintlayout.widget.Group
-            android:id="@+id/populatedGroup"
+            android:id="@+id/populatedGroupVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -143,14 +143,14 @@
 
         <!-- ===== EMPTY STATE: breathing icon + headline + the three methods ===== -->
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/emptyScroll"
+            android:id="@+id/emptyScrollVw"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/_12sdp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                 android:paddingHorizontal="@dimen/_20sdp">
 
                 <com.callerid.number.lookup.home.screen.shared.GlowIconView
-                    android:id="@+id/emptyIcon"
+                    android:id="@+id/emptyIconVw"
                     android:layout_width="@dimen/_74sdp"
                     android:layout_height="@dimen/_74sdp"
                     android:layout_marginTop="@dimen/_20sdp"
@@ -188,7 +188,7 @@
                     android:textSize="@dimen/_11ssp" />
 
                 <include
-                    android:id="@+id/emptyMethods"
+                    android:id="@+id/emptyMethodsVw"
                     layout="@layout/part_block_methods"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -198,10 +198,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

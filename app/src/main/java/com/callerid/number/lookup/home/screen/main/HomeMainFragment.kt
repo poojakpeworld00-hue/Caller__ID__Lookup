@@ -105,8 +105,8 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
     override fun initView() {
         // Hero bleeds under the status bar; pad its content down by the inset.
-        val baseTop = binding.heroHeader.paddingTop
-        ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeader) { v, insets ->
+        val baseTop = binding.heroHeaderVw.paddingTop
+        ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeaderVw) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             v.updatePadding(top = baseTop + top)
             insets
@@ -115,57 +115,57 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         // Per-tile tint = Claude Design's actions-3 cells (g-700/teal/clay/amber).
         // Blocklist/Tools deliberately do NOT reuse the danger/success verdict
         // colors here -- those are fixed verdict roles, not decorative tints.
-        bindQuick(binding.qaDialer, R.drawable.slot_grid_nine, R.string.quick_dialer, R.color.primary, R.color.primary_container)
-        bindQuick(binding.qaLookup, R.drawable.slot_magnifying_glass, R.string.quick_lookup, R.color.cid_teal, R.color.cid_teal_100)
-        bindQuick(binding.qaBlocklist, R.drawable.slot_prohibit, R.string.quick_blocklist, R.color.cid_clay, R.color.cid_clay_100)
-        bindQuick(binding.qaTools, R.drawable.slot_squares_four, R.string.quick_tools, R.color.cid_amber, R.color.cid_amber_100)
+        bindQuick(binding.qaDialerVw, R.drawable.slot_grid_nine, R.string.quick_dialer, R.color.primary, R.color.primary_container)
+        bindQuick(binding.qaLookupVw, R.drawable.slot_magnifying_glass, R.string.quick_lookup, R.color.cid_teal, R.color.cid_teal_100)
+        bindQuick(binding.qaBlocklistVw, R.drawable.slot_prohibit, R.string.quick_blocklist, R.color.cid_clay, R.color.cid_clay_100)
+        bindQuick(binding.qaToolsVw, R.drawable.slot_squares_four, R.string.quick_tools, R.color.cid_amber, R.color.cid_amber_100)
 
-        binding.rvRecent.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvRecent.adapter = recentAdapter
+        binding.rollRecent.layoutManager = LinearLayoutManager(requireContext())
+        binding.rollRecent.adapter = recentAdapter
 
         // Native banner above the recent calls.
-        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adRecentBanner, binding.adRecentShimmer)
-        binding.adNativeDivider.followAdContainer(binding.adRecentBanner)
-        binding.adNativeDivider1.followAdContainer(binding.adRecentBanner)
-        binding.btnSettings.setOnClickListener {
+        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adRecentBannerVw, binding.adRecentShimmerVw)
+        binding.adNativeDividerVw.followAdContainer(binding.adRecentBannerVw)
+        binding.adNativeDivider1Vw.followAdContainer(binding.adRecentBannerVw)
+        binding.padSettings.setOnClickListener {
             requireActivity().openActivity<SettingsHubActivity>()
         }
 
-        binding.qaDialer.root.setOnClickListener {
+        binding.qaDialerVw.root.setOnClickListener {
             withCorePermissions { requireActivity().openActivity<DialPadActivity>() }
         }
-        binding.qaLookup.root.setOnClickListener {
+        binding.qaLookupVw.root.setOnClickListener {
             withCorePermissions { homeShell?.showLookup() }
         }
         setupHomeCountry()
-        binding.llHomeCountry.setOnClickListener {
+        binding.rowHomeCountry.setOnClickListener {
             countryLauncher.launch(Intent(requireContext(), CountryPickActivity::class.java))
         }
-        binding.btnHomeSearch.setOnClickListener { submitSearch() }
-        binding.etHomeSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.padHomeSearch.setOnClickListener { submitSearch() }
+        binding.inpHomeSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 submitSearch(); true
             } else false
         }
-        binding.qaBlocklist.root.setOnClickListener {
+        binding.qaBlocklistVw.root.setOnClickListener {
             withCorePermissions { requireActivity().openActivity<BlockCenterActivity>() }
         }
-        binding.qaTools.root.setOnClickListener {
+        binding.qaToolsVw.root.setOnClickListener {
             withCorePermissions { requireActivity().openActivity<ToolboxActivity>() }
         }
 
         // Protection card → Blocklist; Recent "See all" → Recents tab.
-        binding.cardProtection.setOnClickListener {
+        binding.panelProtection.setOnClickListener {
             requireActivity().openActivity<BlockCenterActivity>()
         }
-        binding.tvSeeAll.setOnClickListener {
+        binding.lblSeeAll.setOnClickListener {
             homeShell?.showRecents()
         }
 
         // Quick-action tiles: press-scale 0.96 with a spring release (design motion).
-        listOf(binding.qaDialer, binding.qaLookup, binding.qaBlocklist, binding.qaTools)
+        listOf(binding.qaDialerVw, binding.qaLookupVw, binding.qaBlocklistVw, binding.qaToolsVw)
             .forEach { it.root.setOnTouchListener(pressScale) }
-        binding.btnAllowCallLog.setOnClickListener {
+        binding.padAllowCallLog.setOnClickListener {
             requestPermissionChain(
                 listOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
             ) {
@@ -174,11 +174,11 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
             }
         }
 
-        binding.btnPermManage.setOnClickListener {
+        binding.padPermManage.setOnClickListener {
             homeShellController?.showPermissionSheet()
         }
 
-        HomeAnim.attachFocusScale(binding.searchBar, binding.etHomeSearch)
+        HomeAnim.attachFocusScale(binding.searchBarVw, binding.inpHomeSearch)
 
         loadRecentIfAllowed()
         // Only when the shell is already on screen — in the launcher this view is built while
@@ -196,10 +196,10 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
      * view is created once; tab switches show/hide it rather than recreating it).
      */
     private fun playEntrance() {
-        HomeAnim.riseIn(binding.cardProtection, delay = 0L)
-        HomeAnim.riseIn(binding.searchBar, delay = 90L)
-        HomeAnim.riseIn(binding.quickActionsRow, delay = 150L)
-        HomeAnim.riseIn(binding.recentHeaderRow, delay = 200L)
+        HomeAnim.riseIn(binding.panelProtection, delay = 0L)
+        HomeAnim.riseIn(binding.searchBarVw, delay = 90L)
+        HomeAnim.riseIn(binding.quickActionsRowVw, delay = 150L)
+        HomeAnim.riseIn(binding.recentHeaderRowVw, delay = 200L)
     }
 
     /**
@@ -211,7 +211,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
     fun refreshPermissionHint() {
         if (view == null) return
         val show = homeShellController?.shouldShowPermissionHint() == true
-        binding.llPermHint.visibility = if (show) View.VISIBLE else View.GONE
+        binding.rowPermHint.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     /**
@@ -303,7 +303,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         // asked while the user is looking at Recents or Lookup — the bar to spotlight is then
         // not on screen at all.
         if (view == null || isHidden) return
-        val anchor = binding.searchBar
+        val anchor = binding.searchBarVw
         anchor.post {
             if (!isAdded || view == null || isHidden) return@post
             if (prefs.isSearchHintShown) return@post
@@ -371,13 +371,13 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
     private fun applyHomeCountry(iso: String, dial: String) {
         homeDial = dial
-        binding.tvHomeFlag.text = DialCountries.flag(iso)
-        binding.tvHomeDial.text = if (dial.isBlank()) iso else "+$dial"
+        binding.lblHomeFlag.text = DialCountries.flag(iso)
+        binding.lblHomeDial.text = if (dial.isBlank()) iso else "+$dial"
     }
 
     /** Navigates to the Lookup tab and runs the lookup for the entered number. */
     private fun submitSearch() {
-        val typed = binding.etHomeSearch.text?.toString()?.trim().orEmpty()
+        val typed = binding.inpHomeSearch.text?.toString()?.trim().orEmpty()
         // Prefix the selected country code unless the user already typed a '+'.
         val number = when {
             typed.isBlank() -> ""
@@ -386,7 +386,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
             else -> typed
         }
         homeShell?.showLookup(number.ifBlank { null })
-        binding.etHomeSearch.setText("")
+        binding.inpHomeSearch.setText("")
     }
 
     private fun bindQuick(
@@ -396,12 +396,12 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         @ColorRes fgColor: Int,
         @ColorRes softColor: Int
     ) {
-        item.qaIcon.setImageResource(icon)
-        item.qaLabel.setText(label)
+        item.qaIconVw.setImageResource(icon)
+        item.qaLabelVw.setText(label)
         val ctx = requireContext()
-        item.qaIcon.imageTintList =
+        item.qaIconVw.imageTintList =
             ColorStateList.valueOf(ContextCompat.getColor(ctx, fgColor))
-        item.qaIconCircle.backgroundTintList =
+        item.qaIconCircleVw.backgroundTintList =
             ColorStateList.valueOf(ContextCompat.getColor(ctx, softColor))
     }
 
@@ -409,7 +409,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         viewModel.recent.observe(viewLifecycleOwner) { recentAdapter.submit(it) }
         // Protection banner subtitle -- Claude Design's hero C reads the count inline.
         viewModel.blockedCount.observe(viewLifecycleOwner) {
-            binding.tvProtectionSub.text = getString(R.string.home_protection_subtitle, it)
+            binding.lblProtectionSub.text = getString(R.string.home_protection_subtitle, it)
         }
     }
 
@@ -443,8 +443,8 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         ) == PackageManager.PERMISSION_GRANTED
 
         // Swap the recent list for a permission prompt when access is missing.
-        binding.llRecentPermission.visibility = if (granted) View.GONE else View.VISIBLE
-        binding.rvRecent.visibility = if (granted) View.VISIBLE else View.GONE
+        binding.rowRecentPermission.visibility = if (granted) View.GONE else View.VISIBLE
+        binding.rollRecent.visibility = if (granted) View.VISIBLE else View.GONE
 
         if (granted) viewModel.loadRecent()
     }

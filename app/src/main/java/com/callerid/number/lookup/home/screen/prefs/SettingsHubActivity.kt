@@ -62,32 +62,32 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.settingsRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.settingsRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Native ad at the top of the settings list (bottom adaptive banner auto-loads via FrameActivity).
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         // Preferences grid — Theme is an inline segmented toggle.
         setupThemeToggle()
         bindCard(
-            binding.cardLanguage, R.drawable.sym_language, R.string.settings_language,
+            binding.panelLanguage, R.drawable.sym_language, R.string.settings_language,
             currentLanguageName(), chevron = true
         ) {
             openActivity(LanguageSelectActivity.newIntent(this, standalone = true))
         }
         bindCard(
-            binding.cardBlocklist, R.drawable.prefs_blocklist, R.string.settings_blocklist,
+            binding.panelBlocklist, R.drawable.prefs_blocklist, R.string.settings_blocklist,
             getString(R.string.settings_blocklist_sub), chevron = true
         ) {
             openActivity<BlockCenterActivity>()
         }
         bindCard(
-            binding.cardSim, R.drawable.sym_sim_card, R.string.settings_sim,
+            binding.panelSim, R.drawable.sym_sim_card, R.string.settings_sim,
             getString(R.string.settings_sim_sub), chevron = false
         ) { openSimManagement() }
 
@@ -100,10 +100,10 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         val showRate = ads.getBoolean("is_rateus", true)
         val showShare = ads.getBoolean("is_share", true)
 
-        binding.rowRate.root.visibility = if (showRate) View.VISIBLE else View.GONE
+        binding.rowRateVw.root.visibility = if (showRate) View.VISIBLE else View.GONE
         if (showRate) {
             bindRow(
-                binding.rowRate,
+                binding.rowRateVw,
                 R.drawable.sym_star,
                 R.string.settings_rate,
                 R.string.settings_rate_sub
@@ -112,10 +112,10 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
             }
         }
 
-        binding.rowShare.root.visibility = if (showShare) View.VISIBLE else View.GONE
+        binding.rowShareVw.root.visibility = if (showShare) View.VISIBLE else View.GONE
         if (showShare) {
             bindRow(
-                binding.rowShare,
+                binding.rowShareVw,
                 R.drawable.prefs_share,
                 R.string.settings_share,
                 R.string.settings_share_sub
@@ -125,16 +125,16 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         }
 
         // Both rows off would otherwise leave the heading stranded over nothing.
-        binding.sectionSupport.visibility =
+        binding.sectionSupportVw.visibility =
             if (showRate || showShare) View.VISIBLE else View.GONE
 
         // Legal
-        binding.rowPrivacy.ivIcon.setImageResource(R.drawable.sym_policy)
-        binding.rowPrivacy.tvTitle.setText(R.string.settings_privacy)
-        binding.rowPrivacy.root.setOnClickListener { openPolicyLink() }
-        binding.rowTerms.ivIcon.setImageResource(R.drawable.sym_terms)
-        binding.rowTerms.tvTitle.setText(R.string.settings_terms)
-        binding.rowTerms.root.setOnClickListener { openTermLink() }
+        binding.rowPrivacyVw.picIcon.setImageResource(R.drawable.sym_policy)
+        binding.rowPrivacyVw.lblTitle.setText(R.string.settings_privacy)
+        binding.rowPrivacyVw.root.setOnClickListener { openPolicyLink() }
+        binding.rowTermsVw.picIcon.setImageResource(R.drawable.sym_terms)
+        binding.rowTermsVw.lblTitle.setText(R.string.settings_terms)
+        binding.rowTermsVw.root.setOnClickListener { openTermLink() }
 
         // First-run coach-mark nudging the user to enable the call-screening toggle.
         maybeShowCallScreeningHint()
@@ -148,10 +148,10 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         chevron: Boolean,
         onClick: () -> Unit
     ) {
-        card.ivIcon.setImageResource(icon)
-        card.tvTitle.setText(title)
-        card.tvSub.text = sub
-        card.ivChevron.visibility = if (chevron) View.VISIBLE else View.GONE
+        card.picIcon.setImageResource(icon)
+        card.lblTitle.setText(title)
+        card.lblSub.text = sub
+        card.picChevron.visibility = if (chevron) View.VISIBLE else View.GONE
         card.root.setOnClickListener { onClick() }
     }
 
@@ -162,9 +162,9 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         @StringRes sub: Int,
         onClick: () -> Unit
     ) {
-        row.ivIcon.setImageResource(icon)
-        row.tvTitle.setText(title)
-        row.tvSub.setText(sub)
+        row.picIcon.setImageResource(icon)
+        row.lblTitle.setText(title)
+        row.lblSub.setText(sub)
         row.root.setOnClickListener { onClick() }
     }
 
@@ -178,16 +178,16 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
     /** Wires the switch, hiding the whole card where the role isn't available. */
     private fun setupCallScreening() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            binding.cardCallScreening.visibility = View.GONE
+            binding.panelCallScreening.visibility = View.GONE
             return
         }
         val rm = getSystemService(RoleManager::class.java)
         if (rm == null || !rm.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
-            binding.cardCallScreening.visibility = View.GONE
+            binding.panelCallScreening.visibility = View.GONE
             return
         }
         refreshCallScreeningCard()
-        binding.switchCallScreening.setOnCheckedChangeListener { _, isChecked ->
+        binding.swcCallScreening.setOnCheckedChangeListener { _, isChecked ->
             if (isProgrammatic) return@setOnCheckedChangeListener
             if (isChecked) requestCallScreening() else openDefaultAppsSettings()
         }
@@ -204,19 +204,19 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
      */
     private fun maybeShowCallScreeningHint() {
         if (prefs.isCallScreeningHintShown) return
-        if (binding.cardCallScreening.visibility != View.VISIBLE) return
-        if (binding.switchCallScreening.isChecked) return
+        if (binding.panelCallScreening.visibility != View.VISIBLE) return
+        if (binding.swcCallScreening.isChecked) return
 
-        val card = binding.cardCallScreening
+        val card = binding.panelCallScreening
         // Wait for layout (native ad above can shift positions), scroll the card
         // fully into view, then spotlight it on the next frame.
-        binding.settingsScroll.post {
+        binding.settingsScrollVw.post {
             if (isFinishing || isDestroyed) return@post
             val pad = (24 * resources.displayMetrics.density).toInt()
-            binding.settingsScroll.scrollTo(0, (card.top - pad).coerceAtLeast(0))
+            binding.settingsScrollVw.scrollTo(0, (card.top - pad).coerceAtLeast(0))
             card.post {
                 if (isFinishing || isDestroyed) return@post
-                if (binding.switchCallScreening.isChecked) return@post
+                if (binding.swcCallScreening.isChecked) return@post
                 prefs.isCallScreeningHintShown = true
                 CoachBubble.show(this, card, R.layout.part_call_screening_hint)
             }
@@ -231,13 +231,13 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
      */
     private fun refreshCallScreeningCard() {
         if (!InstallIdRegistry.isRoleAvailable(this)) {
-            binding.cardCallScreening.visibility = View.GONE
+            binding.panelCallScreening.visibility = View.GONE
             return
         }
         val enabled = InstallIdRegistry.isCallerIdEnabled(this)
-        binding.cardCallScreening.visibility = if (enabled) View.GONE else View.VISIBLE
+        binding.panelCallScreening.visibility = if (enabled) View.GONE else View.VISIBLE
         isProgrammatic = true
-        binding.switchCallScreening.isChecked = enabled
+        binding.swcCallScreening.isChecked = enabled
         isProgrammatic = false
     }
 
@@ -275,9 +275,9 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
 
     /** Inline Light / Dark / System segmented toggle inside the Theme card. */
     private fun setupThemeToggle() {
-        val card = binding.cardTheme
+        val card = binding.panelTheme
         val cells =
-            listOf(card.segLight, card.segDark, card.segSystem) // matches themeOptions order
+            listOf(card.segLightVw, card.segDarkVw, card.segSystemVw) // matches themeOptions order
         val current = AppPrefs.selectedTheme(this).ifEmpty { AppPrefs.THEME_LIGHT }
         highlightTheme(cells, themeOptions.indexOf(current).coerceAtLeast(0))
 

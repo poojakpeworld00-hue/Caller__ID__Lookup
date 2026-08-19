@@ -25,16 +25,16 @@ class MaskedAppsActivity : ShellBaseActivity(), RefreshRecyclerViewListener {
         setContentView(binding.root)
         updateIcons()
 
-        setupEdgeToEdge(padBottomSystem = listOf(binding.manageHiddenIconsList))
-        setupMaterialScrollListener(binding.manageHiddenIconsList, binding.manageHiddenIconsAppbar)
+        setupEdgeToEdge(padBottomSystem = listOf(binding.manageHiddenIconsListVw))
+        setupMaterialScrollListener(binding.manageHiddenIconsListVw, binding.manageHiddenIconsAppbarVw)
 
-        val layoutManager = binding.manageHiddenIconsList.layoutManager as MyGridLayoutManager
+        val layoutManager = binding.manageHiddenIconsListVw.layoutManager as MyGridLayoutManager
         layoutManager.spanCount = config.drawerColumnCount
     }
 
     override fun onResume() {
         super.onResume()
-        setupTopAppBar(binding.manageHiddenIconsAppbar, NavigationIcon.Arrow)
+        setupTopAppBar(binding.manageHiddenIconsAppbarVw, NavigationIcon.Arrow)
     }
 
     private fun updateIcons() {
@@ -49,7 +49,7 @@ class MaskedAppsActivity : ShellBaseActivity(), RefreshRecyclerViewListener {
 
             val hiddenIconsEmpty = hiddenIcons.isEmpty()
             runOnUiThread {
-                binding.manageHiddenIconsPlaceholder.beVisibleIf(hiddenIconsEmpty)
+                binding.manageHiddenIconsPlaceholderVw.beVisibleIf(hiddenIconsEmpty)
             }
 
             if (hiddenIcons.isNotEmpty()) {
@@ -78,9 +78,9 @@ class MaskedAppsActivity : ShellBaseActivity(), RefreshRecyclerViewListener {
             }
 
             runOnUiThread {
-                MaskedIconsAdapter(this, hiddenIcons, this, binding.manageHiddenIconsList) {
+                MaskedIconsAdapter(this, hiddenIcons, this, binding.manageHiddenIconsListVw) {
                 }.apply {
-                    binding.manageHiddenIconsList.adapter = this
+                    binding.manageHiddenIconsListVw.adapter = this
                 }
             }
         }

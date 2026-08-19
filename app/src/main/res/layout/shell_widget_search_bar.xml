@@ -16,14 +16,14 @@
     android:paddingEnd="12dp">
 
     <ImageView
-        android:id="@+id/search_bar_icon"
+        android:id="@+id/search_bar_iconVw"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:contentDescription="@string/pseudo_widget_search_bar"
         android:src="@drawable/sym_pseudo_search_vector" />
 
     <TextView
-        android:id="@+id/search_bar_hint"
+        android:id="@+id/search_bar_hintVw"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lookupDetailRoot"
+        android:id="@+id/lookupDetailRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.lookup.LookupResultActivity">
 
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -48,8 +48,8 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                         android:padding="@dimen/_3sdp">
 
                         <TextView
-                            android:id="@+id/tvAvatar"
+                            android:id="@+id/lblAvatar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/form_avatar"
@@ -83,7 +83,7 @@
                     </FrameLayout>
 
                     <TextView
-                        android:id="@+id/tvName"
+                        android:id="@+id/lblName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -97,7 +97,7 @@
                         tools:text="Pooja Chudhri" />
 
                     <TextView
-                        android:id="@+id/tvNumber"
+                        android:id="@+id/lblNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
@@ -107,7 +107,7 @@
                         tools:text="+91 704 602 4874" />
 
                     <TextView
-                        android:id="@+id/tvStatus"
+                        android:id="@+id/lblStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -131,7 +131,7 @@
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
-                    <LinearLayout android:id="@+id/btnCall" style="@style/DetailAction">
+                    <LinearLayout android:id="@+id/padCall" style="@style/DetailAction">
 
                         <ImageView
                             style="@style/DetailActionIcon"
@@ -146,7 +146,7 @@
                             android:textColor="@color/primary" />
                     </LinearLayout>
 
-                    <LinearLayout android:id="@+id/btnMessage" style="@style/DetailAction">
+                    <LinearLayout android:id="@+id/padMessage" style="@style/DetailAction">
 
                         <ImageView
                             style="@style/DetailActionIcon"
@@ -161,7 +161,7 @@
                             android:textColor="@color/primary" />
                     </LinearLayout>
 
-                    <LinearLayout android:id="@+id/btnShare" style="@style/DetailAction">
+                    <LinearLayout android:id="@+id/padShare" style="@style/DetailAction">
 
                         <ImageView
                             style="@style/DetailActionIcon"
@@ -176,10 +176,10 @@
                             android:textColor="@color/primary" />
                     </LinearLayout>
 
-                    <LinearLayout android:id="@+id/btnBlock" style="@style/DetailAction">
+                    <LinearLayout android:id="@+id/padBlock" style="@style/DetailAction">
 
                         <ImageView
-                            android:id="@+id/ivBlockIcon"
+                            android:id="@+id/picBlockIcon"
                             style="@style/DetailActionIcon"
                             android:backgroundTint="@color/danger_soft"
                             android:contentDescription="@string/action_block"
@@ -187,7 +187,7 @@
                             app:tint="@color/danger" />
 
                         <TextView
-                            android:id="@+id/tvBlockLabel"
+                            android:id="@+id/lblBlockLabel"
                             style="@style/DetailActionLabel"
                             android:text="@string/action_block"
                             android:textColor="@color/danger" />
@@ -227,7 +227,7 @@
                             android:textSize="@dimen/_11ssp" />
 
                         <TextView
-                            android:id="@+id/tvCountry"
+                            android:id="@+id/lblCountry"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/on_surface"
@@ -265,7 +265,7 @@
                             android:textSize="@dimen/_11ssp" />
 
                         <TextView
-                            android:id="@+id/tvCarrier"
+                            android:id="@+id/lblCarrier"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/on_surface"
@@ -303,7 +303,7 @@
                             android:textSize="@dimen/_11ssp" />
 
                         <TextView
-                            android:id="@+id/tvLineType"
+                            android:id="@+id/lblLineType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/on_surface"
@@ -341,7 +341,7 @@
                             android:textSize="@dimen/_11ssp" />
 
                         <TextView
-                            android:id="@+id/tvCity"
+                            android:id="@+id/lblCity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/on_surface"
@@ -353,7 +353,7 @@
 
                 <!-- Spam type (only when flagged) -->
                 <LinearLayout
-                    android:id="@+id/spamRow"
+                    android:id="@+id/spamRowVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
@@ -365,7 +365,7 @@
                     <TextView style="@style/BatteryStatLabel" android:text="@string/lookup_spam_type" />
 
                     <TextView
-                        android:id="@+id/tvSpamType"
+                        android:id="@+id/lblSpamType"
                         style="@style/BatteryStatValue"
                         android:textColor="@color/danger"
                         tools:text="Telemarketer" />
@@ -373,7 +373,7 @@
 
                 <!-- Also known as — per-name reveal (one rewarded ad per name) -->
                 <LinearLayout
-                    android:id="@+id/nicknamesSection"
+                    android:id="@+id/nicknamesSectionVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
@@ -399,7 +399,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvNickCount"
+                            android:id="@+id/lblNickCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/on_surface_variant"
@@ -409,14 +409,14 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llNicknames"
+                        android:id="@+id/rowNicknames"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:orientation="vertical" />
 
                     <TextView
-                        android:id="@+id/tvNickFooter"
+                        android:id="@+id/lblNickFooter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_2sdp"
@@ -430,10 +430,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

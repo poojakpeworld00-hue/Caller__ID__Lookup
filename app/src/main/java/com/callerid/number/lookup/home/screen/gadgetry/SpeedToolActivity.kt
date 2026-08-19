@@ -34,22 +34,22 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.speedRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.speedRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrame, binding.adShimmer)
-        binding.pbGauge.isIndeterminate = false
-        binding.pbGauge.max = 100
-        binding.barUpload.max = 100
-        binding.barLatency.max = 100
-        binding.barJitter.max = 100
+        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.pbGaugeVw.isIndeterminate = false
+        binding.pbGaugeVw.max = 100
+        binding.barUploadVw.max = 100
+        binding.barLatencyVw.max = 100
+        binding.barJitterVw.max = 100
 
-        binding.btnRetest.setOnClickListener { runTest() }
+        binding.padRetest.setOnClickListener { runTest() }
     }
 
     override fun onResume() {
@@ -65,19 +65,19 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
     private fun runTest() {
         job?.cancel()
         resetUi()
-        binding.tvStatus.setText(R.string.speedometer_waiting)
+        binding.lblStatus.setText(R.string.speedometer_waiting)
 
         job = lifecycleScope.launch {
             // 1) Latency + jitter
             val (latency, jitter) = withContext(Dispatchers.IO) { measureLatency() }
             if (latency < 0) {
-                binding.tvStatus.setText(R.string.speedtest_error)
+                binding.lblStatus.setText(R.string.speedtest_error)
                 return@launch
             }
-            binding.tvLatency.text = getString(R.string.speedtest_ms, latency)
-            binding.tvJitter.text = getString(R.string.speedtest_ms, jitter)
-            binding.barLatency.setProgressCompat(pct(latency.toFloat(), 150f), true)
-            binding.barJitter.setProgressCompat(pct(jitter.toFloat(), 30f), true)
+            binding.lblLatency.text = getString(R.string.speedtest_ms, latency)
+            binding.lblJitter.text = getString(R.string.speedtest_ms, jitter)
+            binding.barLatencyVw.setProgressCompat(pct(latency.toFloat(), 150f), true)
+            binding.barJitterVw.setProgressCompat(pct(jitter.toFloat(), 30f), true)
 
             // 2) Download (with live gauge)
             val download = measureDownload { live -> showSpeed(live) }
@@ -85,27 +85,27 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
 
             // 3) Upload (best-effort)
             val upload = withContext(Dispatchers.IO) { measureUpload() }
-            binding.tvUpload.text = getString(R.string.speedtest_mbps, oneDp(upload))
-            binding.barUpload.setProgressCompat(pct(upload, MAX_MBPS), true)
+            binding.lblUpload.text = getString(R.string.speedtest_mbps, oneDp(upload))
+            binding.barUploadVw.setProgressCompat(pct(upload, MAX_MBPS), true)
 
-            binding.tvStatus.setText(R.string.speedtest_stable)
+            binding.lblStatus.setText(R.string.speedtest_stable)
         }
     }
 
     private fun showSpeed(mbps: Float) {
-        binding.tvSpeed.text = mbps.roundToInt().toString()
-        binding.pbGauge.setProgressCompat(pct(mbps, MAX_MBPS), true)
+        binding.lblSpeed.text = mbps.roundToInt().toString()
+        binding.pbGaugeVw.setProgressCompat(pct(mbps, MAX_MBPS), true)
     }
 
     private fun resetUi() {
-        binding.tvSpeed.text = "0"
-        binding.pbGauge.setProgressCompat(0, false)
-        binding.tvUpload.text = getString(R.string.speedtest_mbps, "0")
-        binding.tvLatency.text = getString(R.string.speedtest_ms, 0)
-        binding.tvJitter.text = getString(R.string.speedtest_ms, 0)
-        binding.barUpload.setProgressCompat(0, false)
-        binding.barLatency.setProgressCompat(0, false)
-        binding.barJitter.setProgressCompat(0, false)
+        binding.lblSpeed.text = "0"
+        binding.pbGaugeVw.setProgressCompat(0, false)
+        binding.lblUpload.text = getString(R.string.speedtest_mbps, "0")
+        binding.lblLatency.text = getString(R.string.speedtest_ms, 0)
+        binding.lblJitter.text = getString(R.string.speedtest_ms, 0)
+        binding.barUploadVw.setProgressCompat(0, false)
+        binding.barLatencyVw.setProgressCompat(0, false)
+        binding.barJitterVw.setProgressCompat(0, false)
     }
 
     /** Returns avg latency (ms) and jitter (ms), or (-1, 0) if unreachable. */

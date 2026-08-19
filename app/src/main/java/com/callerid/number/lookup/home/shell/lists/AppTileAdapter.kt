@@ -184,13 +184,13 @@ class AppTileAdapter(
         fun bindView(launcher: AppTile): View {
             val binding = CellLauncherLabelBinding.bind(itemView)
             itemView.apply {
-                binding.launcherLabel.text = launcher.title
-                binding.launcherLabel.setTextColor(textColor)
-                binding.launcherLabel.beVisibleIf(activity.config.showDrawerAppLabels)
-                binding.launcherIcon.setPadding(iconPadding, iconPadding, iconPadding, 0)
+                binding.launcherLabelVw.text = launcher.title
+                binding.launcherLabelVw.setTextColor(textColor)
+                binding.launcherLabelVw.beVisibleIf(activity.config.showDrawerAppLabels)
+                binding.launcherIconVw.setPadding(iconPadding, iconPadding, iconPadding, 0)
 
-                if (launcher.drawable != null && binding.launcherIcon.tag == true) {
-                    binding.launcherIcon.setImageDrawable(launcher.drawable)
+                if (launcher.drawable != null && binding.launcherIconVw.tag == true) {
+                    binding.launcherIconVw.setImageDrawable(launcher.drawable)
                 } else {
                     val placeholderDrawable = activity.resources.getColoredDrawableWithColor(
                         drawableId = R.drawable.stub_drawable,
@@ -200,7 +200,7 @@ class AppTileAdapter(
                         .load(launcher.drawable)
                         .placeholder(placeholderDrawable)
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .into(object : DrawableImageViewTarget(binding.launcherIcon) {
+                        .into(object : DrawableImageViewTarget(binding.launcherIconVw) {
                             override fun onResourceReady(
                                 resource: Drawable,
                                 transition: Transition<in Drawable>?
@@ -226,7 +226,7 @@ class AppTileAdapter(
                 setOnTouchListener { _, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            binding.launcherIcon.drawable.alpha = LAUNCHER_ALPHA_PRESSED
+                            binding.launcherIconVw.drawable.alpha = LAUNCHER_ALPHA_PRESSED
                             animateScale(
                                 from = LAUNCHER_SCALE_NORMAL,
                                 to = LAUNCHER_SCALE_PRESSED,
@@ -236,7 +236,7 @@ class AppTileAdapter(
 
                         MotionEvent.ACTION_UP,
                         MotionEvent.ACTION_CANCEL -> {
-                            binding.launcherIcon.drawable.alpha = LAUNCHER_ALPHA_NORMAL
+                            binding.launcherIconVw.drawable.alpha = LAUNCHER_ALPHA_NORMAL
                             animateScale(
                                 from = LAUNCHER_SCALE_PRESSED,
                                 to = LAUNCHER_SCALE_NORMAL,

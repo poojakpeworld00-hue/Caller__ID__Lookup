@@ -21,21 +21,21 @@
         android:src="@drawable/form_onb_halo_red" />
 
     <View
-        android:id="@+id/obRing1"
+        android:id="@+id/obRing1Vw"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_blocked" />
 
     <View
-        android:id="@+id/obRing2"
+        android:id="@+id/obRing2Vw"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_blocked" />
 
     <LinearLayout
-        android:id="@+id/obCard"
+        android:id="@+id/obCardVw"
         android:layout_width="@dimen/_115sdp"
         android:layout_height="@dimen/_184sdp"
         android:layout_gravity="center"
@@ -73,7 +73,7 @@
             android:clipChildren="false">
 
             <FrameLayout
-                android:id="@+id/obShield"
+                android:id="@+id/obShieldVw"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/form_onb_circle_spam">
@@ -87,7 +87,7 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/obChip"
+                android:id="@+id/obChipVw"
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="bottom|end"
@@ -129,7 +129,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/obStamp"
+            android:id="@+id/obStampVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/form_onb_pill_spam"

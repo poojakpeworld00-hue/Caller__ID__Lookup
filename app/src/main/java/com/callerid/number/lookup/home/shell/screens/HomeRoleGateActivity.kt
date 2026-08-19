@@ -73,13 +73,13 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         // in this task, so they inherit its recents state
         excludeAppFromRecents()
 
-        binding.onboardingSetDefault.setOnClickListener { openHomeSettings() }
-        binding.onboardingSkip.setOnClickListener { goToNextStep() }
+        binding.onboardingSetDefaultVw.setOnClickListener { openHomeSettings() }
+        binding.onboardingSkipVw.setOnClickListener { goToNextStep() }
 
         // `onboarding.set_default.skip_enabled: false` takes the opt-out away: the CTA is the
         // only button left, and Back still falls through to the role dialog below.
         val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
-        binding.onboardingSkip.beVisibleIf(ui.skipEnabled)
+        binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         // Back gets one last ask: the role dialog, the cheapest version of the request. It is
         // the same stage 2 the CTA reaches after the settings page, so cancelling it lands in
@@ -95,10 +95,10 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         ShellPromoConfig.showSlot(
             activity = this,
             slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT),
-            container = binding.adNativeFrame,
-            shimmer = binding.adShimmer,
+            container = binding.adNativeFrameVw,
+            shimmer = binding.adShimmerVw,
         )
-        binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
+        binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
         playEntrance()
     }
@@ -220,16 +220,16 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun playEntrance() = with(binding) {
         riseIn(
             listOf(
-                onboardingHero,
-                onboardingTitle,
-                onboardingLead,
-                onboardingFooter,
+                onboardingHeroVw,
+                onboardingTitleVw,
+                onboardingLeadVw,
+                onboardingFooterVw,
             )
         )
-        stampIn(onboardingBadge)
-        shieldPulse = breathe(onboardingShield)
+        stampIn(onboardingBadgeVw)
+        shieldPulse = breathe(onboardingShieldVw)
         sparklePulses = twinkle(
-            listOf(onboardingSparkle1, onboardingSparkle2, onboardingSparkle3)
+            listOf(onboardingSparkle1Vw, onboardingSparkle2Vw, onboardingSparkle3Vw)
         )
     }
 

@@ -49,9 +49,9 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
         this.binding = BoardWidgetsBinding.bind(this)
         getAppWidgets()
 
-        binding.widgetsList.setOnTouchListener { v, event ->
-            if (event.actionMasked == MotionEvent.ACTION_DOWN && binding.searchBar.hasFocus()) {
-                binding.searchBar.binding.topToolbarSearch.clearFocus()
+        binding.widgetsListVw.setOnTouchListener { v, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN && binding.searchBarVw.hasFocus()) {
+                binding.searchBarVw.binding.topToolbarSearch.clearFocus()
                 activity?.hideKeyboard()
             }
 
@@ -65,7 +65,7 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
     }
 
     fun onConfigurationChanged() {
-        binding.widgetsList.scrollToPosition(0)
+        binding.widgetsListVw.scrollToPosition(0)
         setupViews()
 
         if (widgets.isNotEmpty()) {
@@ -105,9 +105,9 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
         // pull the whole fragment down if it is scrolled way to the top and the users pulls it even further
         if (touchDownY != -1) {
             shouldIntercept =
-                touchDownY - event.y.toInt() < 0 && binding.widgetsList.computeVerticalScrollOffset() == 0
+                touchDownY - event.y.toInt() < 0 && binding.widgetsListVw.computeVerticalScrollOffset() == 0
             if (shouldIntercept) {
-                if (binding.searchBar.hasFocus()) {
+                if (binding.searchBarVw.hasFocus()) {
                     activity?.hideKeyboard()
                 }
                 activity?.startHandlingTouches(touchDownY)
@@ -225,7 +225,7 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun splitWidgetsByApps() {
-        val searchQuery = binding.searchBar.getCurrentQuery()
+        val searchQuery = binding.searchBarVw.getCurrentQuery()
         val filteredWidgets = if (searchQuery.isNotEmpty()) {
             widgets.filter { widget ->
                 widget.appTitle.normalizeString().contains(searchQuery.normalizeString(), ignoreCase = true) ||
@@ -262,14 +262,14 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
 
     private fun setupAdapter(widgetsListItems: ArrayList<GadgetRow>) {
         activity?.runOnUiThread {
-            val currAdapter = binding.widgetsList.adapter
+            val currAdapter = binding.widgetsListVw.adapter
             if (currAdapter == null) {
                 GadgetAdapter(activity!!, widgetsListItems, this) {
                     context.toast(R.string.touch_hold_widget)
                     ignoreTouches = false
                     touchDownY = -1
                 }.apply {
-                    binding.widgetsList.adapter = this
+                    binding.widgetsListVw.adapter = this
                 }
             } else {
                 (currAdapter as GadgetAdapter).updateItems(widgetsListItems)
@@ -282,14 +282,14 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
             return
         }
 
-        binding.widgetsFastscroller.updateColors(context.getProperPrimaryColor())
-        (binding.widgetsList.adapter as? GadgetAdapter)?.updateTextColor(context.getProperTextColor())
+        binding.widgetsFastscrollerVw.updateColors(context.getProperPrimaryColor())
+        (binding.widgetsListVw.adapter as? GadgetAdapter)?.updateTextColor(context.getProperTextColor())
         setupDrawerBackground()
 
-        binding.searchBar.requireToolbar().beGone()
-        binding.searchBar.updateColors()
-        binding.searchBar.setupMenu()
-        binding.searchBar.onSearchTextChangedListener = {
+        binding.searchBarVw.requireToolbar().beGone()
+        binding.searchBarVw.updateColors()
+        binding.searchBarVw.setupMenu()
+        binding.searchBarVw.onSearchTextChangedListener = {
             splitWidgetsByApps()
         }
     }

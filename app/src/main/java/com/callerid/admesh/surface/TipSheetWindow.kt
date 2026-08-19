@@ -71,7 +71,7 @@ object TipSheetWindow {
             dismiss()
 
             val inflated = LayoutInflater.from(app).inflate(R.layout.screen_overlay_guide, null)
-            val card = inflated.findViewById<View>(R.id.overlayCardVw)
+            val card = inflated.findViewById<View>(R.id.overlayCardVwVw)
             (card.parent as? ViewGroup)?.removeView(card)
             TipSheetActivity.applyMode(card, mode)
 

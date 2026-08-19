@@ -2,7 +2,7 @@
 <!-- Tools category header (Measure · Device · Time), spans both grid columns. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tvToolCategory"
+    android:id="@+id/lblToolCategory"
     style="@style/ToolsCategory"
     android:paddingStart="@dimen/_6sdp"
     android:paddingEnd="@dimen/_6sdp"

@@ -34,18 +34,18 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.stopwatchRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.stopwatchRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
-        binding.btnStartPause.setOnClickListener { if (running) pause() else start() }
-        binding.btnReset.setOnClickListener { reset() }
-        binding.btnLap.setOnClickListener { lap() }
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.padStartPause.setOnClickListener { if (running) pause() else start() }
+        binding.padReset.setOnClickListener { reset() }
+        binding.padLap.setOnClickListener { lap() }
 
         reset()
     }
@@ -58,9 +58,9 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
     private fun start() {
         running = true
         startRealtime = SystemClock.elapsedRealtime()
-        binding.btnStartPause.setText(R.string.action_pause)
-        binding.btnStartPause.setIconResource(R.drawable.sym_pause)
-        binding.btnLap.isEnabled = true
+        binding.padStartPause.setText(R.string.action_pause)
+        binding.padStartPause.setIconResource(R.drawable.sym_pause)
+        binding.padLap.isEnabled = true
         handler.post(tick)
     }
 
@@ -68,9 +68,9 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         running = false
         handler.removeCallbacks(tick)
         accumulatedMs += SystemClock.elapsedRealtime() - startRealtime
-        binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.sym_play)
-        binding.btnLap.isEnabled = false
+        binding.padStartPause.setText(R.string.action_start)
+        binding.padStartPause.setIconResource(R.drawable.sym_play)
+        binding.padLap.isEnabled = false
         renderTime()
     }
 
@@ -80,13 +80,13 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         accumulatedMs = 0L
         lastLapTotal = 0L
         lapCount = 0
-        binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.sym_play)
-        binding.btnLap.isEnabled = false
-        binding.llLaps.removeAllViews()
-        binding.llLaps.visibility = View.GONE
-        binding.emptyState.visibility = View.VISIBLE
-        binding.tvLapCount.text = getString(R.string.stopwatch_laps, 0)
+        binding.padStartPause.setText(R.string.action_start)
+        binding.padStartPause.setIconResource(R.drawable.sym_play)
+        binding.padLap.isEnabled = false
+        binding.rowLaps.removeAllViews()
+        binding.rowLaps.visibility = View.GONE
+        binding.emptyStateVw.visibility = View.VISIBLE
+        binding.lblLapCount.text = getString(R.string.stopwatch_laps, 0)
         renderTime()
     }
 
@@ -97,15 +97,15 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         lastLapTotal = total
         lapCount++
 
-        val row = CellLapBinding.inflate(LayoutInflater.from(this), binding.llLaps, false)
-        row.tvLapName.text = getString(R.string.stopwatch_lap_n, lapCount)
-        row.tvLapSplit.text = format(split)
-        row.tvLapTotal.text = format(total)
-        binding.llLaps.addView(row.root, 0) // newest on top
+        val row = CellLapBinding.inflate(LayoutInflater.from(this), binding.rowLaps, false)
+        row.lblLapName.text = getString(R.string.stopwatch_lap_n, lapCount)
+        row.lblLapSplit.text = format(split)
+        row.lblLapTotal.text = format(total)
+        binding.rowLaps.addView(row.root, 0) // newest on top
 
-        binding.llLaps.visibility = View.VISIBLE
-        binding.emptyState.visibility = View.GONE
-        binding.tvLapCount.text = getString(R.string.stopwatch_laps, lapCount)
+        binding.rowLaps.visibility = View.VISIBLE
+        binding.emptyStateVw.visibility = View.GONE
+        binding.lblLapCount.text = getString(R.string.stopwatch_laps, lapCount)
     }
 
     private fun elapsed(): Long =
@@ -120,8 +120,8 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
 
     private fun renderTime() {
         val text = format(elapsed())
-        binding.tvTime.text = text
-        binding.tvTotal.text = text
+        binding.lblTime.text = text
+        binding.lblTotal.text = text
     }
 
     /** mm:ss.cc (centiseconds). */

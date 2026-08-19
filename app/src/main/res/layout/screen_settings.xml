@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/settingsRoot"
+        android:id="@+id/settingsRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -44,14 +44,14 @@
         </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/settingsScroll"
+            android:id="@+id/settingsScrollVw"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_12sdp"
             android:paddingBottom="@dimen/_20sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,13 +61,13 @@
 
                 <!-- Native ad at the top of the settings list -->
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -89,7 +89,7 @@
                     android:orientation="horizontal">
 
                     <include
-                        android:id="@+id/cardTheme"
+                        android:id="@+id/panelTheme"
                         layout="@layout/cell_pref_theme"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -97,7 +97,7 @@
                         android:layout_weight="1" />
 
                     <include
-                        android:id="@+id/cardLanguage"
+                        android:id="@+id/panelLanguage"
                         layout="@layout/cell_pref_card"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -113,7 +113,7 @@
                     android:orientation="horizontal">
 
                     <include
-                        android:id="@+id/cardBlocklist"
+                        android:id="@+id/panelBlocklist"
                         layout="@layout/cell_pref_card"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -121,7 +121,7 @@
                         android:layout_weight="1" />
 
                     <include
-                        android:id="@+id/cardSim"
+                        android:id="@+id/panelSim"
                         layout="@layout/cell_pref_card"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -136,7 +136,7 @@
 
                 <!-- Caller ID / call screening toggle (overlay permission) -->
                 <LinearLayout
-                    android:id="@+id/cardCallScreening"
+                    android:id="@+id/panelCallScreening"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -177,25 +177,25 @@
                     </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchCallScreening"
+                        android:id="@+id/swcCallScreening"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <!-- ACCOUNT & SUPPORT -->
                 <TextView
-                    android:id="@+id/sectionSupport"
+                    android:id="@+id/sectionSupportVw"
                     style="@style/SettingsSection"
                     android:text="@string/settings_section_support" />
 
                 <include
-                    android:id="@+id/rowRate"
+                    android:id="@+id/rowRateVw"
                     layout="@layout/cell_setting_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <include
-                    android:id="@+id/rowShare"
+                    android:id="@+id/rowShareVw"
                     layout="@layout/cell_setting_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -207,13 +207,13 @@
                     android:text="@string/settings_section_legal" />
 
                 <include
-                    android:id="@+id/rowPrivacy"
+                    android:id="@+id/rowPrivacyVw"
                     layout="@layout/cell_setting_legal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <include
-                    android:id="@+id/rowTerms"
+                    android:id="@+id/rowTermsVw"
                     layout="@layout/cell_setting_legal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -223,10 +223,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

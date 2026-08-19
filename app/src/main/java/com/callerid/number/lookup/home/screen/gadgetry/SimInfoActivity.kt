@@ -33,15 +33,15 @@ class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.simRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.simRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
     override fun onResume() {
@@ -56,14 +56,14 @@ class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
 
     private fun render() {
         // Permission-gated fields show a hint; the rest always populate.
-        binding.tvStatus.visibility = if (hasPhonePermission()) View.GONE else View.VISIBLE
+        binding.lblStatus.visibility = if (hasPhonePermission()) View.GONE else View.VISIBLE
 
-        binding.tvCarrier.text = tm.networkOperatorName.ifBlank { dash() }
-        binding.tvNetworkType.text = networkTypeText()
-        binding.tvPhoneType.text = phoneTypeText()
-        binding.tvCountry.text = tm.networkCountryIso.uppercase(Locale.getDefault()).ifBlank { dash() }
-        binding.tvSimState.text = simStateText()
-        binding.tvRoaming.text =
+        binding.lblCarrier.text = tm.networkOperatorName.ifBlank { dash() }
+        binding.lblNetworkType.text = networkTypeText()
+        binding.lblPhoneType.text = phoneTypeText()
+        binding.lblCountry.text = tm.networkCountryIso.uppercase(Locale.getDefault()).ifBlank { dash() }
+        binding.lblSimState.text = simStateText()
+        binding.lblRoaming.text =
             if (tm.isNetworkRoaming) getString(R.string.common_yes) else getString(R.string.common_no)
     }
 

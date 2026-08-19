@@ -32,10 +32,10 @@ class PrefixPickAdapter(
 
         fun bind(entry: CallEntry) {
             val name = entry.name?.takeIf { it.isNotBlank() }
-            binding.tvName.text = name ?: entry.number
+            binding.lblName.text = name ?: entry.number
             // Hide the secondary line when there's no name to avoid showing the number twice.
-            binding.tvNumber.text = entry.number
-            binding.tvNumber.visibility =
+            binding.lblNumber.text = entry.number
+            binding.lblNumber.visibility =
                 if (name == null) android.view.View.GONE else android.view.View.VISIBLE
             binding.root.setOnClickListener { onPick(entry) }
         }

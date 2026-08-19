@@ -15,7 +15,7 @@
 
     <!-- Compact header (pads the status-bar inset from RecentsFragment) -->
     <LinearLayout
-        android:id="@+id/heroHeader"
+        android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -34,7 +34,7 @@
             android:textSize="@dimen/_16ssp" />
 
         <ImageView
-            android:id="@+id/btnRecentsFilter"
+            android:id="@+id/padRecentsFilter"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:background="@drawable/form_onb_circle_lavender"
@@ -67,7 +67,7 @@
             app:tint="@color/on_surface_variant" />
 
         <EditText
-            android:id="@+id/etSearch"
+            android:id="@+id/inpSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
@@ -82,7 +82,7 @@
             android:textSize="@dimen/_11ssp" />
 
         <ImageView
-            android:id="@+id/btnClearSearch"
+            android:id="@+id/padClearSearch"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -109,25 +109,25 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tabAll"
+                android:id="@+id/segAll"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/log_all"
                 android:text="@string/filter_all" />
 
             <TextView
-                android:id="@+id/tabIncoming"
+                android:id="@+id/segIncoming"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/sift_incoming"
                 android:text="@string/filter_incoming" />
 
             <TextView
-                android:id="@+id/tabOutgoing"
+                android:id="@+id/segOutgoing"
                 style="@style/RecentFilterTab"
                 android:drawableStart="@drawable/sift_outgoing"
                 android:text="@string/filter_outgoing" />
 
             <TextView
-                android:id="@+id/tabMissed"
+                android:id="@+id/segMissed"
                 style="@style/RecentFilterTab"
                 android:layout_marginEnd="0dp"
                 android:drawableStart="@drawable/sym_call_missed"
@@ -137,19 +137,19 @@
 
     <!-- Full-bleed hairline separating the filters from the ad below -->
     <View
-        android:layout_marginTop="@dimen/_10sdp"    android:id="@+id/adNativeDivider"
+        android:layout_marginTop="@dimen/_10sdp"    android:id="@+id/adNativeDividerVw"
         style="@style/AdDivider" />
 
     <!-- Labelled native ad -->
     <FrameLayout
-        android:id="@+id/adNativeFrame"
+        android:id="@+id/adNativeFrameVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
        >
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/adShimmer"
+            android:id="@+id/adShimmerVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ccc">
@@ -159,7 +159,7 @@
     </FrameLayout>
     <!-- Full-bleed hairline separating the quick actions from the ad below -->
     <View
-        android:id="@+id/adNativeDivider1"
+        android:id="@+id/adNativeDivider1Vw"
         style="@style/AdDivider" />
     <FrameLayout
         android:layout_width="match_parent"
@@ -167,7 +167,7 @@
         android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRecents"
+            android:id="@+id/rollRecents"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_4sdp"
@@ -176,7 +176,7 @@
             tools:listitem="@layout/cell_call" />
 
         <TextView
-            android:id="@+id/tvEmpty"
+            android:id="@+id/lblEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -187,7 +187,7 @@
 
         <!-- Dialer FAB, clear of the rows -->
         <LinearLayout
-            android:id="@+id/btnRecentsDial"
+            android:id="@+id/padRecentsDial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -223,7 +223,7 @@
 
         <!-- Permission state -->
         <LinearLayout
-            android:id="@+id/permState"
+            android:id="@+id/permStateVw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -259,7 +259,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <TextView
-                android:id="@+id/btnGrant"
+                android:id="@+id/padGrant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"

@@ -5,7 +5,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rowCall"
+    android:id="@+id/rowCallVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_16sdp"
@@ -22,7 +22,7 @@
     android:paddingVertical="@dimen/_8sdp">
 
     <TextView
-        android:id="@+id/tvAvatar"
+        android:id="@+id/lblAvatar"
         android:layout_width="@dimen/_34sdp"
         android:layout_height="@dimen/_34sdp"
         android:background="@drawable/form_avatar"
@@ -40,7 +40,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/lblName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -58,7 +58,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivType"
+                android:id="@+id/picType"
                 android:layout_width="@dimen/_11sdp"
                 android:layout_height="@dimen/_11sdp"
                 android:contentDescription="@string/call_incoming"
@@ -66,7 +66,7 @@
                 app:tint="@color/on_surface_variant" />
 
             <TextView
-                android:id="@+id/tvSub"
+                android:id="@+id/lblSub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
@@ -78,7 +78,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/btnCall"
+        android:id="@+id/padCall"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
         android:background="@drawable/form_circle_surface"
@@ -89,7 +89,7 @@
 
     <!-- Shown instead of Call for unknown / unsaved numbers → opens Lookup. -->
     <TextView
-        android:id="@+id/btnIdentify"
+        android:id="@+id/padIdentify"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
         android:background="@drawable/form_cta_pill"

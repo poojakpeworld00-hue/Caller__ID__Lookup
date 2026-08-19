@@ -46,21 +46,21 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.compassRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.compassRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
         if (rotationSensor == null) {
-            binding.tvNoSensor.visibility = View.VISIBLE
-            binding.content.visibility = View.GONE
+            binding.lblNoSensor.visibility = View.VISIBLE
+            binding.contentVw.visibility = View.GONE
         } else {
             updateSignal(SensorManager.SENSOR_STATUS_ACCURACY_HIGH)
         }
@@ -88,12 +88,12 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
         val diff = ((target - azimuth + 540f) % 360f) - 180f
         azimuth = (azimuth + diff * 0.15f + 360f) % 360f
 
-        binding.ivNeedle.rotation = -azimuth
-        binding.ivDots.rotation = -azimuth
-        binding.dialLabels.rotation = -azimuth
+        binding.picNeedle.rotation = -azimuth
+        binding.picDots.rotation = -azimuth
+        binding.dialLabelsVw.rotation = -azimuth
         val deg = azimuth.roundToInt() % 360
-        binding.tvHeading.text = String.format(Locale.getDefault(), "%03d°", deg)
-        binding.tvDirection.text = directions[((deg / 22.5f).roundToInt()) % 16]
+        binding.lblHeading.text = String.format(Locale.getDefault(), "%03d°", deg)
+        binding.lblDirection.text = directions[((deg / 22.5f).roundToInt()) % 16]
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = updateSignal(accuracy)
@@ -105,6 +105,6 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
             SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> R.string.signal_medium
             else -> R.string.signal_weak
         }
-        binding.tvSignal.text = getString(R.string.compass_signal, getString(labelRes))
+        binding.lblSignal.text = getString(R.string.compass_signal, getString(labelRes))
     }
 }

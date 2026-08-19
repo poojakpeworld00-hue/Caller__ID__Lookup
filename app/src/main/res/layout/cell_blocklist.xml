@@ -7,7 +7,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/blockRow"
+    android:id="@+id/blockRowVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/_6sdp"
@@ -18,13 +18,13 @@
     android:paddingVertical="@dimen/_10sdp">
 
     <FrameLayout
-        android:id="@+id/avatarBox"
+        android:id="@+id/avatarBoxVw"
         android:layout_width="@dimen/_38sdp"
         android:layout_height="@dimen/_38sdp"
         android:background="@drawable/form_avatar_neutral">
 
         <TextView
-            android:id="@+id/tvBang"
+            android:id="@+id/lblBang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,7 +35,7 @@
             android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/ivAvatar"
+            android:id="@+id/picAvatar"
             android:layout_width="@dimen/_16sdp"
             android:layout_height="@dimen/_16sdp"
             android:layout_gravity="center"
@@ -52,7 +52,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvLabel"
+            android:id="@+id/lblLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -64,7 +64,7 @@
             tools:text="Unknown Caller" />
 
         <TextView
-            android:id="@+id/tvNumber"
+            android:id="@+id/lblNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
@@ -78,7 +78,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/btnUnblock"
+        android:id="@+id/padUnblock"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
         android:layout_marginStart="@dimen/_8sdp"

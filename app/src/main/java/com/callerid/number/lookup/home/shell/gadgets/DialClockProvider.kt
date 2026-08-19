@@ -33,7 +33,7 @@ class DialClockProvider : AppWidgetProvider() {
     ) {
         val views = RemoteViews(context.packageName, R.layout.gizmo_analog_clock).apply {
             setInt(
-                R.id.widget_holder,
+                R.id.widget_holderVw,
                 "setBackgroundColor",
                 context.getWidgetBackgroundColor(appWidgetId)
             )

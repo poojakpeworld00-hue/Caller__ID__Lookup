@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.callerid.number.lookup.home.shell.canvas.BoardGrid xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_screen_grid"
+    android:id="@+id/home_screen_gridVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- Drawing area with Z translation so it is drawn over widgets -->
     <com.callerid.number.lookup.home.shell.canvas.BoardGridCanvas
-        android:id="@+id/drawing_area"
+        android:id="@+id/drawing_areaVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:translationZ="1dp" />
 
     <com.callerid.number.lookup.home.shell.canvas.GadgetResizeFrame
-        android:id="@+id/resize_frame"
+        android:id="@+id/resize_frameVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

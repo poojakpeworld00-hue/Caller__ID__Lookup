@@ -17,7 +17,7 @@
         android:textStyle="bold" />
 
     <include
-        android:id="@+id/dialogMethods"
+        android:id="@+id/dialogMethodsVw"
         layout="@layout/part_block_methods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

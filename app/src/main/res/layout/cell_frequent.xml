@@ -16,7 +16,7 @@
     android:paddingVertical="@dimen/_8sdp">
 
     <TextView
-        android:id="@+id/tvAvatar"
+        android:id="@+id/lblAvatar"
         android:layout_width="@dimen/_36sdp"
         android:layout_height="@dimen/_36sdp"
         android:background="@drawable/form_avatar"
@@ -35,7 +35,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/lblName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -46,7 +46,7 @@
             tools:text="Pooja Chudhri" />
 
         <TextView
-            android:id="@+id/tvCount"
+            android:id="@+id/lblCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
@@ -59,7 +59,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/btnCall"
+        android:id="@+id/padCall"
         android:layout_width="@dimen/_34sdp"
         android:layout_height="@dimen/_34sdp"
         android:layout_marginStart="@dimen/_8sdp"

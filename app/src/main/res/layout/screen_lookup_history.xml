@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lookupHistoryRoot"
+        android:id="@+id/lookupHistoryRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -44,7 +44,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/btnClearAll"
+                android:id="@+id/padClearAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHistory"
+            android:id="@+id/rollHistory"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
@@ -65,12 +65,12 @@
             android:paddingHorizontal="@dimen/_8sdp"
             android:paddingBottom="@dimen/_24sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topBar"
+            app:layout_constraintTop_toBottomOf="@id/crownBar"
             tools:listitem="@layout/cell_search_history" />
 
         <!-- Empty state — animated breathing search icon (no Lottie) -->
         <LinearLayout
-            android:id="@+id/emptyState"
+            android:id="@+id/emptyStateVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
@@ -82,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <com.callerid.number.lookup.home.screen.shared.GlowIconView
                 android:layout_width="@dimen/_76sdp"

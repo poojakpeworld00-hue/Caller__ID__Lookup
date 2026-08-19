@@ -53,31 +53,31 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.flashlightRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.flashlightRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrame, binding.adShimmer)
+        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         cameraId = findFlashCamera()
         if (cameraId == null) {
-            binding.tvNoFlash.visibility = View.VISIBLE
-            binding.content.visibility = View.GONE
+            binding.lblNoFlash.visibility = View.VISIBLE
+            binding.contentVw.visibility = View.GONE
             return
         }
 
-        binding.btnToggle.setOnClickListener { toggleActive() }
-        binding.modeSteady.setOnClickListener { selectMode(Mode.STEADY) }
-        binding.modeStrobe.setOnClickListener { selectMode(Mode.STROBE) }
-        binding.modeSos.setOnClickListener { selectMode(Mode.SOS) }
+        binding.padToggle.setOnClickListener { toggleActive() }
+        binding.modeSteadyVw.setOnClickListener { selectMode(Mode.STEADY) }
+        binding.modeStrobeVw.setOnClickListener { selectMode(Mode.STROBE) }
+        binding.modeSosVw.setOnClickListener { selectMode(Mode.SOS) }
 
-        binding.seekBrightness.progress = brightnessPct
-        binding.seekBrightness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekBrightnessVw.progress = brightnessPct
+        binding.seekBrightnessVw.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, value: Int, fromUser: Boolean) {
                 brightnessPct = value
                 if (active && mode == Mode.STEADY) applyTorch(true)
@@ -163,25 +163,25 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
     }
 
     private fun updatePowerUi() {
-        binding.btnToggle.imageTintList = ColorStateList.valueOf(
+        binding.padToggle.imageTintList = ColorStateList.valueOf(
             ContextCompat.getColor(this, if (active) R.color.primary else R.color.on_surface_variant)
         )
-        binding.btnToggle.backgroundTintList = if (active) {
+        binding.padToggle.backgroundTintList = if (active) {
             ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary_container))
         } else null
     }
 
     private fun updateReadout() {
-        binding.tvBrightnessPct.text = "$brightnessPct%"
+        binding.lblBrightnessPct.text = "$brightnessPct%"
         // Faux lumen output: scales with brightness while the torch is on.
         val lumen = if (active) (brightnessPct / 100f * NOMINAL_LUMENS).roundToInt() else 0
-        binding.tvLumen.text = getString(R.string.flashlight_lm, lumen)
+        binding.lblLumen.text = getString(R.string.flashlight_lm, lumen)
     }
 
     private fun highlightModes() {
-        setMode(binding.modeSteady, binding.ivSteady, binding.tvSteady, mode == Mode.STEADY)
-        setMode(binding.modeStrobe, binding.ivStrobe, binding.tvStrobe, mode == Mode.STROBE)
-        setMode(binding.modeSos, binding.ivSos, binding.tvSos, mode == Mode.SOS)
+        setMode(binding.modeSteadyVw, binding.picSteady, binding.lblSteady, mode == Mode.STEADY)
+        setMode(binding.modeStrobeVw, binding.picStrobe, binding.lblStrobe, mode == Mode.STROBE)
+        setMode(binding.modeSosVw, binding.picSos, binding.lblSos, mode == Mode.SOS)
     }
 
     private fun setMode(container: View, icon: ImageView, label: TextView, selected: Boolean) {

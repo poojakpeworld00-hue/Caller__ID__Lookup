@@ -6,7 +6,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/toolsRoot"
+        android:id="@+id/toolsRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -14,7 +14,7 @@
 
         <!-- Top bar -->
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -46,7 +46,7 @@
 
         <!-- Search field -->
         <LinearLayout
-            android:id="@+id/searchBar"
+            android:id="@+id/searchBarVw"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_38sdp"
             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -55,7 +55,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_14sdp"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <ImageView
                 android:layout_width="@dimen/_15sdp"
@@ -65,7 +65,7 @@
                 app:tint="@color/on_surface_variant" />
 
             <EditText
-                android:id="@+id/etSearch"
+                android:id="@+id/inpSearch"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_8sdp"
@@ -84,7 +84,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <ImageView
-                android:id="@+id/btnClearSearch"
+                android:id="@+id/padClearSearch"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -96,32 +96,32 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTools"
+            android:id="@+id/rollTools"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_14sdp"
             android:paddingTop="@dimen/_6sdp"
             android:paddingBottom="@dimen/_16sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/searchBar"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/searchBarVw"
             tools:listitem="@layout/cell_tool"
             tools:spanCount="2" />
 
         <!-- Empty / no-match state -->
         <LinearLayout
-            android:id="@+id/emptyTools"
+            android:id="@+id/emptyToolsVw"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_44sdp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/searchBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/searchBarVw">
 
             <com.callerid.number.lookup.home.screen.shared.GlowIconView
-                android:id="@+id/emptyToolsIcon"
+                android:id="@+id/emptyToolsIconVw"
                 android:layout_width="@dimen/_78sdp"
                 android:layout_height="@dimen/_78sdp"
                 app:biv_disc="@drawable/form_empty_circle_tools"
@@ -131,7 +131,7 @@
                 app:biv_ring="@drawable/form_ring_tools" />
 
             <TextView
-                android:id="@+id/tvEmptyTitle"
+                android:id="@+id/lblEmptyTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_14sdp"
@@ -151,7 +151,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <LinearLayout
-                android:id="@+id/btnResetSearch"
+                android:id="@+id/padResetSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_16sdp"
@@ -182,10 +182,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

@@ -16,7 +16,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/etNumber"
+        android:id="@+id/inpNumber"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_48sdp"
         android:layout_marginTop="@dimen/_14sdp"
@@ -38,7 +38,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/btnCancel"
+            android:id="@+id/padCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -51,7 +51,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btnAdd"
+            android:id="@+id/padAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"

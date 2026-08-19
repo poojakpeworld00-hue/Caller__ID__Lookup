@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/stopwatchRoot"
+        android:id="@+id/stopwatchRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.tools.StopwatchActivity">
 
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -44,7 +44,7 @@
 
         <!-- Total records footer (sticky) -->
         <LinearLayout
-            android:id="@+id/footer"
+            android:id="@+id/footerVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/surface"
@@ -52,7 +52,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/_18sdp"
             android:paddingVertical="@dimen/_12sdp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw">
 
             <TextView
                 android:layout_width="0dp"
@@ -66,7 +66,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvTotal"
+                android:id="@+id/lblTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFeatureSettings="tnum"
@@ -82,8 +82,8 @@
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_12sdp"
-            app:layout_constraintBottom_toTopOf="@id/footer"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/footerVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,13 +92,13 @@
                 android:orientation="vertical">
                 <!-- Mid native (scrolls with content) -->
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -133,7 +133,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvTime"
+                                android:id="@+id/lblTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFeatureSettings="tnum"
@@ -156,7 +156,7 @@
                     </FrameLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnLap"
+                        android:id="@+id/padLap"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_46sdp"
@@ -168,7 +168,7 @@
                         app:cornerRadius="@dimen/_14sdp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnStartPause"
+                        android:id="@+id/padStartPause"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_46sdp"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -184,7 +184,7 @@
                         app:iconTint="@color/white" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnReset"
+                        android:id="@+id/padReset"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_46sdp"
@@ -221,7 +221,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvLapCount"
+                            android:id="@+id/lblLapCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/form_pill"
@@ -236,7 +236,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llLaps"
+                        android:id="@+id/rowLaps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_6sdp"
@@ -244,7 +244,7 @@
                         android:visibility="gone" />
 
                     <LinearLayout
-                        android:id="@+id/emptyState"
+                        android:id="@+id/emptyStateVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -275,10 +275,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

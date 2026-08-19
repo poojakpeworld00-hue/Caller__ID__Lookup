@@ -66,8 +66,8 @@ class DirectoryAdapter(
     class HeaderVH(private val binding: CellSectionHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(letter: String) {
-            binding.tvHeader.text = letter
-            binding.tvHeader.setTextColor(
+            binding.lblHeader.text = letter
+            binding.lblHeader.setTextColor(
                 ContextCompat.getColor(binding.root.context, R.color.primary)
             )
         }
@@ -77,17 +77,17 @@ class DirectoryAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(row: ContactRow.Item) {
             val c = row.contact
-            binding.tvAvatar.text = c.initials
-            binding.tvName.text = c.name
-            binding.tvNumber.text = c.detail
+            binding.lblAvatar.text = c.initials
+            binding.lblName.text = c.name
+            binding.lblNumber.text = c.detail
             loadContactPhoto(c)
-            binding.btnCall.setOnClickListener { onCall(c.detail) }
+            binding.padCall.setOnClickListener { onCall(c.detail) }
             binding.root.setOnClickListener { onOpen(c) }
         }
 
         /** Shows the real contact photo over the initials, falling back to initials. */
         private fun loadContactPhoto(c: ContactItem) {
-            val iv = binding.ivAvatar
+            val iv = binding.picAvatar
             val uri = c.photoUri
             if (uri.isNullOrBlank()) {
                 Glide.with(iv).clear(iv)

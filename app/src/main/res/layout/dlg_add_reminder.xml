@@ -15,7 +15,7 @@
 
         <!-- Title/Input with edit icon -->
         <TextView
-            android:id="@+id/etReminder"
+            android:id="@+id/inpReminder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/figtree_medium"
@@ -23,12 +23,12 @@
             android:paddingEnd="@dimen/_36sdp"
             android:textColor="@color/on_surface"
             android:textSize="@dimen/_16sdp"
-            app:layout_constraintStart_toEndOf="@+id/ivEdit"
+            app:layout_constraintStart_toEndOf="@+id/picEdit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/edit_reminder"
+            android:id="@+id/edit_reminderVw"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@null"
@@ -41,21 +41,21 @@
             android:textSize="@dimen/_10sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etReminder" />
+            app:layout_constraintTop_toBottomOf="@+id/inpReminder" />
 
         <ImageView
-            android:id="@+id/ivEdit"
+            android:id="@+id/picEdit"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:visibility="gone"
             android:src="@drawable/bar_rename"
-            app:layout_constraintBottom_toBottomOf="@id/etReminder"
+            app:layout_constraintBottom_toBottomOf="@id/inpReminder"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/etReminder" />
+            app:layout_constraintTop_toTopOf="@id/inpReminder" />
 
         <!-- Time Picker Row -->
         <LinearLayout
-            android:id="@+id/timePickerLayout"
+            android:id="@+id/timePickerLayoutVw"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
@@ -63,15 +63,15 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_reminder">
+            app:layout_constraintTop_toBottomOf="@id/edit_reminderVw">
 
             <NumberPicker
-                android:id="@+id/npMonth"
+                android:id="@+id/npMonthVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <NumberPicker
-                android:id="@+id/npDay"
+                android:id="@+id/npDayVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -81,12 +81,12 @@
 
 
             <NumberPicker
-                android:id="@+id/npHour"
+                android:id="@+id/npHourVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <NumberPicker
-                android:id="@+id/npMinute"
+                android:id="@+id/npMinuteVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -97,7 +97,7 @@
 
         <!-- Cancel & Save buttons -->
         <LinearLayout
-            android:id="@+id/buttonLayout"
+            android:id="@+id/buttonLayoutVw"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
@@ -105,10 +105,10 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/timePickerLayout">
+            app:layout_constraintTop_toBottomOf="@id/timePickerLayoutVw">
 
             <TextView
-                android:id="@+id/btnCancel"
+                android:id="@+id/padCancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -124,7 +124,7 @@
 
 
             <TextView
-                android:id="@+id/btnSave"
+                android:id="@+id/padSave"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

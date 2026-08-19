@@ -37,7 +37,7 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) startMetering() else binding.tvStatus.setText(R.string.sound_permission)
+        if (granted) startMetering() else binding.lblStatus.setText(R.string.sound_permission)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,23 +46,23 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.soundRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.soundRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrame, binding.adShimmer)
-        binding.pbLevel.isIndeterminate = false
-        binding.pbLevel.max = 100
+        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.pbLevelVw.isIndeterminate = false
+        binding.pbLevelVw.max = 100
 
-        binding.btnHold.setOnClickListener {
+        binding.padHold.setOnClickListener {
             held = !held
-            binding.btnHold.setText(if (held) R.string.sound_resume else R.string.sound_hold)
+            binding.padHold.setText(if (held) R.string.sound_resume else R.string.sound_hold)
         }
-        binding.btnReset.setOnClickListener { resetData() }
+        binding.padReset.setOnClickListener { resetData() }
     }
 
     override fun onResume() {
@@ -82,7 +82,7 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
 
     private fun startMetering() {
         if (recorder != null || !hasMicPermission()) return
-        binding.tvStatus.text = ""
+        binding.lblStatus.text = ""
         val rec = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) MediaRecorder(this)
         else @Suppress("DEPRECATION") MediaRecorder()
         runCatching {
@@ -107,9 +107,9 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
         peak = 0f
         sum = 0.0
         count = 0L
-        binding.spectrum.reset()
-        binding.tvPeak.text = formatDb(0f)
-        binding.tvAvg.text = formatDb(0f)
+        binding.spectrumVw.reset()
+        binding.lblPeak.text = formatDb(0f)
+        binding.lblAvg.text = formatDb(0f)
     }
 
     private val tick = object : Runnable {
@@ -125,19 +125,19 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
     }
 
     private fun render(db: Float) {
-        binding.pbLevel.setProgressCompat(db.roundToInt(), true)
-        binding.tvDb.text = db.roundToInt().toString()
-        binding.tvCategory.setText(categoryRes(db))
+        binding.pbLevelVw.setProgressCompat(db.roundToInt(), true)
+        binding.lblDb.text = db.roundToInt().toString()
+        binding.lblCategory.setText(categoryRes(db))
 
         if (db > peak) {
             peak = db
-            binding.tvPeak.text = formatDb(peak)
+            binding.lblPeak.text = formatDb(peak)
         }
         sum += db
         count++
-        binding.tvAvg.text = formatDb((sum / count).toFloat())
+        binding.lblAvg.text = formatDb((sum / count).toFloat())
 
-        binding.spectrum.setLevel(db / 100f)
+        binding.spectrumVw.setLevel(db / 100f)
     }
 
     private fun formatDb(db: Float) = String.format(Locale.getDefault(), "%.1f dB", db)

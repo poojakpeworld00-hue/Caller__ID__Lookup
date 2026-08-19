@@ -15,7 +15,7 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/languageRoot"
+        android:id="@+id/languageRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/_10sdp"
@@ -24,7 +24,7 @@
 
         <!-- ===== Toolbar ===== -->
         <ImageView
-            android:id="@+id/btnBack"
+            android:id="@+id/padBack"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_8sdp"
@@ -32,13 +32,13 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/onboarding_skip"
             android:src="@drawable/sym_arrow_back"
-            app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="@id/lblTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvTitle"
+            app:layout_constraintTop_toTopOf="@id/lblTitle"
             app:tint="@color/on_surface" />
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/lblTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
@@ -47,27 +47,27 @@
             android:text="@string/settings_language"
             android:textColor="@color/on_surface"
             android:textSize="@dimen/_15ssp"
-            app:layout_constraintBottom_toBottomOf="@id/btnContinue"
-            app:layout_constraintEnd_toStartOf="@id/btnInfo"
-            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintBottom_toBottomOf="@id/padContinue"
+            app:layout_constraintEnd_toStartOf="@id/padInfo"
+            app:layout_constraintStart_toEndOf="@id/padBack"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/btnInfo"
+            android:id="@+id/padInfo"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/language_info_title"
             android:padding="@dimen/_6sdp"
             android:src="@drawable/sym_info"
-            app:layout_constraintBottom_toBottomOf="@id/btnContinue"
-            app:layout_constraintEnd_toStartOf="@id/btnContinue"
-            app:layout_constraintTop_toTopOf="@id/btnContinue"
+            app:layout_constraintBottom_toBottomOf="@id/padContinue"
+            app:layout_constraintEnd_toStartOf="@id/padContinue"
+            app:layout_constraintTop_toTopOf="@id/padContinue"
             app:tint="@color/on_surface_variant" />
 
         <!-- Filled confirm: "Done" pill (Claude Design's labelled confirm), not a bare glyph. -->
         <LinearLayout
-            android:id="@+id/btnContinue"
+            android:id="@+id/padContinue"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_28sdp"
             android:layout_marginEnd="@dimen/_10sdp"
@@ -101,15 +101,15 @@
 
         <!-- ===== Suggested + All languages — one continuous scroll ===== -->
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll"
+            android:id="@+id/scrl"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/_10sdp"
-            app:layout_constraintBottom_toTopOf="@id/adNativeFrame"
+            app:layout_constraintBottom_toTopOf="@id/adNativeFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnContinue">
+            app:layout_constraintTop_toBottomOf="@id/padContinue">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,7 +118,7 @@
 
                 <!-- Suggested -->
                 <TextView
-                    android:id="@+id/tvSuggested"
+                    android:id="@+id/lblSuggested"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_18sdp"
@@ -131,7 +131,7 @@
                     android:textSize="@dimen/_10ssp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSuggested"
+                    android:id="@+id/rollSuggested"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
@@ -149,7 +149,7 @@
 
                 <!-- All languages -->
                 <TextView
-                    android:id="@+id/tvAll"
+                    android:id="@+id/lblAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_18sdp"
@@ -162,7 +162,7 @@
                     android:textSize="@dimen/_10ssp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvLanguages"
+                    android:id="@+id/rollLanguages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
@@ -181,16 +181,16 @@
 
         <!-- Full-bleed hairline separating the list from the ad below -->
         <View
-            android:id="@+id/adNativeDivider"
+            android:id="@+id/adNativeDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/adNativeFrame"
+            app:layout_constraintBottom_toTopOf="@id/adNativeFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- ===== Native ad (labelled card, pinned below the list) ===== -->
         <FrameLayout
-            android:id="@+id/adNativeFrame"
+            android:id="@+id/adNativeFrameVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -198,7 +198,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/adShimmer"
+                android:id="@+id/adShimmerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ccc">

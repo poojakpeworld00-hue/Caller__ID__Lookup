@@ -60,19 +60,19 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         // Record this intro show for the once/count frequency gate.
         RevealPolicy.markShown(this, RevealConfig.TERMS)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.termsRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.termsRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
 
-        binding.cbAgree.isChecked = true
+        binding.chkAgree.isChecked = true
         setAcceptEnabled(true)
 
-        binding.cbAgree.setOnCheckedChangeListener { _, checked -> setAcceptEnabled(checked) }
+        binding.chkAgree.setOnCheckedChangeListener { _, checked -> setAcceptEnabled(checked) }
         // Tapping the label toggles the box too.
-        binding.tvAgree.setOnClickListener { binding.cbAgree.toggle() }
-        binding.btnAccept.setOnClickListener { onAccept() }
+        binding.lblAgree.setOnClickListener { binding.chkAgree.toggle() }
+        binding.padAccept.setOnClickListener { onAccept() }
 
         // Onboarding rule: system back must not exit the app — advance forward to
         // the next screen (marking terms accepted so it isn't shown again). Stays
@@ -114,12 +114,12 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
     }
 
     private fun setAcceptEnabled(enabled: Boolean) {
-        binding.btnAccept.isEnabled = enabled
-        binding.btnAccept.alpha = if (enabled) 1f else 0.5f
+        binding.padAccept.isEnabled = enabled
+        binding.padAccept.alpha = if (enabled) 1f else 0.5f
     }
 
     private fun onAccept() {
-        if (!binding.cbAgree.isChecked) {
+        if (!binding.chkAgree.isChecked) {
             Toast.makeText(this, R.string.terms_please_accept, Toast.LENGTH_SHORT).show()
             return
         }

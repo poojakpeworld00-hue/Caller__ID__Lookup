@@ -18,7 +18,7 @@ class CountryPickActivity : FrameActivity<ScreenCountryPickerBinding>() {
     private lateinit var adapter: DialCountryAdapter
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.countryRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.countryRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
@@ -34,12 +34,12 @@ class CountryPickActivity : FrameActivity<ScreenCountryPickerBinding>() {
             )
             finish()
         }
-        binding.rvCountries.layoutManager = LinearLayoutManager(this)
-        binding.rvCountries.adapter = adapter
+        binding.rollCountries.layoutManager = LinearLayoutManager(this)
+        binding.rollCountries.adapter = adapter
         adapter.submit(DialCountries.all)
 
-        binding.btnBack.setOnClickListener { goBack() }
-        binding.etSearch.addTextChangedListener { text -> filter(text?.toString().orEmpty()) }
+        binding.padBack.setOnClickListener { goBack() }
+        binding.inpSearch.addTextChangedListener { text -> filter(text?.toString().orEmpty()) }
     }
 
     private fun filter(query: String) {

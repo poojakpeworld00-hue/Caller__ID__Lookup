@@ -43,7 +43,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         // Record this intro show for the once/count frequency gate.
         RevealPolicy.markShown(this, RevealConfig.ONBOARDING)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.onboardingRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.onboardingRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
@@ -54,38 +54,38 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         ShellPromoConfig.showSlot(
             activity = this,
             slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.INTRO),
-            container = binding.adNativeFrame,
-            shimmer = binding.adShimmer,
+            container = binding.adNativeFrameVw,
+            shimmer = binding.adShimmerVw,
         )
-        binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
+        binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
-        binding.viewPager.adapter = SlideAdapter(pages)
-        binding.viewPager.offscreenPageLimit = 1
+        binding.vuPager.adapter = SlideAdapter(pages)
+        binding.vuPager.offscreenPageLimit = 1
         buildDots()
         updateDots(0)
 
         // Parallax: the illustration tracks the swipe fully; the title (0.85×) and
         // body (0.7×) lag behind it as they scroll.
-        binding.viewPager.setPageTransformer { page, position ->
+        binding.vuPager.setPageTransformer { page, position ->
             val w = page.width.toFloat()
-            page.findViewById<View?>(R.id.tvTitle)?.translationX = position * w * 0.15f
-            page.findViewById<View?>(R.id.tvDesc)?.translationX = position * w * 0.30f
+            page.findViewById<View?>(R.id.lblTitle)?.translationX = position * w * 0.15f
+            page.findViewById<View?>(R.id.lblDesc)?.translationX = position * w * 0.30f
         }
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.vuPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) = updateDots(position)
         })
 
         // `onboarding.intro.skip_enabled: false` hides Skip, so the carousel has to be paged
         // through to its end (Back still moves forward, see below).
         val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.INTRO)
-        binding.btnSkip.beVisibleIf(ui.skipEnabled)
+        binding.padSkip.beVisibleIf(ui.skipEnabled)
 
-        binding.btnSkip.setOnClickListener { finishOnboarding() }
-        binding.btnNext.setOnClickListener {
-            val current = binding.viewPager.currentItem
+        binding.padSkip.setOnClickListener { finishOnboarding() }
+        binding.padNext.setOnClickListener {
+            val current = binding.vuPager.currentItem
             if (current < pages.lastIndex) {
-                binding.viewPager.currentItem = current + 1
+                binding.vuPager.currentItem = current + 1
             } else {
                 finishOnboarding()
             }
@@ -100,9 +100,9 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         // exit handler; `forwarding` blocks a double finish.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val current = binding.viewPager.currentItem
+                val current = binding.vuPager.currentItem
                 if (!ui.backAdvances && current < pages.lastIndex) {
-                    binding.viewPager.setCurrentItem(current + 1, true)
+                    binding.vuPager.setCurrentItem(current + 1, true)
                 } else if (!forwarding) {
                     forwarding = true
                     finishOnboarding()
@@ -120,7 +120,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
             val dot = View(this)
             val lp = LinearLayout.LayoutParams(size, size).apply { marginEnd = gap }
             dot.layoutParams = lp
-            binding.dots.addView(dot)
+            binding.dotsVw.addView(dot)
             dots.add(dot)
         }
     }
@@ -138,8 +138,8 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         // Final step: the CTA morphs to "Get Started" on the hero gradient — the
         // one place onboarding uses the gradient (Visual System rule).
         val last = active == pages.lastIndex
-        binding.btnNext.setText(if (last) R.string.onboarding_get_started else R.string.onboarding_next)
-        binding.btnNext.setBackgroundResource(
+        binding.padNext.setText(if (last) R.string.onboarding_get_started else R.string.onboarding_next)
+        binding.padNext.setBackgroundResource(
             if (last) R.drawable.form_btn_gradient else R.drawable.form_btn_primary
         )
         if (last != wasLast) {
@@ -167,10 +167,10 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
 
     /** Width/scale spring when the CTA morphs between Next and Get Started. */
     private fun popCta() {
-        binding.btnNext.animate().cancel()
-        binding.btnNext.scaleX = 0.94f
-        binding.btnNext.scaleY = 0.94f
-        binding.btnNext.animate()
+        binding.padNext.animate().cancel()
+        binding.padNext.scaleX = 0.94f
+        binding.padNext.scaleY = 0.94f
+        binding.padNext.animate()
             .scaleX(1f).scaleY(1f)
             .setInterpolator(spring)
             .setDuration(340L)

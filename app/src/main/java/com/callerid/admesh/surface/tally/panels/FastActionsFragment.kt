@@ -22,22 +22,22 @@ class FastActionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.board_third, container, false)
-        view.findViewById<LinearLayout>(R.id.btnmessage).triggerClick {
+        view.findViewById<LinearLayout>(R.id.btnmessageVw).triggerClick {
             messga()
         }
-        view.findViewById<LinearLayout>(R.id.btnAddContact).triggerClick {
+        view.findViewById<LinearLayout>(R.id.padAddContact).triggerClick {
             addContact()
         }
 
-        view.findViewById<LinearLayout>(R.id.btnSendEmail).triggerClick {
+        view.findViewById<LinearLayout>(R.id.padSendEmail).triggerClick {
             sendEmail()
         }
 
-        view.findViewById<LinearLayout>(R.id.btnAddCalendar).triggerClick {
+        view.findViewById<LinearLayout>(R.id.padAddCalendar).triggerClick {
             addCalendarEvent()
         }
 
-        view.findViewById<LinearLayout>(R.id.btnOpenWebsite).triggerClick {
+        view.findViewById<LinearLayout>(R.id.padOpenWebsite).triggerClick {
             openWebsite()
         }
 

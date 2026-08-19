@@ -59,31 +59,31 @@ class BlockListAdapter(
     inner class VH(val binding: CellBlocklistBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(row: BlockedRowUi) {
             val ctx = binding.root.context
-            binding.tvLabel.text = row.label
-            binding.tvNumber.text = row.entry.number
+            binding.lblLabel.text = row.label
+            binding.lblNumber.text = row.entry.number
 
             if (row.isSpam) {
-                binding.blockRow.setBackgroundResource(R.drawable.form_row_spam)
-                binding.avatarBox.setBackgroundResource(R.drawable.form_avatar_spam)
-                binding.tvBang.visibility = View.VISIBLE
-                binding.ivAvatar.visibility = View.GONE
-                binding.tvLabel.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
-                binding.tvNumber.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
-                binding.btnUnblock.setBackgroundResource(R.drawable.form_unblock_spam)
-                binding.btnUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
+                binding.blockRowVw.setBackgroundResource(R.drawable.form_row_spam)
+                binding.avatarBoxVw.setBackgroundResource(R.drawable.form_avatar_spam)
+                binding.lblBang.visibility = View.VISIBLE
+                binding.picAvatar.visibility = View.GONE
+                binding.lblLabel.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
+                binding.lblNumber.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
+                binding.padUnblock.setBackgroundResource(R.drawable.form_unblock_spam)
+                binding.padUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
             } else {
-                binding.blockRow.setBackgroundResource(R.drawable.form_row_neutral)
-                binding.avatarBox.setBackgroundResource(R.drawable.form_avatar_neutral)
-                binding.tvBang.visibility = View.GONE
-                binding.ivAvatar.visibility = View.VISIBLE
-                binding.tvLabel.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
-                binding.tvNumber.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface_variant))
-                binding.btnUnblock.setBackgroundResource(R.drawable.form_unblock_neutral)
-                binding.btnUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
+                binding.blockRowVw.setBackgroundResource(R.drawable.form_row_neutral)
+                binding.avatarBoxVw.setBackgroundResource(R.drawable.form_avatar_neutral)
+                binding.lblBang.visibility = View.GONE
+                binding.picAvatar.visibility = View.VISIBLE
+                binding.lblLabel.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
+                binding.lblNumber.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface_variant))
+                binding.padUnblock.setBackgroundResource(R.drawable.form_unblock_neutral)
+                binding.padUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
             }
 
-            binding.btnUnblock.setOnClickListener { onUnblock(row.entry) }
-            binding.blockRow.setOnClickListener { onRowClick(row.entry) }
+            binding.padUnblock.setOnClickListener { onUnblock(row.entry) }
+            binding.blockRowVw.setOnClickListener { onRowClick(row.entry) }
         }
     }
 }

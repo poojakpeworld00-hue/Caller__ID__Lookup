@@ -70,16 +70,16 @@ class CallPanel(
 
         // Committed once and kept — the panel slides in and out rather than being recreated,
         // so the user's tab and scroll position survive closing it.
-        if (activity.supportFragmentManager.findFragmentById(R.id.callerPanelContainer) == null) {
+        if (activity.supportFragmentManager.findFragmentById(R.id.callerPanelContainerVw) == null) {
             activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.callerPanelContainer, HomeShellFragment.newInstance())
+                .replace(R.id.callerPanelContainerVw, HomeShellFragment.newInstance())
                 .commit()
         }
     }
 
     /** The shell inside the panel, once its transaction has run. */
     fun shell(): HomeShellFragment? = activity?.supportFragmentManager
-        ?.findFragmentById(R.id.callerPanelContainer) as? HomeShellFragment
+        ?.findFragmentById(R.id.callerPanelContainerVw) as? HomeShellFragment
 
     /**
      * Loads the bottom banner every time the panel slides in, matching the left panel and the
@@ -102,12 +102,12 @@ class CallPanel(
         bannerRequested = true
         lastBannerAt = now
 
-        val container = binding.bannerSlot.bannerAdFrame
+        val container = binding.bannerSlotVw.bannerAdFrameVw
         PerScreenPromo.showAd(
-            BANNER_SCREEN_KEY, host, container, binding.bannerSlot.bannerShimmer
+            BANNER_SCREEN_KEY, host, container, binding.bannerSlotVw.bannerShimmerVw
         )
         // The hairline only exists to fence off an advert — drop it if the slot stays empty.
-        binding.callerAdBannerDivider.followAdContainer(container)
+        binding.callerAdBannerDividerVw.followAdContainer(container)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

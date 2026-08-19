@@ -12,7 +12,7 @@
     android:fitsSystemWindows="true">
 
     <org.fossify.commons.views.MyTextView
-        android:id="@+id/onboarding_skip"
+        android:id="@+id/onboarding_skipVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -33,7 +33,7 @@
          CTA behind a hairline, so "Set as Default" stays the bottom-most control. The
          horizontal inset therefore lives on the button and the footnote, not the footer. -->
     <LinearLayout
-        android:id="@+id/onboarding_footer"
+        android:id="@+id/onboarding_footerVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -41,16 +41,16 @@
         android:paddingBottom="16dp">
 
         <View
-            android:id="@+id/ad_native_divider"
+            android:id="@+id/ad_native_dividerVw"
             style="@style/AdDivider" />
 
         <FrameLayout
-            android:id="@+id/ad_native_frame"
+            android:id="@+id/ad_native_frameVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/ad_shimmer"
+                android:id="@+id/ad_shimmerVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ccc">
@@ -61,7 +61,7 @@
         </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/onboarding_set_default"
+            android:id="@+id/onboarding_set_defaultVw"
             style="@style/OnboardingButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:text="@string/onboarding_set_default" />
 
         <org.fossify.commons.views.MyTextView
-            android:id="@+id/onboarding_footnote"
+            android:id="@+id/onboarding_footnoteVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
@@ -86,8 +86,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/onboarding_footer"
-        android:layout_below="@id/onboarding_skip"
+        android:layout_above="@id/onboarding_footerVw"
+        android:layout_below="@id/onboarding_skipVw"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true">
@@ -105,7 +105,7 @@
                  The shield and its badge deliberately hang past this container's right
                  edge, so clipping has to be off all the way up the chain. -->
             <RelativeLayout
-                android:id="@+id/onboarding_hero"
+                android:id="@+id/onboarding_heroVw"
                 android:layout_width="match_parent"
                 android:layout_height="278dp"
                 android:clipChildren="false"
@@ -120,7 +120,7 @@
 
                 <!-- sparkles -->
                 <ImageView
-                    android:id="@+id/onboarding_sparkle_1"
+                    android:id="@+id/onboarding_sparkle_1Vw"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentStart="true"
@@ -131,7 +131,7 @@
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
-                    android:id="@+id/onboarding_sparkle_2"
+                    android:id="@+id/onboarding_sparkle_2Vw"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_alignParentEnd="true"
@@ -142,7 +142,7 @@
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
-                    android:id="@+id/onboarding_sparkle_3"
+                    android:id="@+id/onboarding_sparkle_3Vw"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_alignParentEnd="true"
@@ -154,7 +154,7 @@
 
                 <!-- mock incoming-call screen -->
                 <LinearLayout
-                    android:id="@+id/onboarding_mock"
+                    android:id="@+id/onboarding_mockVw"
                     android:layout_width="138dp"
                     android:layout_height="252dp"
                     android:layout_centerHorizontal="true"
@@ -241,11 +241,11 @@
 
                 <!-- attribution chip, tilted across the mock's lower half -->
                 <LinearLayout
-                    android:id="@+id/onboarding_chip"
+                    android:id="@+id/onboarding_chipVw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@id/onboarding_mock"
-                    android:layout_alignTop="@id/onboarding_mock"
+                    android:layout_alignStart="@id/onboarding_mockVw"
+                    android:layout_alignTop="@id/onboarding_mockVw"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="158dp"
                     android:background="@drawable/form_onb_mock_chip"
@@ -286,22 +286,22 @@
 
                 <!-- shield mark, overlapping the mock's right edge -->
                 <ImageView
-                    android:id="@+id/onboarding_shield"
+                    android:id="@+id/onboarding_shieldVw"
                     android:layout_width="72dp"
                     android:layout_height="82dp"
-                    android:layout_alignEnd="@id/onboarding_mock"
-                    android:layout_alignTop="@id/onboarding_mock"
+                    android:layout_alignEnd="@id/onboarding_mockVw"
+                    android:layout_alignTop="@id/onboarding_mockVw"
                     android:layout_marginTop="116dp"
                     android:layout_marginEnd="-46dp"
                     android:contentDescription="@null"
                     android:src="@drawable/sym_cid_shield_phone" />
 
                 <ImageView
-                    android:id="@+id/onboarding_badge"
+                    android:id="@+id/onboarding_badgeVw"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_alignEnd="@id/onboarding_shield"
-                    android:layout_below="@id/onboarding_shield"
+                    android:layout_alignEnd="@id/onboarding_shieldVw"
+                    android:layout_below="@id/onboarding_shieldVw"
                     android:layout_marginTop="-16dp"
                     android:layout_marginEnd="-10dp"
                     android:background="@drawable/form_onb_check_badge_light"
@@ -313,7 +313,7 @@
             </RelativeLayout>
 
             <org.fossify.commons.views.MyTextView
-                android:id="@+id/onboarding_title"
+                android:id="@+id/onboarding_titleVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
@@ -326,7 +326,7 @@
                 android:textStyle="bold" />
 
             <org.fossify.commons.views.MyTextView
-                android:id="@+id/onboarding_lead"
+                android:id="@+id/onboarding_leadVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="6dp"

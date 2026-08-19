@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/layout"
+            android:id="@+id/sect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/btnmessage"
+                android:id="@+id/btnmessageVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"
@@ -50,7 +50,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btnSendEmail"
+                android:id="@+id/padSendEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"
@@ -83,7 +83,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btnAddCalendar"
+                android:id="@+id/padAddCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"
@@ -116,7 +116,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btnOpenWebsite"
+                android:id="@+id/padOpenWebsite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"
@@ -149,7 +149,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btnAddContact"
+                android:id="@+id/padAddContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_5sdp"

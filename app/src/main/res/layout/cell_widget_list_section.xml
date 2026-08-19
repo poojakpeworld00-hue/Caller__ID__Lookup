@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/widget_app_holder"
+    android:id="@+id/widget_app_holderVw"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/medium_margin">
 
     <org.fossify.commons.views.MySquareImageView
-        android:id="@+id/widget_app_icon"
+        android:id="@+id/widget_app_iconVw"
         android:layout_width="@dimen/launcher_icon_size"
         android:layout_height="@dimen/launcher_icon_size"
         android:layout_gravity="center_horizontal|bottom"
@@ -15,12 +15,12 @@
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/widget_app_title"
+        android:id="@+id/widget_app_titleVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignTop="@+id/widget_app_icon"
-        android:layout_alignBottom="@+id/widget_app_icon"
-        android:layout_toEndOf="@+id/widget_app_icon"
+        android:layout_alignTop="@+id/widget_app_iconVw"
+        android:layout_alignBottom="@+id/widget_app_iconVw"
+        android:layout_toEndOf="@+id/widget_app_iconVw"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"

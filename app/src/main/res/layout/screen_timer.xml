@@ -6,14 +6,14 @@
     <data />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timerRoot"
+        android:id="@+id/timerRootVw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
         tools:context=".ui.tools.CountdownActivity">
 
         <LinearLayout
-            android:id="@+id/topBar"
+            android:id="@+id/crownBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBack"
+                android:id="@+id/padBack"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
-            app:layout_constraintTop_toBottomOf="@id/topBar">
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
+            app:layout_constraintTop_toBottomOf="@id/crownBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:paddingBottom="@dimen/_16sdp">
 
             <TextView
-                android:id="@+id/tvTime"
+                android:id="@+id/lblTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -76,7 +76,7 @@
 
             <!-- Presets -->
             <LinearLayout
-                android:id="@+id/presets"
+                android:id="@+id/presetsVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_24sdp"
@@ -84,7 +84,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/btnAddMin"
+                    android:id="@+id/padAddMin"
                     style="@style/TimerPreset"
                     android:layout_marginEnd="@dimen/_5sdp">
 
@@ -94,7 +94,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/btnAddTenSec"
+                    android:id="@+id/padAddTenSec"
                     style="@style/TimerPreset"
                     android:layout_marginHorizontal="@dimen/_5sdp">
 
@@ -104,7 +104,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/btnAddSec"
+                    android:id="@+id/padAddSec"
                     style="@style/TimerPreset"
                     android:layout_marginStart="@dimen/_5sdp">
 
@@ -126,7 +126,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnReset"
+                    android:id="@+id/padReset"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginEnd="@dimen/_6sdp"
@@ -140,7 +140,7 @@
                     app:cornerRadius="@dimen/_14sdp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStartPause"
+                    android:id="@+id/padStartPause"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginStart="@dimen/_6sdp"
@@ -159,14 +159,14 @@
         </LinearLayout>
 
                 <FrameLayout
-                    android:id="@+id/adNativeFrame"
+                    android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginVertical="@dimen/_10sdp">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/adShimmer"
+                        android:id="@+id/adShimmerVw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ccc">
@@ -180,10 +180,10 @@
 
         <!-- Full-bleed hairline separating app content from the ad below -->
         <View
-            android:id="@+id/adBannerDivider"
+            android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
+            app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

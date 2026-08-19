@@ -23,14 +23,14 @@
 
     <!-- incoming pulse rings -->
     <View
-        android:id="@+id/obRing1"
+        android:id="@+id/obRing1Vw"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="@dimen/_140sdp"
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_incoming" />
 
     <View
-        android:id="@+id/obRing2"
+        android:id="@+id/obRing2Vw"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="@dimen/_140sdp"
         android:layout_gravity="center"
@@ -38,7 +38,7 @@
 
     <!-- phone -->
     <LinearLayout
-        android:id="@+id/obCard"
+        android:id="@+id/obCardVw"
         android:layout_width="@dimen/_115sdp"
         android:layout_height="@dimen/_184sdp"
         android:layout_gravity="center"
@@ -87,7 +87,7 @@
                 tools:ignore="HardcodedText" />
 
             <FrameLayout
-                android:id="@+id/obChip"
+                android:id="@+id/obChipVw"
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="bottom|end"

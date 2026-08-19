@@ -7,7 +7,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/toolCard"
+    android:id="@+id/toolCardVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_5sdp"
@@ -19,7 +19,7 @@
     android:paddingVertical="@dimen/_10sdp">
 
     <ImageView
-        android:id="@+id/ivToolIcon"
+        android:id="@+id/picToolIcon"
         android:layout_width="@dimen/_36sdp"
         android:layout_height="@dimen/_36sdp"
         android:background="@drawable/form_tile_blue"
@@ -28,7 +28,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/tvToolTitle"
+        android:id="@+id/lblToolTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_7sdp"
@@ -40,7 +40,7 @@
         tools:text="Compass" />
 
     <TextView
-        android:id="@+id/tvToolSub"
+        android:id="@+id/lblToolSub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_3sdp"

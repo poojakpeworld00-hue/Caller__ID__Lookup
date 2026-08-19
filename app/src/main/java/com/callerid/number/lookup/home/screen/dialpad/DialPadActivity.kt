@@ -53,27 +53,27 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.dialerRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.dialerRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
 
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
-        binding.rvFrequent.layoutManager = LinearLayoutManager(this)
-        binding.rvFrequent.adapter = adapter
+        binding.rollFrequent.layoutManager = LinearLayoutManager(this)
+        binding.rollFrequent.adapter = adapter
 
         // Keypad builds the dialed number display.
-        binding.btnBackspace.setOnClickListener { backspaceDial() }
-        binding.btnBackspace.setOnLongClickListener { setDial(""); true }
-        binding.btnDialCall.setOnClickListener { placeCall(dialedNumber()) }
-        binding.llAddContact.setOnClickListener { addToContacts(dialedNumber()) }
+        binding.padBackspace.setOnClickListener { backspaceDial() }
+        binding.padBackspace.setOnLongClickListener { setDial(""); true }
+        binding.padDialCall.setOnClickListener { placeCall(dialedNumber()) }
+        binding.rowAddContact.setOnClickListener { addToContacts(dialedNumber()) }
 
         // Show a blinking cursor in the number field but keep our on-screen keypad
         // as the only input: suppress the soft keyboard, then focus it.
-        binding.tvDialNumber.showSoftInputOnFocus = false
-        binding.tvDialNumber.requestFocus()
+        binding.lblDialNumber.showSoftInputOnFocus = false
+        binding.lblDialNumber.requestFocus()
         hideSystemKeyboard()
 
         setupKeypad()
@@ -85,10 +85,10 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         viewModel.frequent.observe(this) { list ->
             adapter.submit(list)
             val hasMatches = list.isNotEmpty()
-            binding.tvEmpty.visibility = if (hasMatches) View.GONE else View.VISIBLE
-            binding.tvMatchesLabel.visibility = if (hasMatches) View.VISIBLE else View.GONE
+            binding.lblEmpty.visibility = if (hasMatches) View.GONE else View.VISIBLE
+            binding.lblMatchesLabel.visibility = if (hasMatches) View.VISIBLE else View.GONE
             // Label reads "Matches" while dialing, "Frequently called" at rest.
-            binding.tvMatchesLabel.setText(
+            binding.lblMatchesLabel.setText(
                 if (dialedNumber().isEmpty()) R.string.dialer_frequent else R.string.dialer_matches
             )
             // A named match means the dialed digits belong to a saved contact — no "Add".
@@ -110,14 +110,14 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
 
     private fun hideSystemKeyboard() {
         runCatching {
-            WindowCompat.getInsetsController(window, binding.tvDialNumber)
+            WindowCompat.getInsetsController(window, binding.lblDialNumber)
                 .hide(WindowInsetsCompat.Type.ime())
         }
     }
 
     /** Wires every key cell to append its tag; long-pressing "0" inserts "+". */
     private fun setupKeypad() {
-        val grid = binding.gridKeypad
+        val grid = binding.gridKeypadVw
         for (i in 0 until grid.childCount) {
             val cell = grid.getChildAt(i)
             val key = cell.tag?.toString() ?: continue
@@ -142,21 +142,21 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         false
     }
 
-    private fun dialedNumber(): String = binding.tvDialNumber.text?.toString().orEmpty()
+    private fun dialedNumber(): String = binding.lblDialNumber.text?.toString().orEmpty()
 
     private fun appendDial(text: String) {
-        binding.tvDialNumber.append(text)
+        binding.lblDialNumber.append(text)
         updateDialState()
     }
 
     private fun backspaceDial() {
-        val text = binding.tvDialNumber.text
-        if (text.isNotEmpty()) binding.tvDialNumber.setText(text.subSequence(0, text.length - 1))
+        val text = binding.lblDialNumber.text
+        if (text.isNotEmpty()) binding.lblDialNumber.setText(text.subSequence(0, text.length - 1))
         updateDialState()
     }
 
     private fun setDial(number: String) {
-        binding.tvDialNumber.setText(number)
+        binding.lblDialNumber.setText(number)
         updateDialState()
     }
 
@@ -180,9 +180,9 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
     private fun updateDialState() {
         val number = dialedNumber()
         // Keep the cursor at the end after every keypad edit (setText resets it).
-        binding.tvDialNumber.setSelection(number.length)
+        binding.lblDialNumber.setSelection(number.length)
         val hasNumber = number.isNotEmpty()
-        binding.btnBackspace.visibility = if (hasNumber) View.VISIBLE else View.INVISIBLE
+        binding.padBackspace.visibility = if (hasNumber) View.VISIBLE else View.INVISIBLE
         if (hasNumber) {
             refreshAddContact(number)
         } else {
@@ -215,7 +215,7 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
      */
     private fun applyAddContactVisibility() {
         val show = dialedNumber().isNotEmpty() && !savedExact && !hasNamedMatch
-        binding.llAddContact.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        binding.rowAddContact.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
     /** Shows a row's number in the dial display, then dials it. */
@@ -239,6 +239,6 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         val granted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.READ_CALL_LOG
         ) == PackageManager.PERMISSION_GRANTED
-        if (granted) viewModel.load() else binding.tvEmpty.visibility = View.VISIBLE
+        if (granted) viewModel.load() else binding.lblEmpty.visibility = View.VISIBLE
     }
 }

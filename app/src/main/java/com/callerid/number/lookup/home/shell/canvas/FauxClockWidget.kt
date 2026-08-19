@@ -34,8 +34,8 @@ class FauxClockWidget @JvmOverloads constructor(
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        time = findViewById(R.id.widget_text_clock)
-        day = findViewById(R.id.widget_date)
+        time = findViewById(R.id.widget_text_clockVw)
+        day = findViewById(R.id.widget_dateVw)
         refresh()
     }
 

@@ -7,7 +7,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fsScreenRoot"
+    android:id="@+id/fsScreenRootVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/form_fsi_intro"
@@ -27,13 +27,13 @@
 
             <!-- Hero: floating card in a halo of glow + orbit rings -->
             <FrameLayout
-                android:id="@+id/fsHero"
+                android:id="@+id/fsHeroVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp">
 
                 <ImageView
-                    android:id="@+id/fsGlow"
+                    android:id="@+id/fsGlowVw"
                     android:layout_width="@dimen/_185sdp"
                     android:layout_height="@dimen/_185sdp"
                     android:layout_gravity="center"
@@ -41,7 +41,7 @@
                     android:src="@drawable/form_fsi_glow" />
 
                 <ImageView
-                    android:id="@+id/fsOrbit1"
+                    android:id="@+id/fsOrbit1Vw"
                     android:layout_width="@dimen/_160sdp"
                     android:layout_height="@dimen/_160sdp"
                     android:layout_gravity="center"
@@ -49,7 +49,7 @@
                     android:src="@drawable/form_fsi_orbit_ring" />
 
                 <ImageView
-                    android:id="@+id/fsOrbit2"
+                    android:id="@+id/fsOrbit2Vw"
                     android:layout_width="@dimen/_160sdp"
                     android:layout_height="@dimen/_160sdp"
                     android:layout_gravity="center"
@@ -66,7 +66,7 @@
 
             <!-- Copy -->
             <TextView
-                android:id="@+id/fsScreenTitle"
+                android:id="@+id/fsScreenTitleVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
@@ -78,7 +78,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/fsScreenDesc"
+                android:id="@+id/fsScreenDescVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -90,7 +90,7 @@
 
             <!-- Benefits -->
             <LinearLayout
-                android:id="@+id/fsScreenFeatures"
+                android:id="@+id/fsScreenFeaturesVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_13sdp"
@@ -206,19 +206,19 @@
 
     <!-- Full-bleed hairline separating the intro content from the ad below -->
     <View
-        android:id="@+id/adNativeDivider"
+        android:id="@+id/adNativeDividerVw"
         style="@style/AdDivider" />
 
     <!-- Mid native ad, pinned just above the CTA -->
     <FrameLayout
-        android:id="@+id/adNativeFrame"
+        android:id="@+id/adNativeFrameVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_6sdp">
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/adShimmer"
+            android:id="@+id/adShimmerVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ccc">
@@ -229,7 +229,7 @@
 
     <!-- CTA -->
     <TextView
-        android:id="@+id/fsScreenButton"
+        android:id="@+id/fsScreenButtonVw"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
         android:layout_marginHorizontal="@dimen/_22sdp"
@@ -242,7 +242,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/fsScreenSkip"
+        android:id="@+id/fsScreenSkipVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -47,7 +47,7 @@ class LogAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val row = rows[position]) {
-            is LogRow.Header -> (holder as HeaderVH).binding.tvHeader.setText(row.titleRes)
+            is LogRow.Header -> (holder as HeaderVH).binding.lblHeader.setText(row.titleRes)
             is LogRow.Call -> (holder as CallVH).bind(row)
         }
 
@@ -76,28 +76,28 @@ class LogAdapter(
             fun color(res: Int) = ContextCompat.getColor(ctx, res)
             fun tint(res: Int) = ColorStateList.valueOf(color(res))
 
-            binding.tvAvatar.text = CallFormatter.initials(e.name, e.number)
-            binding.tvName.text = CallFormatter.displayName(e.name, e.number)
+            binding.lblAvatar.text = CallFormatter.initials(e.name, e.number)
+            binding.lblName.text = CallFormatter.displayName(e.name, e.number)
 
             val type = ctx.getString(CallFormatter.typeLabelRes(e.type))
             val time = CallFormatter.timeLabel(e.date)
             val duration = CallFormatter.durationLabel(e.durationSec)
-            binding.tvSub.text = buildString {
+            binding.lblSub.text = buildString {
                 append(type).append(" · ").append(time)
                 if (duration.isNotEmpty()) append(" · ").append(duration)
             }
 
             // Verdict-tinted row + avatar (matches the Home list): spam reads red,
             // everything else sits on a neutral card with a primary-container avatar.
-            binding.rowCall.setBackgroundResource(
+            binding.rowCallVw.setBackgroundResource(
                 if (isSpam) R.drawable.form_home_tile_spam else R.drawable.form_home_tile
             )
-            binding.tvAvatar.backgroundTintList =
+            binding.lblAvatar.backgroundTintList =
                 tint(if (isSpam) R.color.spam_avatar_bg else R.color.primary_container)
-            binding.tvAvatar.setTextColor(
+            binding.lblAvatar.setTextColor(
                 color(if (isSpam) R.color.spam_on else R.color.on_primary_container)
             )
-            binding.tvName.setTextColor(color(if (isSpam) R.color.spam_on else R.color.on_surface))
+            binding.lblName.setTextColor(color(if (isSpam) R.color.spam_on else R.color.on_surface))
 
             // Icon + subtitle colour by verdict/type.
             val subColorRes = when (e.type) {
@@ -105,26 +105,26 @@ class LogAdapter(
                 CallFlavor.SPAM -> R.color.spam_on
                 else -> R.color.on_surface_variant
             }
-            binding.ivType.setImageResource(CallFormatter.typeIconRes(e.type))
-            binding.ivType.imageTintList = tint(subColorRes)
-            binding.tvSub.setTextColor(color(subColorRes))
+            binding.picType.setImageResource(CallFormatter.typeIconRes(e.type))
+            binding.picType.imageTintList = tint(subColorRes)
+            binding.lblSub.setTextColor(color(subColorRes))
 
             // Spam → no action; unknown/unsaved → Identify (opens Lookup); else Call.
             val unknown = e.name.isNullOrBlank() && e.number.isNotBlank()
             when {
                 isSpam -> {
-                    binding.btnCall.visibility = View.GONE
-                    binding.btnIdentify.visibility = View.GONE
+                    binding.padCall.visibility = View.GONE
+                    binding.padIdentify.visibility = View.GONE
                 }
                 unknown -> {
-                    binding.btnCall.visibility = View.GONE
-                    binding.btnIdentify.visibility = View.VISIBLE
-                    binding.btnIdentify.setOnClickListener { onIdentify(e.number) }
+                    binding.padCall.visibility = View.GONE
+                    binding.padIdentify.visibility = View.VISIBLE
+                    binding.padIdentify.setOnClickListener { onIdentify(e.number) }
                 }
                 else -> {
-                    binding.btnCall.visibility = View.VISIBLE
-                    binding.btnIdentify.visibility = View.GONE
-                    binding.btnCall.setOnClickListener { onCall(e.number) }
+                    binding.padCall.visibility = View.VISIBLE
+                    binding.padIdentify.visibility = View.GONE
+                    binding.padCall.setOnClickListener { onCall(e.number) }
                 }
             }
             binding.root.setOnClickListener { onOpen(e) }

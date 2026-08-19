@@ -76,10 +76,10 @@ class TipSheetActivity : AppCompatActivity() {
          */
         fun applyMode(root: View, mode: String) {
             if (mode != MODE_HOME) return
-            root.findViewById<TextView>(R.id.guideTitleTv)?.setText(R.string.home_guide_title)
-            root.findViewById<TextView>(R.id.guideDescTv)?.setText(R.string.home_guide_desc)
-            root.findViewById<TextView>(R.id.guideRowNameTv)?.setText(R.string.app_name)
-            root.findViewById<TextView>(R.id.guideRowHintTv)?.setText(R.string.home_guide_row_hint)
+            root.findViewById<TextView>(R.id.guideTitleTvVw)?.setText(R.string.home_guide_title)
+            root.findViewById<TextView>(R.id.guideDescTvVw)?.setText(R.string.home_guide_desc)
+            root.findViewById<TextView>(R.id.guideRowNameTvVw)?.setText(R.string.app_name)
+            root.findViewById<TextView>(R.id.guideRowHintTvVw)?.setText(R.string.home_guide_row_hint)
         }
     }
 
@@ -99,7 +99,7 @@ class TipSheetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.screen_overlay_guide)
 
-        val root = findViewById<View>(R.id.llMain)
+        val root = findViewById<View>(R.id.rowMain)
 
         applyMode(root, mode)
 
@@ -122,7 +122,7 @@ class TipSheetActivity : AppCompatActivity() {
         // Slide the card up on entry. The window itself is translucent and the dim
         // fades in on its own, so animating the card is what makes it read as a
         // sheet rising over the Settings page rather than a frame-one pop-in.
-        findViewById<View>(R.id.overlayCardVw)?.apply {
+        findViewById<View>(R.id.overlayCardVwVw)?.apply {
             alpha = 0f
             post {
                 translationY = height.toFloat()

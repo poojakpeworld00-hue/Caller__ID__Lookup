@@ -15,7 +15,7 @@
         android:layout_height="@dimen/_36sdp">
 
         <TextView
-            android:id="@+id/tvAvatar"
+            android:id="@+id/lblAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/form_avatar"
@@ -28,7 +28,7 @@
 
         <!-- Real contact photo, loaded over the initials when one exists -->
         <ImageView
-            android:id="@+id/ivAvatar"
+            android:id="@+id/picAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
@@ -44,7 +44,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/lblName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -56,7 +56,7 @@
             tools:text="Aisha Lawson" />
 
         <TextView
-            android:id="@+id/tvNumber"
+            android:id="@+id/lblNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
@@ -67,7 +67,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/btnCall"
+        android:id="@+id/padCall"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
         android:background="@drawable/form_circle_surface"

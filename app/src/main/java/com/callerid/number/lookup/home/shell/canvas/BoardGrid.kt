@@ -477,7 +477,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         redrawGrid()
 
         val widgetView = widgetViews.firstOrNull { it.tag == resizedWidget!!.widgetId }
-        binding.resizeFrame.beGone()
+        binding.resizeFrameVw.beGone()
         if (widgetView != null) {
             val viewX = widgetView.x.toInt()
             val viewY = widgetView.y.toInt()
@@ -486,7 +486,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 .filter { !it.outOfBounds() }
                 .filter { it.widgetId != item.widgetId }
                 .toMutableList() as ArrayList<BoardItem>
-            binding.resizeFrame.updateFrameCoords(
+            binding.resizeFrameVw.updateFrameCoords(
                 coords = frameRect,
                 cellWidth = cellWidth,
                 cellHeight = cellHeight,
@@ -494,13 +494,13 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 gridItem = item,
                 allGridItems = otherGridItems
             )
-            binding.resizeFrame.beVisible()
-            binding.resizeFrame.z = 1f     // make sure the frame isnt behind the widget itself
-            binding.resizeFrame.onClickListener = {
+            binding.resizeFrameVw.beVisible()
+            binding.resizeFrameVw.z = 1f     // make sure the frame isnt behind the widget itself
+            binding.resizeFrameVw.onClickListener = {
                 hideResizeLines()
             }
 
-            binding.resizeFrame.onResizeListener = { cellsRect ->
+            binding.resizeFrameVw.onResizeListener = { cellsRect ->
                 item.left = cellsRect.left
                 item.top = cellsRect.top
                 item.right = cellsRect.right
@@ -554,7 +554,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
 
             widgetView.ignoreTouches = true
             widgetView.setOnTouchListener { v, event ->
-                binding.resizeFrame.onTouchEvent(event)
+                binding.resizeFrameVw.onTouchEvent(event)
                 return@setOnTouchListener true
             }
         }
@@ -565,7 +565,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             return
         }
 
-        binding.resizeFrame.beGone()
+        binding.resizeFrameVw.beGone()
         widgetViews.firstOrNull { it.tag == resizedWidget!!.widgetId }?.apply {
             ignoreTouches = false
             setOnTouchListener(null)
@@ -1167,10 +1167,10 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
 
                     PSEUDO_WIDGET_CLOCK -> {
                         // the two halves go where their content points, like every other launcher
-                        findViewById<View>(R.id.widget_text_clock)?.setOnClickListener {
+                        findViewById<View>(R.id.widget_text_clockVw)?.setOnClickListener {
                             activity.openClockApp()
                         }
-                        findViewById<View>(R.id.widget_date)?.setOnClickListener {
+                        findViewById<View>(R.id.widget_dateVw)?.setOnClickListener {
                             activity.openCalendarApp()
                         }
                     }
@@ -1265,7 +1265,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         post {
             setWillNotDraw(false)
             invalidate()
-            binding.drawingArea.invalidate()
+            binding.drawingAreaVw.invalidate()
         }
     }
 

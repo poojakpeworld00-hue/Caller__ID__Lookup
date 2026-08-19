@@ -14,13 +14,13 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/qaIconCircle"
+        android:id="@+id/qaIconCircleVw"
         android:layout_width="@dimen/_44sdp"
         android:layout_height="@dimen/_44sdp"
         android:background="@drawable/form_qa_icon_circle">
 
         <ImageView
-            android:id="@+id/qaIcon"
+            android:id="@+id/qaIconVw"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
             android:layout_gravity="center"
@@ -30,7 +30,7 @@
 
     <!-- gap 9px, matches Claude Design's actions-3 cell -->
     <TextView
-        android:id="@+id/qaLabel"
+        android:id="@+id/qaLabelVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_9sdp"

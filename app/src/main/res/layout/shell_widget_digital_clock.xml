@@ -17,7 +17,7 @@
     android:paddingBottom="6dp">
 
     <TextView
-        android:id="@+id/widget_text_clock"
+        android:id="@+id/widget_text_clockVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito_extrabold"
@@ -33,7 +33,7 @@
         tools:text="9:41" />
 
     <TextView
-        android:id="@+id/widget_date"
+        android:id="@+id/widget_dateVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"

@@ -64,7 +64,7 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         // from Settings to change language) — drives the once/count frequency gate.
         if (!standalone) RevealPolicy.markShown(this, RevealConfig.LANGUAGE)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.languageRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.languageRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
@@ -80,10 +80,10 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         ShellPromoConfig.showSlot(
             activity = this,
             slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.LANGUAGE),
-            container = binding.adNativeFrame,
-            shimmer = binding.adShimmer,
+            container = binding.adNativeFrameVw,
+            shimmer = binding.adShimmerVw,
         )
-        binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
+        binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
         // 1) Resolve the region FIRST, before the lists exist. The device seed is
         //    synchronous, so viewModel.suggested/others already hold the correct,
@@ -98,15 +98,15 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         suggestedAdapter = LanguageAdapter(onPick).apply { setCurrent(current) }
         allAdapter = LanguageAdapter(onPick).apply { setCurrent(current) }
 
-        binding.rvSuggested.layoutManager = LinearLayoutManager(this)
-        binding.rvSuggested.adapter = suggestedAdapter
+        binding.rollSuggested.layoutManager = LinearLayoutManager(this)
+        binding.rollSuggested.adapter = suggestedAdapter
 
-        binding.rvLanguages.layoutManager = LinearLayoutManager(this)
-        binding.rvLanguages.adapter = allAdapter
+        binding.rollLanguages.layoutManager = LinearLayoutManager(this)
+        binding.rollLanguages.adapter = allAdapter
 
-        binding.btnBack.setOnClickListener { goBack() }
-        binding.btnInfo.setOnClickListener { showInfoDialog() }
-        binding.btnContinue.setOnClickListener { onContinue() }
+        binding.padBack.setOnClickListener { goBack() }
+        binding.padInfo.setOnClickListener { showInfoDialog() }
+        binding.padContinue.setOnClickListener { onContinue() }
 
         // First-run flow: the system back must NOT exit the app — advance forward
         // exactly like Continue. The callback stays enabled so back never falls
@@ -176,10 +176,10 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
 
     /** Small spring on the confirm button each time the selection changes. */
     private fun popConfirm() {
-        binding.btnContinue.animate().cancel()
-        binding.btnContinue.scaleX = 0.8f
-        binding.btnContinue.scaleY = 0.8f
-        binding.btnContinue.animate()
+        binding.padContinue.animate().cancel()
+        binding.padContinue.scaleX = 0.8f
+        binding.padContinue.scaleY = 0.8f
+        binding.padContinue.animate()
             .scaleX(1f).scaleY(1f)
             .setInterpolator(OvershootInterpolator(3f))
             .setDuration(260L)
@@ -188,13 +188,13 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
 
     private fun showInfoDialog() {
         val view =
-            layoutInflater.inflate(R.layout.dlg_language_info, binding.languageRoot, false)
+            layoutInflater.inflate(R.layout.dlg_language_info, binding.languageRootVw, false)
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .create()
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        view.findViewById<View>(R.id.btnGotIt).setOnClickListener { dialog.dismiss() }
+        view.findViewById<View>(R.id.padGotIt).setOnClickListener { dialog.dismiss() }
 
         dialog.show()
         val width = (resources.displayMetrics.widthPixels * 0.85f).toInt()

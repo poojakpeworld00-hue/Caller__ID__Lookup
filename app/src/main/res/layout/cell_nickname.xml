@@ -6,7 +6,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nickRow"
+    android:id="@+id/nickRowVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/_8sdp"
@@ -17,7 +17,7 @@
     android:paddingVertical="@dimen/_10sdp">
 
     <ImageView
-        android:id="@+id/ivNickIcon"
+        android:id="@+id/picNickIcon"
         android:layout_width="@dimen/_14sdp"
         android:layout_height="@dimen/_14sdp"
         android:contentDescription="@null"
@@ -25,7 +25,7 @@
         app:tint="@color/on_surface_variant" />
 
     <TextView
-        android:id="@+id/tvNickName"
+        android:id="@+id/lblNickName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
@@ -39,7 +39,7 @@
         tools:text="K••••••••" />
 
     <TextView
-        android:id="@+id/tvNickRevealed"
+        android:id="@+id/lblNickRevealed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lookup_revealed"
@@ -50,7 +50,7 @@
         tools:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/btnNickReveal"
+        android:id="@+id/padNickReveal"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_28sdp"
         android:background="@drawable/form_reveal_pill"

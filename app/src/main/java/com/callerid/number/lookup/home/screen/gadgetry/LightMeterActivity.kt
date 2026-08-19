@@ -35,30 +35,30 @@ class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEvent
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.lightRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.lightRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrame, binding.adShimmer)
-        binding.pbLevel.isIndeterminate = false
-        binding.pbLevel.max = 100
+        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.pbLevelVw.isIndeterminate = false
+        binding.pbLevelVw.max = 100
 
-        binding.btnCapture.setOnClickListener {
+        binding.padCapture.setOnClickListener {
             held = !held
-            binding.btnCapture.setText(if (held) R.string.light_resume else R.string.light_capture)
+            binding.padCapture.setText(if (held) R.string.light_resume else R.string.light_capture)
         }
-        binding.btnZero.setOnClickListener { resetStats() }
+        binding.padZero.setOnClickListener { resetStats() }
         resetStats()
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
         if (lightSensor == null) {
-            binding.tvNoSensor.visibility = View.VISIBLE
-            binding.content.visibility = View.GONE
+            binding.lblNoSensor.visibility = View.VISIBLE
+            binding.contentVw.visibility = View.GONE
         }
     }
 
@@ -77,18 +77,18 @@ class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEvent
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type != Sensor.TYPE_LIGHT || held) return
         val lux = event.values[0]
-        binding.tvLux.text = lux.roundToInt().toString()
+        binding.lblLux.text = lux.roundToInt().toString()
         // Arc fills toward MAX_SCALE lux (bright indoor / overcast daylight).
-        binding.pbLevel.setProgressCompat((lux / MAX_SCALE * 100f).roundToInt().coerceIn(0, 100), true)
+        binding.pbLevelVw.setProgressCompat((lux / MAX_SCALE * 100f).roundToInt().coerceIn(0, 100), true)
 
         if (lux < min) min = lux
         if (lux > max) max = lux
         sum += lux
         count++
 
-        binding.tvMin.text = lx(min)
-        binding.tvMax.text = lx(max)
-        binding.tvAvg.text = lx((sum / count).toFloat())
+        binding.lblMin.text = lx(min)
+        binding.lblMax.text = lx(max)
+        binding.lblAvg.text = lx((sum / count).toFloat())
     }
 
     private fun resetStats() {
@@ -96,9 +96,9 @@ class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEvent
         max = 0f
         sum = 0.0
         count = 0L
-        binding.tvMin.text = lx(0f)
-        binding.tvAvg.text = lx(0f)
-        binding.tvMax.text = lx(0f)
+        binding.lblMin.text = lx(0f)
+        binding.lblAvg.text = lx(0f)
+        binding.lblMax.text = lx(0f)
     }
 
     private fun lx(value: Float): String {

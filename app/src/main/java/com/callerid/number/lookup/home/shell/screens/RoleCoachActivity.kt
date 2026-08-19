@@ -52,7 +52,7 @@ class RoleCoachActivity : AppCompatActivity() {
         // NOT_FOCUSABLE keeps key input with the settings screen and implies NOT_TOUCH_MODAL.
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
 
-        val root = findViewById<android.view.View>(R.id.llMain)
+        val root = findViewById<android.view.View>(R.id.rowMain)
         TipSheetActivity.applyMode(root, TipSheetActivity.MODE_HOME)
 
         // targetSdk 36 is edge-to-edge with no opt-out, so this window spans the bars and the
@@ -67,9 +67,9 @@ class RoleCoachActivity : AppCompatActivity() {
         // The label and icon the home-app list itself shows, rather than the app_name string,
         // so the card names exactly the row the user is hunting for.
         runCatching {
-            findViewById<ImageView>(R.id.guideRowIconIv)
+            findViewById<ImageView>(R.id.guideRowIconIvVw)
                 ?.setImageDrawable(packageManager.getApplicationIcon(applicationInfo))
-            findViewById<TextView>(R.id.guideRowNameTv)?.text =
+            findViewById<TextView>(R.id.guideRowNameTvVw)?.text =
                 packageManager.getApplicationLabel(applicationInfo)
         }
 
@@ -96,7 +96,7 @@ class RoleCoachActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        findViewById<android.view.View>(R.id.llMain)?.removeCallbacks(autoFinish)
+        findViewById<android.view.View>(R.id.rowMain)?.removeCallbacks(autoFinish)
         if (visible === this) visible = null
         super.onDestroy()
     }

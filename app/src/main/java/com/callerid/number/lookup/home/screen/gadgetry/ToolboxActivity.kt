@@ -70,43 +70,43 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolsRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolsRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         val gridManager = GridLayoutManager(this, 2)
         gridManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int =
                 if (adapter.isHeader(position)) 2 else 1
         }
-        binding.rvTools.layoutManager = gridManager
-        binding.rvTools.adapter = adapter
+        binding.rollTools.layoutManager = gridManager
+        binding.rollTools.adapter = adapter
 
         setupSearch()
         applyQuery("")
     }
 
     private fun setupSearch() {
-        binding.etSearch.doAfterTextChanged { text ->
+        binding.inpSearch.doAfterTextChanged { text ->
             val query = text?.toString().orEmpty()
-            binding.btnClearSearch.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
+            binding.padClearSearch.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
             updateSearchChrome(query)
             applyQuery(query)
         }
-        binding.etSearch.setOnFocusChangeListener { _, _ ->
-            updateSearchChrome(binding.etSearch.text?.toString().orEmpty())
+        binding.inpSearch.setOnFocusChangeListener { _, _ ->
+            updateSearchChrome(binding.inpSearch.text?.toString().orEmpty())
         }
-        binding.btnClearSearch.setOnClickListener { binding.etSearch.setText("") }
-        binding.btnResetSearch.setOnClickListener { binding.etSearch.setText("") }
+        binding.padClearSearch.setOnClickListener { binding.inpSearch.setText("") }
+        binding.padResetSearch.setOnClickListener { binding.inpSearch.setText("") }
     }
 
     /** Accent ring on the search pill while focused or typing. */
     private fun updateSearchChrome(query: String) {
-        val active = query.isNotEmpty() || binding.etSearch.hasFocus()
-        binding.searchBar.setBackgroundResource(
+        val active = query.isNotEmpty() || binding.inpSearch.hasFocus()
+        binding.searchBarVw.setBackgroundResource(
             if (active) R.drawable.form_search_bar_active else R.drawable.form_search_bar
         )
     }
@@ -117,12 +117,12 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
         else tools.filter { it.name.contains(q, true) || it.hint.contains(q, true) }
 
         if (filtered.isEmpty()) {
-            binding.tvEmptyTitle.text = getString(R.string.tools_empty_title, q)
-            binding.rvTools.visibility = View.GONE
-            binding.emptyTools.visibility = View.VISIBLE
+            binding.lblEmptyTitle.text = getString(R.string.tools_empty_title, q)
+            binding.rollTools.visibility = View.GONE
+            binding.emptyToolsVw.visibility = View.VISIBLE
         } else {
-            binding.emptyTools.visibility = View.GONE
-            binding.rvTools.visibility = View.VISIBLE
+            binding.emptyToolsVw.visibility = View.GONE
+            binding.rollTools.visibility = View.VISIBLE
             adapter.submit(buildRows(filtered))
         }
     }

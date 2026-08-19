@@ -25,7 +25,7 @@ class SlideAdapter(
 
         fun bind(page: SlidePage) {
             cancelAnims()
-            val container = binding.artContainer
+            val container = binding.artContainerVw
             container.removeAllViews()
 
             if (page.customArtRes != 0) {
@@ -45,8 +45,8 @@ class SlideAdapter(
                 container.addView(image)
             }
 
-            binding.tvTitle.setText(page.titleRes)
-            binding.tvDesc.setText(page.descRes)
+            binding.lblTitle.setText(page.titleRes)
+            binding.lblDesc.setText(page.descRes)
             fitArt(container)
         }
 

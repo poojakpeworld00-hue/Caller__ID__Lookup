@@ -62,13 +62,13 @@ class TraceAdapter(
                 val p = bindingAdapterPosition
                 if (p != RecyclerView.NO_POSITION) onClick(items[p])
             }
-            binding.ivHistCall.setOnClickListener {
+            binding.picHistCall.setOnClickListener {
                 val p = bindingAdapterPosition
                 if (p != RecyclerView.NO_POSITION) onCall(items[p])
             }
             // The name is revealed only via the explicit eye button (rewarded ad) —
             // never by tapping the row/name directly.
-            binding.ivHistReveal.setOnClickListener {
+            binding.picHistReveal.setOnClickListener {
                 val p = bindingAdapterPosition
                 if (p != RecyclerView.NO_POSITION) onRevealName(items[p])
             }
@@ -85,12 +85,12 @@ class TraceAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         with(holder.binding) {
-            tvHistAvatar.text = CallFormatter.initials(item.name, item.rawNumber)
+            lblHistAvatar.text = CallFormatter.initials(item.name, item.rawNumber)
             val locked = isLocked(item)
             // Locked: blur the name and surface the eye button to unlock it.
-            tvHistName.text = if (locked) blurName(item.name!!) else (item.name ?: item.number)
-            ivHistReveal.visibility = if (locked) View.VISIBLE else View.GONE
-            tvHistSub.text = item.subtitle ?: item.number
+            lblHistName.text = if (locked) blurName(item.name!!) else (item.name ?: item.number)
+            picHistReveal.visibility = if (locked) View.VISIBLE else View.GONE
+            lblHistSub.text = item.subtitle ?: item.number
         }
 
         // Claude Design's cid-rise-in stagger, once per row per submit().

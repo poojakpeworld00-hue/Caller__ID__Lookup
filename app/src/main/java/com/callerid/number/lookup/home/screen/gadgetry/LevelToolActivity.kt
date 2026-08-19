@@ -42,16 +42,16 @@ class LevelToolActivity : FrameActivity<ScreenLevelBinding>(), SensorEventListen
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.levelRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.levelRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
+        binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrame, binding.adShimmer)
-        binding.btnCalibrate.setOnClickListener {
+        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        binding.padCalibrate.setOnClickListener {
             // Treat the current orientation as perfectly level.
             calRoll = rawRoll
             calPitch = rawPitch
@@ -61,8 +61,8 @@ class LevelToolActivity : FrameActivity<ScreenLevelBinding>(), SensorEventListen
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         // The bubble travels from the centre toward the rim of the dial.
-        binding.dialArea.post {
-            maxOffsetPx = (binding.dialArea.width - binding.bubble.width) / 2f * 0.82f
+        binding.dialAreaVw.post {
+            maxOffsetPx = (binding.dialAreaVw.width - binding.bubbleVw.width) / 2f * 0.82f
         }
     }
 
@@ -93,24 +93,24 @@ class LevelToolActivity : FrameActivity<ScreenLevelBinding>(), SensorEventListen
 
         // Full deflection (~30°) pushes the bubble to the rim.
         val k = maxOffsetPx / 30f
-        binding.bubble.translationX = (roll * k).coerceIn(-maxOffsetPx, maxOffsetPx)
-        binding.bubble.translationY = (-pitch * k).coerceIn(-maxOffsetPx, maxOffsetPx)
+        binding.bubbleVw.translationX = (roll * k).coerceIn(-maxOffsetPx, maxOffsetPx)
+        binding.bubbleVw.translationY = (-pitch * k).coerceIn(-maxOffsetPx, maxOffsetPx)
 
         val tilt = sqrt(roll * roll + pitch * pitch)
-        binding.tvTilt.text = String.format(Locale.getDefault(), "%.1f°", tilt)
-        binding.tvX.text = String.format(Locale.getDefault(), "%.1f°", roll)
-        binding.tvY.text = String.format(Locale.getDefault(), "%.1f°", pitch)
+        binding.lblTilt.text = String.format(Locale.getDefault(), "%.1f°", tilt)
+        binding.lblX.text = String.format(Locale.getDefault(), "%.1f°", roll)
+        binding.lblY.text = String.format(Locale.getDefault(), "%.1f°", pitch)
         bindStatus(tilt)
     }
 
     /** "Level" (green) when nearly flat, otherwise "Adjusting" (blue). */
     private fun bindStatus(tilt: Float) {
         val level = abs(tilt) < 1f
-        binding.tvStatus.setText(if (level) R.string.level_level else R.string.level_adjusting)
+        binding.lblStatus.setText(if (level) R.string.level_level else R.string.level_adjusting)
         val fg = if (level) R.color.success else R.color.primary
         val bg = if (level) R.color.success_soft else R.color.primary_container
-        binding.tvStatus.setTextColor(ContextCompat.getColor(this, fg))
-        binding.tvStatus.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, bg))
+        binding.lblStatus.setTextColor(ContextCompat.getColor(this, fg))
+        binding.lblStatus.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, bg))
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}

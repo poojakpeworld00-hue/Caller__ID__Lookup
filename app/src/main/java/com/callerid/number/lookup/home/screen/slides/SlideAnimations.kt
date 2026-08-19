@@ -37,14 +37,14 @@ object SlideAnimations {
         val d = root.resources.displayMetrics.density
         fun px(dp: Float) = dp * d
 
-        root.findViewById<View?>(R.id.obCard)?.let { out += float(it, px(6f)) }
-        root.findViewById<View?>(R.id.obChip)?.let { out += pop(it) }
-        root.findViewById<View?>(R.id.obShield)?.let { out += shield(it) }
-        root.findViewById<View?>(R.id.obStamp)?.let { out += stamp(it) }
-        root.findViewById<View?>(R.id.obSweep)?.let { out += sweep(it) }
-        root.findViewById<View?>(R.id.obBlip)?.let { out += blip(it) }
-        root.findViewById<View?>(R.id.obRing1)?.let { out += pulse(it, 0L) }
-        root.findViewById<View?>(R.id.obRing2)?.let { out += pulse(it, 900L) }
+        root.findViewById<View?>(R.id.obCardVw)?.let { out += float(it, px(6f)) }
+        root.findViewById<View?>(R.id.obChipVw)?.let { out += pop(it) }
+        root.findViewById<View?>(R.id.obShieldVw)?.let { out += shield(it) }
+        root.findViewById<View?>(R.id.obStampVw)?.let { out += stamp(it) }
+        root.findViewById<View?>(R.id.obSweepVw)?.let { out += sweep(it) }
+        root.findViewById<View?>(R.id.obBlipVw)?.let { out += blip(it) }
+        root.findViewById<View?>(R.id.obRing1Vw)?.let { out += pulse(it, 0L) }
+        root.findViewById<View?>(R.id.obRing2Vw)?.let { out += pulse(it, 900L) }
         return out
     }
 

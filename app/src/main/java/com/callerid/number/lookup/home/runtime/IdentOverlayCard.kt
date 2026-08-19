@@ -56,18 +56,18 @@ object IdentOverlayCard {
         val displayName = info.name?.takeIf { it.isNotBlank() }
             ?: context.getString(R.string.incall_unknown)
 
-        root.findViewById<TextView>(R.id.tvIncallAvatar).text =
+        root.findViewById<TextView>(R.id.lblIncallAvatar).text =
             CallFormatter.initials(info.name, number)
-        root.findViewById<TextView>(R.id.tvIncallName).text = displayName
-        root.findViewById<TextView>(R.id.tvIncallNumber).text = number
+        root.findViewById<TextView>(R.id.lblIncallName).text = displayName
+        root.findViewById<TextView>(R.id.lblIncallNumber).text = number
 
-        bindStatusPill(context, root.findViewById(R.id.tvIncallStatus), info.known)
+        bindStatusPill(context, root.findViewById(R.id.lblIncallStatus), info.known)
 
-        root.findViewById<TextView>(R.id.tvIncallWhen).text =
+        root.findViewById<TextView>(R.id.lblIncallWhen).text =
             context.getString(R.string.incall_now)
-        root.findViewById<TextView>(R.id.tvIncallCalls).text =
+        root.findViewById<TextView>(R.id.lblIncallCalls).text =
             context.getString(R.string.incall_calls, info.callCount)
-        root.findViewById<TextView>(R.id.tvIncallNetwork).text =
+        root.findViewById<TextView>(R.id.lblIncallNetwork).text =
             info.network?.takeIf { it.isNotBlank() } ?: "—"
     }
 

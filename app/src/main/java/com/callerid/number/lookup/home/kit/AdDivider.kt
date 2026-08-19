@@ -24,7 +24,7 @@ import androidx.core.view.isVisible
  *
  * Call once, right after kicking off the ad load:
  * ```
- * binding.adNativeDivider.followAdContainer(binding.adNativeFrame)
+ * binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
  * ```
  */
 fun View.followAdContainer(container: ViewGroup) {

@@ -82,7 +82,7 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         // Read-only inset listener: the top inset is ours (per-tab, the hero tabs draw under
         // the status bar) but bottom/side padding belongs to the host container, which pads
         // its ad banner too. Insets are returned unchanged so the host still sees them.
-        ViewCompat.setOnApplyWindowInsetsListener(binding.shellRoot) { _, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.shellRootVw) { _, insets ->
             statusBarTop = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
             applyTopInsetForTab(currentIndex)
             insets
@@ -90,34 +90,34 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
 
         tabs = listOf(
             Tab(
-                binding.navHome, HomeMainFragment(),
+                binding.navHomeVw, HomeMainFragment(),
                 R.drawable.intro_home_selected, R.drawable.intro_home_unselected, R.string.nav_home
             ),
             Tab(
-                binding.navRecents, RecentsFragment(),
+                binding.navRecentsVw, RecentsFragment(),
                 R.drawable.intro_recent_selected, R.drawable.intro_recent_unselected, R.string.nav_recents
             ),
             Tab(
-                binding.navContacts, DirectoryFragment(),
+                binding.navContactsVw, DirectoryFragment(),
                 R.drawable.intro_contact_selected, R.drawable.intro_contact_unselected, R.string.nav_contacts
             ),
             Tab(
-                binding.navLookup, NumberLookupFragment(),
+                binding.navLookupVw, NumberLookupFragment(),
                 R.drawable.intro_lookup_selected, R.drawable.intro_lookup_unselected, R.string.nav_lookup
             )
         )
 
         tabs.forEachIndexed { index, tab ->
-            tab.nav.navLabel.setText(tab.label)
+            tab.nav.navLabelVw.setText(tab.label)
             tab.nav.root.setOnClickListener {
-                animateIcon(tab.nav.navIcon)
+                animateIcon(tab.nav.navIconVw)
                 select(index)
             }
         }
 
         select(0)
 
-        binding.btnEnableOverlay.setOnClickListener {
+        binding.padEnableOverlay.setOnClickListener {
             controller?.startOverlayPermissionFlow()
         }
 
@@ -273,22 +273,22 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         val tab = tabs[index]
 
         childFragmentManager.beginTransaction().apply {
-            if (!tab.fragment.isAdded) add(R.id.fragmentContainer, tab.fragment)
+            if (!tab.fragment.isAdded) add(R.id.fragContainer, tab.fragment)
             tabs.forEach { if (it.fragment.isAdded && it !== tab) hide(it.fragment) }
             show(tab.fragment)
         }.commit()
 
         tabs.forEachIndexed { i, t ->
             val active = i == index
-            t.nav.navIcon.setImageResource(if (active) t.selectedIcon else t.unselectedIcon)
-            val from = t.nav.navLabel.currentTextColor
+            t.nav.navIconVw.setImageResource(if (active) t.selectedIcon else t.unselectedIcon)
+            val from = t.nav.navLabelVw.currentTextColor
             val to = ContextCompat.getColor(
                 requireContext(), if (active) R.color.primary else R.color.on_surface_variant
             )
             // Icon shape swap is instant (selected/unselected are different drawables); the
             // colour itself crossfades instead of snapping.
-            HomeAnim.animateTint(t.nav.navIcon, t.nav.navLabel, from, to)
-            t.nav.navIndicator.visibility = if (active) View.VISIBLE else View.INVISIBLE
+            HomeAnim.animateTint(t.nav.navIconVw, t.nav.navLabelVw, from, to)
+            t.nav.navIndicatorVw.visibility = if (active) View.VISIBLE else View.INVISIBLE
         }
 
         currentIndex = index
@@ -306,7 +306,7 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
             fragment is RecentsFragment ||
             fragment is DirectoryFragment ||
             fragment is NumberLookupFragment
-        binding.fragmentContainer.setPadding(0, if (immersive) 0 else statusBarTop, 0, 0)
+        binding.fragContainer.setPadding(0, if (immersive) 0 else statusBarTop, 0, 0)
         // All v2 tabs (Home / Recents / Contacts / Lookup) use a LIGHT background, so the
         // status-bar icons are always dark.
         val window = activity?.window ?: return
@@ -326,7 +326,7 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         val coreGranted = isPermissionGranted(Manifest.permission.READ_CALL_LOG) &&
             isPermissionGranted(Manifest.permission.READ_CONTACTS)
         val show = coreGranted && !OverlayKit.isGranted(ctx)
-        binding.overlayBanner.visibility = if (show) View.VISIBLE else View.GONE
+        binding.overlayBannerVw.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     private fun isPermissionGranted(permission: String): Boolean =
@@ -346,8 +346,8 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
      */
     fun showUpdateReadyPrompt() {
         if (view == null || isRemoving) return
-        Snackbar.make(binding.shellRoot, R.string.update_ready_msg, Snackbar.LENGTH_INDEFINITE)
-            .setAnchorView(binding.bottomBar)
+        Snackbar.make(binding.shellRootVw, R.string.update_ready_msg, Snackbar.LENGTH_INDEFINITE)
+            .setAnchorView(binding.footerBar)
             .setAction(R.string.update_restart) { StoreUpdateRegistry.completeUpdate() }
             .show()
     }

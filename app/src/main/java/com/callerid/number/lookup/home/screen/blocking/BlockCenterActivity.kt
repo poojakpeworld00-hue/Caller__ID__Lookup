@@ -104,18 +104,18 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
     }
 
     override fun initView() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.blocklistRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.blocklistRootVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        binding.btnBack.setOnClickListener { goBack() }
-        binding.rvBlocklist.layoutManager = LinearLayoutManager(this)
-        binding.rvBlocklist.adapter = adapter
+        binding.padBack.setOnClickListener { goBack() }
+        binding.rollBlocklist.layoutManager = LinearLayoutManager(this)
+        binding.rollBlocklist.adapter = adapter
 
         // The empty-state card and the FAB chooser share the same three actions.
-        bindMethods(binding.emptyMethods)
-        binding.fabAdd.setOnClickListener { requireCallerId { showMethodsDialog() } }
+        bindMethods(binding.emptyMethodsVw)
+        binding.fabAddVw.setOnClickListener { requireCallerId { showMethodsDialog() } }
     }
 
     /**
@@ -123,9 +123,9 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
      * itself. Each action is gated on Caller ID being enabled.
      */
     private fun bindMethods(methods: PartBlockMethodsBinding, onChosen: () -> Unit = {}) {
-        methods.rowAddNumber.setOnClickListener { requireCallerId { onChosen(); showAddDialog() } }
-        methods.rowFromContacts.setOnClickListener { requireCallerId { onChosen(); pickFromContacts() } }
-        methods.rowFromRecents.setOnClickListener { requireCallerId { onChosen(); pickFromRecents() } }
+        methods.rowAddNumberVw.setOnClickListener { requireCallerId { onChosen(); showAddDialog() } }
+        methods.rowFromContactsVw.setOnClickListener { requireCallerId { onChosen(); pickFromContacts() } }
+        methods.rowFromRecentsVw.setOnClickListener { requireCallerId { onChosen(); pickFromRecents() } }
     }
 
     private var emptyCascaded = false
@@ -135,9 +135,9 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
         if (emptyCascaded) return
         emptyCascaded = true
         val rows = listOf(
-            binding.emptyMethods.rowAddNumber,
-            binding.emptyMethods.rowFromContacts,
-            binding.emptyMethods.rowFromRecents
+            binding.emptyMethodsVw.rowAddNumberVw,
+            binding.emptyMethodsVw.rowFromContactsVw,
+            binding.emptyMethodsVw.rowFromRecentsVw
         )
         val dy = resources.displayMetrics.density * 10f
         rows.forEachIndexed { i, row ->
@@ -155,7 +155,7 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
     private fun showMethodsDialog() {
         val view = DlgBlockMethodsBinding.inflate(layoutInflater)
         val dialog = customDialog(view.root)
-        bindMethods(view.dialogMethods) { dialog.dismiss() }
+        bindMethods(view.dialogMethodsVw) { dialog.dismiss() }
         dialog.show()
     }
 
@@ -163,12 +163,12 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
         viewModel.rows.observe(this) { rows ->
             adapter.submit(rows)
             val empty = rows.isEmpty()
-            binding.emptyScroll.visibility = if (empty) View.VISIBLE else View.GONE
-            binding.populatedGroup.visibility = if (empty) View.GONE else View.VISIBLE
+            binding.emptyScrollVw.visibility = if (empty) View.VISIBLE else View.GONE
+            binding.populatedGroupVw.visibility = if (empty) View.GONE else View.VISIBLE
             if (empty) cascadeEmptyMethods()
         }
         viewModel.count.observe(this) { count ->
-            binding.tvSummaryCount.text =
+            binding.lblSummaryCount.text =
                 resources.getQuantityString(R.plurals.blocklist_blocked_count, count, count)
         }
     }
@@ -178,17 +178,17 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
         val view = DlgBlockDetailsBinding.inflate(layoutInflater)
         val dialog = customDialog(view.root)
 
-        view.tvDetailNumber.text = entry.number
+        view.lblDetailNumber.text = entry.number
         if (entry.addedAt > 0L) {
             val date = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
                 .format(Date(entry.addedAt))
-            view.tvDetailAdded.text = getString(R.string.blocklist_details_added, date)
+            view.lblDetailAdded.text = getString(R.string.blocklist_details_added, date)
         } else {
-            view.tvDetailAdded.visibility = View.GONE
+            view.lblDetailAdded.visibility = View.GONE
         }
 
-        view.btnClose.setOnClickListener { dialog.dismiss() }
-        view.btnUnblock.setOnClickListener {
+        view.padClose.setOnClickListener { dialog.dismiss() }
+        view.padUnblock.setOnClickListener {
             dialog.dismiss()
             unblock(entry)
         }
@@ -206,9 +206,9 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
         val view = DlgBlockAddBinding.inflate(layoutInflater)
         val dialog = customDialog(view.root)
 
-        view.btnCancel.setOnClickListener { dialog.dismiss() }
-        view.btnAdd.setOnClickListener {
-            blockNumber(view.etNumber.text?.toString().orEmpty())
+        view.padCancel.setOnClickListener { dialog.dismiss() }
+        view.padAdd.setOnClickListener {
+            blockNumber(view.inpNumber.text?.toString().orEmpty())
             dialog.dismiss()
         }
         dialog.show()
@@ -266,20 +266,20 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
         val view = DlgBlockRecentsBinding.inflate(layoutInflater)
         val dialog = customDialog(view.root)
 
-        view.tvTitle.setText(titleRes)
-        view.tvNoRecents.setText(emptyRes)
+        view.lblTitle.setText(titleRes)
+        view.lblNoRecents.setText(emptyRes)
 
         val pickAdapter = PrefixPickAdapter { entry ->
             dialog.dismiss()
             blockNumber(entry.number)
         }
-        view.rvRecents.layoutManager = LinearLayoutManager(this)
-        view.rvRecents.adapter = pickAdapter
+        view.rollRecents.layoutManager = LinearLayoutManager(this)
+        view.rollRecents.adapter = pickAdapter
         pickAdapter.submit(items)
 
-        view.rvRecents.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
-        view.tvNoRecents.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-        view.btnClose.setOnClickListener { dialog.dismiss() }
+        view.rollRecents.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        view.lblNoRecents.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+        view.padClose.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
@@ -334,12 +334,12 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
             }
         }
 
-        view.btnNotNow.setOnClickListener {
+        view.padNotNow.setOnClickListener {
             // User declined — drop the queued action so it can't resurface later.
             pendingCallerIdAction = null
             dialog.dismiss()
         }
-        view.btnEnable.setOnClickListener {
+        view.padEnable.setOnClickListener {
             dialog.dismiss()
             requestEnableCallerId()
         }
@@ -360,10 +360,10 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
      */
     private fun animateEnableCallerIdDialog(v: DlgEnableCallerIdBinding) {
         // Shield tile: scale-pop with overshoot.
-        v.shieldTile.alpha = 0f
-        v.shieldTile.scaleX = 0.4f
-        v.shieldTile.scaleY = 0.4f
-        v.shieldTile.animate()
+        v.shieldTileVw.alpha = 0f
+        v.shieldTileVw.scaleX = 0.4f
+        v.shieldTileVw.scaleY = 0.4f
+        v.shieldTileVw.animate()
             .alpha(1f).scaleX(1f).scaleY(1f)
             .setStartDelay(80L).setDuration(440L)
             .setInterpolator(OvershootInterpolator(2.4f))
@@ -371,20 +371,20 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
 
         // Checkmark draws itself in via the animated vector.
         AnimatedVectorDrawableCompat.create(this, R.drawable.avd_guard_shield)?.let { avd ->
-            v.shieldIcon.setImageDrawable(avd)
+            v.shieldIconVw.setImageDrawable(avd)
             avd.start()
         }
 
         // Ring: pulse outward, forever.
-        v.shieldRing.alpha = 0f
-        loopAnimator(v.shieldRing, View.SCALE_X, 0.7f, 1.5f, 1500L, 220L, DecelerateInterpolator())
-        loopAnimator(v.shieldRing, View.SCALE_Y, 0.7f, 1.5f, 1500L, 220L, DecelerateInterpolator())
-        loopAnimator(v.shieldRing, View.ALPHA, 0.7f, 0f, 1500L, 220L, DecelerateInterpolator())
+        v.shieldRingVw.alpha = 0f
+        loopAnimator(v.shieldRingVw, View.SCALE_X, 0.7f, 1.5f, 1500L, 220L, DecelerateInterpolator())
+        loopAnimator(v.shieldRingVw, View.SCALE_Y, 0.7f, 1.5f, 1500L, 220L, DecelerateInterpolator())
+        loopAnimator(v.shieldRingVw, View.ALPHA, 0.7f, 0f, 1500L, 220L, DecelerateInterpolator())
 
         // Hint strip: fade + rise in after the shield.
-        v.hintStrip.alpha = 0f
-        v.hintStrip.translationY = 10f * resources.displayMetrics.density
-        v.hintStrip.animate()
+        v.tipStrip.alpha = 0f
+        v.tipStrip.translationY = 10f * resources.displayMetrics.density
+        v.tipStrip.animate()
             .alpha(1f).translationY(0f)
             .setStartDelay(620L).setDuration(340L)
             .setInterpolator(DecelerateInterpolator())
@@ -392,16 +392,16 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
 
         // CTA: gentle breathing to pull the tap.
         loopAnimator(
-            v.btnEnable, View.SCALE_X, 1f, 1.03f, 1300L, 900L,
+            v.padEnable, View.SCALE_X, 1f, 1.03f, 1300L, 900L,
             AccelerateDecelerateInterpolator(), ValueAnimator.REVERSE
         )
         loopAnimator(
-            v.btnEnable, View.SCALE_Y, 1f, 1.03f, 1300L, 900L,
+            v.padEnable, View.SCALE_Y, 1f, 1.03f, 1300L, 900L,
             AccelerateDecelerateInterpolator(), ValueAnimator.REVERSE
         )
 
         // Demo toggle: loop off→on once the views are measured (needs the thumb travel).
-        v.toggleTrack.post { startToggleDemo(v) }
+        v.flipTrack.post { startToggleDemo(v) }
     }
 
     /** Starts one infinite [ObjectAnimator], registering it for later cancellation. */
@@ -432,8 +432,8 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
      * system step the user is about to see.
      */
     private fun startToggleDemo(v: DlgEnableCallerIdBinding) {
-        val marginStart = (v.toggleThumb.layoutParams as? ViewGroup.MarginLayoutParams)?.marginStart ?: 0
-        val travel = (v.toggleTrack.width - v.toggleThumb.width - 2 * marginStart).toFloat()
+        val marginStart = (v.flipThumb.layoutParams as? ViewGroup.MarginLayoutParams)?.marginStart ?: 0
+        val travel = (v.flipTrack.width - v.flipThumb.width - 2 * marginStart).toFloat()
         if (travel <= 0f) return
 
         val offColor = ContextCompat.getColor(this, R.color.cid_toggle_off)
@@ -455,9 +455,9 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
                     t < 0.96f -> 1f - ease((t - 0.86f) / 0.10f)
                     else -> 0f
                 }
-                v.toggleTrack.backgroundTintList =
+                v.flipTrack.backgroundTintList =
                     ColorStateList.valueOf(argb.evaluate(on, offColor, onColor) as Int)
-                v.toggleThumb.translationX = on * travel
+                v.flipThumb.translationX = on * travel
 
                 // Ripple bursts at the flip.
                 val r = when {
@@ -466,12 +466,12 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
                     else -> -1f
                 }
                 if (r in 0f..1f) {
-                    v.toggleRipple.alpha = (1f - r) * 0.8f
+                    v.flipRipple.alpha = (1f - r) * 0.8f
                     val s = 0.4f + r * 1.7f
-                    v.toggleRipple.scaleX = s
-                    v.toggleRipple.scaleY = s
+                    v.flipRipple.scaleX = s
+                    v.flipRipple.scaleY = s
                 } else {
-                    v.toggleRipple.alpha = 0f
+                    v.flipRipple.alpha = 0f
                 }
             }
             enableDialogAnimators.add(this)

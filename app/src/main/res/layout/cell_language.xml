@@ -5,7 +5,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rowLanguage"
+    android:id="@+id/rowLanguageVw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/_1sdp"
@@ -18,7 +18,7 @@
 
     <!-- Country flag (emoji) leading the row. -->
     <TextView
-        android:id="@+id/tvFlag"
+        android:id="@+id/lblFlag"
         android:layout_width="@dimen/_26sdp"
         android:layout_height="@dimen/_26sdp"
         android:gravity="center"
@@ -30,7 +30,7 @@
         tools:text="IN" />
 
     <TextView
-        android:id="@+id/tvNative"
+        android:id="@+id/lblNative"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
@@ -40,15 +40,15 @@
         android:maxLines="1"
         android:textColor="@color/on_surface"
         android:textSize="@dimen/_13ssp"
-        app:layout_constraintBottom_toTopOf="@id/tvName"
-        app:layout_constraintEnd_toStartOf="@id/radio"
-        app:layout_constraintStart_toEndOf="@id/tvFlag"
+        app:layout_constraintBottom_toTopOf="@id/lblName"
+        app:layout_constraintEnd_toStartOf="@id/rdo"
+        app:layout_constraintStart_toEndOf="@id/lblFlag"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="Hindi" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/lblName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
@@ -59,13 +59,13 @@
         android:textColor="@color/on_surface_variant"
         android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/radio"
-        app:layout_constraintStart_toEndOf="@id/tvFlag"
-        app:layout_constraintTop_toBottomOf="@id/tvNative"
+        app:layout_constraintEnd_toStartOf="@id/rdo"
+        app:layout_constraintStart_toEndOf="@id/lblFlag"
+        app:layout_constraintTop_toBottomOf="@id/lblNative"
         tools:text="Hindi" />
 
     <View
-        android:id="@+id/radio"
+        android:id="@+id/rdo"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
         android:background="@drawable/form_language_radio"

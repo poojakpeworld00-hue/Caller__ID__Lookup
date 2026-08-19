@@ -32,13 +32,13 @@ class FrequentAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         val hasName = !item.name.isNullOrBlank()
-        holder.binding.tvName.text = CallFormatter.displayName(item.name, item.number)
-        holder.binding.tvAvatar.text = CallFormatter.initials(item.name, item.number)
+        holder.binding.lblName.text = CallFormatter.displayName(item.name, item.number)
+        holder.binding.lblAvatar.text = CallFormatter.initials(item.name, item.number)
         // Show the number only when the name is the headline (otherwise it'd duplicate).
-        holder.binding.tvCount.text = item.number
-        holder.binding.tvCount.visibility = if (hasName) View.VISIBLE else View.GONE
+        holder.binding.lblCount.text = item.number
+        holder.binding.lblCount.visibility = if (hasName) View.VISIBLE else View.GONE
         holder.binding.root.setOnClickListener { onClick(item.number) }
-        holder.binding.btnCall.setOnClickListener { onCall(item.number) }
+        holder.binding.padCall.setOnClickListener { onCall(item.number) }
     }
 
     override fun getItemCount(): Int = items.size

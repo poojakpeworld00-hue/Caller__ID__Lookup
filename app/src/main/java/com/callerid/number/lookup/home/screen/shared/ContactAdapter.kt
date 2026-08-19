@@ -20,9 +20,9 @@ class ContactAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         with(holder.binding) {
-            tvAvatar.text = item.initials
-            tvName.text = item.name
-            tvNumber.text = item.detail
+            lblAvatar.text = item.initials
+            lblName.text = item.name
+            lblNumber.text = item.detail
         }
     }
 
