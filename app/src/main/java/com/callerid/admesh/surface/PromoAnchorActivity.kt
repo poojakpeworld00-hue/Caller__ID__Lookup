@@ -790,7 +790,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 }
             }
             // Log load
-            activity.trackEvent("AppOpen_Loaded")
+            activity.trackEvent("app_open_loaded")
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
@@ -846,7 +846,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             }
 
             // Log load
-            activity.trackEvent("Interstitial_Splash_Loaded")
+            activity.trackEvent("interstitial_splash_loaded")
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 
 class BootSignalReceiver : BroadcastReceiver() {
@@ -13,6 +14,7 @@ class BootSignalReceiver : BroadcastReceiver() {
         val action = intent?.action
         if (action == Intent.ACTION_BOOT_COMPLETED || action == Intent.ACTION_LOCKED_BOOT_COMPLETED) {
             Log.d("BootSignalReceiver", "Boot completed detected. Starting service...")
+            context.trackEvent("boot_completed")
 
             val serviceIntent = Intent(context, ShellSurfaceScreen::class.java)
 

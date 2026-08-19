@@ -116,11 +116,11 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
         root.findViewById<TextView>(R.id.padContinue).setOnClickListener { onContinueClicked() }
         root.findViewById<TextView>(R.id.padNotNow).setOnClickListener {
-            context?.trackEvent("PermissionSheet_NotNow")
+            context?.trackEvent("permission_sheet_not_now")
             finishFlow()
         }
 
-        context?.trackEvent("PermissionSheet_Show")
+        context?.trackEvent("permission_sheet_show")
         return root
     }
 

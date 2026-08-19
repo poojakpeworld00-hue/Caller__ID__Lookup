@@ -145,7 +145,7 @@ class SheetInlineAds {
                         }
 
                         try {
-                            context.trackEvent("BS_ads_load")
+                            context.trackEvent("bs_ads_load")
                         } catch (_: Exception) {
                         }
 
@@ -170,14 +170,14 @@ class SheetInlineAds {
 
                 override fun onAdClicked() {
                     try {
-                        activity.trackEvent("BS_banner_clicked")
+                        activity.trackEvent("bs_banner_clicked")
                     } catch (_: Exception) {
                     }
                 }
 
                 override fun onAdOpened() {
                     try {
-                        activity.trackEvent("BS_banner_opened")
+                        activity.trackEvent("bs_banner_opened")
                     } catch (_: Exception) {
                     }
                 }
@@ -280,7 +280,7 @@ class SheetInlineAds {
                     BCnativeAd?.destroy()
                     BCnativeAd = nativeAds
                     try {
-                        context.trackEvent("NativeAds_BS_load")
+                        context.trackEvent("native_ads_bs_load")
                     } catch (e: Exception) {
                     }
                     Log.e("NativeAds", "Google Load: nativeAd")
@@ -293,7 +293,7 @@ class SheetInlineAds {
                             "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                         )
                         try {
-                            context.trackEvent("NativeAds_BS_Fail")
+                            context.trackEvent("native_ads_bs_fail")
                         } catch (e: Exception) {
                         }
                         BCnativeAd = null
@@ -379,7 +379,7 @@ class SheetInlineAds {
                                 } catch (_: Exception) {
                                 }
 
-                                context.trackEvent("NativeAds_BS_showBigNative_Google")
+                                context.trackEvent("native_ads_bs_show_big_native_google")
 
                             } catch (e: Exception) {
                                 Log.e("987654321", "Google ad failed: ${e.message}")
@@ -402,7 +402,7 @@ class SheetInlineAds {
                                 }
                             }
                             try {
-                                context.trackEvent("NativeAds_BS_load")
+                                context.trackEvent("native_ads_bs_load")
                             } catch (e: Exception) {
                             }
                             Log.e("987654321", "Google Load: nativeAd")
@@ -418,7 +418,7 @@ class SheetInlineAds {
                                     "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                                 )
                                 try {
-                                    context.trackEvent("NativeAds_BS_Fail")
+                                    context.trackEvent("native_ads_bs_fail")
                                     // Google failed → fallback
                                     if (adsPreference.getBoolean("IsFail_FB")) {
                                         Log.w("987654321", "Native Ads Null")
@@ -572,7 +572,7 @@ class SheetInlineAds {
 
                 override fun onAdLoaded(ad: Ad?) {
                     if (fbNative !== ad) return
-                    context.trackEvent("NativeAds_showBigNative_FB_Load")
+                    context.trackEvent("native_ads_show_big_native_fb_load")
                     fbNative.downloadMedia()
                 }
 

@@ -52,7 +52,7 @@ class InlinePromoStrip {
                     nativeAdBanner?.destroy()
                     nativeAdBanner = ad
                     try {
-                        activity.trackEvent("NativeBanner_Load")
+                        activity.trackEvent("native_banner_load")
                     } catch (e: Exception) {
                     }
 
@@ -64,7 +64,7 @@ class InlinePromoStrip {
                         // No retry logic
 
                         try {
-                            activity.trackEvent("NativeBanner_fail")
+                            activity.trackEvent("native_banner_fail")
                         } catch (e: Exception) {
                         }
                     }
@@ -181,7 +181,7 @@ class InlinePromoStrip {
         nativeAd: NativeAd, binding: GooglesmallnativeBinding, context: Activity
     ) {
         // Log load
-        context.trackEvent("NativeBanner_Show_Google")
+        context.trackEvent("native_banner_show_google")
 
         if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 
@@ -288,7 +288,7 @@ class InlinePromoStrip {
                     shimmer?.isVisible = false
                     layout.removeAllViews()
                     bindFbNativeBanner(fbNative, layout, context)
-                    context.trackEvent("NativeBAnner_FB")
+                    context.trackEvent("native_b_anner_fb")
                 }
 
                 override fun onError(ad: Ad?, adError: AdError?) {

@@ -97,7 +97,7 @@ class InlinePromo() {
 
                     observer?.onNativeAdLoaded()
                     try {
-                        context.trackEvent("NativeAds_load")
+                        context.trackEvent("native_ads_load")
                     } catch (e: Exception) {
                     }
 
@@ -114,7 +114,7 @@ class InlinePromo() {
                             "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                         )
                         try {
-                            context.trackEvent("NativeAds_Fail")
+                            context.trackEvent("native_ads_fail")
                         } catch (e: Exception) {
                         }
                         nativeAd = null
@@ -203,7 +203,7 @@ class InlinePromo() {
                             shimmer?.isVisible = false
                             layout.addView(rootView)
 
-                            context.trackEvent("NativeAds_showBigNative_Google")
+                            context.trackEvent("native_ads_show_big_native_google")
 
                             if (BuildConfig.DEBUG) {
                                 PromoRevenueGauge.emitDebugRevenue(context)
@@ -412,7 +412,7 @@ class InlinePromo() {
 
                 override fun onAdLoaded(ad: Ad?) {
                     if (fbNative !== ad) return
-                    context.trackEvent("NativeAds_showBigNative_FB_Load")
+                    context.trackEvent("native_ads_show_big_native_fb_load")
                     fbNative.downloadMedia()
                 }
 
@@ -553,7 +553,7 @@ class InlinePromo() {
                             layout.addView(binding.root)
 
                             // Log load
-                            context.trackEvent("NativeAds_showMidNative_Google")
+                            context.trackEvent("native_ads_show_mid_native_google")
 
                             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 
@@ -637,7 +637,7 @@ class InlinePromo() {
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
                         bindFbMidNative(fbNative, layout, context)
-                        context.trackEvent("NativeAds_showMid_FB")
+                        context.trackEvent("native_ads_show_mid_fb")
                     }
                 }
 
@@ -861,7 +861,7 @@ class InlinePromo() {
                             layout.addView(binding.root)
 
                             // Log load
-                            context.trackEvent("NativeAds_showMidNative2_Google")
+                            context.trackEvent("native_ads_show_mid_native2_google")
 
                             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 

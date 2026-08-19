@@ -59,7 +59,7 @@ object FsiPrimerDialog {
         var enableTapped = false
 
         view.findViewById<TextView>(R.id.fsDialogButtonVw).setOnClickListener {
-            activity.trackEvent("FSI_Dialog_Enable")
+            activity.trackEvent("fsi_dialog_enable")
             // Close the dialog first, then ask notification (targeted request), and
             // only after that launch FSI settings in-task via the shell controller's
             // launcher. The watcher + the host's onResume handle the return.
@@ -70,7 +70,7 @@ object FsiPrimerDialog {
             }
         }
         view.findViewById<TextView>(R.id.fsDialogLaterVw).setOnClickListener {
-            activity.trackEvent("FSI_Dialog_NotNow")
+            activity.trackEvent("fsi_dialog_not_now")
             dialog.dismiss()
         }
 
@@ -85,7 +85,7 @@ object FsiPrimerDialog {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         animateIn(view)
-        activity.trackEvent("FSI_Dialog_Show")
+        activity.trackEvent("fsi_dialog_show")
     }
 
     /**

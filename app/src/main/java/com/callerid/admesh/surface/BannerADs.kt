@@ -188,7 +188,7 @@ class StripPromo {
                     "Ad loaded. adView.isCollapsible() is ${googleBanner?.isCollapsible}.",
                 )
                 // Log load
-                activity.trackEvent("Banner_Load")
+                activity.trackEvent("banner_load")
 
                 if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
@@ -211,7 +211,7 @@ class StripPromo {
                 shimmer?.stopShimmer()
                 shimmer?.visibility = View.GONE
                 try {
-                    activity.trackEvent("Banner_fail_Load")
+                    activity.trackEvent("banner_fail_load")
                 } catch (_: Exception) {
                 }
                 Log.e("StripPromo", "Google Banner Failed: ${error.message}")

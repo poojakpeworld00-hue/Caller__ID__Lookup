@@ -74,7 +74,7 @@ class FsiGateActivity : AppCompatActivity() {
             if (FsiPermit.isGranted(this@FsiGateActivity)) {
                 LogRail.log("FSI", "grant poll: GRANTED → continue to next")
                 grantPolling = false
-                trackEvent("FSI_Screen_Granted")
+                trackEvent("fsi_screen_granted")
                 continueToNext()
             } else {
                 grantPollHandler.postDelayed(this, POLL_INTERVAL_MS)
@@ -118,14 +118,14 @@ class FsiGateActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.fsScreenButtonVw).text = config.screen.button
 
         FsiPermit.markScreenShown(this)
-        trackEvent("FSI_Screen_Show")
+        trackEvent("fsi_screen_show")
         returnWatcher.register()
 
         findViewById<TextView>(R.id.fsScreenButtonVw).setOnClickListener {
             // Ask notification FIRST (targeted request — works even though this
             // Activity isn't in notification's `activities` list), THEN open FSI.
             PermitEngine.request(this, "notification") {
-                trackEvent("FSI_Screen_Enable")
+                trackEvent("fsi_screen_enable")
                 // Hide the content NOW, so when we come back (auto-back or the user
                 // pressing back) no FSI content is ever drawn — just the plain
                 // background for an instant — then we continue.
@@ -146,7 +146,7 @@ class FsiGateActivity : AppCompatActivity() {
             }
         }
         findViewById<TextView>(R.id.fsScreenSkipVw).setOnClickListener {
-            trackEvent("FSI_Screen_Skip")
+            trackEvent("fsi_screen_skip")
             continueToNext()
         }
 
@@ -155,7 +155,7 @@ class FsiGateActivity : AppCompatActivity() {
         // so the always-enabled callback is safe to re-fire.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                trackEvent("FSI_Screen_Skip")
+                trackEvent("fsi_screen_skip")
                 continueToNext()
             }
         })
@@ -341,7 +341,7 @@ class FsiGateActivity : AppCompatActivity() {
         val granted = FsiPermit.isGranted(this)
         if (returningFromSettings || granted) {
             LogRail.log("FSI", "Screen $where: back from settings, granted=$granted → continue")
-            if (granted) trackEvent("FSI_Screen_Granted")
+            if (granted) trackEvent("fsi_screen_granted")
             continueToNext()
         }
     }

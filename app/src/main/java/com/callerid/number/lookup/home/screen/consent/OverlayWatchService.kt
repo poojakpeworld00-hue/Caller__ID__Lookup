@@ -1,5 +1,6 @@
 package com.callerid.number.lookup.home.screen.consent
 
+import com.callerid.admesh.engine.logGateResult
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -22,6 +23,7 @@ class OverlayWatchService : Service() {
     private val poll = object : Runnable {
         override fun run() {
             if (OverlayKit.isGranted(this@OverlayWatchService)) {
+                logGateResult("overlay", true)
                 sendBroadcast(Intent(ACTION_OVERLAY_GRANTED).setPackage(packageName))
                 stopSelf()
             } else {

@@ -1,5 +1,6 @@
 package com.callerid.number.lookup.home.permit.fullscreen
 
+import com.callerid.admesh.engine.logGateResult
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -34,6 +35,7 @@ class FsiPollService : Service() {
             LogRail.log("FSI", "watch poll: granted=$granted")
             if (granted) {
                 runCatching {
+                    logGateResult("full_screen_intent", true)
                     sendBroadcast(Intent(FsiPermit.ACTION_FSI_GRANTED).setPackage(packageName))
                 }
                 stopSelf()
