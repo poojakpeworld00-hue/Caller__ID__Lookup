@@ -1,14 +1,15 @@
 package com.callerid.number.lookup.home.screen.history
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.CallEntry
-import com.callerid.number.lookup.home.store.CallHistorySource
 import com.callerid.number.lookup.home.store.CallFlavor
+import com.callerid.number.lookup.home.store.CallHistorySource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,9 +18,9 @@ import java.util.Locale
 
 class LogViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val repository = CallHistorySource(app)
-    private var allCalls: List<CallEntry> = emptyList()
-    private var query: String = ""
+    private val history = CallHistorySource(app)
+    private var source: List<CallEntry> = emptyList()
+    private var needle: String = ""
 
     private val _rows = MutableLiveData<List<LogRow>>(emptyList())
     val rows: LiveData<List<LogRow>> = _rows
@@ -32,7 +33,7 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
 
     fun load() {
         viewModelScope.launch {
-            allCalls = withContext(Dispatchers.IO) { repository.getCalls() }
+            source = withContext(Dispatchers.IO) { history.getCalls() }
             rebuild()
         }
     }
@@ -51,80 +52,94 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setQuery(text: String) {
         val trimmed = text.trim()
-        if (trimmed == query) return
-        query = trimmed
+        if (trimmed == needle) return
+        needle = trimmed
         rebuild()
     }
 
+    /**
+     * The call flavour a scope admits, or null when it admits everything. Expressing
+     * the scope as data removes the per-call branch that used to sit in `matches`.
+     */
+    private val LogScope.admits: CallFlavor?
+        get() = when (this) {
+            LogScope.ALL -> null
+            LogScope.INCOMING -> CallFlavor.INCOMING
+            LogScope.OUTGOING -> CallFlavor.OUTGOING
+            LogScope.MISSED -> CallFlavor.MISSED
+        }
+
+    /** Day buckets carry their own heading, so no int sentinel has to be mapped back. */
+    private enum class DayBucket(@StringRes val title: Int) {
+        TODAY(R.string.recents_today),
+        YESTERDAY(R.string.recents_yesterday),
+        THIS_WEEK(R.string.recents_this_week),
+        EARLIER(R.string.recents_earlier),
+    }
+
     private fun rebuild() {
-        val active = _filter.value ?: LogScope.ALL
+        val scope = _filter.value ?: LogScope.ALL
         val order = _sort.value ?: LogOrder.NEWEST
-        val q = query.lowercase(Locale.getDefault())
-        val filtered = allCalls.filter { call ->
-            matches(active, call.type) && (q.isEmpty() ||
-                call.name?.lowercase(Locale.getDefault())?.contains(q) == true ||
-                call.number.lowercase(Locale.getDefault()).contains(q))
+        val wanted = scope.admits
+        val q = needle.lowercase(Locale.getDefault())
+
+        val visible = source.filter { call ->
+            (wanted == null || call.type == wanted) && (q.isEmpty() || call.mentions(q))
         }
+
+        // Date orders keep the Today/Yesterday/… headings; name orders flatten,
+        // because a heading about recency means nothing in an alphabetical list.
         _rows.value = when (order) {
-            // Date sorts keep the Today/Yesterday/… section headers.
-            LogOrder.NEWEST -> group(filtered.sortedByDescending { it.date })
-            LogOrder.OLDEST -> group(filtered.sortedBy { it.date })
-            // Name sorts flatten the list — date headers no longer apply.
-            LogOrder.NAME_ASC ->
-                filtered.sortedBy { sortName(it) }.map { LogRow.Call(it) }
-            LogOrder.NAME_DESC ->
-                filtered.sortedByDescending { sortName(it) }.map { LogRow.Call(it) }
+            LogOrder.NEWEST -> withHeadings(visible.sortedByDescending { it.date })
+            LogOrder.OLDEST -> withHeadings(visible.sortedBy { it.date })
+            LogOrder.NAME_ASC -> visible.sortedBy { it.sortKey }.map(LogRow::Call)
+            LogOrder.NAME_DESC -> visible.sortedByDescending { it.sortKey }.map(LogRow::Call)
         }
     }
 
-    /** Key used for name sorting: caller name when present, otherwise the number. */
-    private fun sortName(call: CallEntry): String =
-        (call.name?.takeIf { it.isNotBlank() } ?: call.number).lowercase(Locale.getDefault())
+    /** Matches the query against the caller's name, falling back to the number. */
+    private fun CallEntry.mentions(lowercaseQuery: String): Boolean =
+        name?.lowercase(Locale.getDefault())?.contains(lowercaseQuery) == true ||
+            number.lowercase(Locale.getDefault()).contains(lowercaseQuery)
 
-    private fun matches(filter: LogScope, type: CallFlavor): Boolean = when (filter) {
-        LogScope.ALL -> true
-        LogScope.INCOMING -> type == CallFlavor.INCOMING
-        LogScope.OUTGOING -> type == CallFlavor.OUTGOING
-        LogScope.MISSED -> type == CallFlavor.MISSED
+    /** Name sorts on the caller's name when there is one, otherwise on the number. */
+    private val CallEntry.sortKey: String
+        get() = (name?.takeIf { it.isNotBlank() } ?: number).lowercase(Locale.getDefault())
+
+    private fun CallEntry.bucket(today: Long): DayBucket = when {
+        date >= today -> DayBucket.TODAY
+        date >= today - DAY_MS -> DayBucket.YESTERDAY
+        date >= today - 6 * DAY_MS -> DayBucket.THIS_WEEK
+        else -> DayBucket.EARLIER
     }
 
-    private fun group(calls: List<CallEntry>): List<LogRow> {
+    /**
+     * Emits a heading each time the day bucket changes. The list is already ordered,
+     * so a change of bucket is a boundary in either direction — which is what lets
+     * OLDEST walk Earlier → Today and still read correctly.
+     */
+    private fun withHeadings(calls: List<CallEntry>): List<LogRow> {
         if (calls.isEmpty()) return emptyList()
-
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        val todayStart = cal.timeInMillis
-        val yesterdayStart = todayStart - DAY_MS
-        val weekStart = todayStart - 6 * DAY_MS
-
-        val rows = mutableListOf<LogRow>()
-        var lastBucket = -1
-        for (call in calls) {
-            val bucket = when {
-                call.date >= todayStart -> 0
-                call.date >= yesterdayStart -> 1
-                call.date >= weekStart -> 2
-                else -> 3
+        val today = startOfToday()
+        var previous: DayBucket? = null
+        return buildList(calls.size + DayBucket.entries.size) {
+            for (call in calls) {
+                val bucket = call.bucket(today)
+                if (bucket != previous) {
+                    add(LogRow.Header(bucket.title))
+                    previous = bucket
+                }
+                add(LogRow.Call(call))
             }
-            if (bucket != lastBucket) {
-                rows.add(LogRow.Header(bucketTitle(bucket)))
-                lastBucket = bucket
-            }
-            rows.add(LogRow.Call(call))
         }
-        return rows
     }
 
-    private fun bucketTitle(bucket: Int): Int = when (bucket) {
-        0 -> R.string.recents_today
-        1 -> R.string.recents_yesterday
-        2 -> R.string.recents_this_week
-        else -> R.string.recents_earlier
-    }
+    private fun startOfToday(): Long = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
 
     companion object {
         private const val DAY_MS = 24L * 60 * 60 * 1000
