@@ -116,7 +116,7 @@
                     android:layout_height="192dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="22dp"
-                    android:background="@drawable/shape_onb_blob" />
+                    android:background="@drawable/form_onb_blob" />
 
                 <!-- sparkles -->
                 <ImageView
@@ -127,7 +127,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="62dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_cid_sparkle"
+                    android:src="@drawable/sym_cid_sparkle"
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
@@ -138,7 +138,7 @@
                     android:layout_marginTop="34dp"
                     android:layout_marginEnd="34dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_cid_sparkle"
+                    android:src="@drawable/sym_cid_sparkle"
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
@@ -149,7 +149,7 @@
                     android:layout_marginTop="108dp"
                     android:layout_marginEnd="4dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_cid_sparkle"
+                    android:src="@drawable/sym_cid_sparkle"
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <!-- mock incoming-call screen -->
@@ -160,7 +160,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="-22dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/shape_onb_phone_mock"
+                    android:background="@drawable/form_onb_phone_mock"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:paddingHorizontal="12dp"
@@ -185,10 +185,10 @@
                         android:layout_width="46dp"
                         android:layout_height="46dp"
                         android:layout_marginTop="14dp"
-                        android:background="@drawable/shape_onb_mock_avatar"
+                        android:background="@drawable/form_onb_mock_avatar"
                         android:contentDescription="@null"
                         android:padding="10dp"
-                        android:src="@drawable/glyph_cid_person"
+                        android:src="@drawable/sym_cid_person"
                         android:tint="@color/cid_onb_on_mock" />
 
                     <org.fossify.commons.views.MyTextView
@@ -220,19 +220,19 @@
                             android:layout_width="34dp"
                             android:layout_height="34dp"
                             android:layout_marginEnd="14dp"
-                            android:background="@drawable/shape_onb_mock_decline"
+                            android:background="@drawable/form_onb_mock_decline"
                             android:contentDescription="@null"
                             android:padding="8dp"
-                            android:src="@drawable/glyph_cid_call_decline"
+                            android:src="@drawable/sym_cid_call_decline"
                             android:tint="@color/cid_onb_on_mock" />
 
                         <ImageView
                             android:layout_width="34dp"
                             android:layout_height="34dp"
-                            android:background="@drawable/shape_onb_mock_accept"
+                            android:background="@drawable/form_onb_mock_accept"
                             android:contentDescription="@null"
                             android:padding="8dp"
-                            android:src="@drawable/glyph_cid_call_accept"
+                            android:src="@drawable/sym_cid_call_accept"
                             android:tint="@color/cid_onb_on_mock" />
 
                     </LinearLayout>
@@ -248,7 +248,7 @@
                     android:layout_alignTop="@id/onboarding_mock"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="158dp"
-                    android:background="@drawable/shape_onb_mock_chip"
+                    android:background="@drawable/form_onb_mock_chip"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="9dp"
@@ -260,7 +260,7 @@
                         android:layout_height="14dp"
                         android:layout_marginEnd="6dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/holder_shield_check"
+                        android:src="@drawable/slot_shield_check"
                         android:tint="@color/cid_onb_on_mock" />
 
                     <LinearLayout
@@ -294,7 +294,7 @@
                     android:layout_marginTop="116dp"
                     android:layout_marginEnd="-46dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_cid_shield_phone" />
+                    android:src="@drawable/sym_cid_shield_phone" />
 
                 <ImageView
                     android:id="@+id/onboarding_badge"
@@ -304,10 +304,10 @@
                     android:layout_below="@id/onboarding_shield"
                     android:layout_marginTop="-16dp"
                     android:layout_marginEnd="-10dp"
-                    android:background="@drawable/shape_onb_check_badge_light"
+                    android:background="@drawable/form_onb_check_badge_light"
                     android:contentDescription="@null"
                     android:padding="13dp"
-                    android:src="@drawable/glyph_cid_tick"
+                    android:src="@drawable/sym_cid_tick"
                     android:tint="@color/cid_onb_accent" />
 
             </RelativeLayout>

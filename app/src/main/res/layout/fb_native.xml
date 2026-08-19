@@ -139,7 +139,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:background="@drawable/bg_btn_primary"
+                    android:background="@drawable/form_btn_primary"
                     android:backgroundTint="@color/white"
                     android:gravity="center"
                     android:includeFontPadding="false"

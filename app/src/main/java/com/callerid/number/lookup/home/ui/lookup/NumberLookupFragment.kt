@@ -257,17 +257,17 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
 
         when {
             result.isSpam -> bindStatusPill(
-                R.string.lookup_spam_risk, R.color.danger, R.color.danger_soft, R.drawable.glyph_warning
+                R.string.lookup_spam_risk, R.color.danger, R.color.danger_soft, R.drawable.sym_warning
             )
             result.valid == true -> bindStatusPill(
-                R.string.lookup_valid_number, R.color.success, R.color.success_soft, R.drawable.glyph_verified
+                R.string.lookup_valid_number, R.color.success, R.color.success_soft, R.drawable.sym_verified
             )
             result.valid == false -> bindStatusPill(
-                R.string.lookup_invalid_number, R.color.danger, R.color.danger_soft, R.drawable.glyph_warning
+                R.string.lookup_invalid_number, R.color.danger, R.color.danger_soft, R.drawable.sym_warning
             )
             else -> bindStatusPill(
                 if (result.inContacts) R.string.lookup_in_contacts else R.string.lookup_not_in_contacts,
-                R.color.on_surface_variant, R.color.neutral_soft, R.drawable.glyph_info
+                R.color.on_surface_variant, R.color.neutral_soft, R.drawable.sym_info
             )
         }
 

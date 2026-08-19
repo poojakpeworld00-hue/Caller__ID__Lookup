@@ -61,9 +61,9 @@ class LogCallAdapter(
         }
 
         private fun iconFor(type: CallFlavor): Int = when (type) {
-            CallFlavor.INCOMING -> R.drawable.glyph_call_received
-            CallFlavor.OUTGOING -> R.drawable.glyph_call_made
-            CallFlavor.MISSED, CallFlavor.SPAM -> R.drawable.glyph_call_missed
+            CallFlavor.INCOMING -> R.drawable.sym_call_received
+            CallFlavor.OUTGOING -> R.drawable.sym_call_made
+            CallFlavor.MISSED, CallFlavor.SPAM -> R.drawable.sym_call_missed
         }
 
         private fun colorFor(type: CallFlavor): Int = when (type) {

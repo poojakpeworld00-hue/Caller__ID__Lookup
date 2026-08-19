@@ -11,7 +11,7 @@
             android:title="@string/hide" />
         <item
             android:id="@+id/resize"
-            android:icon="@drawable/glyph_resize_vector"
+            android:icon="@drawable/sym_resize_vector"
             android:title="@string/resize" />
         <item
             android:id="@+id/rename"

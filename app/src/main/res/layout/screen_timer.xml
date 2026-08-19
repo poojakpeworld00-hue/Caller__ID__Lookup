@@ -29,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -151,7 +151,7 @@
                     android:textStyle="bold"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="@dimen/_14sdp"
-                    app:icon="@drawable/glyph_play"
+                    app:icon="@drawable/sym_play"
                     app:iconGravity="textStart"
                     app:iconSize="@dimen/_16sdp"
                     app:iconTint="@color/white" />

@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_5sdp"
-    android:background="@drawable/shape_row_neutral"
+    android:background="@drawable/form_row_neutral"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
@@ -22,9 +22,9 @@
         android:id="@+id/ivToolIcon"
         android:layout_width="@dimen/_36sdp"
         android:layout_height="@dimen/_36sdp"
-        android:background="@drawable/shape_tile_blue"
+        android:background="@drawable/form_tile_blue"
         android:padding="@dimen/_8sdp"
-        tools:src="@drawable/glyph_tool_compass"
+        tools:src="@drawable/sym_tool_compass"
         tools:ignore="ContentDescription" />
 
     <TextView

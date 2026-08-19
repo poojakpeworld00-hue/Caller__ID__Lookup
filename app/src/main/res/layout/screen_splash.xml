@@ -19,7 +19,7 @@
         android:id="@+id/splashRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_splash_hero"
+        android:background="@drawable/form_splash_hero"
         android:clipChildren="false"
         android:clipToPadding="false"
         tools:context=".ui.splash.LaunchGateActivity">
@@ -30,7 +30,7 @@
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_150sdp"
             android:contentDescription="@null"
-            android:src="@drawable/shape_splash_orb"
+            android:src="@drawable/form_splash_orb"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.08"
@@ -41,7 +41,7 @@
             android:layout_width="@dimen/_190sdp"
             android:layout_height="@dimen/_190sdp"
             android:contentDescription="@null"
-            android:src="@drawable/shape_splash_orb"
+            android:src="@drawable/form_splash_orb"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.96"
@@ -52,7 +52,7 @@
             android:id="@+id/star1"
             android:layout_width="@dimen/_4sdp"
             android:layout_height="@dimen/_4sdp"
-            android:background="@drawable/shape_splash_star"
+            android:background="@drawable/form_splash_star"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.24"
@@ -62,7 +62,7 @@
             android:id="@+id/star2"
             android:layout_width="@dimen/_3sdp"
             android:layout_height="@dimen/_3sdp"
-            android:background="@drawable/shape_splash_star"
+            android:background="@drawable/form_splash_star"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.58"
@@ -72,7 +72,7 @@
             android:id="@+id/star3"
             android:layout_width="@dimen/_4sdp"
             android:layout_height="@dimen/_4sdp"
-            android:background="@drawable/shape_splash_star"
+            android:background="@drawable/form_splash_star"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.80"
@@ -82,7 +82,7 @@
             android:id="@+id/star4"
             android:layout_width="@dimen/_3sdp"
             android:layout_height="@dimen/_3sdp"
-            android:background="@drawable/shape_splash_star"
+            android:background="@drawable/form_splash_star"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.40"
@@ -109,7 +109,7 @@
                 android:layout_height="@dimen/_240sdp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                android:src="@drawable/shape_splash_orbit_ring" />
+                android:src="@drawable/form_splash_orbit_ring" />
 
             <!-- Blue AI-scan ring around the icon -->
             <ImageView
@@ -119,7 +119,7 @@
                 android:layout_gravity="center"
                 android:alpha="0"
                 android:contentDescription="@null"
-                android:src="@drawable/shape_splash_scan_arc" />
+                android:src="@drawable/form_splash_scan_arc" />
 
             <!-- Centred app icon tile -->
             <FrameLayout
@@ -128,7 +128,7 @@
                 android:layout_height="@dimen/_72sdp"
                 android:layout_gravity="center"
                 android:alpha="0"
-                android:background="@drawable/shape_splash_icon_tile"
+                android:background="@drawable/form_splash_icon_tile"
                 android:elevation="@dimen/_10sdp">
 
                 <ImageView
@@ -136,7 +136,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_phone_solid" />
+                    android:src="@drawable/sym_phone_solid" />
             </FrameLayout>
 
             <!-- Orbit layer: rotates as a whole; children counter-rotate to stay upright -->
@@ -160,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0"
-                        android:background="@drawable/shape_splash_pill"
+                        android:background="@drawable/form_splash_pill"
                         android:elevation="@dimen/_6sdp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -172,14 +172,14 @@
                         <FrameLayout
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:background="@drawable/shape_splash_incoming_dot">
+                            android:background="@drawable/form_splash_incoming_dot">
 
                             <ImageView
                                 android:layout_width="@dimen/_11sdp"
                                 android:layout_height="@dimen/_11sdp"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
-                                android:src="@drawable/glyph_phone_solid"
+                                android:src="@drawable/sym_phone_solid"
                                 app:tint="@color/splash_incoming_icon" />
                         </FrameLayout>
 
@@ -206,7 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0"
-                        android:background="@drawable/shape_splash_pill"
+                        android:background="@drawable/form_splash_pill"
                         android:elevation="@dimen/_6sdp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -219,7 +219,7 @@
                             android:layout_width="@dimen/_13sdp"
                             android:layout_height="@dimen/_13sdp"
                             android:contentDescription="@null"
-                            android:src="@drawable/glyph_fraud_block" />
+                            android:src="@drawable/sym_fraud_block" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -249,7 +249,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/shape_splash_avatar_ring"
+                            android:background="@drawable/form_splash_avatar_ring"
                             android:gravity="center"
                             android:text="@string/splash_avatar_initials"
                             android:textColor="@color/white"
@@ -260,14 +260,14 @@
                             android:layout_width="@dimen/_22sdp"
                             android:layout_height="@dimen/_22sdp"
                             android:layout_gravity="bottom|end"
-                            android:background="@drawable/shape_splash_check">
+                            android:background="@drawable/form_splash_check">
 
                             <ImageView
                                 android:layout_width="@dimen/_12sdp"
                                 android:layout_height="@dimen/_12sdp"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
-                                android:src="@drawable/glyph_check"
+                                android:src="@drawable/sym_check"
                                 app:tint="@color/white" />
                         </FrameLayout>
                     </FrameLayout>
@@ -315,7 +315,7 @@
             android:layout_height="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             android:alpha="0"
-            android:background="@drawable/shape_splash_bar_track"
+            android:background="@drawable/form_splash_bar_track"
             app:layout_constraintBottom_toTopOf="@id/footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -324,7 +324,7 @@
             android:id="@+id/progressFill"
             android:layout_width="@dimen/_8sdp"
             android:layout_height="@dimen/_4sdp"
-            android:background="@drawable/shape_splash_bar_fill"
+            android:background="@drawable/form_splash_bar_fill"
             app:layout_constraintBottom_toBottomOf="@id/progressTrack"
             app:layout_constraintStart_toStartOf="@id/progressTrack"
             app:layout_constraintTop_toTopOf="@id/progressTrack" />
@@ -361,7 +361,7 @@
                     android:layout_width="@dimen/_11sdp"
                     android:layout_height="@dimen/_11sdp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_shield_check" />
+                    android:src="@drawable/sym_shield_check" />
 
                 <TextView
                     android:id="@+id/tvSecureVersion"

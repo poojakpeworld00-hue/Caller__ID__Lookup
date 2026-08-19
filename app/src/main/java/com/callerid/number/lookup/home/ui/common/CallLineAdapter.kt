@@ -51,7 +51,7 @@ class CallLineAdapter(
             // Verdict container: spam rows read red before the text does; everything
             // else sits on a neutral surface card with a primary-container avatar.
             rowCall.setBackgroundResource(
-                if (isSpam) R.drawable.shape_home_tile_spam else R.drawable.shape_home_tile
+                if (isSpam) R.drawable.form_home_tile_spam else R.drawable.form_home_tile
             )
             tvAvatar.backgroundTintList =
                 tint(if (isSpam) R.color.spam_avatar_bg else R.color.primary_container)
@@ -59,10 +59,10 @@ class CallLineAdapter(
             tvName.setTextColor(color(if (isSpam) R.color.spam_on else R.color.on_surface))
 
             val (iconRes, subColorRes) = when (item.type) {
-                CallFlavor.INCOMING -> R.drawable.holder_arrow_down_left to R.color.on_surface_variant
-                CallFlavor.OUTGOING -> R.drawable.holder_arrow_up_right to R.color.on_surface_variant
-                CallFlavor.MISSED -> R.drawable.glyph_call_missed to R.color.danger
-                CallFlavor.SPAM -> R.drawable.holder_shield_warning to R.color.spam_on
+                CallFlavor.INCOMING -> R.drawable.slot_arrow_down_left to R.color.on_surface_variant
+                CallFlavor.OUTGOING -> R.drawable.slot_arrow_up_right to R.color.on_surface_variant
+                CallFlavor.MISSED -> R.drawable.sym_call_missed to R.color.danger
+                CallFlavor.SPAM -> R.drawable.slot_shield_warning to R.color.spam_on
             }
             ivType.setImageResource(iconRes)
             ivType.imageTintList = tint(subColorRes)

@@ -83,7 +83,7 @@ class NudgePromptFragment : Fragment() {
         val etTitle = dialogView.findViewById<EditText>(R.id.edit_reminder).apply {
             hint = "e.g. Birthday, Meeting, Call back..."
             setHintTextColor(Color.parseColor("#999999"))
-            setBackgroundResource(R.drawable.shape_btn)
+            setBackgroundResource(R.drawable.form_btn)
             setPadding(32, 24, 32, 24)
             requestFocus()
         }

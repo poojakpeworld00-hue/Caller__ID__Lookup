@@ -155,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/bg_btn_primary"
+            android:background="@drawable/form_btn_primary"
             android:backgroundTint="@color/white"
             android:gravity="center"
             android:padding="14dp"

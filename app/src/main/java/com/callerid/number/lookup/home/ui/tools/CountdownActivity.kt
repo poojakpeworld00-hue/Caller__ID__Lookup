@@ -66,7 +66,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         running = true
         endRealtime = SystemClock.elapsedRealtime() + remainingMs
         binding.btnStartPause.setText(R.string.action_pause)
-        binding.btnStartPause.setIconResource(R.drawable.glyph_pause)
+        binding.btnStartPause.setIconResource(R.drawable.sym_pause)
         setPresetsEnabled(false)
         handler.post(tick)
     }
@@ -76,7 +76,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         handler.removeCallbacks(tick)
         remainingMs = (endRealtime - SystemClock.elapsedRealtime()).coerceAtLeast(0)
         binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.glyph_play)
+        binding.btnStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         renderTime()
     }
@@ -86,7 +86,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         handler.removeCallbacks(tick)
         remainingMs = 0L
         binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.glyph_play)
+        binding.btnStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         renderTime()
     }
@@ -109,7 +109,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
     private fun onFinished() {
         running = false
         binding.btnStartPause.setText(R.string.action_start)
-        binding.btnStartPause.setIconResource(R.drawable.glyph_play)
+        binding.btnStartPause.setIconResource(R.drawable.sym_play)
         setPresetsEnabled(true)
         vibrate()
     }

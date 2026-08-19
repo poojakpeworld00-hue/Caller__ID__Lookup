@@ -75,19 +75,19 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         // Preferences grid — Theme is an inline segmented toggle.
         setupThemeToggle()
         bindCard(
-            binding.cardLanguage, R.drawable.glyph_language, R.string.settings_language,
+            binding.cardLanguage, R.drawable.sym_language, R.string.settings_language,
             currentLanguageName(), chevron = true
         ) {
             openActivity(LanguageSelectActivity.newIntent(this, standalone = true))
         }
         bindCard(
-            binding.cardBlocklist, R.drawable.settings_blocklist, R.string.settings_blocklist,
+            binding.cardBlocklist, R.drawable.prefs_blocklist, R.string.settings_blocklist,
             getString(R.string.settings_blocklist_sub), chevron = true
         ) {
             openActivity<BlockCenterActivity>()
         }
         bindCard(
-            binding.cardSim, R.drawable.glyph_sim_card, R.string.settings_sim,
+            binding.cardSim, R.drawable.sym_sim_card, R.string.settings_sim,
             getString(R.string.settings_sim_sub), chevron = false
         ) { openSimManagement() }
 
@@ -104,7 +104,7 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         if (showRate) {
             bindRow(
                 binding.rowRate,
-                R.drawable.glyph_star,
+                R.drawable.sym_star,
                 R.string.settings_rate,
                 R.string.settings_rate_sub
             ) {
@@ -116,7 +116,7 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         if (showShare) {
             bindRow(
                 binding.rowShare,
-                R.drawable.settings_share,
+                R.drawable.prefs_share,
                 R.string.settings_share,
                 R.string.settings_share_sub
             ) {
@@ -129,10 +129,10 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
             if (showRate || showShare) View.VISIBLE else View.GONE
 
         // Legal
-        binding.rowPrivacy.ivIcon.setImageResource(R.drawable.glyph_policy)
+        binding.rowPrivacy.ivIcon.setImageResource(R.drawable.sym_policy)
         binding.rowPrivacy.tvTitle.setText(R.string.settings_privacy)
         binding.rowPrivacy.root.setOnClickListener { openPolicyLink() }
-        binding.rowTerms.ivIcon.setImageResource(R.drawable.glyph_terms)
+        binding.rowTerms.ivIcon.setImageResource(R.drawable.sym_terms)
         binding.rowTerms.tvTitle.setText(R.string.settings_terms)
         binding.rowTerms.root.setOnClickListener { openTermLink() }
 
@@ -306,7 +306,7 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
     private fun highlightTheme(cells: List<ImageView>, selected: Int) {
         cells.forEachIndexed { i, cell ->
             val active = i == selected
-            cell.setBackgroundResource(if (active) R.drawable.shape_theme_selected else 0)
+            cell.setBackgroundResource(if (active) R.drawable.form_theme_selected else 0)
             val color = ContextCompat.getColor(
                 this, if (active) R.color.white else R.color.on_surface_variant
             )

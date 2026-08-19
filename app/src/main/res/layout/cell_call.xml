@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_16sdp"
     android:layout_marginTop="@dimen/_6sdp"
-    android:background="@drawable/shape_home_tile"
+    android:background="@drawable/form_home_tile"
     android:clipToOutline="true"
     android:elevation="@dimen/_1sdp"
     android:foreground="?attr/selectableItemBackground"
@@ -25,7 +25,7 @@
         android:id="@+id/tvAvatar"
         android:layout_width="@dimen/_34sdp"
         android:layout_height="@dimen/_34sdp"
-        android:background="@drawable/shape_avatar"
+        android:background="@drawable/form_avatar"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="center"
         android:textColor="@color/on_primary_container"
@@ -62,7 +62,7 @@
                 android:layout_width="@dimen/_11sdp"
                 android:layout_height="@dimen/_11sdp"
                 android:contentDescription="@string/call_incoming"
-                android:src="@drawable/glyph_call_received"
+                android:src="@drawable/sym_call_received"
                 app:tint="@color/on_surface_variant" />
 
             <TextView
@@ -81,10 +81,10 @@
         android:id="@+id/btnCall"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
-        android:background="@drawable/shape_circle_surface"
+        android:background="@drawable/form_circle_surface"
         android:contentDescription="@string/action_call"
         android:padding="@dimen/_7sdp"
-        android:src="@drawable/holder_phone"
+        android:src="@drawable/slot_phone"
         app:tint="@color/primary" />
 
     <!-- Shown instead of Call for unknown / unsaved numbers → opens Lookup. -->
@@ -92,7 +92,7 @@
         android:id="@+id/btnIdentify"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
-        android:background="@drawable/shape_cta_pill"
+        android:background="@drawable/form_cta_pill"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"

@@ -29,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -111,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
-                    android:background="@drawable/shape_card_border"
+                    android:background="@drawable/form_card_border"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="@dimen/_18sdp">
@@ -123,7 +123,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/shape_ring" />
+                            android:background="@drawable/form_ring" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -178,7 +178,7 @@
                         android:textStyle="bold"
                         app:backgroundTint="@color/primary"
                         app:cornerRadius="@dimen/_14sdp"
-                        app:icon="@drawable/glyph_play"
+                        app:icon="@drawable/sym_play"
                         app:iconGravity="textStart"
                         app:iconSize="@dimen/_16sdp"
                         app:iconTint="@color/white" />
@@ -201,7 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp"
-                    android:background="@drawable/shape_card_border"
+                    android:background="@drawable/form_card_border"
                     android:orientation="vertical"
                     android:padding="@dimen/_16sdp">
 
@@ -224,7 +224,7 @@
                             android:id="@+id/tvLapCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/shape_pill"
+                            android:background="@drawable/form_pill"
                             android:backgroundTint="@color/primary_container"
                             android:paddingHorizontal="@dimen/_9sdp"
                             android:paddingVertical="@dimen/_3sdp"
@@ -256,7 +256,7 @@
                             android:layout_height="@dimen/_36sdp"
                             android:alpha="0.3"
                             android:contentDescription="@string/stopwatch_history"
-                            android:src="@drawable/glyph_history"
+                            android:src="@drawable/sym_history"
                             app:tint="@color/on_surface_variant" />
 
                         <TextView

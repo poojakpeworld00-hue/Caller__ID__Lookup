@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/bg_btn_primary"
+            android:background="@drawable/form_btn_primary"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:minHeight="@dimen/_36sdp"

@@ -33,25 +33,25 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
             // (g-700 / teal / clay / amber -- bg_tile_blue/teal/violet/amber
             // are now flat fills in those colours, not the old 6-hue gradients).
             ToolUi(getString(R.string.tools_compass), getString(R.string.tools_compass_sub),
-                R.drawable.glyph_tool_compass, R.drawable.shape_tile_blue, measure, CompassToolActivity::class.java),
+                R.drawable.sym_tool_compass, R.drawable.form_tile_blue, measure, CompassToolActivity::class.java),
             ToolUi(getString(R.string.tools_level), getString(R.string.tools_level_sub),
-                R.drawable.glyph_tool_level, R.drawable.shape_tile_teal, measure, LevelToolActivity::class.java),
+                R.drawable.sym_tool_level, R.drawable.form_tile_teal, measure, LevelToolActivity::class.java),
             ToolUi(getString(R.string.tools_sound), getString(R.string.tools_sound_sub),
-                R.drawable.glyph_tool_sound, R.drawable.shape_tile_violet, measure, NoiseToolActivity::class.java),
+                R.drawable.sym_tool_sound, R.drawable.form_tile_violet, measure, NoiseToolActivity::class.java),
             ToolUi(getString(R.string.tools_light), getString(R.string.tools_light_sub),
-                R.drawable.glyph_tool_light, R.drawable.shape_tile_amber, measure, LightMeterActivity::class.java),
+                R.drawable.sym_tool_light, R.drawable.form_tile_amber, measure, LightMeterActivity::class.java),
             ToolUi(getString(R.string.tools_flashlight), getString(R.string.tools_flashlight_sub),
-                R.drawable.glyph_tool_flashlight, R.drawable.shape_tile_amber, device, TorchToolActivity::class.java),
+                R.drawable.sym_tool_flashlight, R.drawable.form_tile_amber, device, TorchToolActivity::class.java),
             ToolUi(getString(R.string.tools_battery), getString(R.string.tools_battery_sub),
-                R.drawable.glyph_tool_battery, R.drawable.shape_tile_blue, device, BatteryToolActivity::class.java),
+                R.drawable.sym_tool_battery, R.drawable.form_tile_blue, device, BatteryToolActivity::class.java),
             ToolUi(getString(R.string.tools_sim), getString(R.string.tools_sim_sub),
-                R.drawable.glyph_tool_network, R.drawable.shape_tile_teal, device, SimInfoActivity::class.java),
+                R.drawable.sym_tool_network, R.drawable.form_tile_teal, device, SimInfoActivity::class.java),
             ToolUi(getString(R.string.tools_speedometer), getString(R.string.tools_speedometer_sub),
-                R.drawable.glyph_tool_speedometer, R.drawable.shape_tile_violet, device, SpeedToolActivity::class.java),
+                R.drawable.sym_tool_speedometer, R.drawable.form_tile_violet, device, SpeedToolActivity::class.java),
             ToolUi(getString(R.string.tools_stopwatch), getString(R.string.tools_stopwatch_sub),
-                R.drawable.glyph_tool_stopwatch, R.drawable.shape_tile_blue, time, StopwatchActivity::class.java),
+                R.drawable.sym_tool_stopwatch, R.drawable.form_tile_blue, time, StopwatchActivity::class.java),
             ToolUi(getString(R.string.timer_tool), getString(R.string.timer_tool_sub),
-                R.drawable.glyph_tool_timer, R.drawable.shape_tile_teal, time, CountdownActivity::class.java),
+                R.drawable.sym_tool_timer, R.drawable.form_tile_teal, time, CountdownActivity::class.java),
         )
     }
 
@@ -107,7 +107,7 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
     private fun updateSearchChrome(query: String) {
         val active = query.isNotEmpty() || binding.etSearch.hasFocus()
         binding.searchBar.setBackgroundResource(
-            if (active) R.drawable.shape_search_bar_active else R.drawable.shape_search_bar
+            if (active) R.drawable.form_search_bar_active else R.drawable.form_search_bar
         )
     }
 

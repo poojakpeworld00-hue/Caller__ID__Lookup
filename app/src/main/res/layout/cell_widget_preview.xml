@@ -12,7 +12,7 @@
         android:layout_height="@dimen/widget_preview_size"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:background="@drawable/widget_preview_background"
+        android:background="@drawable/gadget_preview_background"
         android:padding="@dimen/normal_margin"
         android:scaleType="centerInside"
         tools:src="@mipmap/ic_launcher" />

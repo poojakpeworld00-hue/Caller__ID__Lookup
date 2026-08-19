@@ -29,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
-                    android:background="@drawable/shape_card_border"
+                    android:background="@drawable/form_card_border"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="@dimen/_18sdp">
@@ -150,7 +150,7 @@
                             android:textStyle="bold"
                             app:backgroundTint="@color/primary"
                             app:cornerRadius="@dimen/_14sdp"
-                            app:icon="@drawable/glyph_camera"
+                            app:icon="@drawable/sym_camera"
                             app:iconGravity="textStart"
                             app:iconPadding="@dimen/_4sdp"
                             app:iconSize="@dimen/_14sdp"
@@ -172,7 +172,7 @@
                             android:textSize="@dimen/_11ssp"
                             android:textStyle="bold"
                             app:cornerRadius="@dimen/_14sdp"
-                            app:icon="@drawable/glyph_refresh"
+                            app:icon="@drawable/sym_refresh"
                             app:iconGravity="textStart"
                             app:iconPadding="@dimen/_4sdp"
                             app:iconSize="@dimen/_14sdp" />

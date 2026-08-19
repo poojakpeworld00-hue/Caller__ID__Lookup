@@ -63,22 +63,22 @@ class BlockListAdapter(
             binding.tvNumber.text = row.entry.number
 
             if (row.isSpam) {
-                binding.blockRow.setBackgroundResource(R.drawable.shape_row_spam)
-                binding.avatarBox.setBackgroundResource(R.drawable.shape_avatar_spam)
+                binding.blockRow.setBackgroundResource(R.drawable.form_row_spam)
+                binding.avatarBox.setBackgroundResource(R.drawable.form_avatar_spam)
                 binding.tvBang.visibility = View.VISIBLE
                 binding.ivAvatar.visibility = View.GONE
                 binding.tvLabel.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
                 binding.tvNumber.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
-                binding.btnUnblock.setBackgroundResource(R.drawable.shape_unblock_spam)
+                binding.btnUnblock.setBackgroundResource(R.drawable.form_unblock_spam)
                 binding.btnUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.spam_on))
             } else {
-                binding.blockRow.setBackgroundResource(R.drawable.shape_row_neutral)
-                binding.avatarBox.setBackgroundResource(R.drawable.shape_avatar_neutral)
+                binding.blockRow.setBackgroundResource(R.drawable.form_row_neutral)
+                binding.avatarBox.setBackgroundResource(R.drawable.form_avatar_neutral)
                 binding.tvBang.visibility = View.GONE
                 binding.ivAvatar.visibility = View.VISIBLE
                 binding.tvLabel.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
                 binding.tvNumber.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface_variant))
-                binding.btnUnblock.setBackgroundResource(R.drawable.shape_unblock_neutral)
+                binding.btnUnblock.setBackgroundResource(R.drawable.form_unblock_neutral)
                 binding.btnUnblock.setTextColor(ContextCompat.getColor(ctx, R.color.on_surface))
             }
 

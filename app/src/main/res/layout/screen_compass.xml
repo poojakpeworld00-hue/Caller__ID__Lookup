@@ -30,7 +30,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -95,27 +95,27 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:contentDescription="@null"
-                            android:src="@drawable/shape_compass_dots" />
+                            android:src="@drawable/form_compass_dots" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:alpha="0.5"
-                            android:background="@drawable/shape_compass_square"
+                            android:background="@drawable/form_compass_square"
                             android:rotation="45" />
 
                         <View
                             android:layout_width="@dimen/_240sdp"
                             android:layout_height="@dimen/_240sdp"
                             android:layout_gravity="center"
-                            android:background="@drawable/shape_compass_square" />
+                            android:background="@drawable/form_compass_square" />
 
                         <View
                             android:layout_width="@dimen/_185sdp"
                             android:layout_height="@dimen/_185sdp"
                             android:layout_gravity="center"
-                            android:background="@drawable/shape_compass_square" />
+                            android:background="@drawable/form_compass_square" />
 
                         <ImageView
                             android:id="@+id/ivNeedle"
@@ -124,7 +124,7 @@
                             android:layout_gravity="center"
                             android:alpha="0.5"
                             android:contentDescription="@string/tools_compass"
-                            android:src="@drawable/glyph_compass_needle" />
+                            android:src="@drawable/sym_compass_needle" />
 
                         <!-- Heading readout -->
                         <LinearLayout
@@ -210,7 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_24sdp"
-                        android:background="@drawable/shape_pill"
+                        android:background="@drawable/form_pill"
                         android:backgroundTint="@color/surface_2"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -220,7 +220,7 @@
                         <View
                             android:layout_width="@dimen/_8sdp"
                             android:layout_height="@dimen/_8sdp"
-                            android:background="@drawable/shape_circle_primary" />
+                            android:background="@drawable/form_circle_primary" />
 
                         <TextView
                             android:id="@+id/tvSignal"

@@ -229,20 +229,20 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
     private val tabIcons by lazy {
         mapOf(
             binding.imgRecent to Pair(
-                R.drawable.callback_recent_selected,
-                R.drawable.callback_recent_unselected
+                R.drawable.ring_recent_selected,
+                R.drawable.ring_recent_unselected
             ),
             binding.imgMes to Pair(
-                R.drawable.callback_message_selected,
-                R.drawable.callback_message_unselected
+                R.drawable.ring_message_selected,
+                R.drawable.ring_message_unselected
             ),
             binding.imgReminder to Pair(
-                R.drawable.callback_reminder_selected,
-                R.drawable.callback_reminder_unselected
+                R.drawable.ring_reminder_selected,
+                R.drawable.ring_reminder_unselected
             ),
             binding.imgWhatsapp to Pair(
-                R.drawable.callback_wa_selected,
-                R.drawable.callback_wa_unselected
+                R.drawable.ring_wa_selected,
+                R.drawable.ring_wa_unselected
             )
         )
     }

@@ -193,7 +193,7 @@ class AppTileAdapter(
                     binding.launcherIcon.setImageDrawable(launcher.drawable)
                 } else {
                     val placeholderDrawable = activity.resources.getColoredDrawableWithColor(
-                        drawableId = R.drawable.placeholder_drawable,
+                        drawableId = R.drawable.stub_drawable,
                         color = launcher.thumbnailColor
                     )
                     Glide.with(activity)

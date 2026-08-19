@@ -17,14 +17,14 @@
         android:id="@+id/qaIconCircle"
         android:layout_width="@dimen/_44sdp"
         android:layout_height="@dimen/_44sdp"
-        android:background="@drawable/shape_qa_icon_circle">
+        android:background="@drawable/form_qa_icon_circle">
 
         <ImageView
             android:id="@+id/qaIcon"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
             android:layout_gravity="center"
-            android:src="@drawable/glyph_dialpad"
+            android:src="@drawable/sym_dialpad"
             tools:ignore="ContentDescription" />
     </FrameLayout>
 

@@ -115,10 +115,10 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         // Per-tile tint = Claude Design's actions-3 cells (g-700/teal/clay/amber).
         // Blocklist/Tools deliberately do NOT reuse the danger/success verdict
         // colors here -- those are fixed verdict roles, not decorative tints.
-        bindQuick(binding.qaDialer, R.drawable.holder_grid_nine, R.string.quick_dialer, R.color.primary, R.color.primary_container)
-        bindQuick(binding.qaLookup, R.drawable.holder_magnifying_glass, R.string.quick_lookup, R.color.cid_teal, R.color.cid_teal_100)
-        bindQuick(binding.qaBlocklist, R.drawable.holder_prohibit, R.string.quick_blocklist, R.color.cid_clay, R.color.cid_clay_100)
-        bindQuick(binding.qaTools, R.drawable.holder_squares_four, R.string.quick_tools, R.color.cid_amber, R.color.cid_amber_100)
+        bindQuick(binding.qaDialer, R.drawable.slot_grid_nine, R.string.quick_dialer, R.color.primary, R.color.primary_container)
+        bindQuick(binding.qaLookup, R.drawable.slot_magnifying_glass, R.string.quick_lookup, R.color.cid_teal, R.color.cid_teal_100)
+        bindQuick(binding.qaBlocklist, R.drawable.slot_prohibit, R.string.quick_blocklist, R.color.cid_clay, R.color.cid_clay_100)
+        bindQuick(binding.qaTools, R.drawable.slot_squares_four, R.string.quick_tools, R.color.cid_amber, R.color.cid_amber_100)
 
         binding.rvRecent.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecent.adapter = recentAdapter

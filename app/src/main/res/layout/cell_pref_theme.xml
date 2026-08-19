@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_card_border"
+        android:background="@drawable/form_card_border"
         android:orientation="vertical"
         android:padding="@dimen/_14sdp">
 
@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_theme_track"
+            android:background="@drawable/form_theme_track"
             android:orientation="horizontal"
             android:padding="@dimen/_4sdp">
 
@@ -28,7 +28,7 @@
                 android:contentDescription="@string/theme_light"
                 android:focusable="true"
                 android:padding="@dimen/_9sdp"
-                android:src="@drawable/glyph_light_mode" />
+                android:src="@drawable/sym_light_mode" />
 
             <ImageView
                 android:id="@+id/segDark"
@@ -39,7 +39,7 @@
                 android:contentDescription="@string/theme_dark"
                 android:focusable="true"
                 android:padding="@dimen/_9sdp"
-                android:src="@drawable/glyph_dark_mode" />
+                android:src="@drawable/sym_dark_mode" />
 
             <ImageView
                 android:id="@+id/segSystem"
@@ -50,7 +50,7 @@
                 android:contentDescription="@string/theme_system"
                 android:focusable="true"
                 android:padding="@dimen/_9sdp"
-                android:src="@drawable/glyph_theme_system" />
+                android:src="@drawable/sym_theme_system" />
         </LinearLayout>
 
         <TextView

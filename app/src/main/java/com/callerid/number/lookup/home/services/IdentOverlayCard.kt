@@ -76,7 +76,7 @@ object IdentOverlayCard {
         val textRes = if (known) R.string.incall_known else R.string.incall_unknown
         val fgRes = if (known) R.color.success else R.color.on_surface_variant
         val bgRes = if (known) R.color.success_soft else R.color.neutral_soft
-        val iconRes = if (known) R.drawable.glyph_verified else R.drawable.glyph_info
+        val iconRes = if (known) R.drawable.sym_verified else R.drawable.sym_info
 
         val fg = ContextCompat.getColor(context, fgRes)
         pill.setText(textRes)

@@ -9,7 +9,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="OnboardingTheme" parent="LauncherBaseTheme">
-        <item name="android:windowBackground">@drawable/shape_onboarding_screen</item>
+        <item name="android:windowBackground">@drawable/form_onboarding_screen</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>

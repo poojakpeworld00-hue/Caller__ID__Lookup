@@ -110,7 +110,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginEnd="-26dp"
-                    android:background="@drawable/shape_onb_blob_square" />
+                    android:background="@drawable/form_onb_blob_square" />
 
                 <View
                     android:id="@+id/onboarding_halo"
@@ -118,7 +118,7 @@
                     android:layout_height="186dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/shape_onb_blob" />
+                    android:background="@drawable/form_onb_blob" />
 
                 <ImageView
                     android:layout_width="52dp"
@@ -129,7 +129,7 @@
                     android:alpha="0.45"
                     android:contentDescription="@null"
                     android:rotation="-18"
-                    android:src="@drawable/holder_phone"
+                    android:src="@drawable/slot_phone"
                     android:tint="@color/cid_onb_card_stroke" />
 
                 <ImageView
@@ -139,7 +139,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="54dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_cid_shield_phone" />
+                    android:src="@drawable/sym_cid_shield_phone" />
 
                 <ImageView
                     android:id="@+id/onboarding_badge"
@@ -149,10 +149,10 @@
                     android:layout_alignBottom="@id/onboarding_shield"
                     android:layout_marginEnd="-12dp"
                     android:layout_marginBottom="-4dp"
-                    android:background="@drawable/shape_onb_check_badge"
+                    android:background="@drawable/form_onb_check_badge"
                     android:contentDescription="@null"
                     android:padding="11dp"
-                    android:src="@drawable/glyph_cid_tick"
+                    android:src="@drawable/sym_cid_tick"
                     android:tint="@color/cid_onb_on_accent" />
 
             </RelativeLayout>
@@ -196,7 +196,7 @@
 
                     <ImageView
                         style="@style/OnbFeatureIcon"
-                        android:src="@drawable/glyph_cid_id_card" />
+                        android:src="@drawable/sym_cid_id_card" />
 
                     <org.fossify.commons.views.MyTextView
                         style="@style/OnbFeatureLabel"
@@ -211,7 +211,7 @@
 
                     <ImageView
                         style="@style/OnbFeatureIcon"
-                        android:src="@drawable/holder_shield_warning" />
+                        android:src="@drawable/slot_shield_warning" />
 
                     <org.fossify.commons.views.MyTextView
                         style="@style/OnbFeatureLabel"
@@ -226,7 +226,7 @@
 
                     <ImageView
                         style="@style/OnbFeatureIcon"
-                        android:src="@drawable/holder_shield_check" />
+                        android:src="@drawable/slot_shield_check" />
 
                     <org.fossify.commons.views.MyTextView
                         style="@style/OnbFeatureLabel"

@@ -15,7 +15,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_overlay_sheet"
+        android:background="@drawable/form_overlay_sheet"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_18sdp"
         android:paddingTop="@dimen/_18sdp"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_14sdp"
-            android:background="@drawable/shape_overlay_row"
+            android:background="@drawable/form_overlay_row"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:gravity="center_vertical"
@@ -91,7 +91,7 @@
                     android:layout_height="@dimen/_26sdp"
                     android:layout_gravity="bottom|center_horizontal"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_hand_tap"
+                    android:src="@drawable/sym_hand_tap"
                     app:tint="@color/on_surface" />
 
             </FrameLayout>
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_14sdp"
-            android:background="@drawable/shape_overlay_hint"
+            android:background="@drawable/form_overlay_hint"
             android:gravity="center"
             android:lineSpacingMultiplier="1.3"
             android:padding="@dimen/_14sdp"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_card"
+    android:background="@drawable/form_card"
     android:orientation="vertical"
     android:padding="@dimen/_20sdp">
 
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_48sdp"
         android:layout_marginTop="@dimen/_14sdp"
-        android:background="@drawable/shape_card_border"
+        android:background="@drawable/form_card_border"
         android:hint="@string/blocklist_add_hint"
         android:importantForAutofill="no"
         android:inputType="phone"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
-            android:background="@drawable/bg_btn_primary"
+            android:background="@drawable/form_btn_primary"
             android:gravity="center"
             android:minWidth="@dimen/_70sdp"
             android:paddingHorizontal="@dimen/_18sdp"

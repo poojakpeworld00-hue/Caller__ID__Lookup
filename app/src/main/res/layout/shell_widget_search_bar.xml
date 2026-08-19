@@ -8,7 +8,7 @@
     android:layout_height="44dp"
     android:layout_gravity="center"
     android:layout_margin="4dp"
-    android:background="@drawable/pseudo_search_bar_bg"
+    android:background="@drawable/form_faux_search_bar"
     android:elevation="2dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -20,7 +20,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:contentDescription="@string/pseudo_widget_search_bar"
-        android:src="@drawable/glyph_pseudo_search_vector" />
+        android:src="@drawable/sym_pseudo_search_vector" />
 
     <TextView
         android:id="@+id/search_bar_hint"

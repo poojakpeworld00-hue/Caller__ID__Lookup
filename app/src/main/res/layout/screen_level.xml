@@ -30,7 +30,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -119,7 +119,7 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/shape_compass_dial" />
+                                android:background="@drawable/form_compass_dial" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -139,20 +139,20 @@
                                 android:layout_width="@dimen/_175sdp"
                                 android:layout_height="@dimen/_175sdp"
                                 android:layout_gravity="center"
-                                android:background="@drawable/shape_ring" />
+                                android:background="@drawable/form_ring" />
 
                             <View
                                 android:layout_width="@dimen/_50sdp"
                                 android:layout_height="@dimen/_50sdp"
                                 android:layout_gravity="center"
-                                android:background="@drawable/shape_ring" />
+                                android:background="@drawable/form_ring" />
 
                             <View
                                 android:id="@+id/bubble"
                                 android:layout_width="@dimen/_38sdp"
                                 android:layout_height="@dimen/_38sdp"
                                 android:layout_gravity="center"
-                                android:background="@drawable/shape_level_bubble" />
+                                android:background="@drawable/form_level_bubble" />
                         </FrameLayout>
                     </FrameLayout>
 
@@ -160,7 +160,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_card_border"
+                        android:background="@drawable/form_card_border"
                         android:orientation="vertical"
                         android:padding="@dimen/_14sdp">
 
@@ -185,7 +185,7 @@
                                 android:id="@+id/tvStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/shape_pill"
+                                android:background="@drawable/form_pill"
                                 android:backgroundTint="@color/primary_container"
                                 android:paddingHorizontal="@dimen/_9sdp"
                                 android:paddingVertical="@dimen/_3sdp"
@@ -259,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:background="@drawable/shape_search_pill"
+                        android:background="@drawable/form_search_pill"
                         android:gravity="center"
                         android:padding="@dimen/_12sdp"
                         android:text="@string/level_calibrate"
@@ -269,7 +269,7 @@
                         android:textStyle="bold"
                         app:backgroundTint="@color/primary"
                         app:cornerRadius="@dimen/_14sdp"
-                        app:icon="@drawable/glyph_refresh"
+                        app:icon="@drawable/sym_refresh"
                         app:iconGravity="textStart"
                         app:iconSize="@dimen/_18sdp"
                         app:iconTint="@color/white" />

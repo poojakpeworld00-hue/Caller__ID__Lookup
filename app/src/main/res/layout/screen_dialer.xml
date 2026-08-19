@@ -30,7 +30,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/action_back"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -100,10 +100,10 @@
             <ImageView
                 android:layout_width="@dimen/_64sdp"
                 android:layout_height="@dimen/_64sdp"
-                android:background="@drawable/shape_circle_surface"
+                android:background="@drawable/form_circle_surface"
                 android:contentDescription="@null"
                 android:padding="@dimen/_18sdp"
-                android:src="@drawable/glyph_dialpad"
+                android:src="@drawable/sym_dialpad"
                 app:tint="@color/on_surface_variant" />
 
             <TextView
@@ -132,7 +132,7 @@
             android:id="@+id/dialpadPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_dialer_sheet"
+            android:background="@drawable/form_dialer_sheet"
             android:elevation="@dimen/_6sdp"
             android:orientation="vertical"
             android:outlineAmbientShadowColor="@color/card_shadow"
@@ -175,7 +175,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
-                android:background="@drawable/shape_pill_lavender"
+                android:background="@drawable/form_pill_lavender"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
@@ -189,7 +189,7 @@
                     android:layout_height="@dimen/_13sdp"
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:contentDescription="@string/add_to_contacts"
-                    android:src="@drawable/glyph_person_add"
+                    android:src="@drawable/sym_person_add"
                     app:tint="@color/on_primary_container" />
 
                 <TextView
@@ -288,7 +288,7 @@
                     android:id="@+id/btnDialCall"
                     android:layout_width="@dimen/_58sdp"
                     android:layout_height="@dimen/_58sdp"
-                    android:background="@drawable/shape_circle_primary"
+                    android:background="@drawable/form_circle_primary"
                     android:clickable="true"
                     android:contentDescription="@string/action_call"
                     android:elevation="@dimen/_6sdp"
@@ -301,7 +301,7 @@
                         android:layout_height="@dimen/_22sdp"
                         android:layout_gravity="center"
                         android:importantForAccessibility="no"
-                        android:src="@drawable/glyph_call"
+                        android:src="@drawable/sym_call"
                         app:tint="@color/white" />
                 </FrameLayout>
 
@@ -318,7 +318,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/dialer_backspace"
                         android:padding="@dimen/_11sdp"
-                        android:src="@drawable/glyph_backspace"
+                        android:src="@drawable/sym_backspace"
                         android:visibility="invisible"
                         app:tint="@color/on_surface_variant" />
                 </FrameLayout>

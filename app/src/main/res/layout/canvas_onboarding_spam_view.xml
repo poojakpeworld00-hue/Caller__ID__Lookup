@@ -18,28 +18,28 @@
         android:layout_height="@dimen/_165sdp"
         android:layout_gravity="center"
         android:contentDescription="@null"
-        android:src="@drawable/shape_onb_halo_red" />
+        android:src="@drawable/form_onb_halo_red" />
 
     <View
         android:id="@+id/obRing1"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_ring_blocked" />
+        android:background="@drawable/form_onb_ring_blocked" />
 
     <View
         android:id="@+id/obRing2"
         android:layout_width="@dimen/_142sdp"
         android:layout_height="@dimen/_142sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_ring_blocked" />
+        android:background="@drawable/form_onb_ring_blocked" />
 
     <LinearLayout
         android:id="@+id/obCard"
         android:layout_width="@dimen/_115sdp"
         android:layout_height="@dimen/_184sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_phone_red"
+        android:background="@drawable/form_onb_phone_red"
         android:clipChildren="false"
         android:elevation="@dimen/_6sdp"
         android:gravity="center_horizontal"
@@ -54,7 +54,7 @@
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_9sdp"
-            android:background="@drawable/shape_onb_notch_red" />
+            android:background="@drawable/form_onb_notch_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -76,14 +76,14 @@
                 android:id="@+id/obShield"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape_onb_circle_spam">
+                android:background="@drawable/form_onb_circle_spam">
 
                 <ImageView
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_ob_shield_spam" />
+                    android:src="@drawable/sym_ob_shield_spam" />
             </FrameLayout>
 
             <FrameLayout
@@ -91,14 +91,14 @@
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="bottom|end"
-                android:background="@drawable/shape_onb_badge_spam">
+                android:background="@drawable/form_onb_badge_spam">
 
                 <ImageView
                     android:layout_width="@dimen/_10sdp"
                     android:layout_height="@dimen/_10sdp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_ob_x" />
+                    android:src="@drawable/sym_ob_x" />
             </FrameLayout>
         </FrameLayout>
 
@@ -132,7 +132,7 @@
             android:id="@+id/obStamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_onb_pill_spam"
+            android:background="@drawable/form_onb_pill_spam"
             android:letterSpacing="0.04"
             android:paddingHorizontal="@dimen/_11sdp"
             android:paddingVertical="@dimen/_4sdp"

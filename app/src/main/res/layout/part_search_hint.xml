@@ -14,12 +14,12 @@
         android:layout_height="@dimen/_8sdp"
         android:layout_marginStart="@dimen/_24sdp"
         android:contentDescription="@null"
-        android:src="@drawable/glyph_hint_caret" />
+        android:src="@drawable/sym_hint_caret" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_hint_bubble"
+        android:background="@drawable/form_hint_bubble"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/_14sdp"
@@ -29,7 +29,7 @@
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:contentDescription="@null"
-            android:src="@drawable/glyph_hand_tap"
+            android:src="@drawable/sym_hand_tap"
             android:tint="@color/on_primary" />
 
         <TextView

@@ -25,7 +25,7 @@
          cid_* tokens carry it, so these screens follow the user's theme and the light system-bar
          icons are overridden in values-night. -->
     <style name="OnboardingTheme" parent="LauncherBaseTheme">
-        <item name="android:windowBackground">@drawable/shape_onboarding_screen</item>
+        <item name="android:windowBackground">@drawable/form_onboarding_screen</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -35,7 +35,7 @@
     <!-- MaterialButton ignores android:background, and backgroundTint cannot carry a ripple, so
          the CTA is a plain AppCompat button with the design's g-700 pill as its background -->
     <style name="OnboardingButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/shape_onboarding_cta</item>
+        <item name="android:background">@drawable/form_onboarding_cta</item>
         <item name="android:textColor">@color/cid_onb_on_cta</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
@@ -54,7 +54,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:background">@drawable/shape_onb_feature_card</item>
+        <item name="android:background">@drawable/form_onb_feature_card</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">14dp</item>
         <item name="android:paddingHorizontal">6dp</item>
@@ -63,7 +63,7 @@
     <style name="OnbFeatureIcon">
         <item name="android:layout_width">44dp</item>
         <item name="android:layout_height">44dp</item>
-        <item name="android:background">@drawable/shape_onb_feature_icon</item>
+        <item name="android:background">@drawable/form_onb_feature_icon</item>
         <item name="android:padding">11dp</item>
         <item name="android:contentDescription">@null</item>
         <item name="android:tint">@color/cid_onb_ink</item>
@@ -84,7 +84,7 @@
         <item name="android:layout_width">22dp</item>
         <item name="android:layout_height">3dp</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">@drawable/shape_onb_feature_rule</item>
+        <item name="android:background">@drawable/form_onb_feature_rule</item>
     </style>
 
     <!-- Mock incoming-call screen inside the Set-as-default illustration. -->

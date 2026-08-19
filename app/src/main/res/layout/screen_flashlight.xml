@@ -29,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
-                    android:background="@drawable/shape_pill"
+                    android:background="@drawable/form_pill"
                     android:backgroundTint="@color/primary_container"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -88,7 +88,7 @@
                     <View
                         android:layout_width="@dimen/_8sdp"
                         android:layout_height="@dimen/_8sdp"
-                        android:background="@drawable/shape_circle_primary" />
+                        android:background="@drawable/form_circle_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -108,11 +108,11 @@
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_marginTop="@dimen/_24sdp"
-                    android:background="@drawable/shape_compass_dial"
+                    android:background="@drawable/form_compass_dial"
                     android:contentDescription="@string/tools_flashlight"
                     android:elevation="@dimen/_4sdp"
                     android:padding="@dimen/_48sdp"
-                    android:src="@drawable/glyph_power"
+                    android:src="@drawable/sym_power"
                     app:tint="@color/on_surface_variant" />
 
                 <TextView
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_18sdp"
-                    android:background="@drawable/shape_card_border"
+                    android:background="@drawable/form_card_border"
                     android:orientation="vertical"
                     android:visibility="gone"
                     android:padding="@dimen/_14sdp">
@@ -192,7 +192,7 @@
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
                             android:contentDescription="@string/flashlight_brightness"
-                            android:src="@drawable/glyph_light_mode"
+                            android:src="@drawable/sym_light_mode"
                             app:tint="@color/on_surface_variant" />
 
                         <View
@@ -204,7 +204,7 @@
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
                             android:contentDescription="@string/flashlight_brightness"
-                            android:src="@drawable/glyph_settings"
+                            android:src="@drawable/sym_settings"
                             app:tint="@color/on_surface_variant" />
                     </LinearLayout>
                 </LinearLayout>
@@ -224,7 +224,7 @@
                         <ImageView
                             android:id="@+id/ivSteady"
                             style="@style/FlashModeIcon"
-                            android:src="@drawable/glyph_flashlight" />
+                            android:src="@drawable/sym_flashlight" />
 
                         <TextView
                             android:id="@+id/tvSteady"
@@ -240,7 +240,7 @@
                         <ImageView
                             android:id="@+id/ivStrobe"
                             style="@style/FlashModeIcon"
-                            android:src="@drawable/glyph_light_mode" />
+                            android:src="@drawable/sym_light_mode" />
 
                         <TextView
                             android:id="@+id/tvStrobe"
@@ -256,7 +256,7 @@
                         <ImageView
                             android:id="@+id/ivSos"
                             style="@style/FlashModeIcon"
-                            android:src="@drawable/glyph_flag" />
+                            android:src="@drawable/sym_flag" />
 
                         <TextView
                             android:id="@+id/tvSos"

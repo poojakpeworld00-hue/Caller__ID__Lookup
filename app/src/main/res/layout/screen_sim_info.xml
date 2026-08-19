@@ -29,7 +29,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/onboarding_skip"
                 android:padding="@dimen/_8sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -89,7 +89,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/shape_card_border"
+                    android:background="@drawable/form_card_border"
                     android:gravity="center_vertical"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:orientation="horizontal"
@@ -98,10 +98,10 @@
                     <ImageView
                         android:layout_width="@dimen/_44sdp"
                         android:layout_height="@dimen/_44sdp"
-                        android:background="@drawable/shape_summary_tile"
+                        android:background="@drawable/form_summary_tile"
                         android:contentDescription="@string/sim_carrier"
                         android:padding="@dimen/_11sdp"
-                        android:src="@drawable/glyph_sim_card"
+                        android:src="@drawable/sym_sim_card"
                         app:tint="@color/primary" />
 
                     <LinearLayout
@@ -138,7 +138,7 @@
                         android:id="@+id/tvNetworkType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_pill"
+                        android:background="@drawable/form_pill"
                         android:backgroundTint="@color/primary_container"
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:paddingVertical="@dimen/_5sdp"

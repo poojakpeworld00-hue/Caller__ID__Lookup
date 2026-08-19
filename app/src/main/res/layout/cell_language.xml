@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/_1sdp"
-    android:background="@drawable/shape_language_row"
+    android:background="@drawable/form_language_row"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="@dimen/_46sdp"
@@ -68,7 +68,7 @@
         android:id="@+id/radio"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        android:background="@drawable/shape_language_radio"
+        android:background="@drawable/form_language_radio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

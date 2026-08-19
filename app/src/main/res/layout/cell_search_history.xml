@@ -14,7 +14,7 @@
         android:id="@+id/tvHistAvatar"
         android:layout_width="@dimen/_36sdp"
         android:layout_height="@dimen/_36sdp"
-        android:background="@drawable/shape_avatar"
+        android:background="@drawable/form_avatar"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="center"
         android:textColor="@color/white"
@@ -56,7 +56,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/lookup_unknown_caller"
                 android:padding="@dimen/_3sdp"
-                android:src="@drawable/glyph_view"
+                android:src="@drawable/sym_view"
                 android:visibility="gone"
                 app:tint="@color/primary" />
         </LinearLayout>
@@ -80,7 +80,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_call"
         android:padding="@dimen/_7sdp"
-        android:src="@drawable/glyph_call"
+        android:src="@drawable/sym_call"
         app:tint="@color/primary" />
 
 </LinearLayout>

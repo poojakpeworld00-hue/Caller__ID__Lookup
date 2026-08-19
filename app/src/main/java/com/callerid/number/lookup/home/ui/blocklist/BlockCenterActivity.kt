@@ -370,7 +370,7 @@ class BlockCenterActivity : FrameActivity<ScreenBlocklistBinding>() {
             .start()
 
         // Checkmark draws itself in via the animated vector.
-        AnimatedVectorDrawableCompat.create(this, R.drawable.avd_cid_shield)?.let { avd ->
+        AnimatedVectorDrawableCompat.create(this, R.drawable.avd_guard_shield)?.let { avd ->
             v.shieldIcon.setImageDrawable(avd)
             avd.start()
         }

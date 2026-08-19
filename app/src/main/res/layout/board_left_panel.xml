@@ -15,7 +15,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/panel_search_bg">
+        android:background="@drawable/form_search_board">
 
         <ImageView
             android:id="@+id/panel_search_icon"
@@ -26,7 +26,7 @@
             android:layout_marginStart="5dp"
             android:contentDescription="@string/search"
             android:padding="4dp"
-            android:src="@drawable/glyph_pseudo_search_vector" />
+            android:src="@drawable/sym_pseudo_search_vector" />
 
         <ImageView
             android:id="@+id/panel_search_clear"
@@ -149,7 +149,7 @@
                 android:id="@+id/panel_suggested_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/panel_search_bg"
+                android:background="@drawable/form_search_board"
                 android:nestedScrollingEnabled="false"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -193,7 +193,7 @@
                 android:id="@+id/panel_recent_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/panel_search_bg"
+                android:background="@drawable/form_search_board"
                 android:nestedScrollingEnabled="false"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"

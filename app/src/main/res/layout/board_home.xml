@@ -53,10 +53,10 @@
             android:id="@+id/btnSettings"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
-            android:background="@drawable/shape_onb_circle_lavender"
+            android:background="@drawable/form_onb_circle_lavender"
             android:contentDescription="@string/nav_settings"
             android:padding="@dimen/_8sdp"
-            android:src="@drawable/holder_gear_six"
+            android:src="@drawable/slot_gear_six"
             app:tint="@color/on_primary_container" />
     </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_9sdp"
-                android:background="@drawable/shape_home_protection"
+                android:background="@drawable/form_home_protection"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
@@ -95,7 +95,7 @@
                     android:layout_width="@dimen/_22sdp"
                     android:layout_height="@dimen/_22sdp"
                     android:contentDescription="@null"
-                    android:src="@drawable/holder_shield_check"
+                    android:src="@drawable/slot_shield_check"
                     app:tint="@color/cid_g_050" />
 
                 <LinearLayout
@@ -130,7 +130,7 @@
                     android:layout_height="@dimen/_14sdp"
                     android:alpha="0.8"
                     android:contentDescription="@null"
-                    android:src="@drawable/holder_caret_right"
+                    android:src="@drawable/slot_caret_right"
                     app:tint="@color/cid_g_050" />
             </LinearLayout>
 
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/shape_home_search"
+                android:background="@drawable/form_home_search"
                 android:elevation="@dimen/_10sdp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -178,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_4sdp"
-                        android:drawableEnd="@drawable/holder_caret_down"
+                        android:drawableEnd="@drawable/slot_caret_down"
                         android:drawablePadding="@dimen/_2sdp"
                         android:fontFamily="@font/nunito_bold"
                         android:gravity="center_vertical"
@@ -215,10 +215,10 @@
                     android:id="@+id/btnHomeSearch"
                     android:layout_width="@dimen/_34sdp"
                     android:layout_height="@dimen/_34sdp"
-                    android:background="@drawable/shape_circle_primary"
+                    android:background="@drawable/form_circle_primary"
                     android:contentDescription="@string/lookup_hint"
                     android:padding="@dimen/_9sdp"
-                    android:src="@drawable/holder_magnifying_glass"
+                    android:src="@drawable/slot_magnifying_glass"
                     app:tint="@color/on_primary" />
             </LinearLayout>
 
@@ -231,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/shape_card"
+                android:background="@drawable/form_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/_12sdp"
@@ -244,7 +244,7 @@
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:contentDescription="@null"
-                    android:src="@drawable/holder_shield_check"
+                    android:src="@drawable/slot_shield_check"
                     app:tint="@color/primary" />
 
                 <TextView
@@ -261,7 +261,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
-                    android:background="@drawable/bg_btn_primary"
+                    android:background="@drawable/form_btn_primary"
                     android:paddingHorizontal="@dimen/_14sdp"
                     android:paddingVertical="@dimen/_6sdp"
                     android:text="@string/home_perm_manage"
@@ -277,7 +277,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/shape_home_tile"
+                android:background="@drawable/form_home_tile"
                 android:baselineAligned="false"
                 android:elevation="@dimen/_1sdp"
                 android:orientation="horizontal"
@@ -391,7 +391,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@drawable/shape_card"
+                android:background="@drawable/form_card"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="@dimen/_20sdp"
@@ -400,10 +400,10 @@
                 <ImageView
                     android:layout_width="@dimen/_46sdp"
                     android:layout_height="@dimen/_46sdp"
-                    android:background="@drawable/shape_icon_box"
+                    android:background="@drawable/form_icon_box"
                     android:contentDescription="@string/perm_calllog_title"
                     android:padding="@dimen/_12sdp"
-                    android:src="@drawable/holder_clock_counter_clockwise"
+                    android:src="@drawable/slot_clock_counter_clockwise"
                     app:tint="@color/primary" />
 
                 <TextView

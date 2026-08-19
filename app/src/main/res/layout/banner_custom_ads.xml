@@ -74,7 +74,7 @@
         android:layout_width="@dimen/_80sdp"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        android:background="@drawable/bg_btn_primary"
+        android:background="@drawable/form_btn_primary"
         android:backgroundTint="@color/primary"
         android:fontFamily="@font/figtree_medium"
         android:gravity="center"

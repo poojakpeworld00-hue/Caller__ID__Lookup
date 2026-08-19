@@ -43,10 +43,10 @@ class GlowIconView @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.GlowIconView)
         val iconRes = a.getResourceId(R.styleable.GlowIconView_biv_icon, 0)
         val discRes = a.getResourceId(
-            R.styleable.GlowIconView_biv_disc, R.drawable.shape_empty_circle_tools
+            R.styleable.GlowIconView_biv_disc, R.drawable.form_empty_circle_tools
         )
         val ringRes = a.getResourceId(
-            R.styleable.GlowIconView_biv_ring, R.drawable.shape_ring_tools
+            R.styleable.GlowIconView_biv_ring, R.drawable.form_ring_tools
         )
         val iconSize = a.getDimensionPixelSize(R.styleable.GlowIconView_biv_iconSize, 0)
         val hasTint = a.hasValue(R.styleable.GlowIconView_biv_iconTint)

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/bg_btn_primary"
+            android:background="@drawable/form_btn_primary"
             android:fontFamily="@font/figtree_medium"
             android:gravity="center"
             android:padding="@dimen/_13sdp"

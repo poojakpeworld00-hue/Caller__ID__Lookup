@@ -132,7 +132,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
             // Active dot stretches into a pill; the others shrink back — spring settle.
             animateDotWidth(dot, if (i == active) activeWidth else size)
             dot.setBackgroundResource(
-                if (i == active) R.drawable.shape_dot_active else R.drawable.shape_dot
+                if (i == active) R.drawable.form_dot_active else R.drawable.form_dot
             )
         }
         // Final step: the CTA morphs to "Get Started" on the hero gradient — the
@@ -140,7 +140,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         val last = active == pages.lastIndex
         binding.btnNext.setText(if (last) R.string.onboarding_get_started else R.string.onboarding_next)
         binding.btnNext.setBackgroundResource(
-            if (last) R.drawable.shape_btn_gradient else R.drawable.bg_btn_primary
+            if (last) R.drawable.form_btn_gradient else R.drawable.form_btn_primary
         )
         if (last != wasLast) {
             wasLast = last

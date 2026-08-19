@@ -30,7 +30,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/action_back"
                 android:padding="@dimen/_7sdp"
-                android:src="@drawable/glyph_arrow_back"
+                android:src="@drawable/sym_arrow_back"
                 app:tint="@color/on_surface" />
 
             <TextView
@@ -87,11 +87,11 @@
             <com.callerid.number.lookup.home.ui.common.GlowIconView
                 android:layout_width="@dimen/_76sdp"
                 android:layout_height="@dimen/_76sdp"
-                app:biv_disc="@drawable/shape_empty_circle_tools"
-                app:biv_icon="@drawable/glyph_search_plus"
+                app:biv_disc="@drawable/form_empty_circle_tools"
+                app:biv_icon="@drawable/sym_search_plus"
                 app:biv_iconSize="@dimen/_32sdp"
                 app:biv_iconTint="@color/on_primary_container"
-                app:biv_ring="@drawable/shape_ring_tools" />
+                app:biv_ring="@drawable/form_ring_tools" />
 
             <TextView
                 android:layout_width="match_parent"

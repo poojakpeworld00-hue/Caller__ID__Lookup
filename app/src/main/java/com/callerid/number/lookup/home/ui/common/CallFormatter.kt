@@ -42,10 +42,10 @@ object CallFormatter {
     }
 
     fun typeIconRes(type: CallFlavor): Int = when (type) {
-        CallFlavor.INCOMING -> R.drawable.glyph_call_received
-        CallFlavor.OUTGOING -> R.drawable.glyph_call_made
-        CallFlavor.MISSED -> R.drawable.glyph_call_missed
-        CallFlavor.SPAM -> R.drawable.glyph_warning
+        CallFlavor.INCOMING -> R.drawable.sym_call_received
+        CallFlavor.OUTGOING -> R.drawable.sym_call_made
+        CallFlavor.MISSED -> R.drawable.sym_call_missed
+        CallFlavor.SPAM -> R.drawable.sym_warning
     }
 
     fun typeColorRes(type: CallFlavor): Int = when (type) {

@@ -19,7 +19,7 @@
         android:layout_height="@dimen/_165sdp"
         android:layout_gravity="center"
         android:contentDescription="@null"
-        android:src="@drawable/shape_onb_halo_blue" />
+        android:src="@drawable/form_onb_halo_blue" />
 
     <!-- incoming pulse rings -->
     <View
@@ -27,14 +27,14 @@
         android:layout_width="@dimen/_140sdp"
         android:layout_height="@dimen/_140sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_ring_incoming" />
+        android:background="@drawable/form_onb_ring_incoming" />
 
     <View
         android:id="@+id/obRing2"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="@dimen/_140sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_ring_incoming" />
+        android:background="@drawable/form_onb_ring_incoming" />
 
     <!-- phone -->
     <LinearLayout
@@ -42,7 +42,7 @@
         android:layout_width="@dimen/_115sdp"
         android:layout_height="@dimen/_184sdp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_onb_phone_blue"
+        android:background="@drawable/form_onb_phone_blue"
         android:clipChildren="false"
         android:elevation="@dimen/_6sdp"
         android:gravity="center_horizontal"
@@ -57,7 +57,7 @@
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_9sdp"
-            android:background="@drawable/shape_onb_notch" />
+            android:background="@drawable/form_onb_notch" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape_splash_avatar"
+                android:background="@drawable/form_splash_avatar"
                 android:gravity="center"
                 android:text="JA"
                 android:textColor="@color/white"
@@ -91,14 +91,14 @@
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="bottom|end"
-                android:background="@drawable/shape_onb_badge_verified">
+                android:background="@drawable/form_onb_badge_verified">
 
                 <ImageView
                     android:layout_width="@dimen/_10sdp"
                     android:layout_height="@dimen/_10sdp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
-                    android:src="@drawable/glyph_check"
+                    android:src="@drawable/sym_check"
                     app:tint="@color/white" />
             </FrameLayout>
         </FrameLayout>
@@ -139,20 +139,20 @@
                 android:layout_width="@dimen/_26sdp"
                 android:layout_height="@dimen/_26sdp"
                 android:layout_marginEnd="@dimen/_14sdp"
-                android:background="@drawable/shape_onb_circle_spam"
+                android:background="@drawable/form_onb_circle_spam"
                 android:contentDescription="@null"
                 android:padding="@dimen/_6sdp"
                 android:rotation="135"
-                android:src="@drawable/glyph_phone_solid"
+                android:src="@drawable/sym_phone_solid"
                 app:tint="#D93B3B" />
 
             <ImageView
                 android:layout_width="@dimen/_26sdp"
                 android:layout_height="@dimen/_26sdp"
-                android:background="@drawable/shape_onb_circle_green"
+                android:background="@drawable/form_onb_circle_green"
                 android:contentDescription="@null"
                 android:padding="@dimen/_6sdp"
-                android:src="@drawable/glyph_phone_solid"
+                android:src="@drawable/sym_phone_solid"
                 app:tint="@color/white" />
         </LinearLayout>
     </LinearLayout>

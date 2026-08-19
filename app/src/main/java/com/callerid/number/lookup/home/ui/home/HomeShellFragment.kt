@@ -91,19 +91,19 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         tabs = listOf(
             Tab(
                 binding.navHome, HomeMainFragment(),
-                R.drawable.onb_home_selected, R.drawable.onb_home_unselected, R.string.nav_home
+                R.drawable.intro_home_selected, R.drawable.intro_home_unselected, R.string.nav_home
             ),
             Tab(
                 binding.navRecents, RecentsFragment(),
-                R.drawable.onb_recent_selected, R.drawable.onb_recent_unselected, R.string.nav_recents
+                R.drawable.intro_recent_selected, R.drawable.intro_recent_unselected, R.string.nav_recents
             ),
             Tab(
                 binding.navContacts, DirectoryFragment(),
-                R.drawable.onb_contact_selected, R.drawable.onb_contact_unselected, R.string.nav_contacts
+                R.drawable.intro_contact_selected, R.drawable.intro_contact_unselected, R.string.nav_contacts
             ),
             Tab(
                 binding.navLookup, NumberLookupFragment(),
-                R.drawable.onb_lookup_selected, R.drawable.onb_lookup_unselected, R.string.nav_lookup
+                R.drawable.intro_lookup_selected, R.drawable.intro_lookup_unselected, R.string.nav_lookup
             )
         )
 

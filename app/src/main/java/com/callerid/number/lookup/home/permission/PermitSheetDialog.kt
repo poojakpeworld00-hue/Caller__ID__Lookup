@@ -126,7 +126,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        // Let our rounded @drawable/shape_overlay_sheet show instead of the default
+        // Let our rounded @drawable/form_overlay_sheet show instead of the default
         // opaque bottom-sheet background.
         (dialog as? BottomSheetDialog)
             ?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
@@ -165,7 +165,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             list += Row(
                 "notification", R.string.perm_notification_title, R.string.perm_notification_desc,
-                R.drawable.glyph_notifications, androidPermission = Manifest.permission.POST_NOTIFICATIONS,
+                R.drawable.sym_notifications, androidPermission = Manifest.permission.POST_NOTIFICATIONS,
                 engineManaged = true,
             )
         }
@@ -174,21 +174,21 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         if (PromoVault.getInstance(ctx).getBoolean("HD_VBC_Show")) {
             list += Row(
                 "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
-                R.drawable.glyph_phone_solid, androidPermission = Manifest.permission.READ_PHONE_STATE,
+                R.drawable.sym_phone_solid, androidPermission = Manifest.permission.READ_PHONE_STATE,
                 engineManaged = true,
             )
         }
         list += Row(
             "call_log", R.string.permsheet_calllog_title, R.string.perm_calllog_desc,
-            R.drawable.glyph_history, androidPermission = Manifest.permission.READ_CALL_LOG,
+            R.drawable.sym_history, androidPermission = Manifest.permission.READ_CALL_LOG,
         )
         list += Row(
             "contacts", R.string.permsheet_contacts_title, R.string.perm_contacts_desc,
-            R.drawable.glyph_group, androidPermission = Manifest.permission.READ_CONTACTS,
+            R.drawable.sym_group, androidPermission = Manifest.permission.READ_CONTACTS,
         )
         list += Row(
             "overlay", R.string.perm_overlay_title, R.string.perm_overlay_desc,
-            R.drawable.glyph_apps, isOverlay = true,
+            R.drawable.sym_apps, isOverlay = true,
         )
         return list
     }
