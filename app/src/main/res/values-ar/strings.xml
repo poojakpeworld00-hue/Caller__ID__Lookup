@@ -14,28 +14,28 @@
     <string name="language_suggested">اللغات المقترحة</string>
     <string name="language_current">اللغة الحالية</string>
     <string name="language_info_title">معلومات اللغة</string>
-    <string name="language_info_msg">تغيير اللغة سيحدّث واجهة التطبيق. قد تختلف بعض الميزات الإقليمية بناءً على اختيارك.</string>
+    <string name="language_info_msg">تغيير اللغة يعيد رسم الواجهة. قد تختلف بعض التفاصيل الإقليمية حسب اختيارك.</string>
     <string name="language_info_got_it">حسناً</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">الشروط والأحكام</string>
-    <string name="terms_body">يرجى قراءة هذه الشروط بعناية. بالمتابعة، فإنك توافق على ما يلي:\n\n• يتعرّف CallerID على المكالمات الواردة والصادرة والمجهولة في الوقت الفعلي.\n• يكتشف التطبيق مكالمات الإزعاج والاحتيال والنصب ويساعدك على حظرها.\n• يمكنك البحث عن أي رقم هاتف لعرض تفاصيل المتصل المتاحة.\n• للعمل بشكل صحيح، قد يصل التطبيق إلى سجل المكالمات وجهات الاتصال لديك.\n• يُستخدم إذن العرض فوق التطبيقات الأخرى (التراكب) لعرض معلومات المتصل أثناء المكالمات.\n• تبقى بياناتك خاصة وتُستخدم فقط لتوفير تحديد هوية المتصل والحماية من الإزعاج.\n\nبالنقر على ”موافقة ومتابعة“ فإنك تؤكد أنك قرأت ووافقت على الشروط والأحكام وسياسة الخصوصية.</string>
-    <string name="terms_agree">لقد قرأت ووافقت على الشروط والأحكام وسياسة الخصوصية.</string>
+    <string name="terms_body">امنح هذه الشروط لحظة من وقتك. المتابعة تعني قبولها:\n\n• يسمّي Caller ID Lookup المكالمات الواردة والصادرة والمجهولة أثناء حدوثها.\n• تُوسم مكالمات الإزعاج والنصب والاحتيال حتى تتمكن من صدّها.\n• يمكن البحث عن أي رقم لعرض بيانات المتصل المسجّلة.\n• قد يُقرأ سجل مكالماتك وجهات اتصالك كي يؤدي التطبيق هذا العمل.\n• إذن الرسم فوق التطبيقات الأخرى هو ما يُظهر بيانات المتصل أثناء المكالمة.\n• ما نجمعه يبقى ملكك، ولا يُستخدم إلا لتعريف المتصل وصدّ المكالمات المزعجة.\n\nاختيار «قبول ومتابعة» يؤكد أنك قرأت شروطنا وسياسة الخصوصية ووافقت عليهما.</string>
+    <string name="terms_agree">قرأت الشروط وسياسة الخصوصية وأوافق عليهما.</string>
     <string name="terms_accept">موافقة ومتابعة</string>
-    <string name="terms_please_accept">يرجى قبول الشروط والأحكام للمتابعة.</string>
+    <string name="terms_please_accept">اقبل الشروط للمتابعة.</string>
     <string name="txt_allow_overlay_access">السماح بالعرض فوق التطبيقات الأخرى</string>
     <string name="overlay_system_permission">إذن النظام</string>
-    <string name="overlay_permission_desc">يتيح العرض فوق التطبيقات الأخرى لهذا التطبيق عرض معلومات المتصل أثناء استخدامك لتطبيقات أخرى.</string>
+    <string name="overlay_permission_desc">الرسم فوق التطبيقات الأخرى هو ما يتيح رؤية المتصل بينما أنت منشغل بشيء آخر.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">تخطٍّ</string>
     <string name="onboarding_next">التالي</string>
     <string name="onboarding_title">اعرف من المتصل</string>
-    <string name="onboarding_desc">تعرّف فورًا على الأرقام المجهولة، وشاهد اسم المتصل وشركته، واحظر المكالمات المزعجة قبل أن يرنّ الهاتف.</string>
+    <string name="onboarding_desc">سمِّ الأرقام المجهولة فور ظهورها، وشاهد من يتصل ومن أين، وصُدّ المكالمات المزعجة قبل أول رنّة.</string>
     <string name="onboarding_title_2">احظر الإزعاج والاحتيال</string>
-    <string name="onboarding_desc_2">اكتشف واحظر تلقائيًا المكالمات المزعجة والاحتيالية والآلية حتى لا تزعجك مرة أخرى.</string>
+    <string name="onboarding_desc_2">تُكتشف مكالمات الإزعاج والنصب والمسجّلة وتُصدّ، فتتوقف عن الوصول إليك.</string>
     <string name="onboarding_title_3">ابحث عن أي رقم</string>
-    <string name="onboarding_desc_3">ابحث عن أي رقم مجهول لترى فورًا اسم المتصل وموقعه وتفاصيل شركته.</string>
+    <string name="onboarding_desc_3">ابحث عن أي رقم مجهول واعرف من خلفه: الاسم، الموقع، طبيعة العمل.</string>
     <string name="onboarding_get_started">ابدأ</string>
 
     <!-- Home -->
@@ -67,7 +67,7 @@
     <string name="call_decline">رفض</string>
     <string name="call_accept">قبول</string>
     <string name="call_message">رسالة</string>
-    <string name="call_identified">تم التعرّف عبر CallerID</string>
+    <string name="call_identified">تم التعرّف عبر Caller ID Lookup</string>
     <string name="label_spam">مزعجة</string>
     <string name="label_verified">موثّق</string>
 
@@ -92,7 +92,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">شاهد مكالماتك الأخيرة</string>
-    <string name="perm_calllog_message">اسمح بالوصول إلى سجل المكالمات لعرض مكالماتك الأخيرة هنا.</string>
+    <string name="perm_calllog_message">اسمح للتطبيق بقراءة سجل مكالماتك لتظهر مكالماتك الأخيرة هنا.</string>
     <string name="action_grant">منح الإذن</string>
 
     <!-- Lookup -->
@@ -103,7 +103,7 @@
     <string name="lookup_spam_risk">خطر الإزعاج</string>
     <string name="action_call">اتصال</string>
     <string name="action_save">حفظ</string>
-    <string name="lookup_idle_hint">أدخل رقمًا للتعرّف على المتصل</string>
+    <string name="lookup_idle_hint">اكتب رقمًا لتسمية المتصل</string>
     <string name="lookup_unknown_caller">متصل مجهول</string>
     <string name="lookup_in_contacts">في جهات اتصالك</string>
     <string name="lookup_not_in_contacts">ليس في جهات اتصالك</string>
@@ -117,7 +117,7 @@
     <string name="contacts_search_hint">ابحث في جهات الاتصال</string>
     <string name="contacts_empty">لم يتم العثور على جهات اتصال</string>
     <string name="perm_contacts_title">شاهد جهات اتصالك</string>
-    <string name="perm_contacts_message">اسمح بالوصول إلى جهات اتصالك لعرضها هنا.</string>
+    <string name="perm_contacts_message">اسمح للتطبيق بقراءة جهات اتصالك لتظهر هنا.</string>
 
     <!-- Settings -->
     <string name="settings_language">اللغة</string>
@@ -189,10 +189,10 @@
     <string name="tools_compass_sub">اعثر على الشمال المغناطيسي</string>
     <string name="tools_speedometer">عداد السرعة</string>
     <string name="tools_speedometer_sub">سرعتك الحالية عبر GPS</string>
-    <string name="compass_no_sensor">مستشعر البوصلة غير متوفر على هذا الجهاز</string>
+    <string name="compass_no_sensor">لا يحتوي هذا الجهاز على مستشعر بوصلة</string>
     <string name="speedometer_unit">كم/س</string>
     <string name="speedometer_waiting">في انتظار GPS…</string>
-    <string name="speedometer_permission">إذن الموقع مطلوب لقياس السرعة</string>
+    <string name="speedometer_permission">قياس السرعة يتطلب إذن الموقع</string>
     <string name="cardinal_n">N</string>
     <string name="cardinal_e">E</string>
     <string name="cardinal_s">S</string>
@@ -217,7 +217,7 @@
     <string name="tools_sound">مقياس الصوت</string>
     <string name="tools_sound_sub">قياس مستوى الضوضاء</string>
     <string name="sound_unit">ديسيبل</string>
-    <string name="sound_permission">إذن الميكروفون مطلوب لقياس الصوت</string>
+    <string name="sound_permission">قياس الصوت يتطلب إذن الميكروفون</string>
     <string name="tools_sim">معلومات الشبكة</string>
     <string name="tools_sim_sub">تفاصيل SIM والمشغّل</string>
     <string name="sim_carrier">المشغّل</string>
@@ -226,11 +226,11 @@
     <string name="sim_country">الدولة</string>
     <string name="sim_state">حالة SIM</string>
     <string name="sim_roaming">التجوال</string>
-    <string name="sim_permission">إذن الهاتف مطلوب لتفاصيل الشبكة</string>
+    <string name="sim_permission">تفاصيل الشبكة تتطلب إذن الهاتف</string>
     <string name="tools_light">مقياس الضوء</string>
     <string name="tools_light_sub">الضوء المحيط بوحدة لوكس</string>
     <string name="light_unit">لوكس</string>
-    <string name="light_no_sensor">مستشعر الضوء غير متوفر على هذا الجهاز</string>
+    <string name="light_no_sensor">لا يحتوي هذا الجهاز على مستشعر ضوء</string>
     <string name="tools_stopwatch">ساعة الإيقاف</string>
     <string name="tools_stopwatch_sub">ساعة إيقاف ومؤقّت</string>
     <string name="mode_stopwatch">ساعة الإيقاف</string>
@@ -252,12 +252,12 @@
     <string name="settings_rate">قيّمنا</string>
     <string name="settings_rate_sub">أعجبك التطبيق؟ أخبرنا.</string>
     <string name="settings_share">مشاركة</string>
-    <string name="settings_share_sub">ادعُ أصدقاءك لتأمين حياتهم الرقمية.</string>
-    <string name="settings_share_text">تعرّف على المتصلين المجهولين واحظر الرسائل المزعجة مع Caller ID Phone Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">مرّرها — ساعد أحدهم على تحصين مكالماته.</string>
+    <string name="settings_share_text">سمِّ المتصلين المجهولين وصُدّ المكالمات المزعجة مع Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">سياسة الخصوصية</string>
     <string name="settings_terms">شروط الخدمة</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="one">%d إدخال</item>
         <item quantity="other">%d إدخالات</item>
@@ -266,12 +266,12 @@
         <item quantity="one">%d مكالمة</item>
         <item quantity="other">%d مكالمات</item>
     </plurals>
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="battery_activity_title">معلومات البطارية</string>
 
     <!-- Localized batch -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">البحث عن الأرقام</string>
     <string name="home_quick_actions">إجراءات سريعة</string>
 
@@ -290,14 +290,14 @@
     <string name="please_wait">يرجى الانتظار...</string>
 
     <string name="app_unavailable">التطبيق غير متوفر</string>
-    <string name="app_redirect_desc">هذا التطبيق غير مثبّت على جهازك. هل تريد فتحه في Play Store؟</string>
+    <string name="app_redirect_desc">هذا التطبيق غير موجود على جهازك. نفتح صفحته في Play Store؟</string>
 
     <string name="overlay_banner_desc">عرض معلومات المتصل فوق التطبيقات الأخرى</string>
-    <string name="search_hint_tip">اكتب أي رقم هنا للتعرّف على المتصل</string>
+    <string name="search_hint_tip">ألقِ أي رقم هنا لتسمية المتصل</string>
     <string name="settings_section_call">حماية المتصل</string>
 
     <!-- Battery health -->
-    <string name="battery_activity_sub">راقب استهلاك الطاقة وسلامة العتاد. اطّلع على الأداء في الوقت الفعلي وحالات تأمين الاتصال.</string>
+    <string name="battery_activity_sub">راقب استهلاك الطاقة وسلامة العتاد. الأداء اللحظي وحالة مصافحة الأمان في مكان واحد.</string>
     <string name="battery_secured">مؤمّن وقيد التحسين</string>
     <string name="battery_health_great">ممتازة</string>
     <string name="battery_health_hot">ساخنة</string>
@@ -309,7 +309,7 @@
     <string name="blocklist_already_blocked">محظور بالفعل</string>
     <string name="blocklist_choose_title">حظر رقم</string>
     <string name="blocklist_contact_no_number">تعذّرت قراءة رقم جهة الاتصال هذه</string>
-    <string name="blocklist_empty_subtitle">ارفض المكالمات من أرقام أو أنماط محددة</string>
+    <string name="blocklist_empty_subtitle">ردّ المكالمات من أرقام أو أنماط تختارها</string>
     <string name="blocklist_method_add_title">إضافة رقم</string>
     <string name="blocklist_method_add_sub">أدخله يدويًا</string>
     <string name="blocklist_method_contacts_title">من جهات الاتصال</string>
@@ -318,8 +318,8 @@
     <string name="blocklist_method_recents_sub">اختر من سجل مكالماتك</string>
     <string name="blocklist_no_contacts">لم يتم العثور على جهات اتصال</string>
     <string name="blocklist_no_recents">لا توجد مكالمات حديثة</string>
-    <string name="blocklist_perm_calllog">الوصول إلى سجل المكالمات مطلوب لاختيار المكالمات الأخيرة</string>
-    <string name="blocklist_perm_contacts">الوصول إلى جهات الاتصال مطلوب لاختيار جهة اتصال</string>
+    <string name="blocklist_perm_calllog">اختيار المكالمات الأخيرة يتطلب الوصول إلى السجل</string>
+    <string name="blocklist_perm_contacts">اختيار جهة اتصال يتطلب الوصول إلى جهات الاتصال</string>
     <string name="blocklist_pick_contacts_title">جهات الاتصال</string>
     <string name="blocklist_pick_recents_title">المكالمات الأخيرة</string>
 
@@ -480,7 +480,7 @@
     <string name="stopwatch_lap">لفة</string>
     <string name="stopwatch_history">سجل اللفات</string>
     <string name="stopwatch_laps">%1$d لفات</string>
-    <string name="stopwatch_empty">لم تُسجَّل أي بيانات لفات للجلسة الحالية.</string>
+    <string name="stopwatch_empty">لم تُسجَّل أي لفّة في هذه الجلسة.</string>
     <string name="stopwatch_total">إجمالي السجلات</string>
     <string name="stopwatch_lap_n">لفة %1$d</string>
 
@@ -492,12 +492,12 @@
 
     <!-- Watch ad -->
     <string name="watch_ad_title">اكشف التفاصيل الكاملة</string>
-    <string name="watch_ad_message">شاهد إعلانًا قصيرًا لفتح اسم المتصل وتفاصيله كاملة.</string>
+    <string name="watch_ad_message">إعلان قصير يفتح اسم المتصل الكامل وتفاصيله.</string>
     <string name="watch_ad_button">مشاهدة الإعلان</string>
     <string name="watch_ad_cancel">ليس الآن</string>
-    <string name="call_screening_hint_tip">شغّل هذا الخيار لمعرفة المتصل وحظر المكالمات المزعجة</string>
+    <string name="call_screening_hint_tip">فعّل هذا لترى من يتصل ولتصدّ المزعج</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">بعض الأذونات معطّلة. فعّلها للحصول على هوية المتصل كاملة.</string>
+    <string name="home_perm_hint">لا تزال بعض الأذونات مغلقة. فعّلها للتعريف الكامل.</string>
     <string name="home_perm_manage">إدارة</string>
     <string name="fsi_incoming_call">مكالمة واردة</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -508,7 +508,7 @@
     <string name="fsi_meta_calls">68 مكالمة</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">لا تفوّت من يتصل بك</string>
-    <string name="fsi_screen_desc">اعرض تفاصيل المتصل المؤكَّدة على شاشة القفل لحظة ورود المكالمة.</string>
+    <string name="fsi_screen_desc">اعرض بيانات المتصل الموثّقة على شاشة القفل لحظة وصول المكالمة.</string>
     <string name="fsi_feature_identify">تعرّف على الأرقام المجهولة فورًا</string>
     <string name="fsi_feature_spam">شاهد تحذيرات البريد المزعج والاحتيال مسبقًا</string>
     <string name="fsi_feature_missed">لا تفوّت مكالمة مهمة مرة أخرى</string>

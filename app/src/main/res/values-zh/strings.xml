@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">来电一目了然 · 拦截垃圾电话</string>
     <string name="splash_footer">此应用可能包含广告</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">推荐语言</string>
     <string name="language_current">当前语言</string>
     <string name="language_info_title">语言信息</string>
-    <string name="language_info_msg">更改语言将更新应用界面。部分区域功能可能因您的选择而有所不同。</string>
+    <string name="language_info_msg">切换语言会重绘界面。部分地区性细节可能因所选语言而不同。</string>
     <string name="language_info_got_it">知道了</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">条款与条件</string>
-    <string name="terms_body">请仔细阅读以下条款。继续即表示您同意以下内容：\n\n• CallerID 实时识别来电、去电和陌生来电。\n• 应用可检测并帮助您拦截垃圾、诈骗和欺诈电话。\n• 您可以查询任意电话号码以查看可用的来电者信息。\n• 为正常运行，应用可能会访问您的通话记录和联系人。\n• “显示在其他应用上层”（悬浮窗）权限用于在通话期间显示来电者信息。\n• 您的数据将保持私密，仅用于提供来电识别和垃圾防护。\n\n点按“接受并继续”即表示您确认已阅读并同意我们的条款与条件及隐私政策。</string>
-    <string name="terms_agree">我已阅读并同意条款与条件及隐私政策。</string>
+    <string name="terms_body">请花点时间看看这些条款。继续即表示接受:\n\n• Caller ID Lookup 会在通话进行时为来电、去电和陌生号码标出名字。\n• 骚扰、诈骗与欺诈来电会被标记，方便你把它们挡在门外。\n• 任何号码都能查询，看到已记录的来电者信息。\n• 为完成这些工作，应用可能读取你的通话记录与联系人。\n• 悬浮于其他应用之上的权限，正是通话中把来电信息显示到屏幕上的那一项。\n• 我们收集的仍归你所有，只用于识别来电和阻挡骚扰。\n\n选择“接受并继续”即确认你已阅读并接受我们的条款与隐私政策。</string>
+    <string name="terms_agree">我已阅读并接受条款与隐私政策。</string>
     <string name="terms_accept">接受并继续</string>
-    <string name="terms_please_accept">请接受条款与条件以继续。</string>
+    <string name="terms_please_accept">接受条款后方可继续。</string>
     <string name="txt_allow_overlay_access">允许显示在其他应用上层</string>
     <string name="overlay_system_permission">系统权限</string>
-    <string name="overlay_permission_desc">“显示在其他应用上层”允许此应用在您使用其他应用时显示来电者信息。</string>
+    <string name="overlay_permission_desc">悬浮于其他应用之上，才能在你忙别的事情时看到来电信息。</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">跳过</string>
     <string name="onboarding_next">下一步</string>
     <string name="onboarding_title">知道是谁来电</string>
-    <string name="onboarding_desc">即时识别陌生号码，查看来电者的姓名和商家信息，并在铃响前拦截垃圾电话。</string>
+    <string name="onboarding_desc">陌生号码即刻有名字，看清谁在打、从哪打来，骚扰来电在第一声铃响前就被挡下。</string>
     <string name="onboarding_title_2">拦截垃圾与诈骗</string>
-    <string name="onboarding_desc_2">自动检测并拦截垃圾电话、诈骗电话和骚扰电话，让它们不再打扰您。</string>
+    <string name="onboarding_desc_2">骚扰、诈骗与录音来电会被识别并挡下，不再打扰到你。</string>
     <string name="onboarding_title_3">查询任意号码</string>
-    <string name="onboarding_desc_3">查询任意陌生号码，即时查看来电者的姓名、位置和商家详情。</string>
+    <string name="onboarding_desc_3">查询任意陌生号码，看清背后是谁 —— 名字、所在地、从事什么。</string>
     <string name="onboarding_get_started">开始使用</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">查看您的最近通话</string>
-    <string name="perm_calllog_message">允许访问通话记录，以便在此显示您的最近通话。</string>
+    <string name="perm_calllog_message">允许应用读取通话记录，最近的来电就会列在这里。</string>
     <string name="action_grant">授予访问权限</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">垃圾风险</string>
     <string name="action_call">拨打</string>
     <string name="action_save">保存</string>
-    <string name="lookup_idle_hint">输入电话号码以识别来电者</string>
+    <string name="lookup_idle_hint">输入号码，为来电者标出名字</string>
     <string name="lookup_unknown_caller">未知来电者</string>
     <string name="lookup_in_contacts">在您的联系人中</string>
     <string name="lookup_not_in_contacts">不在您的联系人中</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">搜索联系人</string>
     <string name="contacts_empty">未找到联系人</string>
     <string name="perm_contacts_title">查看您的联系人</string>
-    <string name="perm_contacts_message">允许访问您的联系人，以便在此显示。</string>
+    <string name="perm_contacts_message">允许应用读取联系人，他们就会列在这里。</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">选择语言</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">拒接</string>
     <string name="call_accept">接听</string>
     <string name="call_message">信息</string>
-    <string name="call_identified">由 CallerID 识别</string>
+    <string name="call_identified">由 Caller ID Lookup 识别</string>
     <string name="label_spam">垃圾</string>
     <string name="label_verified">已认证</string>
 
@@ -190,7 +190,7 @@
     <string name="tools_compass_sub">寻找磁北</string>
     <string name="tools_speedometer">速度表</string>
     <string name="tools_speedometer_sub">当前 GPS 速度</string>
-    <string name="compass_no_sensor">此设备不支持指南针传感器</string>
+    <string name="compass_no_sensor">此设备没有指南针传感器</string>
     <string name="speedometer_unit">公里/小时</string>
     <string name="speedometer_waiting">正在等待 GPS…</string>
     <string name="speedometer_permission">测量速度需要位置权限</string>
@@ -231,7 +231,7 @@
     <string name="tools_light">照度计</string>
     <string name="tools_light_sub">环境光照度（勒克斯）</string>
     <string name="light_unit">勒克斯</string>
-    <string name="light_no_sensor">此设备不支持光线传感器</string>
+    <string name="light_no_sensor">此设备没有光线传感器</string>
     <string name="tools_stopwatch">秒表</string>
     <string name="tools_stopwatch_sub">秒表与计时器</string>
     <string name="mode_stopwatch">秒表</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">给我们评分</string>
     <string name="settings_rate_sub">喜欢这款应用？告诉我们吧。</string>
     <string name="settings_share">分享</string>
-    <string name="settings_share_sub">邀请好友守护他们的数字生活。</string>
-    <string name="settings_share_text">使用 Caller ID Phone Lookup 识别陌生来电并拦截垃圾信息：https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">传出去 —— 帮身边人把来电也守住。</string>
+    <string name="settings_share_text">为陌生来电标出名字，把骚扰挡在门外，用 Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">隐私政策</string>
     <string name="settings_terms">服务条款</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="other">%d 条</item>
     </plurals>
@@ -270,7 +270,7 @@
     <!-- Localized (zh) - batch added -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">在其他应用上层显示来电者信息</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">号码查询</string>
     <string name="home_quick_actions">快捷操作</string>
     <string name="recents_subtitle">您的通话记录</string>
@@ -302,7 +302,7 @@
     <string name="lookup_unlock_nicknames">观看广告以揭示</string>
     <string name="lookup_unknown_value">未知</string>
     <string name="watch_ad_title">揭示完整详情</string>
-    <string name="watch_ad_message">观看一段短广告即可解锁完整的来电者姓名和详情。</string>
+    <string name="watch_ad_message">一段短广告即可解锁来电者的全名与详情。</string>
     <string name="watch_ad_button">观看广告</string>
     <string name="watch_ad_cancel">暂不</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -356,7 +356,7 @@
     <string name="level_calibrate">校准</string>
     <string name="level_adjusting">调整中</string>
     <string name="level_level">水平</string>
-    <string name="battery_activity_sub">监测功耗与硬件完整性。查看实时性能和安全握手状态。</string>
+    <string name="battery_activity_sub">盯住耗电与硬件状态。实时性能与安全握手状态，同在一处。</string>
     <string name="battery_secured">已保护并优化中</string>
     <string name="battery_health_great">良好</string>
     <string name="battery_health_hot">过热</string>
@@ -385,7 +385,7 @@
     <string name="stopwatch_lap">计圈</string>
     <string name="stopwatch_history">计圈历史</string>
     <string name="stopwatch_laps">%1$d 圈</string>
-    <string name="stopwatch_empty">当前会话未记录计圈数据。</string>
+    <string name="stopwatch_empty">本次没有记录任何计次。</string>
     <string name="stopwatch_total">记录总数</string>
     <string name="stopwatch_lap_n">第 %1$d 圈</string>
     <string name="timer_tool">计时器</string>
@@ -402,7 +402,7 @@
     <string name="contacts_tab_favorites">收藏</string>
     <string name="contacts_tab_recents">最近</string>
     <string name="contacts_tab_groups">群组</string>
-    <string name="blocklist_empty_subtitle">拒接来自特定号码或模式的来电</string>
+    <string name="blocklist_empty_subtitle">回绝来自指定号码或规则的来电</string>
     <string name="blocklist_choose_title">拦截号码</string>
     <string name="blocklist_method_add_title">添加号码</string>
     <string name="blocklist_method_add_sub">手动输入</string>
@@ -414,10 +414,10 @@
     <string name="blocklist_no_recents">未找到最近通话</string>
     <string name="blocklist_contact_no_number">无法读取该联系人的号码</string>
     <string name="blocklist_already_blocked">已拦截</string>
-    <string name="blocklist_perm_calllog">选择最近通话需要通话记录访问权限</string>
+    <string name="blocklist_perm_calllog">挑选最近来电需要通话记录权限</string>
     <string name="blocklist_pick_contacts_title">联系人</string>
     <string name="blocklist_no_contacts">未找到联系人</string>
-    <string name="blocklist_perm_contacts">选择联系人需要联系人访问权限</string>
+    <string name="blocklist_perm_contacts">挑选联系人需要联系人权限</string>
     <string name="call_screening">来电识别悬浮窗</string>
     <string name="call_screening_desc">在通话期间显示来电者信息</string>
     <string name="please_wait">请稍候…</string>
@@ -442,14 +442,14 @@
     <string name="feature_calendar">添加到日历</string>
     <string name="feature_web">打开网站</string>
     <string name="feature_edit_contact">编辑联系人</string>
-    <string name="search_hint_tip">在此输入任意号码以识别来电者</string>
+    <string name="search_hint_tip">把任意号码丢进来，为来电者标出名字</string>
     <string name="got_it">知道了</string>
     <string name="app_unavailable">应用不可用</string>
-    <string name="app_redirect_desc">此应用未安装在您的设备上。是否在 Play Store 中打开它？</string>
+    <string name="app_redirect_desc">设备上没有这个应用。要打开它的 Play 商店页面吗?</string>
     <string name="settings_section_call">来电保护</string>
-    <string name="call_screening_hint_tip">开启后即可查看来电者并拦截垃圾来电</string>
+    <string name="call_screening_hint_tip">打开它，看清谁在来电，并把骚扰挡下</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">部分权限已关闭。开启后即可使用完整的来电显示。</string>
+    <string name="home_perm_hint">仍有权限处于关闭状态。全部打开才能完整识别。</string>
     <string name="home_perm_manage">管理</string>
     <string name="fsi_incoming_call">来电</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -460,7 +460,7 @@
     <string name="fsi_meta_calls">68 次通话</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">绝不错过每一个来电</string>
-    <string name="fsi_screen_desc">来电瞬间即可在锁屏上显示已验证的来电信息。</string>
+    <string name="fsi_screen_desc">来电的那一刻，就把已核实的来电信息送上锁屏。</string>
     <string name="fsi_feature_identify">即时识别陌生号码</string>
     <string name="fsi_feature_spam">提前查看垃圾和欺诈提醒</string>
     <string name="fsi_feature_missed">再也不错过重要来电</string>

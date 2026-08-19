@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Узнайте, кто звонит · Блокируйте спам</string>
     <string name="splash_footer">Это приложение может содержать рекламу</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">Рекомендуемые языки</string>
     <string name="language_current">Текущий язык</string>
     <string name="language_info_title">Информация о языке</string>
-    <string name="language_info_msg">Изменение языка обновит интерфейс приложения. Некоторые региональные функции могут отличаться в зависимости от выбора.</string>
+    <string name="language_info_msg">Смена языка перерисовывает интерфейс. Некоторые региональные детали могут отличаться в зависимости от выбора.</string>
     <string name="language_info_got_it">Понятно</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">Условия использования</string>
-    <string name="terms_body">Внимательно прочитайте эти условия. Продолжая, вы соглашаетесь со следующим:\n\n• CallerID определяет входящие, исходящие и неизвестные вызовы в реальном времени.\n• Приложение обнаруживает и помогает блокировать спам, мошеннические и обманные звонки.\n• Вы можете найти любой номер телефона, чтобы увидеть доступные сведения о звонящем.\n• Для корректной работы приложению может потребоваться доступ к журналу звонков и контактам.\n• Разрешение «поверх других приложений» (наложение) используется для показа информации о звонящем во время вызовов.\n• Ваши данные остаются конфиденциальными и используются только для определения номера и защиты от спама.\n\nНажимая «Принять и продолжить», вы подтверждаете, что прочитали и принимаете наши Условия использования и Политику конфиденциальности.</string>
-    <string name="terms_agree">Я прочитал(а) и принимаю Условия использования и Политику конфиденциальности.</string>
+    <string name="terms_body">Уделите минуту этим условиям. Продолжая, вы их принимаете:\n\n• Caller ID Lookup называет входящие, исходящие и незнакомые звонки прямо во время вызова.\n• Назойливые, мошеннические и обманные звонки помечаются, чтобы вы могли их отсечь.\n• Любой номер можно найти и увидеть известные сведения о звонящем.\n• Журнал звонков и контакты могут читаться, чтобы приложение делало эту работу.\n• Отрисовка поверх других приложений — это то, что выводит сведения о звонящем во время вызова.\n• Собранное остаётся вашим и служит только определению звонящих и защите от назойливых вызовов.\n\nВыбор «Принять и продолжить» подтверждает, что вы прочли и принимаете наши Условия и Политику конфиденциальности.</string>
+    <string name="terms_agree">Я прочитал(а) и принимаю Условия и Политику конфиденциальности.</string>
     <string name="terms_accept">Принять и продолжить</string>
-    <string name="terms_please_accept">Чтобы продолжить, примите Условия использования.</string>
+    <string name="terms_please_accept">Примите Условия, чтобы продолжить.</string>
     <string name="txt_allow_overlay_access">Разрешить показ поверх других приложений</string>
     <string name="overlay_system_permission">Системное разрешение</string>
-    <string name="overlay_permission_desc">Показ поверх других приложений позволяет приложению показывать информацию о звонящем, пока вы пользуетесь другими приложениями.</string>
+    <string name="overlay_permission_desc">Отрисовка поверх других приложений позволяет видеть звонящего, пока вы заняты другим.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">Пропустить</string>
     <string name="onboarding_next">Далее</string>
     <string name="onboarding_title">Узнайте, кто звонит</string>
-    <string name="onboarding_desc">Мгновенно определяйте неизвестные номера, видьте имя и компанию звонящего и блокируйте спам ещё до звонка.</string>
+    <string name="onboarding_desc">Называйте незнакомые номера сразу, смотрите, кто звонит и откуда, и отсекайте назойливые вызовы до первого гудка.</string>
     <string name="onboarding_title_2">Блокируйте спам и мошенников</string>
-    <string name="onboarding_desc_2">Автоматически распознавайте и блокируйте спам, мошеннические и роботизированные звонки, чтобы они вас больше не беспокоили.</string>
+    <string name="onboarding_desc_2">Назойливые, мошеннические и записанные звонки распознаются и отсекаются, чтобы перестать до вас доходить.</string>
     <string name="onboarding_title_3">Ищите любой номер</string>
-    <string name="onboarding_desc_3">Найдите любой неизвестный номер, чтобы мгновенно увидеть имя, местоположение и данные компании звонящего.</string>
+    <string name="onboarding_desc_3">Найдите любой незнакомый номер и узнайте, кто за ним: имя, где находится, чем занимается.</string>
     <string name="onboarding_get_started">Начать</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">Просмотр недавних звонков</string>
-    <string name="perm_calllog_message">Разрешите доступ к журналу звонков, чтобы показывать здесь ваши недавние звонки.</string>
+    <string name="perm_calllog_message">Разрешите приложению читать журнал — и недавние звонки появятся здесь.</string>
     <string name="action_grant">Разрешить доступ</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">Риск спама</string>
     <string name="action_call">Позвонить</string>
     <string name="action_save">Сохранить</string>
-    <string name="lookup_idle_hint">Введите номер телефона, чтобы определить звонящего</string>
+    <string name="lookup_idle_hint">Введите номер, чтобы назвать звонящего</string>
     <string name="lookup_unknown_caller">Неизвестный абонент</string>
     <string name="lookup_in_contacts">В ваших контактах</string>
     <string name="lookup_not_in_contacts">Нет в ваших контактах</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">Поиск контактов</string>
     <string name="contacts_empty">Контакты не найдены</string>
     <string name="perm_contacts_title">Просмотр ваших контактов</string>
-    <string name="perm_contacts_message">Разрешите доступ к контактам, чтобы показывать их здесь.</string>
+    <string name="perm_contacts_message">Разрешите приложению читать контакты — и они появятся здесь.</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">Выберите язык</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">Отклонить</string>
     <string name="call_accept">Принять</string>
     <string name="call_message">Сообщение</string>
-    <string name="call_identified">Определено CallerID</string>
+    <string name="call_identified">Определено Caller ID Lookup</string>
     <string name="label_spam">Спам</string>
     <string name="label_verified">Проверено</string>
 
@@ -190,10 +190,10 @@
     <string name="tools_compass_sub">Найдите магнитный север</string>
     <string name="tools_speedometer">Спидометр</string>
     <string name="tools_speedometer_sub">Текущая скорость по GPS</string>
-    <string name="compass_no_sensor">Датчик компаса недоступен на этом устройстве</string>
+    <string name="compass_no_sensor">В этом устройстве нет датчика компаса</string>
     <string name="speedometer_unit">км/ч</string>
     <string name="speedometer_waiting">Ожидание GPS…</string>
-    <string name="speedometer_permission">Для измерения скорости нужен доступ к геолокации</string>
+    <string name="speedometer_permission">Для измерения скорости нужно разрешение на местоположение</string>
     <string name="cardinal_n">С</string>
     <string name="cardinal_e">В</string>
     <string name="cardinal_s">Ю</string>
@@ -218,7 +218,7 @@
     <string name="tools_sound">Шумомер</string>
     <string name="tools_sound_sub">Измерьте уровень шума</string>
     <string name="sound_unit">дБ</string>
-    <string name="sound_permission">Для измерения звука нужен доступ к микрофону</string>
+    <string name="sound_permission">Для измерения звука нужно разрешение на микрофон</string>
     <string name="tools_sim">Сведения о сети</string>
     <string name="tools_sim_sub">Данные SIM и оператора</string>
     <string name="sim_carrier">Оператор</string>
@@ -227,11 +227,11 @@
     <string name="sim_country">Страна</string>
     <string name="sim_state">Состояние SIM</string>
     <string name="sim_roaming">Роуминг</string>
-    <string name="sim_permission">Для сведений о сети нужен доступ к телефону</string>
+    <string name="sim_permission">Для сведений о сети нужно разрешение телефона</string>
     <string name="tools_light">Люксметр</string>
     <string name="tools_light_sub">Освещённость в люксах</string>
     <string name="light_unit">лк</string>
-    <string name="light_no_sensor">Датчик света недоступен на этом устройстве</string>
+    <string name="light_no_sensor">В этом устройстве нет датчика освещённости</string>
     <string name="tools_stopwatch">Секундомер</string>
     <string name="tools_stopwatch_sub">Секундомер и таймер</string>
     <string name="mode_stopwatch">Секундомер</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">Оцените нас</string>
     <string name="settings_rate_sub">Нравится приложение? Расскажите нам.</string>
     <string name="settings_share">Поделиться</string>
-    <string name="settings_share_sub">Пригласите друзей защитить их цифровую жизнь.</string>
-    <string name="settings_share_text">Определяйте неизвестные номера и блокируйте спам с Caller ID Phone Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">Передайте дальше — помогите близкому закрыть свои звонки.</string>
+    <string name="settings_share_text">Называйте незнакомых звонящих и отсекайте назойливые вызовы с Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Политика конфиденциальности</string>
     <string name="settings_terms">Условия использования</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="one">%d запись</item>
         <item quantity="few">%d записи</item>
@@ -275,7 +275,7 @@
 
     <!-- Localization batch: ru -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Поиск номера</string>
     <string name="home_quick_actions">Быстрые действия</string>
     <string name="overlay_banner_desc">Показывать информацию о звонящем поверх других приложений</string>
@@ -314,7 +314,7 @@
     <string name="lookup_unlock_nicknames">Смотреть рекламу, чтобы открыть</string>
     <string name="lookup_unknown_value">Неизвестно</string>
     <string name="watch_ad_title">Открыть полные сведения</string>
-    <string name="watch_ad_message">Посмотрите короткую рекламу, чтобы открыть полное имя и сведения о звонящем.</string>
+    <string name="watch_ad_message">Короткая реклама открывает полное имя и сведения о звонящем.</string>
     <string name="watch_ad_button">Смотреть рекламу</string>
     <string name="watch_ad_cancel">Не сейчас</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -345,7 +345,7 @@
     <string name="dialer_voice_search">Голосовой поиск</string>
 
     <!-- Blocklist -->
-    <string name="blocklist_empty_subtitle">Отклоняйте звонки с определённых номеров или по шаблонам</string>
+    <string name="blocklist_empty_subtitle">Отклоняйте звонки с выбранных номеров или шаблонов</string>
     <string name="blocklist_choose_title">Заблокировать номер</string>
     <string name="blocklist_method_add_title">Добавить номер</string>
     <string name="blocklist_method_add_sub">Ввести вручную</string>
@@ -357,7 +357,7 @@
     <string name="blocklist_no_recents">Недавние звонки не найдены</string>
     <string name="blocklist_contact_no_number">Не удалось прочитать номер этого контакта</string>
     <string name="blocklist_already_blocked">Уже заблокирован</string>
-    <string name="blocklist_perm_calllog">Для выбора недавних звонков нужен доступ к журналу звонков</string>
+    <string name="blocklist_perm_calllog">Для выбора недавних звонков нужен доступ к журналу</string>
     <string name="blocklist_pick_contacts_title">Контакты</string>
     <string name="blocklist_no_contacts">Контакты не найдены</string>
     <string name="blocklist_perm_contacts">Для выбора контакта нужен доступ к контактам</string>
@@ -398,7 +398,7 @@
     <string name="level_level">Ровно</string>
 
     <!-- Battery -->
-    <string name="battery_activity_sub">Отслеживайте энергопотребление и целостность оборудования. Просматривайте производительность в реальном времени и статусы защищённого подключения.</string>
+    <string name="battery_activity_sub">Следите за расходом энергии и состоянием оборудования. Живые показатели и статус защитного рукопожатия — в одном месте.</string>
     <string name="battery_secured">Защищено и оптимизируется</string>
     <string name="battery_health_great">Отличное</string>
     <string name="battery_health_hot">Перегрев</string>
@@ -433,7 +433,7 @@
     <string name="stopwatch_lap">Круг</string>
     <string name="stopwatch_history">История кругов</string>
     <string name="stopwatch_laps">Кругов: %1$d</string>
-    <string name="stopwatch_empty">Нет данных о кругах для текущей сессии.</string>
+    <string name="stopwatch_empty">В этой сессии круги не записаны.</string>
     <string name="stopwatch_total">Всего записей</string>
     <string name="stopwatch_lap_n">Круг %1$d</string>
 
@@ -489,15 +489,15 @@
     <string name="feature_edit_contact">Изменить контакт</string>
 
     <!-- Home search-bar one-time hint -->
-    <string name="search_hint_tip">Введите здесь любой номер, чтобы определить звонящего</string>
+    <string name="search_hint_tip">Бросьте сюда любой номер, чтобы назвать звонящего</string>
     <string name="got_it">Понятно</string>
 
     <!-- App-redirect dialog -->
     <string name="app_unavailable">Приложение недоступно</string>
-    <string name="app_redirect_desc">Это приложение не установлено на вашем устройстве. Открыть его в Play Store?</string>
-    <string name="call_screening_hint_tip">Включите, чтобы видеть, кто звонит, и блокировать спам</string>
+    <string name="app_redirect_desc">Этого приложения нет на устройстве. Открыть его страницу в Play Store?</string>
+    <string name="call_screening_hint_tip">Включите, чтобы видеть, кто звонит, и отсекать назойливое</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">Некоторые разрешения выключены. Включите их для полного определителя номера.</string>
+    <string name="home_perm_hint">Часть разрешений всё ещё выключена. Включите их для полного определения.</string>
     <string name="home_perm_manage">Управлять</string>
     <string name="fsi_incoming_call">Входящий вызов</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -508,7 +508,7 @@
     <string name="fsi_meta_calls">68 вызовов</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">Не пропустите, кто звонит</string>
-    <string name="fsi_screen_desc">Показывает проверенные данные вызывающего на экране блокировки в момент звонка.</string>
+    <string name="fsi_screen_desc">Показывайте проверенные сведения о звонящем на экране блокировки, как только идёт вызов.</string>
     <string name="fsi_feature_identify">Мгновенно определяйте незнакомые номера</string>
     <string name="fsi_feature_spam">Заранее видите предупреждения о спаме и мошенничестве</string>
     <string name="fsi_feature_missed">Больше не пропускайте важные звонки</string>

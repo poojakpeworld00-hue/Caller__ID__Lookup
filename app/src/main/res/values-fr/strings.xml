@@ -14,28 +14,28 @@
     <string name="language_suggested">Langues suggérées</string>
     <string name="language_current">Langue actuelle</string>
     <string name="language_info_title">Informations sur la langue</string>
-    <string name="language_info_msg">Changer de langue mettra à jour l\'interface de l\'app. Certaines fonctionnalités régionales peuvent varier selon votre sélection.</string>
+    <string name="language_info_msg">Changer de langue redessine l\'interface. Quelques détails régionaux peuvent varier selon votre choix.</string>
     <string name="language_info_got_it">Compris</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">Conditions générales</string>
-    <string name="terms_body">Veuillez lire attentivement ces conditions. En continuant, vous acceptez ce qui suit :\n\n• CallerID identifie en temps réel les appels entrants, sortants et inconnus.\n• L\'application détecte et vous aide à bloquer les appels de spam, d\'arnaque et de fraude.\n• Vous pouvez rechercher n\'importe quel numéro pour voir les informations disponibles sur l\'appelant.\n• Pour fonctionner correctement, l\'application peut accéder à votre journal d\'appels et à vos contacts.\n• L\'autorisation d\'affichage par-dessus les autres applications (superposition) sert à afficher les informations de l\'appelant pendant les appels.\n• Vos données restent privées et ne sont utilisées que pour fournir l\'identification des appelants et la protection contre le spam.\n\nEn appuyant sur « Accepter et continuer », vous confirmez avoir lu et accepté nos Conditions générales et notre Politique de confidentialité.</string>
-    <string name="terms_agree">J\'ai lu et j\'accepte les Conditions générales et la Politique de confidentialité.</string>
+    <string name="terms_body">Prenez un moment pour ces conditions. Continuer vaut acceptation :\n\n• Caller ID Lookup nomme les appels entrants, sortants et inconnus au moment où ils arrivent.\n• Les appels indésirables, d\'arnaque et de fraude sont signalés pour que vous puissiez les écarter.\n• N\'importe quel numéro peut être recherché pour voir les informations connues sur l\'appelant.\n• Votre journal d\'appels et vos contacts peuvent être lus pour que l\'application fasse ce travail.\n• L\'affichage par-dessus les autres applications sert à montrer l\'appelant pendant l\'appel.\n• Ce que nous collectons reste à vous et ne sert qu\'à nommer les appelants et écarter les indésirables.\n\nChoisir « Accepter et continuer » confirme que vous avez lu, et acceptez, nos Conditions générales et notre Politique de confidentialité.</string>
+    <string name="terms_agree">J\'ai lu, et j\'accepte, les Conditions générales et la Politique de confidentialité.</string>
     <string name="terms_accept">Accepter et continuer</string>
-    <string name="terms_please_accept">Veuillez accepter les Conditions générales pour continuer.</string>
+    <string name="terms_please_accept">Acceptez les Conditions générales pour continuer.</string>
     <string name="txt_allow_overlay_access">Autoriser l\'affichage par-dessus les autres apps</string>
     <string name="overlay_system_permission">Autorisation système</string>
-    <string name="overlay_permission_desc">L\'affichage par-dessus les autres applications permet à cette app d\'afficher les informations de l\'appelant pendant que vous utilisez d\'autres apps.</string>
+    <string name="overlay_permission_desc">L\'affichage par-dessus les autres applications permet de voir l\'appelant pendant que vous faites autre chose.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">Ignorer</string>
     <string name="onboarding_next">Suivant</string>
     <string name="onboarding_title">Sachez qui appelle</string>
-    <string name="onboarding_desc">Identifiez instantanément les numéros inconnus, voyez le nom et l\'entreprise de l\'appelant, et bloquez le spam avant qu\'il ne sonne.</string>
+    <string name="onboarding_desc">Nommez les numéros inconnus à vue, voyez qui appelle et d\'où, et écartez les appels indésirables avant la première sonnerie.</string>
     <string name="onboarding_title_2">Bloquez spam et fraude</string>
-    <string name="onboarding_desc_2">Détectez et bloquez automatiquement les appels de spam, d\'arnaque et automatisés pour ne plus jamais être dérangé.</string>
+    <string name="onboarding_desc_2">Les appels indésirables, frauduleux et automatisés sont repérés et écartés, pour qu\'ils cessent de vous atteindre.</string>
     <string name="onboarding_title_3">Recherchez n\'importe quel numéro</string>
-    <string name="onboarding_desc_3">Recherchez n\'importe quel numéro inconnu pour voir instantanément le nom, la localisation et les détails de l\'entreprise.</string>
+    <string name="onboarding_desc_3">Cherchez n\'importe quel numéro inconnu et découvrez qui se cache derrière : nom, lieu, activité.</string>
     <string name="onboarding_get_started">Commencer</string>
 
     <!-- Home -->
@@ -67,7 +67,7 @@
     <string name="call_decline">Refuser</string>
     <string name="call_accept">Accepter</string>
     <string name="call_message">Message</string>
-    <string name="call_identified">Identifié par CallerID</string>
+    <string name="call_identified">Identifié par Caller ID Lookup</string>
     <string name="label_spam">Spam</string>
     <string name="label_verified">Vérifié</string>
 
@@ -92,7 +92,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">Voir vos appels récents</string>
-    <string name="perm_calllog_message">Autorisez l\'accès à votre journal d\'appels pour afficher vos appels récents ici.</string>
+    <string name="perm_calllog_message">Laissez l\'application lire votre journal et vos appels récents apparaîtront ici.</string>
     <string name="action_grant">Autoriser l\'accès</string>
 
     <!-- Lookup -->
@@ -103,7 +103,7 @@
     <string name="lookup_spam_risk">Risque de spam</string>
     <string name="action_call">Appeler</string>
     <string name="action_save">Enregistrer</string>
-    <string name="lookup_idle_hint">Saisissez un numéro pour identifier l\'appelant</string>
+    <string name="lookup_idle_hint">Saisissez un numéro pour nommer l\'appelant</string>
     <string name="lookup_unknown_caller">Appelant inconnu</string>
     <string name="lookup_in_contacts">Dans vos contacts</string>
     <string name="lookup_not_in_contacts">Pas dans vos contacts</string>
@@ -117,7 +117,7 @@
     <string name="contacts_search_hint">Rechercher des contacts</string>
     <string name="contacts_empty">Aucun contact trouvé</string>
     <string name="perm_contacts_title">Voir vos contacts</string>
-    <string name="perm_contacts_message">Autorisez l\'accès à vos contacts pour les afficher ici.</string>
+    <string name="perm_contacts_message">Laissez l\'application lire vos contacts et ils apparaîtront ici.</string>
 
     <!-- Settings -->
     <string name="settings_language">Langue</string>
@@ -189,10 +189,10 @@
     <string name="tools_compass_sub">Trouver le nord magnétique</string>
     <string name="tools_speedometer">Compteur de vitesse</string>
     <string name="tools_speedometer_sub">Votre vitesse GPS actuelle</string>
-    <string name="compass_no_sensor">Capteur de boussole indisponible sur cet appareil</string>
+    <string name="compass_no_sensor">Cet appareil ne possède pas de capteur de boussole</string>
     <string name="speedometer_unit">km/h</string>
     <string name="speedometer_waiting">En attente du GPS…</string>
-    <string name="speedometer_permission">L\'autorisation de localisation est requise pour mesurer la vitesse</string>
+    <string name="speedometer_permission">Mesurer la vitesse demande l\'autorisation de localisation</string>
     <string name="cardinal_n">N</string>
     <string name="cardinal_e">E</string>
     <string name="cardinal_s">S</string>
@@ -217,7 +217,7 @@
     <string name="tools_sound">Sonomètre</string>
     <string name="tools_sound_sub">Mesurer le niveau sonore</string>
     <string name="sound_unit">dB</string>
-    <string name="sound_permission">L\'autorisation du micro est requise pour mesurer le son</string>
+    <string name="sound_permission">Mesurer le son demande l\'autorisation de microphone</string>
     <string name="tools_sim">Infos réseau</string>
     <string name="tools_sim_sub">Détails SIM et opérateur</string>
     <string name="sim_carrier">Opérateur</string>
@@ -226,11 +226,11 @@
     <string name="sim_country">Pays</string>
     <string name="sim_state">État de la SIM</string>
     <string name="sim_roaming">Itinérance</string>
-    <string name="sim_permission">L\'autorisation du téléphone est requise pour les détails réseau</string>
+    <string name="sim_permission">Les détails réseau demandent l\'autorisation de téléphone</string>
     <string name="tools_light">Luxmètre</string>
     <string name="tools_light_sub">Lumière ambiante en lux</string>
     <string name="light_unit">lux</string>
-    <string name="light_no_sensor">Capteur de lumière indisponible sur cet appareil</string>
+    <string name="light_no_sensor">Cet appareil ne possède pas de capteur de lumière</string>
     <string name="tools_stopwatch">Chronomètre</string>
     <string name="tools_stopwatch_sub">Chronomètre et minuteur</string>
     <string name="mode_stopwatch">Chronomètre</string>
@@ -252,12 +252,12 @@
     <string name="settings_rate">Évaluez-nous</string>
     <string name="settings_rate_sub">Vous aimez l\'app ? Dites-le-nous.</string>
     <string name="settings_share">Partager</string>
-    <string name="settings_share_sub">Invitez vos amis à sécuriser leur vie numérique.</string>
-    <string name="settings_share_text">Identifiez les appelants inconnus et bloquez le spam avec Caller ID Phone Lookup : https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">Faites passer le mot : aidez un proche à verrouiller ses appels.</string>
+    <string name="settings_share_text">Nommez les appelants inconnus et écartez les indésirables avec Caller ID Lookup : https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Politique de confidentialité</string>
     <string name="settings_terms">Conditions d\'utilisation</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="one">%d entrée</item>
         <item quantity="other">%d entrées</item>
@@ -266,12 +266,12 @@
         <item quantity="one">%d appel</item>
         <item quantity="other">%d appels</item>
     </plurals>
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="battery_activity_title">Infos batterie</string>
 
     <!-- French localization additions -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Recherche de numéro</string>
     <string name="overlay_banner_desc">Afficher les infos d\'appelant par-dessus les autres apps</string>
     <string name="recents_subtitle">Votre historique d\'appels</string>
@@ -303,7 +303,7 @@
     <string name="lookup_unlock_nicknames">Regarder une pub pour révéler</string>
     <string name="lookup_unknown_value">Inconnu</string>
     <string name="watch_ad_title">Révéler tous les détails</string>
-    <string name="watch_ad_message">Regardez une courte pub pour débloquer le nom complet et les détails de l\'appelant.</string>
+    <string name="watch_ad_message">Une courte publicité débloque le nom complet et les détails de l\'appelant.</string>
     <string name="watch_ad_button">Regarder la pub</string>
     <string name="watch_ad_cancel">Plus tard</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -357,7 +357,7 @@
     <string name="level_calibrate">Calibrer</string>
     <string name="level_adjusting">Ajustement</string>
     <string name="level_level">Niveau</string>
-    <string name="battery_activity_sub">Surveillez la consommation d\'énergie et l\'intégrité matérielle. Consultez les performances en temps réel et l\'état des connexions sécurisées.</string>
+    <string name="battery_activity_sub">Surveillez la consommation et l\'état du matériel. Performances en direct et état du handshake de sécurité, au même endroit.</string>
     <string name="battery_secured">Sécurisé et optimisé</string>
     <string name="battery_health_great">Excellent</string>
     <string name="battery_health_hot">Chaud</string>
@@ -386,7 +386,7 @@
     <string name="stopwatch_lap">Tour</string>
     <string name="stopwatch_history">Historique des tours</string>
     <string name="stopwatch_laps">%1$d tours</string>
-    <string name="stopwatch_empty">Aucune donnée de tour enregistrée pour la session actuelle.</string>
+    <string name="stopwatch_empty">Aucun tour enregistré pour cette session.</string>
     <string name="stopwatch_total">Total des enregistrements</string>
     <string name="stopwatch_lap_n">Tour %1$d</string>
     <string name="timer_tool">Minuteur</string>
@@ -403,7 +403,7 @@
     <string name="contacts_tab_favorites">Favoris</string>
     <string name="contacts_tab_recents">Récents</string>
     <string name="contacts_tab_groups">Groupes</string>
-    <string name="blocklist_empty_subtitle">Rejetez les appels de numéros ou de motifs spécifiques</string>
+    <string name="blocklist_empty_subtitle">Écartez les appels de numéros ou de motifs choisis</string>
     <string name="blocklist_choose_title">Bloquer un numéro</string>
     <string name="blocklist_method_add_title">Ajouter un numéro</string>
     <string name="blocklist_method_add_sub">Saisir manuellement</string>
@@ -415,10 +415,10 @@
     <string name="blocklist_no_recents">Aucun appel récent trouvé</string>
     <string name="blocklist_contact_no_number">Impossible de lire le numéro de ce contact</string>
     <string name="blocklist_already_blocked">Déjà bloqué</string>
-    <string name="blocklist_perm_calllog">L\'accès au journal d\'appels est requis pour choisir des appels récents</string>
+    <string name="blocklist_perm_calllog">Choisir des appels récents demande l\'accès au journal</string>
     <string name="blocklist_pick_contacts_title">Contacts</string>
     <string name="blocklist_no_contacts">Aucun contact trouvé</string>
-    <string name="blocklist_perm_contacts">L\'accès aux contacts est requis pour choisir un contact</string>
+    <string name="blocklist_perm_contacts">Choisir un contact demande l\'accès aux contacts</string>
     <string name="call_screening">Superposition de l\'identification</string>
     <string name="call_screening_desc">Afficher les informations de l\'appelant pendant les appels</string>
     <string name="home_quick_actions">Actions rapides</string>
@@ -444,14 +444,14 @@
     <string name="feature_calendar">Ajouter au calendrier</string>
     <string name="feature_web">Ouvrir le site web</string>
     <string name="feature_edit_contact">Modifier le contact</string>
-    <string name="search_hint_tip">Saisissez un numéro ici pour identifier l\'appelant</string>
+    <string name="search_hint_tip">Déposez n\'importe quel numéro ici pour nommer l\'appelant</string>
     <string name="got_it">Compris</string>
     <string name="app_unavailable">Application indisponible</string>
-    <string name="app_redirect_desc">Cette application n\'est pas installée sur votre appareil. Voulez-vous l\'ouvrir dans le Play Store ?</string>
+    <string name="app_redirect_desc">Cette application n\'est pas sur l\'appareil. On ouvre sa page Play Store ?</string>
     <string name="settings_section_call">PROTECTION DES APPELS</string>
-    <string name="call_screening_hint_tip">Activez cette option pour voir qui appelle et bloquer le spam</string>
+    <string name="call_screening_hint_tip">Activez ceci pour voir qui appelle et écarter les indésirables</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">Certaines autorisations sont désactivées. Activez-les pour l\'identification complète des appels.</string>
+    <string name="home_perm_hint">Des autorisations sont encore désactivées. Activez-les pour tout identifier.</string>
     <string name="home_perm_manage">Gérer</string>
     <string name="fsi_incoming_call">Appel entrant</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -462,7 +462,7 @@
     <string name="fsi_meta_calls">68 appels</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">Ne manquez plus aucun appel</string>
-    <string name="fsi_screen_desc">Affichez les informations vérifiées de l\'appelant sur votre écran de verrouillage, dès qu\'un appel arrive.</string>
+    <string name="fsi_screen_desc">Affichez les informations vérifiées de l\'appelant sur l\'écran de verrouillage dès l\'arrivée de l\'appel.</string>
     <string name="fsi_feature_identify">Identifiez instantanément les numéros inconnus</string>
     <string name="fsi_feature_spam">Voyez les alertes spam et fraude en amont</string>
     <string name="fsi_feature_missed">Ne manquez plus jamais un appel important</string>

@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Biết ai đang gọi · Chặn spam</string>
     <string name="splash_footer">Ứng dụng này có thể chứa quảng cáo</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">Ngôn ngữ gợi ý</string>
     <string name="language_current">Ngôn ngữ hiện tại</string>
     <string name="language_info_title">Thông tin ngôn ngữ</string>
-    <string name="language_info_msg">Thay đổi ngôn ngữ sẽ cập nhật giao diện ứng dụng. Một số tính năng theo khu vực có thể khác nhau tùy lựa chọn của bạn.</string>
+    <string name="language_info_msg">Đổi ngôn ngữ sẽ vẽ lại giao diện. Vài chi tiết theo vùng có thể khác đi tuỳ lựa chọn.</string>
     <string name="language_info_got_it">Đã hiểu</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">Điều khoản và Điều kiện</string>
-    <string name="terms_body">Vui lòng đọc kỹ các điều khoản sau. Khi tiếp tục, bạn đồng ý với những điều sau:\n\n• CallerID nhận diện cuộc gọi đến, gọi đi và số lạ theo thời gian thực.\n• Ứng dụng phát hiện và giúp bạn chặn cuộc gọi spam, lừa đảo và gian lận.\n• Bạn có thể tra cứu bất kỳ số điện thoại nào để xem thông tin người gọi hiện có.\n• Để hoạt động đúng cách, ứng dụng có thể truy cập nhật ký cuộc gọi và danh bạ của bạn.\n• Quyền hiển thị trên ứng dụng khác (lớp phủ) được dùng để hiển thị thông tin người gọi trong khi gọi.\n• Dữ liệu của bạn luôn được giữ riêng tư và chỉ dùng để cung cấp nhận diện người gọi và bảo vệ khỏi spam.\n\nKhi nhấn “Chấp nhận và tiếp tục”, bạn xác nhận đã đọc và đồng ý với Điều khoản và Điều kiện cùng Chính sách quyền riêng tư của chúng tôi.</string>
-    <string name="terms_agree">Tôi đã đọc và đồng ý với Điều khoản và Điều kiện cùng Chính sách quyền riêng tư.</string>
+    <string name="terms_body">Hãy dành chút thời gian cho các điều khoản này. Tiếp tục nghĩa là bạn chấp nhận:\n\n• Caller ID Lookup gọi tên cuộc gọi đến, đi và lạ ngay trong lúc cuộc gọi diễn ra.\n• Cuộc gọi làm phiền, lừa đảo và gian lận được đánh dấu để bạn chặn lại.\n• Có thể tra bất kỳ số nào để xem thông tin người gọi đang được lưu.\n• Nhật ký cuộc gọi và danh bạ có thể được đọc để ứng dụng làm việc đó.\n• Quyền vẽ đè lên ứng dụng khác chính là thứ đưa thông tin người gọi lên màn hình giữa cuộc gọi.\n• Những gì chúng tôi thu thập vẫn là của bạn, chỉ phục vụ việc gọi tên người gọi và chặn cuộc gọi làm phiền.\n\nChọn “Chấp nhận và tiếp tục” xác nhận bạn đã đọc và chấp nhận Điều khoản cùng Chính sách quyền riêng tư của chúng tôi.</string>
+    <string name="terms_agree">Tôi đã đọc và chấp nhận Điều khoản cùng Chính sách quyền riêng tư.</string>
     <string name="terms_accept">Chấp nhận và tiếp tục</string>
-    <string name="terms_please_accept">Vui lòng chấp nhận Điều khoản và Điều kiện để tiếp tục.</string>
+    <string name="terms_please_accept">Chấp nhận Điều khoản để đi tiếp.</string>
     <string name="txt_allow_overlay_access">Cho phép hiển thị trên ứng dụng khác</string>
     <string name="overlay_system_permission">Quyền hệ thống</string>
-    <string name="overlay_permission_desc">Hiển thị trên ứng dụng khác cho phép ứng dụng này hiển thị thông tin người gọi khi bạn dùng ứng dụng khác.</string>
+    <string name="overlay_permission_desc">Vẽ đè lên ứng dụng khác cho phép thấy người gọi trong lúc bạn đang bận việc khác.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">Bỏ qua</string>
     <string name="onboarding_next">Tiếp theo</string>
     <string name="onboarding_title">Biết ai đang gọi</string>
-    <string name="onboarding_desc">Nhận diện ngay số lạ, xem tên và doanh nghiệp của người gọi, và chặn spam trước khi chuông reo.</string>
+    <string name="onboarding_desc">Gọi tên số lạ ngay lập tức, thấy ai gọi và gọi từ đâu, chặn cuộc gọi làm phiền trước hồi chuông đầu tiên.</string>
     <string name="onboarding_title_2">Chặn spam và lừa đảo</string>
-    <string name="onboarding_desc_2">Tự động phát hiện và chặn cuộc gọi spam, lừa đảo và tự động để chúng không bao giờ làm phiền bạn nữa.</string>
+    <string name="onboarding_desc_2">Cuộc gọi làm phiền, lừa đảo và ghi âm sẵn bị phát hiện và chặn lại, thôi không tới được bạn nữa.</string>
     <string name="onboarding_title_3">Tra cứu mọi số</string>
-    <string name="onboarding_desc_3">Tra cứu bất kỳ số lạ nào để xem ngay tên, vị trí và thông tin doanh nghiệp của người gọi.</string>
+    <string name="onboarding_desc_3">Tra bất kỳ số lạ nào và thấy ai đứng sau: tên, ở đâu, làm gì.</string>
     <string name="onboarding_get_started">Bắt đầu</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">Xem cuộc gọi gần đây của bạn</string>
-    <string name="perm_calllog_message">Cho phép truy cập nhật ký cuộc gọi để hiển thị các cuộc gọi gần đây tại đây.</string>
+    <string name="perm_calllog_message">Cho ứng dụng đọc nhật ký cuộc gọi, các cuộc gọi gần đây sẽ hiện ở đây.</string>
     <string name="action_grant">Cấp quyền truy cập</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">Nguy cơ spam</string>
     <string name="action_call">Gọi</string>
     <string name="action_save">Lưu</string>
-    <string name="lookup_idle_hint">Nhập số điện thoại để nhận diện người gọi</string>
+    <string name="lookup_idle_hint">Nhập một số để gọi tên người gọi</string>
     <string name="lookup_unknown_caller">Người gọi không xác định</string>
     <string name="lookup_in_contacts">Có trong danh bạ của bạn</string>
     <string name="lookup_not_in_contacts">Không có trong danh bạ của bạn</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">Tìm danh bạ</string>
     <string name="contacts_empty">Không tìm thấy liên hệ</string>
     <string name="perm_contacts_title">Xem danh bạ của bạn</string>
-    <string name="perm_contacts_message">Cho phép truy cập danh bạ để hiển thị tại đây.</string>
+    <string name="perm_contacts_message">Cho ứng dụng đọc danh bạ, họ sẽ hiện ở đây.</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">Chọn ngôn ngữ</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">Từ chối</string>
     <string name="call_accept">Trả lời</string>
     <string name="call_message">Tin nhắn</string>
-    <string name="call_identified">Được nhận diện bởi CallerID</string>
+    <string name="call_identified">Được nhận diện bởi Caller ID Lookup</string>
     <string name="label_spam">Spam</string>
     <string name="label_verified">Đã xác minh</string>
 
@@ -193,7 +193,7 @@
     <string name="compass_no_sensor">Thiết bị này không có cảm biến la bàn</string>
     <string name="speedometer_unit">km/h</string>
     <string name="speedometer_waiting">Đang chờ GPS…</string>
-    <string name="speedometer_permission">Cần quyền vị trí để đo tốc độ</string>
+    <string name="speedometer_permission">Đo tốc độ cần quyền vị trí</string>
     <string name="cardinal_n">B</string>
     <string name="cardinal_e">Đ</string>
     <string name="cardinal_s">N</string>
@@ -218,7 +218,7 @@
     <string name="tools_sound">Đo âm thanh</string>
     <string name="tools_sound_sub">Đo mức ồn</string>
     <string name="sound_unit">dB</string>
-    <string name="sound_permission">Cần quyền micro để đo âm thanh</string>
+    <string name="sound_permission">Đo âm thanh cần quyền micrô</string>
     <string name="tools_sim">Thông tin mạng</string>
     <string name="tools_sim_sub">Chi tiết SIM và nhà mạng</string>
     <string name="sim_carrier">Nhà mạng</string>
@@ -227,7 +227,7 @@
     <string name="sim_country">Quốc gia</string>
     <string name="sim_state">Trạng thái SIM</string>
     <string name="sim_roaming">Chuyển vùng</string>
-    <string name="sim_permission">Cần quyền điện thoại để xem chi tiết mạng</string>
+    <string name="sim_permission">Chi tiết mạng cần quyền điện thoại</string>
     <string name="tools_light">Đo ánh sáng</string>
     <string name="tools_light_sub">Ánh sáng môi trường (lux)</string>
     <string name="light_unit">lux</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">Đánh giá</string>
     <string name="settings_rate_sub">Thích ứng dụng? Hãy cho chúng tôi biết.</string>
     <string name="settings_share">Chia sẻ</string>
-    <string name="settings_share_sub">Mời bạn bè bảo vệ cuộc sống số.</string>
-    <string name="settings_share_text">Nhận diện người gọi lạ và chặn spam với Caller ID Phone Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">Lan ra đi — giúp người thân khoá chặt cuộc gọi của họ.</string>
+    <string name="settings_share_text">Gọi tên người lạ và chặn cuộc gọi làm phiền với Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Chính sách bảo mật</string>
     <string name="settings_terms">Điều khoản dịch vụ</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="other">%d mục</item>
     </plurals>
@@ -270,7 +270,7 @@
     <!-- Localized: remaining keys -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">Hiển thị thông tin người gọi trên các ứng dụng khác</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Tra cứu số</string>
     <string name="home_quick_actions">Thao tác nhanh</string>
     <string name="recents_subtitle">Lịch sử cuộc gọi của bạn</string>
@@ -302,7 +302,7 @@
     <string name="lookup_unlock_nicknames">Xem quảng cáo để hiển thị</string>
     <string name="lookup_unknown_value">Không rõ</string>
     <string name="watch_ad_title">Hiển thị đầy đủ chi tiết</string>
-    <string name="watch_ad_message">Xem một quảng cáo ngắn để mở khóa tên và chi tiết đầy đủ của người gọi.</string>
+    <string name="watch_ad_message">Một quảng cáo ngắn mở khoá tên đầy đủ và chi tiết người gọi.</string>
     <string name="watch_ad_button">Xem quảng cáo</string>
     <string name="watch_ad_cancel">Để sau</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -329,7 +329,7 @@
     <string name="dialer_favorites">Yêu thích</string>
     <string name="dialer_view_all">Xem tất cả</string>
     <string name="dialer_voice_search">Tìm bằng giọng nói</string>
-    <string name="blocklist_empty_subtitle">Từ chối cuộc gọi từ các số hoặc mẫu cụ thể</string>
+    <string name="blocklist_empty_subtitle">Từ chối cuộc gọi từ số hoặc mẫu bạn chọn</string>
     <string name="blocklist_choose_title">Chặn một số</string>
     <string name="blocklist_method_add_title">Thêm một số</string>
     <string name="blocklist_method_add_sub">Nhập thủ công</string>
@@ -341,10 +341,10 @@
     <string name="blocklist_no_recents">Không tìm thấy cuộc gọi gần đây</string>
     <string name="blocklist_contact_no_number">Không thể đọc số của liên hệ đó</string>
     <string name="blocklist_already_blocked">Đã chặn rồi</string>
-    <string name="blocklist_perm_calllog">Cần quyền truy cập nhật ký cuộc gọi để chọn cuộc gọi gần đây</string>
+    <string name="blocklist_perm_calllog">Chọn cuộc gọi gần đây cần quyền nhật ký cuộc gọi</string>
     <string name="blocklist_pick_contacts_title">Danh bạ</string>
     <string name="blocklist_no_contacts">Không tìm thấy liên hệ</string>
-    <string name="blocklist_perm_contacts">Cần quyền truy cập danh bạ để chọn một liên hệ</string>
+    <string name="blocklist_perm_contacts">Chọn một liên hệ cần quyền danh bạ</string>
     <string name="call_screening">Lớp phủ nhận diện người gọi</string>
     <string name="call_screening_desc">Hiển thị thông tin người gọi trong khi gọi</string>
     <string name="please_wait">Vui lòng đợi...</string>
@@ -369,10 +369,10 @@
     <string name="feature_calendar">Thêm vào lịch</string>
     <string name="feature_web">Mở trang web</string>
     <string name="feature_edit_contact">Sửa liên hệ</string>
-    <string name="search_hint_tip">Nhập bất kỳ số nào tại đây để nhận diện người gọi</string>
+    <string name="search_hint_tip">Thả bất kỳ số nào vào đây để gọi tên người gọi</string>
     <string name="got_it">Đã hiểu</string>
     <string name="app_unavailable">Ứng dụng không khả dụng</string>
-    <string name="app_redirect_desc">Ứng dụng này chưa được cài trên thiết bị của bạn. Bạn có muốn mở ứng dụng trong Play Store không?</string>
+    <string name="app_redirect_desc">Ứng dụng đó không có trên máy. Mở trang Play Store của nó chứ?</string>
     <string name="settings_section_call">BẢO VỆ NGƯỜI GỌI</string>
     <string name="signal_strong">Mạnh</string>
     <string name="signal_medium">Trung bình</string>
@@ -401,7 +401,7 @@
     <string name="level_calibrate">Hiệu chỉnh</string>
     <string name="level_adjusting">Đang điều chỉnh</string>
     <string name="level_level">Cân bằng</string>
-    <string name="battery_activity_sub">Theo dõi mức tiêu thụ điện và tính toàn vẹn phần cứng. Xem hiệu suất theo thời gian thực và trạng thái bắt tay bảo mật.</string>
+    <string name="battery_activity_sub">Trông chừng mức tiêu thụ điện và sức khoẻ phần cứng. Hiệu năng thời gian thực và trạng thái bắt tay bảo mật, cùng một chỗ.</string>
     <string name="battery_secured">Đã bảo mật &amp; Tối ưu</string>
     <string name="battery_health_great">Tốt</string>
     <string name="battery_health_hot">Nóng</string>
@@ -430,7 +430,7 @@
     <string name="stopwatch_lap">Vòng</string>
     <string name="stopwatch_history">Lịch sử vòng</string>
     <string name="stopwatch_laps">%1$d Vòng</string>
-    <string name="stopwatch_empty">Chưa ghi nhận dữ liệu vòng nào cho phiên hiện tại.</string>
+    <string name="stopwatch_empty">Phiên này chưa ghi vòng nào.</string>
     <string name="stopwatch_total">Tổng bản ghi</string>
     <string name="stopwatch_lap_n">Vòng %1$d</string>
     <string name="timer_tool">Hẹn giờ</string>
@@ -447,9 +447,9 @@
     <string name="contacts_tab_favorites">Yêu thích</string>
     <string name="contacts_tab_recents">Gần đây</string>
     <string name="contacts_tab_groups">Nhóm</string>
-    <string name="call_screening_hint_tip">Bật tính năng này để xem ai đang gọi và chặn cuộc gọi rác</string>
+    <string name="call_screening_hint_tip">Bật lên để thấy ai đang gọi và chặn thứ làm phiền</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">Một số quyền đang tắt. Bật để có ID người gọi đầy đủ.</string>
+    <string name="home_perm_hint">Vẫn còn quyền đang tắt. Bật lên để nhận diện đầy đủ.</string>
     <string name="home_perm_manage">Quản lý</string>
     <string name="fsi_incoming_call">Cuộc gọi đến</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -460,7 +460,7 @@
     <string name="fsi_meta_calls">68 cuộc gọi</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">Không bỏ lỡ ai đang gọi</string>
-    <string name="fsi_screen_desc">Hiển thị thông tin người gọi đã xác minh trên màn hình khóa ngay khi có cuộc gọi.</string>
+    <string name="fsi_screen_desc">Đưa thông tin người gọi đã xác minh lên màn hình khoá ngay khi cuộc gọi tới.</string>
     <string name="fsi_feature_identify">Nhận diện số lạ ngay lập tức</string>
     <string name="fsi_feature_spam">Xem cảnh báo spam và lừa đảo ngay từ đầu</string>
     <string name="fsi_feature_missed">Không bao giờ bỏ lỡ cuộc gọi quan trọng</string>

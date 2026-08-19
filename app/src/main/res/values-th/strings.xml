@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">รู้ว่าใครโทรมา · บล็อกสแปม</string>
     <string name="splash_footer">แอปนี้อาจมีโฆษณา</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">ภาษาที่แนะนำ</string>
     <string name="language_current">ภาษาปัจจุบัน</string>
     <string name="language_info_title">ข้อมูลภาษา</string>
-    <string name="language_info_msg">การเปลี่ยนภาษาจะอัปเดตอินเทอร์เฟซของแอป คุณสมบัติบางอย่างในแต่ละภูมิภาคอาจแตกต่างกันไปตามการเลือกของคุณ</string>
+    <string name="language_info_msg">การเปลี่ยนภาษาจะวาดหน้าจอใหม่ รายละเอียดตามภูมิภาคบางอย่างอาจต่างไปตามที่คุณเลือก</string>
     <string name="language_info_got_it">เข้าใจแล้ว</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">ข้อกำหนดและเงื่อนไข</string>
-    <string name="terms_body">โปรดอ่านข้อกำหนดเหล่านี้อย่างละเอียด เมื่อดำเนินการต่อ แสดงว่าคุณยอมรับสิ่งต่อไปนี้:\n\n• CallerID ระบุสายเรียกเข้า สายโทรออก และสายที่ไม่รู้จักแบบเรียลไทม์\n• แอปตรวจจับและช่วยคุณบล็อกสายสแปม สายหลอกลวง และสายฉ้อโกง\n• คุณสามารถค้นหาหมายเลขโทรศัพท์ใดก็ได้เพื่อดูรายละเอียดผู้โทรที่มี\n• เพื่อให้ทำงานได้อย่างถูกต้อง แอปอาจเข้าถึงบันทึกการโทรและรายชื่อของคุณ\n• ใช้สิทธิ์การแสดงทับแอปอื่น (โอเวอร์เลย์) เพื่อแสดงข้อมูลผู้โทรระหว่างการโทร\n• ข้อมูลของคุณยังคงเป็นส่วนตัวและใช้เพื่อให้บริการระบุผู้โทรและการป้องกันสแปมเท่านั้น\n\nเมื่อแตะ “ยอมรับและดำเนินการต่อ” แสดงว่าคุณยืนยันว่าได้อ่านและยอมรับข้อกำหนดและเงื่อนไขและนโยบายความเป็นส่วนตัวของเรา</string>
-    <string name="terms_agree">ฉันได้อ่านและยอมรับข้อกำหนดและเงื่อนไขและนโยบายความเป็นส่วนตัวแล้ว</string>
+    <string name="terms_body">สละเวลาสักครู่กับข้อกำหนดเหล่านี้ การไปต่อหมายถึงคุณยอมรับ:\n\n• Caller ID Lookup ระบุชื่อสายเรียกเข้า สายโทรออก และเบอร์แปลกหน้าในขณะที่สายกำลังเกิดขึ้น\n• สายกวนใจ สายหลอกลวง และสายฉ้อโกงจะถูกทำเครื่องหมายไว้ให้คุณกันออกไป\n• ค้นเบอร์ใดก็ได้เพื่อดูข้อมูลผู้โทรเท่าที่มีบันทึกไว้\n• แอปอาจอ่านบันทึกการโทรและรายชื่อผู้ติดต่อของคุณเพื่อทำงานเหล่านั้น\n• สิทธิ์วาดทับแอปอื่นคือสิ่งที่นำข้อมูลผู้โทรขึ้นจอระหว่างสาย\n• สิ่งที่เราเก็บยังเป็นของคุณ และใช้เพียงเพื่อระบุผู้โทรและกันสายกวนใจ\n\nการเลือก “ยอมรับและไปต่อ” ยืนยันว่าคุณได้อ่านและยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของเรา</string>
+    <string name="terms_agree">ฉันได้อ่านและยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัว</string>
     <string name="terms_accept">ยอมรับและดำเนินการต่อ</string>
-    <string name="terms_please_accept">โปรดยอมรับข้อกำหนดและเงื่อนไขเพื่อดำเนินการต่อ</string>
+    <string name="terms_please_accept">ยอมรับข้อกำหนดเพื่อไปต่อ</string>
     <string name="txt_allow_overlay_access">อนุญาตให้แสดงทับแอปอื่น</string>
     <string name="overlay_system_permission">สิทธิ์ของระบบ</string>
-    <string name="overlay_permission_desc">การแสดงทับแอปอื่นช่วยให้แอปนี้แสดงข้อมูลผู้โทรขณะที่คุณใช้แอปอื่น</string>
+    <string name="overlay_permission_desc">สิทธิ์วาดทับแอปอื่นทำให้เห็นข้อมูลผู้โทรขณะคุณกำลังทำอย่างอื่น</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">ข้าม</string>
     <string name="onboarding_next">ถัดไป</string>
     <string name="onboarding_title">รู้ว่าใครโทรมา</string>
-    <string name="onboarding_desc">ระบุหมายเลขที่ไม่รู้จักได้ทันที ดูชื่อและธุรกิจของผู้โทร และบล็อกสแปมก่อนที่สายจะดัง</string>
+    <string name="onboarding_desc">ระบุชื่อเบอร์แปลกหน้าได้ทันที เห็นว่าใครโทรมาจากที่ไหน และกันสายกวนใจก่อนเสียงเรียกเข้าแรก</string>
     <string name="onboarding_title_2">บล็อกสแปมและการฉ้อโกง</string>
-    <string name="onboarding_desc_2">ตรวจจับและบล็อกสายสแปม สายหลอกลวง และสายอัตโนมัติโดยอัตโนมัติ เพื่อไม่ให้รบกวนคุณอีก</string>
+    <string name="onboarding_desc_2">สายกวนใจ สายหลอกลวง และสายอัดเสียงจะถูกจับได้และกันออก จนเลิกมาถึงคุณ</string>
     <string name="onboarding_title_3">ค้นหาหมายเลขใดก็ได้</string>
-    <string name="onboarding_desc_3">ค้นหาหมายเลขที่ไม่รู้จักเพื่อดูชื่อ ตำแหน่ง และรายละเอียดธุรกิจของผู้โทรได้ทันที</string>
+    <string name="onboarding_desc_3">ค้นเบอร์แปลกหน้าใดก็ได้แล้วเห็นว่าใครอยู่เบื้องหลัง — ชื่อ ที่อยู่ กิจการ</string>
     <string name="onboarding_get_started">เริ่มต้นใช้งาน</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">ดูสายล่าสุดของคุณ</string>
-    <string name="perm_calllog_message">อนุญาตการเข้าถึงบันทึกการโทรเพื่อแสดงสายล่าสุดของคุณที่นี่</string>
+    <string name="perm_calllog_message">อนุญาตให้แอปอ่านบันทึกการโทร แล้วสายล่าสุดจะมาอยู่ตรงนี้</string>
     <string name="action_grant">อนุญาตการเข้าถึง</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">ความเสี่ยงสแปม</string>
     <string name="action_call">โทร</string>
     <string name="action_save">บันทึก</string>
-    <string name="lookup_idle_hint">ป้อนหมายเลขโทรศัพท์เพื่อระบุผู้โทร</string>
+    <string name="lookup_idle_hint">พิมพ์เบอร์เพื่อระบุชื่อผู้โทร</string>
     <string name="lookup_unknown_caller">ผู้โทรที่ไม่รู้จัก</string>
     <string name="lookup_in_contacts">อยู่ในรายชื่อของคุณ</string>
     <string name="lookup_not_in_contacts">ไม่อยู่ในรายชื่อของคุณ</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">ค้นหารายชื่อ</string>
     <string name="contacts_empty">ไม่พบรายชื่อ</string>
     <string name="perm_contacts_title">ดูรายชื่อของคุณ</string>
-    <string name="perm_contacts_message">อนุญาตการเข้าถึงรายชื่อเพื่อแสดงที่นี่</string>
+    <string name="perm_contacts_message">อนุญาตให้แอปอ่านรายชื่อผู้ติดต่อ แล้วจะมาอยู่ตรงนี้</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">เลือกภาษา</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">ปฏิเสธ</string>
     <string name="call_accept">รับสาย</string>
     <string name="call_message">ข้อความ</string>
-    <string name="call_identified">ระบุโดย CallerID</string>
+    <string name="call_identified">ระบุโดย Caller ID Lookup</string>
     <string name="label_spam">สแปม</string>
     <string name="label_verified">ยืนยันแล้ว</string>
 
@@ -190,10 +190,10 @@
     <string name="tools_compass_sub">หาทิศเหนือแม่เหล็ก</string>
     <string name="tools_speedometer">มาตรวัดความเร็ว</string>
     <string name="tools_speedometer_sub">ความเร็ว GPS ปัจจุบัน</string>
-    <string name="compass_no_sensor">อุปกรณ์นี้ไม่มีเซ็นเซอร์เข็มทิศ</string>
+    <string name="compass_no_sensor">เครื่องนี้ไม่มีเซ็นเซอร์เข็มทิศ</string>
     <string name="speedometer_unit">กม./ชม.</string>
     <string name="speedometer_waiting">กำลังรอ GPS…</string>
-    <string name="speedometer_permission">ต้องมีสิทธิ์ตำแหน่งเพื่อวัดความเร็ว</string>
+    <string name="speedometer_permission">การวัดความเร็วต้องใช้สิทธิ์ตำแหน่ง</string>
     <string name="cardinal_n">N</string>
     <string name="cardinal_e">E</string>
     <string name="cardinal_s">S</string>
@@ -218,7 +218,7 @@
     <string name="tools_sound">เครื่องวัดเสียง</string>
     <string name="tools_sound_sub">วัดระดับเสียง</string>
     <string name="sound_unit">เดซิเบล</string>
-    <string name="sound_permission">ต้องมีสิทธิ์ไมโครโฟนเพื่อวัดเสียง</string>
+    <string name="sound_permission">การวัดเสียงต้องใช้สิทธิ์ไมโครโฟน</string>
     <string name="tools_sim">ข้อมูลเครือข่าย</string>
     <string name="tools_sim_sub">รายละเอียด SIM และผู้ให้บริการ</string>
     <string name="sim_carrier">ผู้ให้บริการ</string>
@@ -227,11 +227,11 @@
     <string name="sim_country">ประเทศ</string>
     <string name="sim_state">สถานะ SIM</string>
     <string name="sim_roaming">โรมมิ่ง</string>
-    <string name="sim_permission">ต้องมีสิทธิ์โทรศัพท์เพื่อดูข้อมูลเครือข่าย</string>
+    <string name="sim_permission">รายละเอียดเครือข่ายต้องใช้สิทธิ์โทรศัพท์</string>
     <string name="tools_light">เครื่องวัดแสง</string>
     <string name="tools_light_sub">แสงโดยรอบเป็นลักซ์</string>
     <string name="light_unit">ลักซ์</string>
-    <string name="light_no_sensor">อุปกรณ์นี้ไม่มีเซ็นเซอร์แสง</string>
+    <string name="light_no_sensor">เครื่องนี้ไม่มีเซ็นเซอร์แสง</string>
     <string name="tools_stopwatch">นาฬิกาจับเวลา</string>
     <string name="tools_stopwatch_sub">นาฬิกาจับเวลาและตัวตั้งเวลา</string>
     <string name="mode_stopwatch">จับเวลา</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">ให้คะแนนเรา</string>
     <string name="settings_rate_sub">ชอบแอปไหม? บอกเราหน่อย</string>
     <string name="settings_share">แชร์</string>
-    <string name="settings_share_sub">ชวนเพื่อนมาปกป้องชีวิตดิจิทัล</string>
-    <string name="settings_share_text">ระบุผู้โทรที่ไม่รู้จักและบล็อกสแปมด้วย Caller ID Phone Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">ส่งต่อเถอะ — ช่วยคนใกล้ตัวปิดประตูสายกวนใจ</string>
+    <string name="settings_share_text">ระบุชื่อผู้โทรแปลกหน้าและกันสายกวนใจด้วย Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">นโยบายความเป็นส่วนตัว</string>
     <string name="settings_terms">ข้อกำหนดการให้บริการ</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="other">%d รายการ</item>
     </plurals>
@@ -270,7 +270,7 @@
     <!-- Localization batch (th) -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">แสดงข้อมูลผู้โทรทับแอปอื่น</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">ค้นหาเบอร์โทร</string>
     <string name="home_quick_actions">การดำเนินการด่วน</string>
     <string name="recents_subtitle">ประวัติการโทรของคุณ</string>
@@ -302,7 +302,7 @@
     <string name="lookup_unlock_nicknames">ดูโฆษณาเพื่อเปิดเผย</string>
     <string name="lookup_unknown_value">ไม่ทราบ</string>
     <string name="watch_ad_title">เปิดเผยรายละเอียดทั้งหมด</string>
-    <string name="watch_ad_message">ดูโฆษณาสั้น ๆ เพื่อปลดล็อกชื่อและรายละเอียดผู้โทรทั้งหมด</string>
+    <string name="watch_ad_message">โฆษณาสั้นหนึ่งชิ้นปลดล็อกชื่อเต็มและรายละเอียดผู้โทร</string>
     <string name="watch_ad_button">ดูโฆษณา</string>
     <string name="watch_ad_cancel">ไว้ทีหลัง</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -329,7 +329,7 @@
     <string name="dialer_favorites">รายการโปรด</string>
     <string name="dialer_view_all">ดูทั้งหมด</string>
     <string name="dialer_voice_search">ค้นหาด้วยเสียง</string>
-    <string name="blocklist_empty_subtitle">ปฏิเสธสายจากหมายเลขหรือรูปแบบที่กำหนด</string>
+    <string name="blocklist_empty_subtitle">ปัดสายจากเบอร์หรือรูปแบบที่คุณเลือก</string>
     <string name="blocklist_choose_title">บล็อกหมายเลข</string>
     <string name="blocklist_method_add_title">เพิ่มหมายเลข</string>
     <string name="blocklist_method_add_sub">ป้อนด้วยตนเอง</string>
@@ -341,10 +341,10 @@
     <string name="blocklist_no_recents">ไม่พบสายล่าสุด</string>
     <string name="blocklist_contact_no_number">ไม่สามารถอ่านหมายเลขของรายชื่อนั้นได้</string>
     <string name="blocklist_already_blocked">ถูกบล็อกอยู่แล้ว</string>
-    <string name="blocklist_perm_calllog">ต้องเข้าถึงบันทึกการโทรเพื่อเลือกสายล่าสุด</string>
+    <string name="blocklist_perm_calllog">การเลือกสายล่าสุดต้องเข้าถึงบันทึกการโทร</string>
     <string name="blocklist_pick_contacts_title">รายชื่อ</string>
     <string name="blocklist_no_contacts">ไม่พบรายชื่อ</string>
-    <string name="blocklist_perm_contacts">ต้องเข้าถึงรายชื่อเพื่อเลือกผู้ติดต่อ</string>
+    <string name="blocklist_perm_contacts">การเลือกผู้ติดต่อต้องเข้าถึงรายชื่อผู้ติดต่อ</string>
     <string name="call_screening">โอเวอร์เลย์ระบุผู้โทร</string>
     <string name="call_screening_desc">แสดงข้อมูลผู้โทรระหว่างการโทร</string>
     <string name="please_wait">โปรดรอสักครู่...</string>
@@ -369,10 +369,10 @@
     <string name="feature_calendar">เพิ่มในปฏิทิน</string>
     <string name="feature_web">เปิดเว็บไซต์</string>
     <string name="feature_edit_contact">แก้ไขรายชื่อ</string>
-    <string name="search_hint_tip">พิมพ์หมายเลขใดก็ได้ที่นี่เพื่อระบุผู้โทร</string>
+    <string name="search_hint_tip">โยนเบอร์อะไรก็ได้ลงตรงนี้เพื่อระบุชื่อผู้โทร</string>
     <string name="got_it">เข้าใจแล้ว</string>
     <string name="app_unavailable">ไม่มีแอปนี้</string>
-    <string name="app_redirect_desc">แอปนี้ยังไม่ได้ติดตั้งบนอุปกรณ์ของคุณ ต้องการเปิดใน Play Store หรือไม่?</string>
+    <string name="app_redirect_desc">เครื่องนี้ไม่มีแอปนั้น เปิดหน้า Play Store ของมันไหม</string>
     <string name="settings_section_call">การปกป้องผู้โทร</string>
     <string name="contacts_tab_all">ทั้งหมด</string>
     <string name="contacts_tab_favorites">รายการโปรด</string>
@@ -405,7 +405,7 @@
     <string name="level_calibrate">ปรับเทียบ</string>
     <string name="level_adjusting">กำลังปรับ</string>
     <string name="level_level">ระดับ</string>
-    <string name="battery_activity_sub">ตรวจสอบการใช้พลังงานและความสมบูรณ์ของฮาร์ดแวร์ ดูประสิทธิภาพแบบเรียลไทม์และสถานะการจับมือด้านความปลอดภัย</string>
+    <string name="battery_activity_sub">จับตาการใช้พลังงานและสุขภาพฮาร์ดแวร์ ประสิทธิภาพแบบเรียลไทม์และสถานะการจับมือด้านความปลอดภัย รวมไว้ที่เดียว</string>
     <string name="battery_secured">ปลอดภัยและกำลังปรับให้เหมาะสม</string>
     <string name="battery_health_great">ดีเยี่ยม</string>
     <string name="battery_health_hot">ร้อน</string>
@@ -434,7 +434,7 @@
     <string name="stopwatch_lap">รอบ</string>
     <string name="stopwatch_history">ประวัติรอบ</string>
     <string name="stopwatch_laps">%1$d รอบ</string>
-    <string name="stopwatch_empty">ไม่มีข้อมูลรอบที่บันทึกไว้สำหรับเซสชันปัจจุบัน</string>
+    <string name="stopwatch_empty">รอบนี้ยังไม่มีการจับรอบใด</string>
     <string name="stopwatch_total">บันทึกทั้งหมด</string>
     <string name="stopwatch_lap_n">รอบ %1$d</string>
     <string name="timer_tool">ตัวตั้งเวลา</string>
@@ -447,9 +447,9 @@
     <string name="incall_now">ตอนนี้</string>
     <string name="incall_calls">%1$d สาย</string>
     <string name="incall_service_active">ระบุผู้โทรกำลังทำงาน</string>
-    <string name="call_screening_hint_tip">เปิดใช้งานเพื่อดูว่าใครโทรมาและบล็อกสแปม</string>
+    <string name="call_screening_hint_tip">เปิดสิ่งนี้เพื่อเห็นว่าใครโทรมาและกันสายกวนใจ</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">การอนุญาตบางอย่างปิดอยู่ เปิดใช้เพื่อระบุตัวผู้โทรอย่างเต็มรูปแบบ</string>
+    <string name="home_perm_hint">ยังมีสิทธิ์ที่ปิดอยู่ เปิดให้ครบเพื่อระบุได้เต็มที่</string>
     <string name="home_perm_manage">จัดการ</string>
     <string name="fsi_incoming_call">สายเรียกเข้า</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -460,7 +460,7 @@
     <string name="fsi_meta_calls">68 สาย</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">ไม่พลาดว่าใครโทรมา</string>
-    <string name="fsi_screen_desc">แสดงรายละเอียดผู้โทรที่ยืนยันแล้วบนหน้าจอล็อกทันทีที่มีสายเข้า</string>
+    <string name="fsi_screen_desc">แสดงข้อมูลผู้โทรที่ยืนยันแล้วบนหน้าจอล็อกทันทีที่สายเข้ามา</string>
     <string name="fsi_feature_identify">ระบุหมายเลขที่ไม่รู้จักได้ทันที</string>
     <string name="fsi_feature_spam">เห็นคำเตือนสแปมและการฉ้อโกงล่วงหน้า</string>
     <string name="fsi_feature_missed">ไม่พลาดสายสำคัญอีกต่อไป</string>

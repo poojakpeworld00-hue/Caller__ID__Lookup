@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">発信者を確認 · 迷惑電話をブロック</string>
     <string name="splash_footer">このアプリには広告が含まれる場合があります</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">おすすめの言語</string>
     <string name="language_current">現在の言語</string>
     <string name="language_info_title">言語情報</string>
-    <string name="language_info_msg">言語を変更するとアプリのインターフェースが更新されます。選択内容によっては一部の地域機能が異なる場合があります。</string>
+    <string name="language_info_msg">言語を変えると画面が描き直されます。選択によって地域ごとの細部が変わることがあります。</string>
     <string name="language_info_got_it">OK</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">利用規約</string>
-    <string name="terms_body">以下の規約をよくお読みください。続行すると、次の内容に同意したことになります。\n\n• CallerID は着信、発信、不明な発信者をリアルタイムで識別します。\n• アプリは迷惑電話、詐欺、不正な電話を検出し、ブロックを支援します。\n• 任意の電話番号を検索して、利用可能な発信者情報を確認できます。\n• 正しく動作させるため、アプリは通話履歴と連絡先にアクセスする場合があります。\n• 通話中に発信者情報を表示するために、他のアプリの上に表示（オーバーレイ）する権限を使用します。\n• お客様のデータは非公開に保たれ、発信者識別と迷惑電話対策の提供にのみ使用されます。\n\n「同意して続ける」をタップすると、利用規約およびプライバシーポリシーを読み、同意したことを確認したものとみなされます。</string>
-    <string name="terms_agree">利用規約およびプライバシーポリシーを読み、同意します。</string>
+    <string name="terms_body">この規約に少しだけ目を通してください。続けることは同意を意味します:\n\n• Caller ID Lookup は着信・発信・見知らぬ番号を、その通話のさなかに名前で示します。\n• 迷惑・詐欺・不正の電話には印が付き、締め出せるようになります。\n• どの番号も検索でき、記録に残る発信者情報を確認できます。\n• そのために、通話履歴と連絡先を読み取ることがあります。\n• 他のアプリの上に描画する権限が、通話中に発信者情報を画面へ出しています。\n• 集めたものはあなたのものであり、発信者の特定と迷惑電話対策にのみ使われます。\n\n「同意して続行」を選ぶことで、当社の利用規約とプライバシーポリシーを読み、同意したことを確認します。</string>
+    <string name="terms_agree">利用規約とプライバシーポリシーを読み、同意します。</string>
     <string name="terms_accept">同意して続ける</string>
     <string name="terms_please_accept">続けるには利用規約に同意してください。</string>
     <string name="txt_allow_overlay_access">他のアプリの上に表示を許可</string>
     <string name="overlay_system_permission">システム権限</string>
-    <string name="overlay_permission_desc">他のアプリの上に表示を許可すると、他のアプリの使用中でも発信者情報を表示できます。</string>
+    <string name="overlay_permission_desc">他のアプリの上に描画する権限があると、別の作業中でも発信者情報が見えます。</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">スキップ</string>
     <string name="onboarding_next">次へ</string>
     <string name="onboarding_title">発信者をすぐに確認</string>
-    <string name="onboarding_desc">不明な番号を瞬時に識別し、発信者の名前や事業者を表示。着信が鳴る前に迷惑電話をブロックします。</string>
+    <string name="onboarding_desc">見知らぬ番号をその場で名前にし、誰がどこから掛けているかを見て、迷惑電話は最初の呼び出し音の前に止めます。</string>
     <string name="onboarding_title_2">迷惑電話と詐欺をブロック</string>
-    <string name="onboarding_desc_2">迷惑電話、詐欺、自動音声通話を自動的に検出してブロックし、二度と煩わされません。</string>
+    <string name="onboarding_desc_2">迷惑・詐欺・自動音声の電話を見つけて締め出し、あなたに届かないようにします。</string>
     <string name="onboarding_title_3">どんな番号でも検索</string>
-    <string name="onboarding_desc_3">不明な番号を検索すると、発信者の名前、地域、事業者の詳細を瞬時に確認できます。</string>
+    <string name="onboarding_desc_3">見知らぬ番号を検索すれば、その先にいる相手が分かります — 名前、所在地、事業。</string>
     <string name="onboarding_get_started">始める</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">最近の通話を表示</string>
-    <string name="perm_calllog_message">通話履歴へのアクセスを許可すると、最近の通話をここに表示できます。</string>
+    <string name="perm_calllog_message">通話履歴の読み取りを許可すると、最近の通話がここに並びます。</string>
     <string name="action_grant">アクセスを許可</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">迷惑リスク</string>
     <string name="action_call">発信</string>
     <string name="action_save">保存</string>
-    <string name="lookup_idle_hint">電話番号を入力して発信者を識別</string>
+    <string name="lookup_idle_hint">発信者に名前を付けるには番号を入力</string>
     <string name="lookup_unknown_caller">不明な発信者</string>
     <string name="lookup_in_contacts">連絡先に登録済み</string>
     <string name="lookup_not_in_contacts">連絡先に未登録</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">連絡先を検索</string>
     <string name="contacts_empty">連絡先が見つかりません</string>
     <string name="perm_contacts_title">連絡先を表示</string>
-    <string name="perm_contacts_message">連絡先へのアクセスを許可すると、ここに表示できます。</string>
+    <string name="perm_contacts_message">連絡先の読み取りを許可すると、ここに並びます。</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">言語を選択</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">拒否</string>
     <string name="call_accept">応答</string>
     <string name="call_message">メッセージ</string>
-    <string name="call_identified">CallerID により識別</string>
+    <string name="call_identified">Caller ID Lookup により識別</string>
     <string name="label_spam">迷惑</string>
     <string name="label_verified">認証済み</string>
 
@@ -190,7 +190,7 @@
     <string name="tools_compass_sub">磁北を探す</string>
     <string name="tools_speedometer">スピードメーター</string>
     <string name="tools_speedometer_sub">現在のGPS速度</string>
-    <string name="compass_no_sensor">このデバイスにはコンパスセンサーがありません</string>
+    <string name="compass_no_sensor">この端末にコンパスセンサーはありません</string>
     <string name="speedometer_unit">km/h</string>
     <string name="speedometer_waiting">GPSを待機中…</string>
     <string name="speedometer_permission">速度の測定には位置情報の許可が必要です</string>
@@ -227,11 +227,11 @@
     <string name="sim_country">国</string>
     <string name="sim_state">SIMの状態</string>
     <string name="sim_roaming">ローミング</string>
-    <string name="sim_permission">ネットワーク詳細には電話の許可が必要です</string>
+    <string name="sim_permission">ネットワーク情報には電話の許可が必要です</string>
     <string name="tools_light">照度計</string>
     <string name="tools_light_sub">環境光をルクスで表示</string>
     <string name="light_unit">ルクス</string>
-    <string name="light_no_sensor">このデバイスには照度センサーがありません</string>
+    <string name="light_no_sensor">この端末に光センサーはありません</string>
     <string name="tools_stopwatch">ストップウォッチ</string>
     <string name="tools_stopwatch_sub">ストップウォッチとタイマー</string>
     <string name="mode_stopwatch">ストップウォッチ</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">評価する</string>
     <string name="settings_rate_sub">アプリは気に入りましたか？</string>
     <string name="settings_share">共有</string>
-    <string name="settings_share_sub">友達を招待してデジタル生活を守りましょう。</string>
-    <string name="settings_share_text">Caller ID Phone Lookupで不明な発信者を特定し迷惑電話をブロック: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">広めてください — 大切な人の着信も固めましょう。</string>
+    <string name="settings_share_text">見知らぬ着信に名前を、迷惑電話に締め出しを。Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">プライバシーポリシー</string>
     <string name="settings_terms">利用規約</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="other">%d 件</item>
     </plurals>
@@ -277,9 +277,9 @@
     <string name="action_unblock">ブロック解除</string>
     <string name="action_whatsapp">WhatsApp</string>
     <string name="add_reminder">リマインダーを追加</string>
-    <string name="app_redirect_desc">このアプリはお使いのデバイスにインストールされていません。Play Store で開きますか？</string>
+    <string name="app_redirect_desc">そのアプリは端末にありません。Play ストアのページを開きますか?</string>
     <string name="app_unavailable">アプリを利用できません</string>
-    <string name="battery_activity_sub">電力消費とハードウェアの整合性を監視します。リアルタイムのパフォーマンスとセキュリティハンドシェイクの状態を確認できます。</string>
+    <string name="battery_activity_sub">電力消費とハードウェアの健全性を見張ります。リアルタイムの性能とセキュリティハンドシェイクの状態を一か所で。</string>
     <string name="battery_health_cold">低温</string>
     <string name="battery_health_dead">劣化</string>
     <string name="battery_health_great">良好</string>
@@ -289,7 +289,7 @@
     <string name="blocklist_already_blocked">すでにブロック済み</string>
     <string name="blocklist_choose_title">番号をブロック</string>
     <string name="blocklist_contact_no_number">その連絡先の番号を読み取れませんでした</string>
-    <string name="blocklist_empty_subtitle">特定の番号やパターンからの着信を拒否します</string>
+    <string name="blocklist_empty_subtitle">選んだ番号やパターンからの着信を突き返します</string>
     <string name="blocklist_method_add_sub">手動で入力</string>
     <string name="blocklist_method_add_title">番号を追加</string>
     <string name="blocklist_method_contacts_sub">連絡先から選択</string>
@@ -298,8 +298,8 @@
     <string name="blocklist_method_recents_title">最近の通話からブロック</string>
     <string name="blocklist_no_contacts">連絡先が見つかりません</string>
     <string name="blocklist_no_recents">最近の通話が見つかりません</string>
-    <string name="blocklist_perm_calllog">最近の通話を選択するには通話履歴へのアクセスが必要です</string>
-    <string name="blocklist_perm_contacts">連絡先を選択するには連絡先へのアクセスが必要です</string>
+    <string name="blocklist_perm_calllog">最近の通話を選ぶには通話履歴へのアクセスが要ります</string>
+    <string name="blocklist_perm_contacts">連絡先を選ぶには連絡先へのアクセスが要ります</string>
     <string name="blocklist_pick_contacts_title">連絡先</string>
     <string name="blocklist_pick_recents_title">最近の通話</string>
     <string name="call_detail_title">通話の詳細</string>
@@ -348,7 +348,7 @@
     <string name="flashlight_mode_steady">点灯</string>
     <string name="flashlight_mode_strobe">ストロボ</string>
     <string name="got_it">OK</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">電話番号検索</string>
     <string name="home_quick_actions">クイック操作</string>
     <string name="incall_calls">%1$d 件の通話</string>
@@ -400,7 +400,7 @@
     <string name="reminder_name_hint">誕生日</string>
     <string name="reminder_prompt">リマインドする内容</string>
     <string name="save">保存</string>
-    <string name="search_hint_tip">ここに番号を入力すると発信者を識別できます</string>
+    <string name="search_hint_tip">発信者に名前を付けるには、ここに番号を放り込んでください</string>
     <string name="settings_section_call">発信者保護</string>
     <string name="signal_medium">中</string>
     <string name="signal_strong">強</string>
@@ -431,7 +431,7 @@
     <string name="speedtest_stable">セキュア接続は安定しています</string>
     <string name="speedtest_upload">アップロード速度</string>
     <string name="stopwatch_active">アクティブなセッション</string>
-    <string name="stopwatch_empty">現在のセッションのラップ記録はありません。</string>
+    <string name="stopwatch_empty">このセッションのラップは記録されていません。</string>
     <string name="stopwatch_history">ラップ履歴</string>
     <string name="stopwatch_lap">ラップ</string>
     <string name="stopwatch_lap_n">ラップ %1$d</string>
@@ -443,13 +443,13 @@
     <string name="timer_tool_sub">カウントダウンタイマー</string>
     <string name="watch_ad_button">広告を見る</string>
     <string name="watch_ad_cancel">後で</string>
-    <string name="watch_ad_message">短い広告を見て、発信者の氏名と詳細をすべて表示します。</string>
+    <string name="watch_ad_message">短い広告で発信者のフルネームと詳細が開きます。</string>
     <string name="watch_ad_title">詳細をすべて表示</string>
     <string name="whatsapp">WhatsApp</string>
     <string name="whatsapp_not_installed">WhatsApp がインストールされていません</string>
-    <string name="call_screening_hint_tip">オンにすると、発信者を確認し迷惑電話をブロックできます</string>
+    <string name="call_screening_hint_tip">これを入れると誰からの着信か分かり、迷惑は締め出せます</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">一部の権限がオフです。完全な発信者IDのためにオンにしてください。</string>
+    <string name="home_perm_hint">まだ切れている権限があります。完全に特定するには入れてください。</string>
     <string name="home_perm_manage">管理</string>
     <string name="fsi_incoming_call">着信</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -460,7 +460,7 @@
     <string name="fsi_meta_calls">68 件の通話</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">誰からの電話か見逃さない</string>
-    <string name="fsi_screen_desc">着信した瞬間に、確認済みの発信者情報をロック画面に表示します。</string>
+    <string name="fsi_screen_desc">着信した瞬間に、確認済みの発信者情報をロック画面へ。</string>
     <string name="fsi_feature_identify">不明な番号を即座に識別</string>
     <string name="fsi_feature_spam">迷惑・詐欺の警告を事前に確認</string>
     <string name="fsi_feature_missed">大切な電話を二度と逃さない</string>

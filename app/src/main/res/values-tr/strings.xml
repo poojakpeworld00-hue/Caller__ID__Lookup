@@ -4,7 +4,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Kimin aradığını bilin · Spam\'i engelleyin</string>
     <string name="splash_footer">Bu uygulama reklam içerebilir</string>
 
@@ -15,28 +15,28 @@
     <string name="language_suggested">Önerilen diller</string>
     <string name="language_current">Geçerli dil</string>
     <string name="language_info_title">Dil Bilgisi</string>
-    <string name="language_info_msg">Dili değiştirmek uygulama arayüzünü günceller. Bazı bölgesel özellikler seçiminize göre değişebilir.</string>
+    <string name="language_info_msg">Dili değiştirmek arayüzü yeniden çizer. Seçiminize göre bazı bölgesel ayrıntılar değişebilir.</string>
     <string name="language_info_got_it">Anladım</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">Şartlar ve Koşullar</string>
-    <string name="terms_body">Lütfen bu koşulları dikkatlice okuyun. Devam ederek aşağıdakileri kabul etmiş olursunuz:\n\n• CallerID gelen, giden ve bilinmeyen aramaları gerçek zamanlı olarak tanımlar.\n• Uygulama spam, dolandırıcılık ve sahtekârlık aramalarını algılar ve engellemenize yardımcı olur.\n• Herhangi bir telefon numarasını sorgulayarak mevcut arayan bilgilerini görebilirsiniz.\n• Düzgün çalışması için uygulama arama kaydınıza ve kişilerinize erişebilir.\n• Aramalar sırasında arayan bilgilerini göstermek için diğer uygulamaların üzerinde gösterme (yer paylaşımı) izni kullanılır.\n• Verileriniz gizli kalır ve yalnızca arayan kimliği ve spam koruması sağlamak için kullanılır.\n\n“Kabul et ve devam et” seçeneğine dokunarak Şartlar ve Koşullarımızı ve Gizlilik Politikamızı okuyup kabul ettiğinizi onaylarsınız.</string>
-    <string name="terms_agree">Şartlar ve Koşulları ve Gizlilik Politikasını okudum ve kabul ediyorum.</string>
+    <string name="terms_body">Bu koşullara biraz vakit ayırın. Devam etmek kabul etmek demektir:\n\n• Caller ID Lookup gelen, giden ve tanınmayan aramaları tam o anda adlandırır.\n• Rahatsız edici, dolandırıcılık ve sahtekârlık aramaları işaretlenir, siz de dışarıda bırakırsınız.\n• Herhangi bir numara aranarak arayan hakkında kayıtlı bilgiler görülebilir.\n• Uygulamanın bu işi yapabilmesi için arama kaydınız ve kişileriniz okunabilir.\n• Diğer uygulamaların üzerine çizim, arama sırasında arayan bilgisini ekrana getiren şeydir.\n• Topladığımız sizde kalır ve yalnızca arayanı adlandırmaya ve rahatsız edici aramaları savmaya yarar.\n\n“Kabul et ve devam et” demek, Koşullarımızı ve Gizlilik Politikamızı okuduğunuzu ve kabul ettiğinizi doğrular.</string>
+    <string name="terms_agree">Koşulları ve Gizlilik Politikasını okudum ve kabul ediyorum.</string>
     <string name="terms_accept">Kabul et ve devam et</string>
-    <string name="terms_please_accept">Devam etmek için Şartlar ve Koşulları kabul edin.</string>
+    <string name="terms_please_accept">Devam etmek için Koşulları kabul edin.</string>
     <string name="txt_allow_overlay_access">Diğer uygulamaların üzerinde göstermeye izin ver</string>
     <string name="overlay_system_permission">Sistem izni</string>
-    <string name="overlay_permission_desc">Diğer uygulamaların üzerinde gösterme, bu uygulamanın siz başka uygulamalar kullanırken arayan bilgilerini göstermesine olanak tanır.</string>
+    <string name="overlay_permission_desc">Diğer uygulamaların üzerine çizim, siz başka işle meşgulken arayanı görmenizi sağlar.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">Atla</string>
     <string name="onboarding_next">İleri</string>
     <string name="onboarding_title">Kimin aradığını bilin</string>
-    <string name="onboarding_desc">Bilinmeyen numaraları anında tanıyın, arayanın adını ve işletmesini görün ve telefon çalmadan spam\'i engelleyin.</string>
+    <string name="onboarding_desc">Tanınmayan numaraları anında adlandırın, kimin nereden aradığını görün ve rahatsız edici aramaları ilk çalıştan önce savın.</string>
     <string name="onboarding_title_2">Spam ve dolandırıcılığı engelleyin</string>
-    <string name="onboarding_desc_2">Spam, dolandırıcılık ve otomatik aramaları otomatik olarak algılayıp engelleyin, böylece sizi bir daha rahatsız etmesinler.</string>
+    <string name="onboarding_desc_2">Rahatsız edici, dolandırıcı ve kayıtlı aramalar yakalanır ve savulur, size ulaşmayı bırakır.</string>
     <string name="onboarding_title_3">Herhangi bir numarayı sorgulayın</string>
-    <string name="onboarding_desc_3">Bilinmeyen herhangi bir numarayı sorgulayarak arayanın adını, konumunu ve işletme bilgilerini anında görün.</string>
+    <string name="onboarding_desc_3">Tanınmayan herhangi bir numarayı arayın ve arkasındakini görün: ad, yer, iş.</string>
     <string name="onboarding_get_started">Başla</string>
 
     <!-- Home -->
@@ -84,7 +84,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">Son aramalarınızı görün</string>
-    <string name="perm_calllog_message">Son aramalarınızı burada göstermek için arama kaydına erişime izin verin.</string>
+    <string name="perm_calllog_message">Uygulamanın arama kaydınızı okumasına izin verin, son aramalar burada belirsin.</string>
     <string name="action_grant">Erişime izin ver</string>
 
     <!-- Lookup -->
@@ -95,7 +95,7 @@
     <string name="lookup_spam_risk">Spam riski</string>
     <string name="action_call">Ara</string>
     <string name="action_save">Kaydet</string>
-    <string name="lookup_idle_hint">Arayanı tanımlamak için bir telefon numarası girin</string>
+    <string name="lookup_idle_hint">Arayanı adlandırmak için bir numara yazın</string>
     <string name="lookup_unknown_caller">Bilinmeyen arayan</string>
     <string name="lookup_in_contacts">Kişilerinizde</string>
     <string name="lookup_not_in_contacts">Kişilerinizde değil</string>
@@ -109,7 +109,7 @@
     <string name="contacts_search_hint">Kişilerde ara</string>
     <string name="contacts_empty">Kişi bulunamadı</string>
     <string name="perm_contacts_title">Kişilerinizi görün</string>
-    <string name="perm_contacts_message">Kişilerinizi burada göstermek için erişime izin verin.</string>
+    <string name="perm_contacts_message">Uygulamanın kişilerinizi okumasına izin verin, burada belirsinler.</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">Dil seçin</string>
@@ -143,7 +143,7 @@
     <string name="call_decline">Reddet</string>
     <string name="call_accept">Kabul et</string>
     <string name="call_message">Mesaj</string>
-    <string name="call_identified">CallerID tarafından tanımlandı</string>
+    <string name="call_identified">Caller ID Lookup tarafından tanımlandı</string>
     <string name="label_spam">Spam</string>
     <string name="label_verified">Doğrulandı</string>
 
@@ -193,7 +193,7 @@
     <string name="compass_no_sensor">Bu cihazda pusula sensörü yok</string>
     <string name="speedometer_unit">km/sa</string>
     <string name="speedometer_waiting">GPS bekleniyor…</string>
-    <string name="speedometer_permission">Hızı ölçmek için konum izni gerekir</string>
+    <string name="speedometer_permission">Hız ölçmek için konum izni gerekir</string>
     <string name="cardinal_n">K</string>
     <string name="cardinal_e">D</string>
     <string name="cardinal_s">G</string>
@@ -218,7 +218,7 @@
     <string name="tools_sound">Ses Ölçer</string>
     <string name="tools_sound_sub">Gürültü seviyesini ölç</string>
     <string name="sound_unit">dB</string>
-    <string name="sound_permission">Sesi ölçmek için mikrofon izni gerekir</string>
+    <string name="sound_permission">Ses ölçmek için mikrofon izni gerekir</string>
     <string name="tools_sim">Ağ bilgisi</string>
     <string name="tools_sim_sub">SIM ve operatör ayrıntıları</string>
     <string name="sim_carrier">Operatör</string>
@@ -253,12 +253,12 @@
     <string name="settings_rate">Bizi Değerlendirin</string>
     <string name="settings_rate_sub">Uygulamayı beğendiniz mi? Bize bildirin.</string>
     <string name="settings_share">Paylaş</string>
-    <string name="settings_share_sub">Arkadaşlarınızı dijital yaşamlarını korumaya davet edin.</string>
-    <string name="settings_share_text">Caller ID Phone Lookup ile bilinmeyen aramaları tanıyın ve spam\'i engelleyin: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">Haberi yayın — bir yakınınızın aramalarını da kapatın.</string>
+    <string name="settings_share_text">Tanınmayan arayanları adlandırın, rahatsız edici aramaları savın: Caller ID Lookup https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Gizlilik Politikası</string>
     <string name="settings_terms">Hizmet Şartları</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="one">%d giriş</item>
         <item quantity="other">%d giriş</item>
@@ -272,7 +272,7 @@
     <!-- Batch translations -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">Arayan bilgilerini diğer uygulamaların üzerinde göster</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Numara Sorgulama</string>
     <string name="home_quick_actions">Hızlı İşlemler</string>
     <string name="recents_subtitle">Arama geçmişiniz</string>
@@ -304,7 +304,7 @@
     <string name="lookup_unlock_nicknames">Görmek için reklam izleyin</string>
     <string name="lookup_unknown_value">Bilinmiyor</string>
     <string name="watch_ad_title">Tüm ayrıntıları göster</string>
-    <string name="watch_ad_message">Tüm arayan adını ve ayrıntılarını görmek için kısa bir reklam izleyin.</string>
+    <string name="watch_ad_message">Kısa bir reklam arayanın tam adını ve ayrıntılarını açar.</string>
     <string name="watch_ad_button">Reklam İzle</string>
     <string name="watch_ad_cancel">Şimdi değil</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -331,7 +331,7 @@
     <string name="dialer_favorites">Favoriler</string>
     <string name="dialer_view_all">Tümünü gör</string>
     <string name="dialer_voice_search">Sesli arama</string>
-    <string name="blocklist_empty_subtitle">Belirli numaralardan veya kalıplardan gelen aramaları reddedin</string>
+    <string name="blocklist_empty_subtitle">Seçtiğiniz numara ya da kalıplardan gelen aramaları geri çevirin</string>
     <string name="blocklist_choose_title">Bir numarayı engelle</string>
     <string name="blocklist_method_add_title">Bir numara ekle</string>
     <string name="blocklist_method_add_sub">Elle girin</string>
@@ -343,10 +343,10 @@
     <string name="blocklist_no_recents">Son arama bulunamadı</string>
     <string name="blocklist_contact_no_number">Bu kişinin numarası okunamadı</string>
     <string name="blocklist_already_blocked">Zaten engellendi</string>
-    <string name="blocklist_perm_calllog">Son aramaları seçmek için arama kaydı erişimi gerekir</string>
+    <string name="blocklist_perm_calllog">Son aramaları seçmek arama kaydı erişimi ister</string>
     <string name="blocklist_pick_contacts_title">Kişiler</string>
     <string name="blocklist_no_contacts">Kişi bulunamadı</string>
-    <string name="blocklist_perm_contacts">Bir kişi seçmek için kişiler erişimi gerekir</string>
+    <string name="blocklist_perm_contacts">Kişi seçmek kişiler erişimi ister</string>
     <string name="compass_activity_title">Pusula Etkinliği</string>
     <string name="compass_signal">Sinyal Gücü: %1$s</string>
     <string name="signal_strong">Güçlü</string>
@@ -374,7 +374,7 @@
     <string name="level_calibrate">Kalibre et</string>
     <string name="level_adjusting">Ayarlanıyor</string>
     <string name="level_level">Düz</string>
-    <string name="battery_activity_sub">Güç tüketimini ve donanım bütünlüğünü izleyin. Gerçek zamanlı performansı ve güvenlik el sıkışma durumlarını inceleyin.</string>
+    <string name="battery_activity_sub">Güç tüketimini ve donanım sağlığını izleyin. Canlı performans ve güvenlik el sıkışma durumu, tek yerde.</string>
     <string name="battery_secured">Güvenli ve Optimize Ediliyor</string>
     <string name="battery_health_great">Mükemmel</string>
     <string name="battery_health_hot">Sıcak</string>
@@ -403,7 +403,7 @@
     <string name="stopwatch_lap">Tur</string>
     <string name="stopwatch_history">Tur Geçmişi</string>
     <string name="stopwatch_laps">%1$d Tur</string>
-    <string name="stopwatch_empty">Geçerli oturum için tur verisi kaydedilmedi.</string>
+    <string name="stopwatch_empty">Bu oturumda tur kaydedilmedi.</string>
     <string name="stopwatch_total">Toplam kayıt</string>
     <string name="stopwatch_lap_n">Tur %1$d</string>
     <string name="timer_tool">Zamanlayıcı</string>
@@ -444,14 +444,14 @@
     <string name="feature_calendar">Takvime Ekle</string>
     <string name="feature_web">Web Sitesini Aç</string>
     <string name="feature_edit_contact">Kişiyi Düzenle</string>
-    <string name="search_hint_tip">Arayanı tanımlamak için buraya herhangi bir numara yazın</string>
+    <string name="search_hint_tip">Arayanı adlandırmak için buraya herhangi bir numara bırakın</string>
     <string name="got_it">Anladım</string>
     <string name="app_unavailable">Uygulama Mevcut Değil</string>
-    <string name="app_redirect_desc">Bu uygulama cihazınızda yüklü değil. Play Store\'da açmak ister misiniz?</string>
+    <string name="app_redirect_desc">O uygulama bu cihazda yok. Play Store sayfasını açalım mı?</string>
     <string name="settings_section_call">ARAYAN KORUMASI</string>
-    <string name="call_screening_hint_tip">Arayanı görmek ve spam aramaları engellemek için bunu açın</string>
+    <string name="call_screening_hint_tip">Bunu açın, kimin aradığını görün ve rahatsız edeni savın</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">Bazı izinler kapalı. Tam arayan kimliği için bunları açın.</string>
+    <string name="home_perm_hint">Hâlâ kapalı izinler var. Tam tanıma için onları açın.</string>
     <string name="home_perm_manage">Yönet</string>
     <string name="fsi_incoming_call">Gelen Arama</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -462,7 +462,7 @@
     <string name="fsi_meta_calls">68 arama</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">Kimin aradığını kaçırmayın</string>
-    <string name="fsi_screen_desc">Bir arama geldiği anda kilit ekranınızda doğrulanmış arayan bilgilerini görün.</string>
+    <string name="fsi_screen_desc">Arama gelir gelmez kilit ekranında doğrulanmış arayan bilgisini gösterin.</string>
     <string name="fsi_feature_identify">Bilinmeyen numaraları anında tanıyın</string>
     <string name="fsi_feature_spam">Spam ve dolandırıcılık uyarılarını önceden görün</string>
     <string name="fsi_feature_missed">Önemli bir aramayı bir daha kaçırmayın</string>

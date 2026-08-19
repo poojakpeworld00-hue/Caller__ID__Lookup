@@ -14,28 +14,28 @@
     <string name="language_suggested">सुझाई गई भाषाएँ</string>
     <string name="language_current">वर्तमान भाषा</string>
     <string name="language_info_title">भाषा जानकारी</string>
-    <string name="language_info_msg">भाषा बदलने से ऐप का इंटरफ़ेस अपडेट होगा। आपके चयन के आधार पर कुछ क्षेत्रीय सुविधाएँ भिन्न हो सकती हैं।</string>
+    <string name="language_info_msg">भाषा बदलने पर इंटरफ़ेस दोबारा बनता है। आपके चुनाव के हिसाब से कुछ क्षेत्रीय बातें अलग हो सकती हैं।</string>
     <string name="language_info_got_it">समझ गया</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">नियम और शर्तें</string>
-    <string name="terms_body">कृपया इन शर्तों को ध्यान से पढ़ें। जारी रखकर, आप निम्नलिखित से सहमत होते हैं:\n\n• CallerID आने वाली, जाने वाली और अनजान कॉल की रीयल-टाइम में पहचान करता है।\n• ऐप स्पैम, घोटाले और धोखाधड़ी वाली कॉल का पता लगाता है और उन्हें ब्लॉक करने में मदद करता है।\n• आप किसी भी फ़ोन नंबर को खोजकर उपलब्ध कॉलर विवरण देख सकते हैं।\n• सही ढंग से काम करने के लिए, ऐप आपके कॉल लॉग और संपर्कों तक पहुँच सकता है।\n• कॉल के दौरान कॉलर जानकारी दिखाने के लिए अन्य ऐप्स के ऊपर दिखाने (ओवरले) की अनुमति का उपयोग किया जाता है।\n• आपका डेटा निजी रहता है और इसका उपयोग केवल कॉलर पहचान और स्पैम सुरक्षा के लिए किया जाता है।\n\n“स्वीकार करें और जारी रखें” पर टैप करके आप पुष्टि करते हैं कि आपने हमारी नियम और शर्तें तथा गोपनीयता नीति पढ़ी है और उनसे सहमत हैं।</string>
-    <string name="terms_agree">मैंने नियम और शर्तें तथा गोपनीयता नीति पढ़ी है और उनसे सहमत हूँ।</string>
+    <string name="terms_body">इन शर्तों को थोड़ा समय दें। आगे बढ़ने का मतलब है कि आप इन्हें स्वीकार करते हैं:\n\n• Caller ID Lookup आने वाली, जाने वाली और अनजान कॉल को उसी वक्त नाम देता है।\n• परेशान करने वाली, ठगी और धोखाधड़ी की कॉल चिह्नित होती हैं ताकि आप उन्हें रोक सकें।\n• किसी भी नंबर को खोजकर कॉल करने वाले का दर्ज ब्योरा देखा जा सकता है।\n• यह काम करने के लिए ऐप आपका कॉल लॉग और संपर्क पढ़ सकता है।\n• दूसरे ऐप्स के ऊपर दिखने की अनुमति ही कॉल के दौरान ब्योरा स्क्रीन पर लाती है।\n• जो हम इकट्ठा करते हैं वह आपका ही रहता है, और सिर्फ कॉल पहचान तथा परेशान करने वाली कॉल रोकने के काम आता है।\n\n“स्वीकार करें और आगे बढ़ें” चुनना पुष्टि करता है कि आपने हमारी शर्तें और गोपनीयता नीति पढ़ी और मानी हैं।</string>
+    <string name="terms_agree">मैंने शर्तें और गोपनीयता नीति पढ़ी हैं और उन्हें मानता/मानती हूँ।</string>
     <string name="terms_accept">स्वीकार करें और जारी रखें</string>
-    <string name="terms_please_accept">जारी रखने के लिए कृपया नियम और शर्तें स्वीकार करें।</string>
+    <string name="terms_please_accept">आगे बढ़ने के लिए शर्तें स्वीकार करें।</string>
     <string name="txt_allow_overlay_access">अन्य ऐप्स के ऊपर दिखाने की अनुमति दें</string>
     <string name="overlay_system_permission">सिस्टम अनुमति</string>
-    <string name="overlay_permission_desc">अन्य ऐप्स के ऊपर दिखाने की अनुमति इस ऐप को अन्य ऐप्स का उपयोग करते समय कॉलर जानकारी दिखाने देती है।</string>
+    <string name="overlay_permission_desc">दूसरे ऐप्स के ऊपर दिखने की अनुमति ही तब काम आती है जब आप कहीं और व्यस्त हों।</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">छोड़ें</string>
     <string name="onboarding_next">आगे</string>
     <string name="onboarding_title">जानें कौन कॉल कर रहा है</string>
-    <string name="onboarding_desc">अनजान नंबरों को तुरंत पहचानें, कॉल करने वाले का नाम और कंपनी देखें, और घंटी बजने से पहले स्पैम ब्लॉक करें।</string>
+    <string name="onboarding_desc">अनजान नंबरों को तुरंत नाम दें, देखें कौन और कहाँ से कॉल कर रहा है, और पहली घंटी से पहले परेशान करने वाली कॉल रोकें।</string>
     <string name="onboarding_title_2">स्पैम और धोखाधड़ी ब्लॉक करें</string>
-    <string name="onboarding_desc_2">स्पैम, घोटाले और रोबोकॉल को अपने आप पहचानें और ब्लॉक करें ताकि वे आपको दोबारा परेशान न करें।</string>
+    <string name="onboarding_desc_2">परेशान करने वाली, ठगी और रिकॉर्ड की गई कॉल पकड़ी और रोकी जाती हैं, ताकि वे आप तक पहुँचना बंद कर दें।</string>
     <string name="onboarding_title_3">कोई भी नंबर खोजें</string>
-    <string name="onboarding_desc_3">किसी भी अनजान नंबर को खोजें और तुरंत कॉल करने वाले का नाम, स्थान और कंपनी जानकारी देखें।</string>
+    <string name="onboarding_desc_3">किसी भी अनजान नंबर को खोजें और देखें उसके पीछे कौन है — नाम, जगह, काम।</string>
     <string name="onboarding_get_started">शुरू करें</string>
 
     <!-- Home -->
@@ -67,7 +67,7 @@
     <string name="call_decline">अस्वीकार करें</string>
     <string name="call_accept">स्वीकार करें</string>
     <string name="call_message">संदेश</string>
-    <string name="call_identified">CallerID द्वारा पहचाना गया</string>
+    <string name="call_identified">Caller ID Lookup द्वारा पहचाना गया</string>
     <string name="label_spam">स्पैम</string>
     <string name="label_verified">सत्यापित</string>
 
@@ -92,7 +92,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">अपनी हाल की कॉल देखें</string>
-    <string name="perm_calllog_message">यहाँ अपनी हाल की कॉल दिखाने के लिए कॉल लॉग तक पहुँच की अनुमति दें।</string>
+    <string name="perm_calllog_message">ऐप को कॉल लॉग पढ़ने दें और आपकी हाल की कॉल यहाँ दिखेंगी।</string>
     <string name="action_grant">अनुमति दें</string>
 
     <!-- Lookup -->
@@ -103,7 +103,7 @@
     <string name="lookup_spam_risk">स्पैम जोखिम</string>
     <string name="action_call">कॉल करें</string>
     <string name="action_save">सहेजें</string>
-    <string name="lookup_idle_hint">कॉल करने वाले की पहचान के लिए नंबर दर्ज करें</string>
+    <string name="lookup_idle_hint">कॉल करने वाले को नाम देने के लिए नंबर लिखें</string>
     <string name="lookup_unknown_caller">अज्ञात कॉलर</string>
     <string name="lookup_in_contacts">आपके संपर्कों में</string>
     <string name="lookup_not_in_contacts">आपके संपर्कों में नहीं</string>
@@ -117,7 +117,7 @@
     <string name="contacts_search_hint">संपर्क खोजें</string>
     <string name="contacts_empty">कोई संपर्क नहीं मिला</string>
     <string name="perm_contacts_title">अपने संपर्क देखें</string>
-    <string name="perm_contacts_message">अपने संपर्क यहाँ दिखाने के लिए पहुँच की अनुमति दें।</string>
+    <string name="perm_contacts_message">ऐप को संपर्क पढ़ने दें और वे यहाँ दिखेंगे।</string>
 
     <!-- Settings -->
     <string name="settings_language">भाषा</string>
@@ -189,10 +189,10 @@
     <string name="tools_compass_sub">चुंबकीय उत्तर खोजें</string>
     <string name="tools_speedometer">स्पीडोमीटर</string>
     <string name="tools_speedometer_sub">आपकी वर्तमान GPS गति</string>
-    <string name="compass_no_sensor">इस डिवाइस पर कम्पास सेंसर उपलब्ध नहीं है</string>
+    <string name="compass_no_sensor">इस डिवाइस में कंपास सेंसर नहीं है</string>
     <string name="speedometer_unit">किमी/घंटा</string>
     <string name="speedometer_waiting">GPS की प्रतीक्षा…</string>
-    <string name="speedometer_permission">गति मापने के लिए स्थान अनुमति आवश्यक है</string>
+    <string name="speedometer_permission">रफ़्तार मापने के लिए स्थान की अनुमति चाहिए</string>
     <string name="cardinal_n">उ</string>
     <string name="cardinal_e">पू</string>
     <string name="cardinal_s">द</string>
@@ -217,7 +217,7 @@
     <string name="tools_sound">साउंड मीटर</string>
     <string name="tools_sound_sub">शोर स्तर मापें</string>
     <string name="sound_unit">डेसिबल</string>
-    <string name="sound_permission">ध्वनि मापने के लिए माइक्रोफ़ोन अनुमति आवश्यक है</string>
+    <string name="sound_permission">आवाज़ मापने के लिए माइक्रोफ़ोन की अनुमति चाहिए</string>
     <string name="tools_sim">नेटवर्क जानकारी</string>
     <string name="tools_sim_sub">SIM और कैरियर विवरण</string>
     <string name="sim_carrier">कैरियर</string>
@@ -226,11 +226,11 @@
     <string name="sim_country">देश</string>
     <string name="sim_state">SIM स्थिति</string>
     <string name="sim_roaming">रोमिंग</string>
-    <string name="sim_permission">नेटवर्क विवरण के लिए फ़ोन अनुमति आवश्यक है</string>
+    <string name="sim_permission">नेटवर्क ब्योरे के लिए फ़ोन की अनुमति चाहिए</string>
     <string name="tools_light">लाइट मीटर</string>
     <string name="tools_light_sub">लक्स में परिवेशी प्रकाश</string>
     <string name="light_unit">लक्स</string>
-    <string name="light_no_sensor">इस डिवाइस पर लाइट सेंसर उपलब्ध नहीं है</string>
+    <string name="light_no_sensor">इस डिवाइस में लाइट सेंसर नहीं है</string>
     <string name="tools_stopwatch">स्टॉपवॉच</string>
     <string name="tools_stopwatch_sub">स्टॉपवॉच और टाइमर</string>
     <string name="mode_stopwatch">स्टॉपवॉच</string>
@@ -252,12 +252,12 @@
     <string name="settings_rate">हमें रेट करें</string>
     <string name="settings_rate_sub">ऐप पसंद आया? हमें बताएं.</string>
     <string name="settings_share">साझा करें</string>
-    <string name="settings_share_sub">दोस्तों को उनकी डिजिटल लाइफ सुरक्षित करने के लिए आमंत्रित करें.</string>
-    <string name="settings_share_text">Caller ID Phone Lookup से अनजान कॉलर पहचानें और स्पैम ब्लॉक करें: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">आगे बढ़ाएँ — किसी अपने की कॉल सुरक्षित करवाएँ।</string>
+    <string name="settings_share_text">अनजान कॉल करने वालों को नाम दें और परेशान करने वाली कॉल रोकें, Caller ID Lookup के साथ: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">गोपनीयता नीति</string>
     <string name="settings_terms">सेवा की शर्तें</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
     <plurals name="blocklist_entries">
         <item quantity="one">%d प्रविष्टि</item>
         <item quantity="other">%d प्रविष्टियाँ</item>
@@ -266,12 +266,12 @@
         <item quantity="one">%d कॉल</item>
         <item quantity="other">%d कॉल</item>
     </plurals>
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="battery_activity_title">बैटरी जानकारी</string>
 
     <!-- Localization batch: missing keys -->
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">फ़ोन लुकअप</string>
     <string name="home_quick_actions">त्वरित क्रियाएँ</string>
     <string name="action_back">वापस</string>
@@ -327,7 +327,7 @@
     <string name="lookup_unlock_nicknames">देखने के लिए विज्ञापन देखें</string>
     <string name="lookup_unknown_value">अज्ञात</string>
     <string name="watch_ad_title">पूरा विवरण देखें</string>
-    <string name="watch_ad_message">पूरा कॉलर नाम और विवरण देखने के लिए एक छोटा विज्ञापन देखें।</string>
+    <string name="watch_ad_message">एक छोटा विज्ञापन कॉल करने वाले का पूरा नाम और ब्योरा खोल देता है।</string>
     <string name="watch_ad_button">विज्ञापन देखें</string>
     <string name="watch_ad_cancel">अभी नहीं</string>
     <string name="whatsapp_not_installed">WhatsApp इंस्टॉल नहीं है</string>
@@ -357,7 +357,7 @@
     <string name="dialer_voice_search">वॉइस खोज</string>
 
     <!-- Blocklist -->
-    <string name="blocklist_empty_subtitle">विशिष्ट नंबरों या पैटर्न से आने वाली कॉल अस्वीकार करें</string>
+    <string name="blocklist_empty_subtitle">चुने हुए नंबरों या पैटर्न की कॉल लौटा दें</string>
     <string name="blocklist_choose_title">नंबर ब्लॉक करें</string>
     <string name="blocklist_method_add_title">नंबर जोड़ें</string>
     <string name="blocklist_method_add_sub">मैन्युअल रूप से दर्ज करें</string>
@@ -369,10 +369,10 @@
     <string name="blocklist_no_recents">कोई हाल की कॉल नहीं मिली</string>
     <string name="blocklist_contact_no_number">उस संपर्क का नंबर नहीं पढ़ा जा सका</string>
     <string name="blocklist_already_blocked">पहले से ब्लॉक है</string>
-    <string name="blocklist_perm_calllog">हाल की कॉल चुनने के लिए कॉल लॉग एक्सेस आवश्यक है</string>
+    <string name="blocklist_perm_calllog">हाल की कॉल चुनने के लिए कॉल लॉग की पहुँच चाहिए</string>
     <string name="blocklist_pick_contacts_title">संपर्क</string>
     <string name="blocklist_no_contacts">कोई संपर्क नहीं मिला</string>
-    <string name="blocklist_perm_contacts">संपर्क चुनने के लिए संपर्क एक्सेस आवश्यक है</string>
+    <string name="blocklist_perm_contacts">संपर्क चुनने के लिए संपर्कों की पहुँच चाहिए</string>
 
     <!-- Settings -->
     <string name="call_screening">कॉलर आईडी ओवरले</string>
@@ -413,7 +413,7 @@
     <string name="level_level">समतल</string>
 
     <!-- Battery -->
-    <string name="battery_activity_sub">पावर खपत और हार्डवेयर अखंडता की निगरानी करें। रीयल-टाइम प्रदर्शन और सुरक्षा हैंडशेक स्थितियों की समीक्षा करें।</string>
+    <string name="battery_activity_sub">बिजली की खपत और हार्डवेयर की सेहत पर नज़र रखें। लाइव प्रदर्शन और सुरक्षा हैंडशेक की स्थिति, एक ही जगह।</string>
     <string name="battery_secured">सुरक्षित और अनुकूलित किया जा रहा है</string>
     <string name="battery_health_great">बढ़िया</string>
     <string name="battery_health_hot">गर्म</string>
@@ -448,7 +448,7 @@
     <string name="stopwatch_lap">लैप</string>
     <string name="stopwatch_history">लैप इतिहास</string>
     <string name="stopwatch_laps">%1$d लैप</string>
-    <string name="stopwatch_empty">वर्तमान सत्र के लिए कोई लैप टेलीमेट्री दर्ज नहीं की गई।</string>
+    <string name="stopwatch_empty">इस सत्र में कोई लैप दर्ज नहीं हुआ।</string>
     <string name="stopwatch_total">कुल रिकॉर्ड</string>
     <string name="stopwatch_lap_n">लैप %1$d</string>
     <string name="timer_tool">टाइमर</string>
@@ -484,14 +484,14 @@
     <string name="feature_edit_contact">संपर्क संपादित करें</string>
 
     <!-- Home search-bar one-time hint -->
-    <string name="search_hint_tip">कॉल करने वाले की पहचान के लिए यहाँ कोई भी नंबर टाइप करें</string>
+    <string name="search_hint_tip">कॉल करने वाले को नाम देने के लिए यहाँ कोई भी नंबर डालें</string>
 
     <!-- App-redirect dialog -->
     <string name="app_unavailable">ऐप उपलब्ध नहीं है</string>
-    <string name="app_redirect_desc">यह ऐप आपके डिवाइस पर इंस्टॉल नहीं है। क्या आप इसे Play Store में खोलना चाहेंगे?</string>
-    <string name="call_screening_hint_tip">कॉल करने वाले को देखने और स्पैम ब्लॉक करने के लिए इसे चालू करें</string>
+    <string name="app_redirect_desc">वह ऐप इस डिवाइस पर नहीं है। इसका Play Store पेज खोलें?</string>
+    <string name="call_screening_hint_tip">इसे चालू करें और देखें कौन कॉल कर रहा है, परेशान करने वाली कॉल रोकें</string>
     <!-- FSI intro Activity/Dialog + Home permission hint -->
-    <string name="home_perm_hint">कुछ अनुमतियाँ बंद हैं। पूरी कॉलर आईडी के लिए उन्हें चालू करें।</string>
+    <string name="home_perm_hint">कुछ अनुमतियाँ अब भी बंद हैं। पूरी पहचान के लिए उन्हें चालू करें।</string>
     <string name="home_perm_manage">प्रबंधित करें</string>
     <string name="fsi_incoming_call">इनकमिंग कॉल</string>
     <string name="fsi_avatar_initials">ID</string>
@@ -502,7 +502,7 @@
     <string name="fsi_meta_calls">68 कॉल</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">जानें कौन कॉल कर रहा है</string>
-    <string name="fsi_screen_desc">कॉल आते ही अपनी लॉक स्क्रीन पर सत्यापित कॉलर विवरण देखें।</string>
+    <string name="fsi_screen_desc">कॉल आते ही लॉक स्क्रीन पर कॉल करने वाले का प्रमाणित ब्योरा दिखाएँ।</string>
     <string name="fsi_feature_identify">अनजान नंबरों को तुरंत पहचानें</string>
     <string name="fsi_feature_spam">स्पैम और धोखाधड़ी की चेतावनी पहले से देखें</string>
     <string name="fsi_feature_missed">फिर कभी ज़रूरी कॉल न चूकें</string>

@@ -8,7 +8,7 @@
     <string name="dash">&#8211;</string>
 
     <!-- Splash -->
-    <string name="splash_title">CallerID</string>
+    <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Know who\'s calling. Stay protected.</string>
     <string name="splash_footer">This Action May Contain Ads</string>
     <string name="splash_incoming_call">Incoming call…</string>
@@ -25,29 +25,29 @@
     <string name="language_all">All languages</string>
     <string name="language_current">Current language</string>
     <string name="language_info_title">Language Information</string>
-    <string name="language_info_msg">Changing the language will update the app\'s interface. Some regional features may vary based on your selection.</string>
+    <string name="language_info_msg">Switching language redraws the interface. A few region-specific touches may differ depending on what you pick.</string>
     <string name="language_info_got_it">Got it</string>
 
     <!-- Terms &amp; Conditions -->
     <string name="terms_title">Terms &amp; Conditions</string>
-    <string name="terms_body">Please review these terms carefully. By continuing, you agree to the following:\n\n• CallerID identifies incoming, outgoing and unknown callers in real time.\n• The app detects and helps you block spam, scam and fraud calls.\n• You can look up any phone number to see available caller details.\n• To work properly, the app may access your call log and contacts.\n• The display-over-other-apps (overlay) permission is used to show caller information during calls.\n• Your data stays private and is used only to provide caller identification and spam protection.\n\nBy tapping “Accept &amp; Continue” you confirm that you have read and agree to our Terms &amp; Conditions and Privacy Policy.</string>
-    <string name="terms_agree">I have read and agree to the Terms &amp; Conditions and Privacy Policy.</string>
+    <string name="terms_body">Take a moment with these terms. Continuing means you accept them:\n\n• Caller ID Lookup names incoming, outgoing and unfamiliar callers as the call happens.\n• Nuisance, scam and fraud calls are flagged so you can shut them out.\n• Any phone number can be searched for whatever caller details are on record.\n• Your call log and contacts may be read so the app can do that work.\n• Drawing over other apps is what puts caller details on screen mid-call.\n• What we collect stays yours, and serves only caller naming and nuisance-call defence.\n\nChoosing “Accept &amp; Continue” confirms you have read, and accept, our Terms &amp; Conditions and Privacy Policy.</string>
+    <string name="terms_agree">I have read, and accept, the Terms &amp; Conditions and Privacy Policy.</string>
     <string name="terms_accept">Accept &amp; Continue</string>
-    <string name="terms_please_accept">Please accept the Terms &amp; Conditions to continue.</string>
+    <string name="terms_please_accept">Accept the Terms &amp; Conditions to carry on.</string>
 
     <!-- Overlay-permission guide -->
     <string name="txt_allow_overlay_access">Allow display over other apps</string>
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="overlay_system_permission">System permission</string>
-    <string name="overlay_permission_desc">Display over other apps allows this app to show caller info while you use other apps.</string>
+    <string name="overlay_permission_desc">Drawing over other apps is what lets caller details appear while you are busy elsewhere.</string>
     <string name="overlay_banner_desc">Show caller info over other apps</string>
-    <string name="overlay_guide_desc">Find this app in the list and turn the switch on.</string>
+    <string name="overlay_guide_desc">Pick this app out of the list and flip the switch on.</string>
     <string name="overlay_guide_row_hint">Tap to turn on</string>
     <string name="overlay_guide_dismiss">Tap anywhere to dismiss</string>
 
     <!-- Same coach mark, shown over the system "Default home app" list -->
     <string name="home_guide_title">Set as your home app</string>
-    <string name="home_guide_desc">Find this app in the list and select it as your home app.</string>
+    <string name="home_guide_desc">Pick this app out of the list and set it as your home app.</string>
     <string name="home_guide_row_hint">Tap to select</string>
 
     <!-- Post-call summary fallback notification -->
@@ -58,11 +58,11 @@
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_title">Know who\'s calling</string>
-    <string name="onboarding_desc">Instantly identify unknown numbers, see the caller\'s name and business, and block spam before it rings.</string>
+    <string name="onboarding_desc">Put a name to unfamiliar numbers on sight, see who is calling and where from, and stop nuisance calls before the first ring.</string>
     <string name="onboarding_title_2">Block spam &amp; fraud</string>
-    <string name="onboarding_desc_2">Automatically detect and block spam, scam and robocalls so they never disturb you again.</string>
+    <string name="onboarding_desc_2">Nuisance, scam and recorded calls get spotted and shut out, so they stop reaching you.</string>
     <string name="onboarding_title_3">Search any number</string>
-    <string name="onboarding_desc_3">Look up any unknown number to instantly see the caller\'s name, location and business details.</string>
+    <string name="onboarding_desc_3">Search any unfamiliar number and see the caller behind it — name, where they are, what they do.</string>
     <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_spam_id">Spam ID</string>
     <string name="onboarding_caller_id">Caller ID</string>
@@ -71,7 +71,7 @@
     <string name="home_title">You\'re protected</string>
     <string name="home_subtitle">Caller ID and spam blocking are active</string>
     <string name="home_greeting">Good morning 👋</string>
-    <string name="home_brand">CallerID</string>
+    <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Phone Lookup</string>
     <string name="home_search_hint">Search name or number…</string>
     <string name="home_protection_active">Protection active</string>
@@ -129,7 +129,7 @@
 
     <!-- Call log permission -->
     <string name="perm_calllog_title">See your recent calls</string>
-    <string name="perm_calllog_message">Allow access to your call log to show your recent calls here.</string>
+    <string name="perm_calllog_message">Let the app read your call log and your recent calls appear here.</string>
     <string name="action_grant">Grant access</string>
 
     <!-- Lookup -->
@@ -140,7 +140,7 @@
     <string name="lookup_spam_risk">Spam risk</string>
     <string name="action_call">Call</string>
     <string name="action_save">Save</string>
-    <string name="lookup_idle_hint">Enter a phone number to identify the caller</string>
+    <string name="lookup_idle_hint">Type in a phone number to name the caller</string>
     <string name="number_lookup">Number lookup</string>
     <string name="lookup_unknown_caller">Unknown caller</string>
     <string name="lookup_in_contacts">In your contacts</string>
@@ -159,7 +159,7 @@
     <string name="lookup_subtitle">Identify any number worldwide</string>
     <string name="lookup_search_hint">Search Number</string>
     <string name="lookup_empty_title">Find out who\'s behind any number</string>
-    <string name="lookup_empty_sub">Your lookups will appear here. Nothing is shared with the numbers you search.</string>
+    <string name="lookup_empty_sub">Searches land here. The numbers you look up are never told about it.</string>
     <string name="lookup_empty_cta">Search a number</string>
     <string name="lookup_paste">Paste</string>
     <string name="lookup_search_number">Search Number</string>
@@ -189,7 +189,7 @@
     <string name="lookup_unlock_nicknames">Watch ad to reveal</string>
     <string name="lookup_unknown_value">Unknown</string>
     <string name="watch_ad_title">Reveal full details</string>
-    <string name="watch_ad_message">Watch a short ad to unlock the full caller name and details.</string>
+    <string name="watch_ad_message">A short ad unlocks the caller\'s full name and details.</string>
     <string name="watch_ad_button">Watch Ad</string>
     <string name="watch_ad_cancel">Not now</string>
     <string name="action_whatsapp">WhatsApp</string>
@@ -218,7 +218,7 @@
     <string name="detail_not_identified">Not identified yet</string>
     <string name="detail_identify">Identify this number</string>
     <string name="detail_history_empty_title">No calls with this number yet</string>
-    <string name="detail_history_empty_sub">When you call or receive calls from this number, the history shows up here.</string>
+    <string name="detail_history_empty_sub">Calls to and from this number will start collecting here.</string>
     <string name="detail_today_short">Today</string>
     <string name="detail_yesterday_short">Yesterday</string>
 
@@ -233,7 +233,7 @@
     <string name="dialer_empty">No call history yet</string>
     <string name="dialer_matches">Matches</string>
     <string name="dialer_empty_title">Dial a number to get started</string>
-    <string name="dialer_empty_sub">Frequently called numbers will appear here for one-tap calling.</string>
+    <string name="dialer_empty_sub">Numbers you call often collect here for one-tap dialling.</string>
     <string name="dialer_backspace">Delete</string>
     <string name="add_to_contacts">Add to contacts</string>
 
@@ -263,7 +263,7 @@
     <string name="tools_compass_sub">Find magnetic north</string>
     <string name="tools_speedometer">Speedometer</string>
     <string name="tools_speedometer_sub">Internet speed test</string>
-    <string name="compass_no_sensor">Compass sensor not available on this device</string>
+    <string name="compass_no_sensor">This device carries no compass sensor</string>
     <string name="compass_activity_title">Compass Activity</string>
     <string name="compass_signal">Signal Strength: %1$s</string>
     <string name="signal_strong">Strong</string>
@@ -271,7 +271,7 @@
     <string name="signal_weak">Weak</string>
     <string name="speedometer_unit">Mbps</string>
     <string name="speedometer_waiting">Testing…</string>
-    <string name="speedometer_permission">Location permission is needed to measure speed</string>
+    <string name="speedometer_permission">Measuring speed needs the location permission</string>
     <string name="speedtest_pill">Quantum-Resistant AES-512</string>
     <string name="speedtest_stable">Secure connection stable</string>
     <string name="speedtest_error">Connection error — tap to retry</string>
@@ -322,7 +322,7 @@
     <string name="battery_tech">Technology</string>
     <string name="battery_plugged">Power source</string>
     <string name="battery_activity_title">Battery Info</string>
-    <string name="battery_activity_sub">Monitor power consumption and hardware integrity. Review real-time performance and security handshake statuses.</string>
+    <string name="battery_activity_sub">Keep an eye on power draw and hardware health. Live performance figures and security handshake status, in one place.</string>
     <string name="battery_secured">Secured &amp; Optimizing</string>
     <string name="battery_health_great">Great</string>
     <string name="battery_health_hot">Hot</string>
@@ -334,7 +334,7 @@
     <string name="tools_sound">Sound meter</string>
     <string name="tools_sound_sub">Measure noise level</string>
     <string name="sound_unit">dB</string>
-    <string name="sound_permission">Microphone permission is needed to measure sound</string>
+    <string name="sound_permission">Measuring sound needs the microphone permission</string>
     <string name="sound_peak">Peak level</string>
     <string name="sound_average">Average level</string>
     <string name="sound_spectrum">Frequency spectrum</string>
@@ -356,13 +356,13 @@
     <string name="sim_country">Country</string>
     <string name="sim_state">SIM state</string>
     <string name="sim_roaming">Roaming</string>
-    <string name="sim_permission">Phone permission is needed for network details</string>
+    <string name="sim_permission">Network details need the phone permission</string>
 
     <!-- Light meter -->
     <string name="tools_light">Light meter</string>
     <string name="tools_light_sub">Ambient light in lux</string>
     <string name="light_unit">lux</string>
-    <string name="light_no_sensor">Light sensor not available on this device</string>
+    <string name="light_no_sensor">This device carries no light sensor</string>
     <string name="light_capture">Capture</string>
     <string name="light_resume">Resume</string>
     <string name="light_zero">Zero</string>
@@ -380,7 +380,7 @@
     <string name="stopwatch_lap">Lap</string>
     <string name="stopwatch_history">Lap History</string>
     <string name="stopwatch_laps">%1$d Laps</string>
-    <string name="stopwatch_empty">No lap telemetry recorded for current session.</string>
+    <string name="stopwatch_empty">No lap times captured this session.</string>
     <string name="stopwatch_total">Total records</string>
     <string name="stopwatch_lap_n">Lap %1$d</string>
 
@@ -421,7 +421,7 @@
     <string name="contacts_tab_groups">Groups</string>
     <string name="contacts_empty">No contacts found</string>
     <string name="perm_contacts_title">See your contacts</string>
-    <string name="perm_contacts_message">Allow access to your contacts to show them here.</string>
+    <string name="perm_contacts_message">Let the app read your contacts and they appear here.</string>
 
     <!-- Settings actions -->
     <string name="language_dialog_title">Choose language</string>
@@ -432,7 +432,7 @@
     <string name="blocklist_added">Number blocked</string>
     <string name="blocklist_removed">Number removed</string>
     <string name="blocklist_remove_title">Remove from block list?</string>
-    <string name="blocklist_empty_subtitle">Reject calls from specific numbers or patterns</string>
+    <string name="blocklist_empty_subtitle">Turn away calls from chosen numbers or patterns</string>
     <string name="blocklist_choose_title">Block a number</string>
     <string name="blocklist_method_add_title">Add a number</string>
     <string name="blocklist_method_add_sub">Enter manually</string>
@@ -444,13 +444,13 @@
     <string name="blocklist_no_recents">No recent calls found</string>
     <string name="blocklist_contact_no_number">Couldn\'t read that contact\'s number</string>
     <string name="blocklist_already_blocked">Already blocked</string>
-    <string name="blocklist_perm_calllog">Call-log access is needed to pick recent calls</string>
+    <string name="blocklist_perm_calllog">Picking recent calls needs call-log access</string>
     <string name="blocklist_pick_contacts_title">Contacts</string>
     <string name="blocklist_no_contacts">No contacts found</string>
-    <string name="blocklist_perm_contacts">Contacts access is needed to pick a contact</string>
+    <string name="blocklist_perm_contacts">Picking a contact needs contacts access</string>
     <!-- Caller-ID gate on block management -->
     <string name="blocklist_enable_cid_title">Enable Caller ID</string>
-    <string name="blocklist_enable_cid_message">Turn on Caller ID to manage blocked numbers and access all blocking features.</string>
+    <string name="blocklist_enable_cid_message">Switch Caller ID on to curate blocked numbers and reach every blocking feature.</string>
     <string name="blocklist_enable_cid_confirm">Enable Caller ID</string>
     <string name="blocklist_enable_cid_not_now">Not Now</string>
     <string name="blocklist_enable_cid_hint_label">Next step — turn this on</string>
@@ -465,7 +465,7 @@
     <string name="settings_blocklist">Block list</string>
     <string name="call_screening">Caller ID Overlay</string>
     <string name="call_screening_desc">Show caller information during calls</string>
-    <string name="call_screening_hint_tip">Turn this on to see who\'s calling and block spam</string>
+    <string name="call_screening_hint_tip">Switch this on to see who is calling and shut out nuisance calls</string>
     <string name="settings_blocklist_sub">Numbers you blocked</string>
     <string name="settings_protection">Spam protection</string>
     <string name="settings_protection_sub">Caller ID &amp; spam blocking</string>
@@ -479,12 +479,12 @@
     <string name="settings_rate">Rate Us</string>
     <string name="settings_rate_sub">Love the app? Let us know.</string>
     <string name="settings_share">Share</string>
-    <string name="settings_share_sub">Invite friends to secure their digital life.</string>
-    <string name="settings_share_text">Identify unknown callers and block spam with Caller ID Phone Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="settings_share_sub">Pass it on — help a friend lock their calls down.</string>
+    <string name="settings_share_text">Put a name to unknown callers and shut out nuisance calls with Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Privacy Policy</string>
     <string name="settings_terms">Terms of Service</string>
-    <string name="settings_privacy_url">https://sites.google.com/view/calleridphonelookup/privacy</string>
-    <string name="settings_terms_url">https://sites.google.com/view/calleridphonelookup/terms</string>
+    <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
+    <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>
 
     <!-- Theme dialog -->
     <string name="theme_dialog_title">Choose theme</string>
@@ -497,7 +497,7 @@
     <string name="call_decline">Decline</string>
     <string name="call_accept">Accept</string>
     <string name="call_message">Message</string>
-    <string name="call_identified">Identified by CallerID</string>
+    <string name="call_identified">Identified by Caller ID Lookup</string>
     <string name="label_spam">Spam</string>
     <string name="label_verified">Verified</string>
     <string name="please_wait">Please Wait...</string>
@@ -526,25 +526,25 @@
     <string name="feature_edit_contact">Edit Contact</string>
 
     <!-- Home search-bar one-time hint -->
-    <string name="search_hint_tip">Type any number here to identify the caller</string>
+    <string name="search_hint_tip">Drop any number in here to name the caller</string>
     <string name="got_it">Got it</string>
 
     <!-- In-app update (Play flexible / force flows) -->
     <string name="update_ready_msg">Update downloaded</string>
     <string name="update_restart">Restart</string>
     <string name="update_required_title">Update required</string>
-    <string name="update_required_msg">We couldn\'t check for the latest version. Please connect to the internet and try again, or update from the Play Store.</string>
+    <string name="update_required_msg">The latest version could not be checked. Get back online and retry, or update straight from the Play Store.</string>
     <string name="update_retry">Try again</string>
     <string name="update_open_store">Play Store</string>
 
     <!-- App-redirect dialog -->
     <string name="app_unavailable">App Not Available</string>
-    <string name="app_redirect_desc">This app isn\'t installed on your device. Would you like to open it in the Play Store?</string>
+    <string name="app_redirect_desc">That app is not on this device. Shall we open its Play Store page?</string>
     <string name="settings_section_call">CALLER PROTECTION</string>
 
     <!-- ===== Blocklist redesign (2026) ===== -->
     <string name="blocklist_section_blocked">Blocked numbers</string>
-    <string name="blocklist_summary_sub">Incoming calls from these are auto-rejected</string>
+    <string name="blocklist_summary_sub">Calls from these are turned away on arrival</string>
     <string name="blocklist_unknown_caller">Unknown caller</string>
     <plurals name="blocklist_blocked_count">
         <item quantity="one">%1$d number blocked</item>
@@ -556,7 +556,7 @@
     <!-- ===== Number details · Also known as (per-name reveal) ===== -->
     <string name="lookup_revealed">Revealed</string>
     <string name="lookup_reveal">Reveal</string>
-    <string name="lookup_nick_footer">One ad reveals one name · revealed names stay unlocked</string>
+    <string name="lookup_nick_footer">One ad, one name revealed · what you reveal stays revealed</string>
     <string name="lookup_x_of_n_revealed">%1$d of %2$d revealed</string>
     <plurals name="lookup_more_names">
         <item quantity="one">%1$d name</item>
@@ -569,13 +569,13 @@
     <string name="tools_cat_device">Device</string>
     <string name="tools_cat_time">Time</string>
     <string name="tools_empty_title">No tools match \"%1$s\"</string>
-    <string name="tools_empty_sub">Try \"level\" or \"compass\" — or browse the full set.</string>
+    <string name="tools_empty_sub">Try \"level\" or \"compass\" — or page through the whole set.</string>
     <string name="tools_reset_search">Reset search</string>
     <string name="tools_clear_search">Clear search</string>
 
     <!-- Permission priming bottom sheet -->
     <string name="perm_sheet_title">Enable permissions</string>
-    <string name="perm_sheet_subtitle">Grant access so caller ID, spam alerts and your call history work properly.</string>
+    <string name="perm_sheet_subtitle">Grant access and caller naming, nuisance alerts and your call history all start working.</string>
     <string name="perm_sheet_continue">Continue</string>
     <string name="perm_sheet_not_now">Not now</string>
     <string name="permsheet_allow">Allow</string>
@@ -592,7 +592,7 @@
     <string name="perm_overlay_desc">Show caller ID during calls</string>
 
     <!-- Home permission hint (shown after the permission sheet is dismissed with permissions still pending) -->
-    <string name="home_perm_hint">Some permissions are off. Turn them on for full caller ID.</string>
+    <string name="home_perm_hint">A few permissions are still off. Switch them on for full caller naming.</string>
     <string name="home_perm_manage">Manage</string>
 
     <!-- Full-Screen-Intent permission flow (Screen + Dialog). Title/desc/button are
@@ -606,7 +606,7 @@
     <string name="fsi_meta_calls">68 calls</string>
     <string name="fsi_meta_sim">JIO 4G</string>
     <string name="fsi_screen_title">Never miss who\'s calling</string>
-    <string name="fsi_screen_desc">Show verified caller details on your lock screen — the instant a call comes in.</string>
+    <string name="fsi_screen_desc">Put verified caller details on your lock screen the moment a call arrives.</string>
     <string name="fsi_feature_identify">Instantly identify unknown numbers</string>
     <string name="fsi_feature_spam">See spam &amp; fraud warnings up front</string>
     <string name="fsi_feature_missed">Never miss an important call again</string>
@@ -619,20 +619,20 @@
     <string name="app_launcher_name" translatable="false">@string/app_name</string>
     <string name="launcher_settings">Launcher Settings</string>
     <string name="app_info">App info</string>
-    <string name="touch_hold_widget">Long press the widget and drag it on your home screen</string>
+    <string name="touch_hold_widget">Press and hold the widget, then drag it onto your home screen</string>
     <string name="uninstall">Uninstall</string>
     <string name="manage_hidden_icons">Manage hidden icons</string>
     <string name="hidden_icons">Hidden icons</string>
-    <string name="hidden_icons_placeholder">Some apps cannot be uninstalled due to system restrictions, but you can at least hide their icons to avoid seeing them.</string>
+    <string name="hidden_icons_placeholder">System rules keep some apps from being removed at all. Tucking their icons out of sight is the next best thing.</string>
     <string name="app_drawer_settings">App drawer</string>
     <string name="close_app_drawer_on_app_open">Close app drawer on opening an app</string>
     <string name="auto_show_keyboard_in_app_drawer">Automatically show keyboard in drawer</string>
     <string name="show_app_labels">Show app labels</string>
     <string name="home_screen_settings">Home screen</string>
-    <string name="widget_too_big">Widget is too big for current home screen size</string>
+    <string name="widget_too_big">This widget will not fit the current home screen</string>
     <string name="double_tap_to_lock">Double tap to lock screen</string>
-    <string name="lock_device_admin_hint">To enable the double tap to lock screen feature, you need to grant admin permission. Note that the app cannot be uninstalled until this permission is removed.</string>
-    <string name="lock_device_admin_warning">Deactivating admin permission will disable the double tap to lock screen feature.</string>
+    <string name="lock_device_admin_hint">Double-tap-to-lock needs administrator rights before it will work. While those rights are held, the app cannot be removed until you withdraw them.</string>
+    <string name="lock_device_admin_warning">Withdrawing administrator rights switches double-tap-to-lock back off.</string>
     <string name="pseudo_widget_clock">Clock</string>
     <string name="pseudo_widget_search_bar">Search bar</string>
     <string name="pseudo_widget_search_bar_hint">Search apps…</string>
@@ -650,7 +650,7 @@
     <string name="onboarding_continue">Continue</string>
     <string name="onboarding_set_default">Set as Default</string>
     <string name="default_launcher_banner_title">Setup Required</string>
-    <string name="default_launcher_banner_body">Set this app as your home screen to identify and block calls straight from the launcher.</string>
+    <string name="default_launcher_banner_body">Make this your home screen and name or shut out calls without leaving the launcher.</string>
     <string name="swipe_right_hint">Swipe right to open Caller ID</string>
     <string name="swipe_left_hint">Swipe left to search your apps</string>
     <string name="swipe_up_hint">Swipe up for all apps</string>
@@ -660,14 +660,14 @@
 
     <!-- Onboarding copy, taken verbatim from the reference screens. -->
     <string name="onb_welcome_title">Welcome!</string>
-    <string name="onb_welcome_lead">Identify unknown callers, block spam calls, and stay protected every day.</string>
+    <string name="onb_welcome_lead">Name unfamiliar callers, shut out nuisance calls, stay covered day to day.</string>
     <string name="onb_feature_caller_id">Instant\nCaller ID</string>
     <string name="onb_feature_spam">Spam\nProtection</string>
     <string name="onb_feature_secure">Safe &amp;\nSecure</string>
 
     <string name="onb_default_title">Set as Default Home Screen</string>
-    <string name="onb_default_lead">Set this app as your default home screen to identify unknown callers and block spam calls straight from the launcher.</string>
-    <string name="onb_default_footnote">You can change your default home screen anytime from your phone settings.</string>
+    <string name="onb_default_lead">Make this your home screen and unfamiliar callers get named, and nuisance calls get shut out, right from the launcher.</string>
+    <string name="onb_default_footnote">Your default home screen can be changed back whenever you like, from phone settings.</string>
 
     <!-- Mock incoming-call screen inside the Set-as-default illustration. Decorative:
          the caller and number are invented, never a real contact. -->
