@@ -77,7 +77,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             try {
                 FirebaseApp.initializeApp(this@LookupCoreApp)
                 // Global permission engine — fetches the latest `permission_engine`
-                // Remote LauncherPrefs so every screen can be gated dynamically. Requires
+                // Remote Config so every screen can be gated dynamically. Requires
                 // FirebaseApp to be initialised first (above).
                 // No subscribeAsync() here: LaunchGateActivity does it from the
                 // ensureDataDisclosure callback, which is the one place that knows the
@@ -85,7 +85,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
                 // re-POSTs /subscribe on every launch after the first acceptance.
                 PermitEngine.init(this@LookupCoreApp)
 
-                // Realtime Remote LauncherPrefs: without it a value published in the console only
+                // Realtime Remote Config: without it a value published in the console only
                 // reaches a device on its next cold start, which for a launcher can be days.
                 LiveConfigListener.start(this@LookupCoreApp)
             } catch (e: Exception) {

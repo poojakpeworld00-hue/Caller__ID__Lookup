@@ -24,7 +24,7 @@ import java.util.Locale
  *  4. the user's country is allowed ([isCountryAllowed]),
  *  5. the specific surface (Screen or Dialog) is enabled.
  *
- * Nothing here is hardcoded — [FsiSettings] supplies every value from Remote LauncherPrefs.
+ * Nothing here is hardcoded — [FsiSettings] supplies every value from Remote Config.
  * The Screen appears once after Language; the Dialog appears in AppHomeActivity,
  * rate-limited by `show_after_days` + `max_show_count`. Once the permission is
  * granted, neither ever shows again.

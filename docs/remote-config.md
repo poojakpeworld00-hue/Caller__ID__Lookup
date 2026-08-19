@@ -1,6 +1,6 @@
-# Remote LauncherPrefs — `docs/remote-config.json`
+# Remote Config — `docs/remote-config.json`
 
-The whole file is the value of **one** Remote LauncherPrefs parameter, not one parameter
+The whole file is the value of **one** Remote Config parameter, not one parameter
 per key:
 
 | Build | Parameter |
@@ -9,7 +9,7 @@ per key:
 | debug (`BuildConfig.DEBUG`) | `DEBUG_GET_DATA_LIST` |
 
 Both are read as a string and parsed as JSON — `PromoAnchorActivity.setResponceInPref`
-at splash, `LiveConfigListener` again whenever Realtime Remote LauncherPrefs pushes a
+at splash, `LiveConfigListener` again whenever Realtime Remote Config pushes a
 change. To publish, paste the file's contents into that parameter's value in the
 Firebase console for **caller-id-phone-home** and publish.
 

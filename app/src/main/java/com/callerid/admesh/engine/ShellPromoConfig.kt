@@ -21,7 +21,7 @@ import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
 import org.json.JSONObject
 
 /**
- * The `launcher_ads` Remote LauncherPrefs block — everything the launcher does around ads, the
+ * The `launcher_ads` Remote Config block — everything the launcher does around ads, the
  * home-screen coach mark and the first-run route. The full schema lives in
  * `docs/launcher-ads-config.md`; the short version:
  *
@@ -217,7 +217,7 @@ object ShellPromoConfig {
     )
 
     /**
-     * The frame under the panel's suggested-apps grid. Off unless Remote LauncherPrefs asks for it,
+     * The frame under the panel's suggested-apps grid. Off unless Remote Config asks for it,
      * and a native banner by default — it sits between two sections, so the tall renderers
      * would push the recents and the search results off the screen.
      */
@@ -229,7 +229,7 @@ object ShellPromoConfig {
     }
 
     /**
-     * The frame at the bottom of the swipe-up app drawer. Off unless Remote LauncherPrefs asks for
+     * The frame at the bottom of the swipe-up app drawer. Off unless Remote Config asks for
      * it — the drawer shipped without an ad, so a missing block keeps it that way.
      */
     fun drawerSlot(context: Context): Slot {

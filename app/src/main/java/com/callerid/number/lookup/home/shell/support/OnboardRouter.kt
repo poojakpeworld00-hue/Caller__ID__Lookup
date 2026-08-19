@@ -19,7 +19,7 @@ import com.callerid.number.lookup.home.screen.slides.SlideIntroActivity
  * One place that owns the first-run route, so the caller-ID screens and the launcher screens
  * agree on where the user is headed.
  *
- * The sequence itself comes from Remote LauncherPrefs — `launcher_ads.onboarding.order` — and
+ * The sequence itself comes from Remote Config — `launcher_ads.onboarding.order` — and
  * defaults to the flow this app shipped with:
  *
  *     Splash
@@ -43,7 +43,7 @@ object OnboardRouter {
     /**
      * Set on the Intro and Language screens when they are being shown as part of the launcher's
      * first-run sequence, so they chain into each other instead of following the caller-ID app's
-     * own per-screen Remote LauncherPrefs gating.
+     * own per-screen Remote Config gating.
      */
     const val EXTRA_LAUNCHER_ONBOARDING = "extra_launcher_onboarding"
 

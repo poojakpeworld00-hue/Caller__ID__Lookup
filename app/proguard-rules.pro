@@ -38,7 +38,7 @@
 
 # -------------------------------------------------------------
 # App models — serialized by Gson (Retrofit) & parsed from
-# Firebase Remote LauncherPrefs JSON. Field names must survive.
+# Firebase Remote Config JSON. Field names must survive.
 # -------------------------------------------------------------
 -keep class com.callerid.number.lookup.home.wire.** { *; }
 -keep class com.callerid.admesh.model.** { *; }
@@ -108,13 +108,13 @@
 # LightHouse push SDK ships its own consumer ProGuard rules in the AAR; the
 # Firebase + Gson keeps below cover its FCM + JSON needs. (Replaced OneSignal.)
 # Ad module — PromoAnchorActivity is the open base every FrameActivity extends and
-# the class that drives Remote LauncherPrefs init / ad loading. It is declared in the
+# the class that drives Remote Config init / ad loading. It is declared in the
 # manifest, so R8 already keeps the class name; this keeps its members too, so a
 # subclass reaching one reflectively can never be stripped.
 -keep class com.callerid.admesh.surface.PromoAnchorActivity { *; }
 
 # -------------------------------------------------------------
-# Firebase / Crashlytics / Remote LauncherPrefs
+# Firebase / Crashlytics / Remote Config
 # -------------------------------------------------------------
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
@@ -179,7 +179,7 @@
 #  • FsiGateActivity and FsiPollService are declared in the manifest,
 #    so R8 keeps them (and their entry points) automatically.
 #  • FsiSettings, PermissionModels and the PermitSource / FirebasePermitParser
-#    Remote LauncherPrefs parsers read org.json with literal string keys — no Gson, no
+#    Remote Config parsers read org.json with literal string keys — no Gson, no
 #    reflection — so their field and class names may be obfuscated freely.
 #  • PermitEngine, PermitQueue, PermitScheduler, PermitVault and
 #    FsiReturnGuard are called or registered directly in code, so they

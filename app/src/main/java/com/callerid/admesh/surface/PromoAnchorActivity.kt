@@ -87,7 +87,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         /** One grep-able tag for the whole splash AppOpen/interstitial load+show path. */
         const val APPOPEN_TAG = "AppOpenAd"
 
-        /** One grep-able tag for the getData Remote LauncherPrefs → prefs ingestion path. */
+        /** One grep-able tag for the getData Remote Config → prefs ingestion path. */
         const val CONFIG_TAG = "GetDataConfig"
 
         /**
@@ -482,7 +482,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         // → phone_state) via PermitEngine.request() — the targeted,
                         // activity-independent path — rather than check()'s Activity-name
                         // matching. This guarantees the OS Allow/Deny dialogs fire HERE,
-                        // on the splash, BEFORE the splash ad, even when the Remote LauncherPrefs
+                        // on the splash, BEFORE the splash ad, even when the Remote Config
                         // permission_engine rules don't list LaunchGateActivity. Resolving
                         // notification now also stops LightHouse's later
                         // subscribeAsync()/data-disclosure from re-prompting for it on the
@@ -534,7 +534,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
      * Splash no longer requests any runtime permission directly. Notification
      * and READ_PHONE_STATE are now owned entirely by the global
      * [com.callerid.number.lookup.home.permit.PermitEngine]
-     * (Remote LauncherPrefs-driven, per-Activity, with the HD_VBC_Show gate preserved
+     * (Remote Config-driven, per-Activity, with the HD_VBC_Show gate preserved
      * for phone state). Kept as a thin pass-through so the splash navigation
      * flow is unchanged. [hdVbcShow] is intentionally unused now.
      */
@@ -550,7 +550,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
      *
      * Uses request() (targeted by permission key) so the prompts fire HERE, in
      * this exact order, before the splash ad — but only for keys whose Remote
-     * LauncherPrefs rule actually lists this screen (see [targetsScreen]). So dropping
+     * Config rule actually lists this screen (see [targetsScreen]). So dropping
      * `LaunchGateActivity` from a permission's `activities` list keeps it off the
      * splash, and it is then asked wherever it *is* listed (e.g. AppHomeActivity).
      * Each request still honours SDK applicability (notification only on API
@@ -578,13 +578,13 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     /**
-     * True when the Remote LauncherPrefs rule for [key] targets [screen]. A key with no
+     * True when the Remote Config rule for [key] targets [screen]. A key with no
      * configured rule returns true — there is nothing to opt out of, so the
      * splash keeps its previous behaviour of asking.
      */
     private fun targetsScreen(key: String, screen: String): Boolean {
         val rule = PermitSource.rules().firstOrNull { it.key == key } ?: return true
-        val targets = rule.activities.any { ScreenGlob.matches(it, screen) }
+        val targets = rule.activities.any { ScreenGlob.refersTo(it, screen) }
         if (!targets) Log.d("PermitEngine", "'$key' not configured for $screen — skipped on splash")
         return targets
     }
@@ -715,7 +715,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
     ) {
         val appOpenId = adsPreference.getString("googleAppopen")
         if (appOpenId.isNullOrBlank()) {
-            Log.w(APPOPEN_TAG, "no/blank 'googleAppopen' unit id in Remote LauncherPrefs → skipping AppOpen, continuing")
+            Log.w(APPOPEN_TAG, "no/blank 'googleAppopen' unit id in Remote Config → skipping AppOpen, continuing")
             onComplete(); return
         }
         fetchAppOpenAd(activity, appOpenId, onLoaded = { onComplete() }, onFailed = {

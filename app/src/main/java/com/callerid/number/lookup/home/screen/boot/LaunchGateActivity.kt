@@ -434,7 +434,7 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
      * Picks the next screen in the launch flow.
      *
      * Language, Terms and Onboarding are all gated by [RevealPolicy] (the
-     * `intro_display` Remote LauncherPrefs block: per-screen `prompt_frequency` = always |
+     * `intro_display` Remote Config block: per-screen `prompt_frequency` = always |
      * once | every_days | app_launches | never, with `prompt_interval`).
      */
     private fun nextScreen(): Class<*> = when {

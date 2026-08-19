@@ -6,7 +6,7 @@ import org.json.JSONObject
 
 /**
  * How often an intro screen (Language / Terms / Onboarding / permission sheet) is
- * shown, from Remote LauncherPrefs.
+ * shown, from Remote Config.
  *
  * The `intro_display` parameter is split by audience — `marketing` and `organic`
  * (resolved from `PromoVault.OnMaketing`, matching the FSI config) — each

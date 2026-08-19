@@ -1058,7 +1058,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     private fun showSidePanel(panel: View) {
         // Re-apply here, not just in onCreate: on a cold boot straight to this home screen
-        // onCreate runs before the Remote LauncherPrefs fetch lands, so there is no palette to copy
+        // onCreate runs before the Remote Config fetch lands, so there is no palette to copy
         // yet. By the time a panel is opened there is. See [applyNativeAdTheme].
         applyNativeAdTheme()
         hideSwipeHint()

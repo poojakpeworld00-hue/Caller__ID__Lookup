@@ -50,7 +50,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         }
 
         // Ad frame pinned at the bottom, `launcher_ads.onboarding.intro.slot` — a mid2 native
-        // unless Remote LauncherPrefs switches it to a banner or turns it off.
+        // unless Remote Config switches it to a banner or turns it off.
         ShellPromoConfig.renderSlot(
             activity = this,
             slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.INTRO),

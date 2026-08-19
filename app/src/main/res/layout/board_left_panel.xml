@@ -157,7 +157,7 @@
                 app:spanCount="4" />
 
             <!-- Second panel slot, under the suggested apps —
-                 `launcher_ads.right_panel.suggested_banner`, off unless Remote LauncherPrefs asks
+                 `launcher_ads.right_panel.suggested_banner`, off unless Remote Config asks
                  for it. It scrolls with the panel content; the frame at the bottom of the
                  panel is the pinned one. -->
             <FrameLayout

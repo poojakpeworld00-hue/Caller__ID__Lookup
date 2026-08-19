@@ -4,18 +4,18 @@ package com.callerid.number.lookup.home.permit
  * Immutable data models for the global Permission Engine.
  *
  * A [PermitRule] is one entry parsed out of the `permission_engine`
- * Firebase Remote LauncherPrefs object. A [PermitSpec] is the engine's static
+ * Firebase Remote Config object. A [PermitSpec] is the engine's static
  * knowledge of *how* to request a given OS permission (its Android permission
  * string and the SDK level below which it is implicitly granted).
  *
  * To support a brand-new permission in the future you only add a
  * [PermitSpec] to [PermitKit.CATALOG] and reference its key from
- * Remote LauncherPrefs — no other code changes are required.
+ * Remote Config — no other code changes are required.
  */
 
-/** One permission requirement, exactly as declared in Remote LauncherPrefs. */
+/** One permission requirement, exactly as declared in Remote Config. */
 data class PermitRule(
-    /** LauncherPrefs key, e.g. `"notification"` / `"phone_state"`. Maps to a [PermitSpec]. */
+    /** Config key, e.g. `"notification"` / `"phone_state"`. Maps to a [PermitSpec]. */
     val key: String,
     /** Master on/off switch for this rule. */
     val enabled: Boolean,
@@ -31,7 +31,7 @@ data class PermitRule(
 
 /** Static description of an OS permission the engine knows how to request. */
 data class PermitSpec(
-    /** LauncherPrefs key this spec is bound to. */
+    /** Config key this spec is bound to. */
     val key: String,
     /** The `android.permission.*` string handed to the OS. */
     val androidPermission: String,

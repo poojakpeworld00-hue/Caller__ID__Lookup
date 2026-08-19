@@ -596,7 +596,7 @@
     <string name="home_perm_manage">Manage</string>
 
     <!-- Full-Screen-Intent permission flow (Screen + Dialog). Title/desc/button are
-         overridden at runtime from Remote LauncherPrefs; these are the fallbacks. -->
+         overridden at runtime from Remote Config; these are the fallbacks. -->
     <string name="fsi_incoming_call">Incoming Call</string>
     <string name="fsi_avatar_initials">ID</string>
     <string name="fsi_caller_unknown">Unknown</string>

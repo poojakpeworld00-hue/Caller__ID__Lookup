@@ -16,7 +16,7 @@ object HttpClientFactory {
     private const val TAG = "HttpClientFactory"
 
     /**
-     * Compiled-in API base URL, and the fallback whenever Remote LauncherPrefs has nothing usable.
+     * Compiled-in API base URL, and the fallback whenever Remote Config has nothing usable.
      *
      * Kept as the fallback rather than removed: this is the one config value the app cannot ask
      * the network for, since it *is* the network address. A blank or malformed [RC_KEY] must
@@ -24,7 +24,7 @@ object HttpClientFactory {
      */
     const val BASE_URL = "https://callerid.kpeworld.com/"
 
-    /** Remote LauncherPrefs key that overrides [BASE_URL] — a full origin, e.g. `https://api.host/`. */
+    /** Remote Config key that overrides [BASE_URL] — a full origin, e.g. `https://api.host/`. */
     private const val RC_KEY = "api_base_url"
 
     private val okHttpClient: OkHttpClient by lazy {
@@ -46,7 +46,7 @@ object HttpClientFactory {
     }
 
     /**
-     * The base URL to use right now: [RC_KEY] when Remote LauncherPrefs supplies something that parses,
+     * The base URL to use right now: [RC_KEY] when Remote Config supplies something that parses,
      * otherwise [BASE_URL].
      *
      * Normalises the trailing slash, because Retrofit rejects a base URL without one outright —
@@ -75,7 +75,7 @@ object HttpClientFactory {
     private var cached: Pair<String, LookupApi>? = null
 
     /**
-     * Resolved per access rather than once, so a Remote LauncherPrefs fetch that lands *after* the first
+     * Resolved per access rather than once, so a Remote Config fetch that lands *after* the first
      * API call still takes effect — nothing is readable at the top of a cold start, and the app
      * can reach this before the fetch completes. Retrofit is only rebuilt when the URL actually
      * changes, which for a whole session is normally never.

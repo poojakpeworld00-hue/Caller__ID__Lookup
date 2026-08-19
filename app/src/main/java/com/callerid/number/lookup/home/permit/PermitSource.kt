@@ -10,13 +10,13 @@ import com.callerid.admesh.engine.RemoteConfigRules
 /**
  * Single access point for the engine's configuration.
  *
- * Reads the `permission_engine` block from Firebase Remote LauncherPrefs and caches the
- * parsed [PermitRule]s in memory. Remote LauncherPrefs already persists activated
+ * Reads the `permission_engine` block from Firebase Remote Config and caches the
+ * parsed [PermitRule]s in memory. Remote Config already persists activated
  * values to disk, so the last-known config is available immediately on the next
  * cold start — the engine works even before a fresh fetch completes.
  *
- * LauncherPrefs resolution order (first non-empty wins):
- *  1. A dedicated Remote LauncherPrefs parameter named `permission_engine`.
+ * Config resolution order (first non-empty wins):
+ *  1. A dedicated Remote Config parameter named `permission_engine`.
  *  2. The `permission_engine` key inside the app's existing data blob
  *     (`GET_DATA_LIST` / `DEBUG_GET_DATA_LIST`), so no new RC parameter is
  *     strictly required.
@@ -27,16 +27,16 @@ object PermitSource {
     private const val RC_KEY = "permission_engine"
 
     /**
-     * Compiled-in safety-net configuration. Used **only** when Remote LauncherPrefs
+     * Compiled-in safety-net configuration. Used **only** when Remote Config
      * supplies no `permission_engine` value (before the first successful fetch,
-     * or if the parameter is never set on the server). Any Remote LauncherPrefs value
+     * or if the parameter is never set on the server). Any Remote Config value
      * completely overrides this.
      *
      * Notification + phone state are driven by the engine and triggered
      * explicitly — from the splash flow (PromoAnchorActivity) and from the permission
      * bottom sheet's Continue button on AppHomeActivity. So the default targets
      * both `LaunchGateActivity` and `AppHomeActivity` with no delay (the trigger point
-     * already picks the moment). Remote LauncherPrefs fully overrides this.
+     * already picks the moment). Remote Config fully overrides this.
      * `phone_state` stays subject to the `HD_VBC_Show` gate.
      */
     private const val DEFAULT_CONFIG = """
@@ -51,10 +51,10 @@ object PermitSource {
     @Volatile
     private var cached: List<PermitRule>? = null
 
-    /** Returns cached rules, parsing from Remote LauncherPrefs on first access. */
+    /** Returns cached rules, parsing from Remote Config on first access. */
     fun rules(): List<PermitRule> = cached ?: reload()
 
-    /** Re-reads (and re-parses) the currently activated Remote LauncherPrefs values. */
+    /** Re-reads (and re-parses) the currently activated Remote Config values. */
     @Synchronized
     fun reload(): List<PermitRule> {
         val parsed = FirebasePermitParser.parse(rawConfig())
@@ -63,7 +63,7 @@ object PermitSource {
     }
 
     /**
-     * Triggers a fresh Remote LauncherPrefs fetch, then refreshes the cache. Safe to
+     * Triggers a fresh Remote Config fetch, then refreshes the cache. Safe to
      * call once at startup; failures fall back silently to cached/activated
      * values so the flow is never blocked.
      */
@@ -72,7 +72,7 @@ object PermitSource {
             val rc = FirebaseRemoteConfig.getInstance()
             RemoteConfigRules.applyTo(rc)
             rc.fetchAndActivate().addOnCompleteListener { task ->
-                LogRail.log(TAG, "Remote LauncherPrefs fetch success=${task.isSuccessful}")
+                LogRail.log(TAG, "Remote Config fetch success=${task.isSuccessful}")
                 reload()
                 onReady?.invoke()
             }
@@ -83,7 +83,7 @@ object PermitSource {
         }
     }
 
-    /** Resolves the raw JSON for the engine from Remote LauncherPrefs (see class doc). */
+    /** Resolves the raw JSON for the engine from Remote Config (see class doc). */
     private fun rawConfig(): String {
         return try {
             val rc = FirebaseRemoteConfig.getInstance()
@@ -107,7 +107,7 @@ object PermitSource {
             LogRail.log(TAG, "No remote permission_engine config; using compiled-in default")
             DEFAULT_CONFIG
         } catch (e: Exception) {
-            LogRail.error(TAG, "Failed to read Remote LauncherPrefs; using compiled-in default", e)
+            LogRail.error(TAG, "Failed to read Remote Config; using compiled-in default", e)
             DEFAULT_CONFIG
         }
     }

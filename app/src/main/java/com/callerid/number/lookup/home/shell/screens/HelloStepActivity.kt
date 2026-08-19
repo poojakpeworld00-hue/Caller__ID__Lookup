@@ -24,12 +24,12 @@ import org.fossify.commons.extensions.viewBinding
  * each rule's delay and skipping anything already granted or not applicable on this SDK.
  *
  * The engine matches rules by Activity simple name, so `"HelloStepActivity"` has to
- * appear in the `activities` list of each rule in Remote LauncherPrefs. With no rule targeting this
+ * appear in the `activities` list of each rule in Remote Config. With no rule targeting this
  * screen the engine completes immediately and Continue simply moves on — which is also what
  * happens once every permission is already granted.
  *
  * Declining is not a dead end: the flow always continues to whatever `onboarding.order` puts
- * next (the "set as default launcher" step, unless Remote LauncherPrefs reordered it), and the
+ * next (the "set as default launcher" step, unless Remote Config reordered it), and the
  * permissions stay reachable later from Settings. Skip goes to the same place without asking
  * for anything.
  */
@@ -58,7 +58,7 @@ class HelloStepActivity : ShellBaseActivity() {
         })
 
         // Ad frame pinned above the CTA, `launcher_ads.onboarding.welcome.slot` — a mid native
-        // unless Remote LauncherPrefs says otherwise. renderSlot hides the frame outright when the slot
+        // unless Remote Config says otherwise. renderSlot hides the frame outright when the slot
         // is off (as the renderers do when ads are off or the network is down), and
         // followAdContainer drops the hairline with it.
         ShellPromoConfig.renderSlot(

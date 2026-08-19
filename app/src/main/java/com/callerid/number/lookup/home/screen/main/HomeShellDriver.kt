@@ -153,7 +153,7 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     // ─────────────────────────── In-app update ───────────────────────────
 
     /**
-     * Triggers the Play in-app update flow when Remote LauncherPrefs enables it.
+     * Triggers the Play in-app update flow when Remote Config enables it.
      *  - `In_App_Update_Show`       → master switch for offering an update.
      *  - `In_App_Update_Force_Show` → true = IMMEDIATE (mandatory), false = FLEXIBLE (optional).
      */

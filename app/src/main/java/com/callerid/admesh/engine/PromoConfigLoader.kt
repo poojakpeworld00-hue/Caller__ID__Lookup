@@ -15,7 +15,7 @@ import org.json.JSONObject
  * Reads a getData blob into [PromoVault].
  *
  * Lifted out of PromoAnchorActivity so it is not tied to the splash: the same absorb has to run
- * when Remote LauncherPrefs pushes a change to a running app (see LiveConfigListener), and duplicating
+ * when Remote Config pushes a change to a running app (see LiveConfigListener), and duplicating
  * it would leave two lists of keys to keep in step.
  *
  * Facebook SDK initialisation stays with the caller — it needs an Activity and only makes

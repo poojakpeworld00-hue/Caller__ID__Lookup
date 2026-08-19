@@ -76,7 +76,7 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         viewModel.init(current)
 
         // Ad frame above the Continue button, `launcher_ads.onboarding.language.slot` — a big
-        // native unless Remote LauncherPrefs switches it to a banner or turns it off.
+        // native unless Remote Config switches it to a banner or turns it off.
         ShellPromoConfig.renderSlot(
             activity = this,
             slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.LANGUAGE),
@@ -239,7 +239,7 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
             if (next == OnboardRouter.homeActivity()) {
                 OnboardRouter.markOnboardingCompleted(this)
             }
-            // Conditional Full-Screen-Intent Screen: when the Remote LauncherPrefs gate
+            // Conditional Full-Screen-Intent Screen: when the Remote Config gate
             // passes, it shows here (after Language) and then continues to `next`.
             // It rebuilds the intent from a class name, so a launcher step reached
             // through it arrives without the first-run marker — which is why those

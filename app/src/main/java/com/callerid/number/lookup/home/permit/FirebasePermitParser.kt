@@ -4,10 +4,10 @@ import com.callerid.number.lookup.home.kit.LogRail
 import org.json.JSONObject
 
 /**
- * Parses the `permission_engine` Remote LauncherPrefs JSON into [PermitRule]s.
+ * Parses the `permission_engine` Remote Config JSON into [PermitRule]s.
  *
  * Accepts either shape, so it works whether the value is stored as its own
- * Remote LauncherPrefs parameter or nested inside a larger config blob:
+ * Remote Config parameter or nested inside a larger config blob:
  *
  * Wrapped:
  * ```
@@ -54,7 +54,7 @@ object FirebasePermitParser {
                     showOnce = obj.optBoolean("show_once", obj.optBoolean("showOnce", false)),
                 )
             }
-            LogRail.log(TAG, "Parsed ${rules.size} permission rule(s) from Remote LauncherPrefs")
+            LogRail.log(TAG, "Parsed ${rules.size} permission rule(s) from Remote Config")
             rules
         } catch (e: Exception) {
             LogRail.error(TAG, "Failed to parse permission_engine config", e)

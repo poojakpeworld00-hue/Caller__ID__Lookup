@@ -94,7 +94,7 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         // Call-screening toggle — backed by the Android 10+ CallScreening role.
         setupCallScreening()
 
-        // Account & support — each row is gated by its own Remote LauncherPrefs flag: true
+        // Account & support — each row is gated by its own Remote Config flag: true
         // (or unset) → visible, false → gone.
         val ads = PromoVault.getInstance(this)
         val showRate = ads.getBoolean("is_rateus", true)

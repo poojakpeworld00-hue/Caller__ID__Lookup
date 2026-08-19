@@ -16,7 +16,7 @@ import org.json.JSONObject
 import com.callerid.number.lookup.home.permit.ScreenGlob
 
 /**
- * Per-screen on-load ad configuration, driven by Remote LauncherPrefs.
+ * Per-screen on-load ad configuration, driven by Remote Config.
  *
  * Resolution order:
  *  - `screen_wise_ad = false` → global `googleBanner` / `googleNative`.

@@ -93,7 +93,7 @@ class AppDrawerPanel(
      * Re-reads `app_drawer.bottom_native` before showing.
      *
      * The slot used to be resolved once in [setupFragment], which runs in the launcher's
-     * onCreate — and a home-screen activity is effectively never recreated, so a Remote LauncherPrefs
+     * onCreate — and a home-screen activity is effectively never recreated, so a Remote Config
      * change to the row position, ad type or enabled flag never reached a running device no
      * matter how promptly the blob itself was updated.
      *

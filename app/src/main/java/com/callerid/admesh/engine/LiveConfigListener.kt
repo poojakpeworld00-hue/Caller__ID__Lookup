@@ -11,13 +11,13 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import org.json.JSONObject
 
 /**
- * Applies Remote LauncherPrefs changes while the app is running.
+ * Applies Remote Config changes while the app is running.
  *
  * Without this the blob is only read at splash, so a value published in the console reaches a
  * device on its next cold start — which for a launcher can be days, since the home screen is
  * rarely killed.
  *
- * Realtime Remote LauncherPrefs pushes the change instead: [ConfigUpdateListener.onUpdate] fires,
+ * Realtime Remote Config pushes the change instead: [ConfigUpdateListener.onUpdate] fires,
  * the new values are activated, and the same absorb the splash runs re-populates PromoVault, so
  * every gate that reads from it — ad slots, the permission engine, the settings rows — picks
  * the change up on its next read.

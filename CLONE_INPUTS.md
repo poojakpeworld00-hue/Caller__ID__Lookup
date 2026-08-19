@@ -47,7 +47,7 @@ Legend:
 | D1 | Backend URL + API credentials | `services/HttpClientFactory.kt`, `ApiCredentials.kt` | **[KEPT]** your own backend |
 | D2 | `google-services.json` | `app/` | **[SET]** real file for project `caller-id-phone-home` (`797289773894`), package matches A1 |
 | D3 | LightHouse API key / base URL | `local.properties` | **[SET]** own key `sk_69w12…uagwi` (distinct from the source's), base `https://api.falconpush.com/`. Gitignored; reaches the app as an XOR'd `BuildConfig` `byte[]` decoded by `Veiled.s` |
-| D4 | Remote LauncherPrefs | `docs/remote-config.json` | **[NEEDS YOU]** regenerated and verified against the ingest (see `docs/remote-config.md`), but **not yet published** — paste it into `GET_DATA_LIST` for `caller-id-phone-home` |
+| D4 | Remote Config | `docs/remote-config.json` | **[NEEDS YOU]** regenerated and verified against the ingest (see `docs/remote-config.md`), but **not yet published** — paste it into `GET_DATA_LIST` for `caller-id-phone-home` |
 | D5 | AdMob app id | `AndroidManifest.xml` | **[NEEDS YOU]** Google's test id |
 | D6 | Ad unit ids | `docs/remote-config.json` | **[NEEDS YOU]** all test units |
 | D7 | Signing keystore | — | **[NEEDS YOU]** deliberately not copied; generate one for this listing |
@@ -65,7 +65,7 @@ Legend:
 
 ## Still outstanding
 
-1. **Publish Remote LauncherPrefs** to `caller-id-phone-home` (D4) — paste `docs/remote-config.json` into the `GET_DATA_LIST` parameter (`DEBUG_GET_DATA_LIST` for debug builds). The file itself is now correct; only publishing is outstanding.
+1. **Publish Remote Config** to `caller-id-phone-home` (D4) — paste `docs/remote-config.json` into the `GET_DATA_LIST` parameter (`DEBUG_GET_DATA_LIST` for debug builds). The file itself is now correct; only publishing is outstanding.
 2. **Real AdMob ids** (D5, D6) — app id in the manifest and every unit id in the config are Google's test values.
 3. **Own signing keystore** (D7).
 4. **Policy / terms URLs** (D8) — still the original app's `sites.google.com/view/calleridphonelookup`.

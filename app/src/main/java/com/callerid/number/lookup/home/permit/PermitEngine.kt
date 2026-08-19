@@ -18,10 +18,10 @@ import java.lang.ref.WeakReference
  * ```
  *
  * It is NOT auto-triggered anymore; [init] (called once from the Application)
- * only warms the Remote LauncherPrefs so the config is ready by the time you trigger.
+ * only warms the Remote Config so the config is ready by the time you trigger.
  *
  * For the Activity it is called with, the engine:
- *  1. reads the `permission_engine` Remote LauncherPrefs (via [PermitSource]),
+ *  1. reads the `permission_engine` Remote Config (via [PermitSource]),
  *  2. finds rules that target this Activity by simple name ([ScreenGlob]),
  *  3. drops permissions that are already granted, not applicable on this SDK, or
  *     already shown when `show_once` is set,
@@ -47,7 +47,7 @@ object PermitEngine {
     private var pendingOnComplete: (() -> Unit)? = null
 
     /**
-     * One-time startup hook. Kicks a fresh Remote LauncherPrefs fetch so the newest
+     * One-time startup hook. Kicks a fresh Remote Config fetch so the newest
      * configuration is active as early as possible. Safe to call from
      * `Application.onCreate` (after `FirebaseApp.initializeApp`).
      */
@@ -131,7 +131,7 @@ object PermitEngine {
      * where you want exactly one permission asked — regardless of whether the
      * current Activity is listed in that permission's `activities` — and then to
      * continue. This is why the FSI screens can prime `notification` even though
-     * the Remote LauncherPrefs only lists Splash/Main for it.
+     * the Remote Config only lists Splash/Main for it.
      *
      * [onComplete] always fires once, on the main thread, when done: after the
      * OS dialog resolves, or immediately when the permission is already granted,
@@ -156,9 +156,9 @@ object PermitEngine {
                 fireComplete(onComplete); return
             }
 
-            // LauncherPrefs lookup: rule is keyed by permission (not by Activity), so a
+            // Config lookup: rule is keyed by permission (not by Activity), so a
             // targeted request works from any screen. When the rule exists but is
-            // disabled in Remote LauncherPrefs, honour that and skip — this is the remote
+            // disabled in Remote Config, honour that and skip — this is the remote
             // off-switch for the FSI notification prime. (A missing rule = no
             // config for this key → still ask, driven by the spec alone.)
             val rule = PermitSource.rules().firstOrNull { it.key == key }

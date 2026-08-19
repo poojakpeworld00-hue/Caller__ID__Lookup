@@ -54,7 +54,7 @@ fun Context.applyNativeAdTheme(
             defaultJson.optJSONObject(modeKey)
 
         if (themeJson == null) {
-            // No palette to copy — Remote LauncherPrefs has not landed yet (the launcher is the device
+            // No palette to copy — Remote Config has not landed yet (the launcher is the device
             // HOME, so it can run before any fetch has ever happened) or the key is absent. Say
             // so rather than logging a write that did not occur.
             Log.d(TAG, "No $modeKey palette in NativeTheme_* — native colors left unchanged")

@@ -5,7 +5,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 /**
- * One place to decide how Remote LauncherPrefs fetches behave.
+ * One place to decide how Remote Config fetches behave.
  *
  * [FirebaseRemoteConfig.setConfigSettingsAsync] applies to the singleton, so two callers with
  * different settings do not each get their own — the last one to run defines the behaviour for

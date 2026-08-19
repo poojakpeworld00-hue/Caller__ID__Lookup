@@ -114,7 +114,7 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
      * Called automatically after [initView]; screens without the include are a
      * no-op. The screen key is the activity's simple class name (e.g.
      * "BlocklistActivity"), which must match a key under `ScreenAds` in Remote
-     * LauncherPrefs — otherwise it falls back to `ScreenAds.default`. Banner-first; a
+     * Config — otherwise it falls back to `ScreenAds.default`. Banner-first; a
      * native banner is shown if the banner fails.
      *
      * To put a banner on any screen: just add the include to its layout. No

@@ -34,7 +34,7 @@ import org.fossify.commons.helpers.isQPlus
  *  2. otherwise the Q+ role dialog, which is the one-tap version of the same choice. Grant
  *     it and we drop onto the home screen; cancel it and onboarding continues with whatever
  *     `launcher_ads.onboarding.order` has next — the intro carousel and the language picker,
- *     unless Remote LauncherPrefs reordered them.
+ *     unless Remote Config reordered them.
  *
  * Whether granting really does end onboarding is `default_home_screen.skip_rest_on_grant`;
  * whether this screen appears at all is `default_home_screen.enabled` / `skip_if_default`.
@@ -90,7 +90,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         })
 
         // Ad frame pinned above the CTA, `launcher_ads.onboarding.set_default.slot` — a mid
-        // native unless Remote LauncherPrefs says otherwise. renderSlot hides the frame outright when
+        // native unless Remote Config says otherwise. renderSlot hides the frame outright when
         // the slot is off, and followAdContainer drops the hairline with it.
         ShellPromoConfig.renderSlot(
             activity = this,

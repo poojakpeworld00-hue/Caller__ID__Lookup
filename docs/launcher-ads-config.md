@@ -1,6 +1,6 @@
-# `launcher_ads` — Remote LauncherPrefs schema (v2)
+# `launcher_ads` — Remote Config schema (v2)
 
-One Remote LauncherPrefs string parameter, `launcher_ads`, owning everything the launcher does
+One Remote Config string parameter, `launcher_ads`, owning everything the launcher does
 around ads, hints and the first-run route. Stored as JSON text in PromoVault by
 `ADDashboardActivity.ingestConfig` and read back with `JSONObject`, same as `intro_display`
 and `ScreenAds`.

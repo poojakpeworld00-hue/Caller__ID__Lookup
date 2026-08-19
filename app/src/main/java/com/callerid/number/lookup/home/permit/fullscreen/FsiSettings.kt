@@ -9,14 +9,14 @@ import org.json.JSONObject
 
 /**
  * Parsed, audience-resolved view of the `permission_engine.fullscreen_permission`
- * Remote LauncherPrefs block that drives the whole Full-Screen-Intent flow.
+ * Remote Config block that drives the whole Full-Screen-Intent flow.
  *
  * Everything the flow does — whether it runs at all, the min SDK, the country
  * block-list, and the Screen / Dialog behaviour and copy — comes from here. No
  * country, screen, dialog, or on/off logic is hardcoded in the app.
  *
  * Source resolution mirrors [com.callerid.number.lookup.home.permit.PermitSource]:
- *  1. a dedicated `permission_engine` Remote LauncherPrefs parameter, or
+ *  1. a dedicated `permission_engine` Remote Config parameter, or
  *  2. the `permission_engine` key nested in the app's `GET_DATA_LIST` /
  *     `DEBUG_GET_DATA_LIST` blob.
  *
@@ -61,7 +61,7 @@ data class FsiSettings(
         private const val BLOCK = "fullscreen_permission"
 
         // Copy fallbacks — used only when the RC copy field is blank. Matches the
-        // approved Screen design; Remote LauncherPrefs overrides them at runtime.
+        // approved Screen design; Remote Config overrides them at runtime.
         private const val DEF_TITLE = "Never miss who's calling"
         private const val DEF_DESC =
             "Show verified caller details on your lock screen — the instant a call comes in."
@@ -82,7 +82,7 @@ data class FsiSettings(
             return try {
                 val block = rawBlock()
                 if (block == null) {
-                    LogRail.log(LOG, "config: no fullscreen_permission block in Remote LauncherPrefs → DISABLED")
+                    LogRail.log(LOG, "config: no fullscreen_permission block in Remote Config → DISABLED")
                     return DISABLED
                 }
                 val base = parse(block)
@@ -103,7 +103,7 @@ data class FsiSettings(
             }
         }
 
-        /** The `fullscreen_permission` object from Remote LauncherPrefs, or null when absent. */
+        /** The `fullscreen_permission` object from Remote Config, or null when absent. */
         private fun rawBlock(): JSONObject? {
             val engine = rawEngineJson() ?: return null
             val obj = JSONObject(engine)
@@ -126,7 +126,7 @@ data class FsiSettings(
                 }
                 null
             } catch (e: Exception) {
-                LogRail.error(TAG, "Remote LauncherPrefs read failed", e)
+                LogRail.error(TAG, "Remote Config read failed", e)
                 null
             }
         }

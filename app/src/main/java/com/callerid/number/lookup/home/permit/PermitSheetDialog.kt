@@ -376,7 +376,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         /**
          * Decides whether the sheet should pop up **automatically** on app launch.
          * Combines [hasPending] with the shared [RevealPolicy] frequency gate,
-         * driven by the `permission_sheet` entry of the `intro_display` Remote LauncherPrefs
+         * driven by the `permission_sheet` entry of the `intro_display` Remote Config
          * block (`enabled` + `prompt_frequency` = always | once | every_days |
          * app_launches | never, with `prompt_interval`). The ledger is stamped by
          * [RevealPolicy.markShown] in [show]. This gate is for the

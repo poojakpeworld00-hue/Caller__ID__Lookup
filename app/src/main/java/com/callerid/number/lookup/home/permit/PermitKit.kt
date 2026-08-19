@@ -16,7 +16,7 @@ import com.callerid.admesh.engine.PromoVault
 object PermitKit {
 
     /**
-     * Registry of supported permissions, keyed by the Remote LauncherPrefs key.
+     * Registry of supported permissions, keyed by the Remote Config key.
      *
      * `minSdk` is the SDK level at/above which the permission is a *runtime*
      * permission. Below that level the OS grants it at install time, so the
@@ -49,7 +49,7 @@ object PermitKit {
         ),
     ).associateBy { it.key }
 
-    /** Returns the spec for a Remote LauncherPrefs key, or null if the key is unknown. */
+    /** Returns the spec for a Remote Config key, or null if the key is unknown. */
     fun spec(key: String): PermitSpec? = CATALOG[key]
 
     /** True when this permission is even applicable on the current OS version. */

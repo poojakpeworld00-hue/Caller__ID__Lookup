@@ -5,7 +5,7 @@ import com.callerid.number.lookup.home.store.StorageRegistry
 
 /**
  * Decides whether an intro screen (Language / Onboarding) shows this launch, from
- * its [RevealSpec] Remote LauncherPrefs policy plus the persisted ledger in
+ * its [RevealSpec] Remote Config policy plus the persisted ledger in
  * [StorageRegistry]. A screen calls [markShown] when it actually appears.
  *
  * Session = one cold start: [StorageRegistry.appLaunchCount] is bumped once per launch

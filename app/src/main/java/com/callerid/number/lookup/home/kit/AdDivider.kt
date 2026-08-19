@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
  * `removeAllViews()` on the container plus GONE — which means one check covers
  * all of them:
  *
- *  - ads switched off globally in Remote LauncherPrefs (`IsAdsON`)
+ *  - ads switched off globally in Remote Config (`IsAdsON`)
  *  - the screen's `ScreenAds` entry carrying `show: false`
  *  - the `NativeCounter` skip
  *  - a banner failing with the native-banner fallback also failing
