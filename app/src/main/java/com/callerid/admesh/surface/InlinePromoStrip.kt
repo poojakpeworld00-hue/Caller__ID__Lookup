@@ -288,7 +288,7 @@ class InlinePromoStrip {
                     shimmer?.isVisible = false
                     layout.removeAllViews()
                     bindFbNativeBanner(fbNative, layout, context)
-                    context.trackEvent("native_b_anner_fb")
+                    context.trackEvent("native_banner_fb")
                 }
 
                 override fun onError(ad: Ad?, adError: AdError?) {
