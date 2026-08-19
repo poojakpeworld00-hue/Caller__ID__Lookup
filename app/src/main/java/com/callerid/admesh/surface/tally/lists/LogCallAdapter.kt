@@ -13,11 +13,6 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.CallEntry
 import com.callerid.number.lookup.home.store.CallFlavor
 
-/**
- * Recent-call list for the post-call screen. Each row shows the caller and a
- * call button; tapping the button (or the row) reports the number back via
- * [onCall] (blank numbers are ignored), which the host places as a direct call.
- */
 class LogCallAdapter(
     private val onCall: (String) -> Unit
 ) : RecyclerView.Adapter<LogCallAdapter.VH>() {
@@ -67,8 +62,8 @@ class LogCallAdapter(
         }
 
         private fun colorFor(type: CallFlavor): Int = when (type) {
-            CallFlavor.MISSED, CallFlavor.SPAM -> Color.parseColor("#D32F2F") // danger
-            else -> Color.parseColor("#00796B")                           // primary
+            CallFlavor.MISSED, CallFlavor.SPAM -> Color.parseColor("#D32F2F")
+            else -> Color.parseColor("#00796B")
         }
     }
 }

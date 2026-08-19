@@ -38,8 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/padSkip" />
 
-        <!-- Dots ride the CTA's row: the button is the taller of the two, so it
-             owns the vertical slot and the dots centre on it. -->
+        
         <LinearLayout
             android:id="@+id/dotsVw"
             android:layout_width="wrap_content"
@@ -51,9 +50,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/padNext" />
 
-        <!-- CTA. Anchored to the ad (not to the 8dp dots) so it keeps a real
-             10sdp gap above the advert at any system font scale; constrained
-             against the dots so a long label can never ride over them. -->
+        
         <TextView
             android:id="@+id/padNext"
             android:layout_width="wrap_content"
@@ -77,9 +74,7 @@
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/dotsVw" />
 
-
-
-        <!-- Full-bleed hairline separating the pager content from the ad below -->
+        
         <View
             android:id="@+id/adNativeDividerVw"
             style="@style/AdDivider"
@@ -88,7 +83,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Big native ad pinned at the bottom. -->
+        
         <FrameLayout
             android:id="@+id/adNativeFrameVw"
             android:layout_width="match_parent"

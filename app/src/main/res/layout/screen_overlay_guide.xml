@@ -1,16 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  Overlay-permission coach-mark. Hosted by a transparent activity
-  (Theme.OverlayGuide) with system-applied dim, so the screen behind stays
-  visible and the card reads as a sheet over it.
-
-  The card mirrors the row the user is looking for on the system "Appear on
-  top" page — app icon, app name, toggle — so the eye can match it 1:1 against
-  the real list. The Lottie plays the flip they need to perform. Tapping
-  anywhere finishes (TipSheetActivity).
-
-  Sizes are sdp/ssp throughout, like the rest of the app: this card is a
-  full-width sheet and fixed dp made it overrun the screen on small phones.
--->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rowMain"
@@ -62,7 +50,7 @@
             android:textColor="@color/on_surface_variant"
             android:textSize="@dimen/_10ssp" />
 
-        <!-- clipChildren=false: the Lottie's toggle knob overshoots its bounds mid-flip. -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

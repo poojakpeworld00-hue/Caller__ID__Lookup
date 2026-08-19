@@ -23,7 +23,6 @@ class LogAdapter(
 
     private var rows: List<LogRow> = emptyList()
 
-    /** Rows animate in once; scrolling back or re-submitting must not replay the stagger. */
     private var lastAnimated = -1
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,7 +50,6 @@ class LogAdapter(
             is LogRow.Call -> (holder as CallVH).bind(row)
         }
 
-        // Claude Design's cid-rise-in stagger, once per row per submit().
         if (position > lastAnimated) {
             lastAnimated = position
             HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
@@ -87,8 +85,6 @@ class LogAdapter(
                 if (duration.isNotEmpty()) append(" · ").append(duration)
             }
 
-            // Verdict-tinted row + avatar (matches the Home list): spam reads red,
-            // everything else sits on a neutral card with a primary-container avatar.
             binding.rowCallVw.setBackgroundResource(
                 if (isSpam) R.drawable.form_home_tile_spam else R.drawable.form_home_tile
             )
@@ -99,7 +95,6 @@ class LogAdapter(
             )
             binding.lblName.setTextColor(color(if (isSpam) R.color.spam_on else R.color.on_surface))
 
-            // Icon + subtitle colour by verdict/type.
             val subColorRes = when (e.type) {
                 CallFlavor.MISSED -> R.color.danger
                 CallFlavor.SPAM -> R.color.spam_on
@@ -109,7 +104,6 @@ class LogAdapter(
             binding.picType.imageTintList = tint(subColorRes)
             binding.lblSub.setTextColor(color(subColorRes))
 
-            // Spam → no action; unknown/unsaved → Identify (opens Lookup); else Call.
             val unknown = e.name.isNullOrBlank() && e.number.isNotBlank()
             when {
                 isSpam -> {

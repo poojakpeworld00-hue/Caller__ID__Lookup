@@ -29,16 +29,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * Shows the caller-ID card while a call is ringing.
- *
- * - **Device unlocked** → a floating [WindowManager] overlay (TYPE_APPLICATION_OVERLAY),
- *   which is why the app requires SYSTEM_ALERT_WINDOW.
- * - **Device locked** → overlays are unreliable over the keyguard, so we hand off to
- *   [RingScreenActivity] (showWhenLocked + turnScreenOn) and stop.
- *
- * Started by [PhoneStateReceiver] on RINGING and stopped on OFFHOOK/IDLE.
- */
 class IdentOverlayService : Service() {
 
     private val TAG = "CallerOverlay"
@@ -47,7 +37,6 @@ class IdentOverlayService : Service() {
     private var windowManager: WindowManager? = null
     private var overlayView: View? = null
 
-    /** Self-dismiss the moment the call leaves the ringing/active state. */
     private val callEndWatcher by lazy { CallEndGuard(this) { stopSelf() } }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -64,7 +53,7 @@ class IdentOverlayService : Service() {
 
         val keyguard = getSystemService(KEYGUARD_SERVICE) as? KeyguardManager
         if (keyguard?.isKeyguardLocked == true) {
-            // Locked: a show-when-locked activity is the reliable path over the keyguard.
+
             startActivity(RingScreenActivity.newIntent(this, number))
             stopSelf()
             return START_NOT_STICKY
@@ -77,7 +66,7 @@ class IdentOverlayService : Service() {
     }
 
     private fun showOverlay(number: String) {
-        // Replace any previous card (e.g. rapid re-start) before adding a new one.
+
         removeOverlay()
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -99,7 +88,7 @@ class IdentOverlayService : Service() {
         ).apply {
             gravity = Gravity.CENTER
             val density = resources.displayMetrics.density
-            // Inset from the screen edges so the card doesn't span full width.
+
             width = resources.displayMetrics.widthPixels - (24 * density).toInt()
         }
 
@@ -112,7 +101,6 @@ class IdentOverlayService : Service() {
             return
         }
 
-        // Resolve caller details off the main thread, then bind.
         scope.launch {
             val info = withContext(Dispatchers.IO) { IdentOverlayCard.resolve(this@IdentOverlayService, number) }
             overlayView?.let { IdentOverlayCard.bind(this@IdentOverlayService, it, number, info) }
@@ -124,11 +112,6 @@ class IdentOverlayService : Service() {
         overlayView = null
     }
 
-    /**
-     * Keep the service alive during the ring. startForeground can be refused when the
-     * PHONE_STATE broadcast's exemption has elapsed — that's fine, the WindowManager
-     * overlay does not depend on the foreground service, so we swallow it.
-     */
     private fun startAsForeground() {
         val channelId = "caller_id_overlay"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -7,7 +7,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-/** Formatting helpers shared by call-log adapters. */
 object CallFormatter {
 
     fun displayName(name: String?, number: String): String =

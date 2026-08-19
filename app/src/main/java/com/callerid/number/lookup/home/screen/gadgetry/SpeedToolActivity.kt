@@ -21,7 +21,6 @@ import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-/** Internet speed test: download / upload throughput, latency and jitter over HTTP. */
 class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
 
     override val layoutId: Int = R.layout.screen_speedometer
@@ -41,7 +40,6 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.pbGaugeVw.isIndeterminate = false
         binding.pbGaugeVw.max = 100
@@ -68,7 +66,7 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
         binding.lblStatus.setText(R.string.speedometer_waiting)
 
         job = lifecycleScope.launch {
-            // 1) Latency + jitter
+
             val (latency, jitter) = withContext(Dispatchers.IO) { measureLatency() }
             if (latency < 0) {
                 binding.lblStatus.setText(R.string.speedtest_error)
@@ -79,11 +77,9 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
             binding.barLatencyVw.setProgressCompat(pct(latency.toFloat(), 150f), true)
             binding.barJitterVw.setProgressCompat(pct(jitter.toFloat(), 30f), true)
 
-            // 2) Download (with live gauge)
             val download = measureDownload { live -> showSpeed(live) }
             showSpeed(download)
 
-            // 3) Upload (best-effort)
             val upload = withContext(Dispatchers.IO) { measureUpload() }
             binding.lblUpload.text = getString(R.string.speedtest_mbps, oneDp(upload))
             binding.barUploadVw.setProgressCompat(pct(upload, MAX_MBPS), true)
@@ -108,7 +104,6 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
         binding.barJitterVw.setProgressCompat(0, false)
     }
 
-    /** Returns avg latency (ms) and jitter (ms), or (-1, 0) if unreachable. */
     private fun measureLatency(): Pair<Int, Int> {
         val samples = mutableListOf<Long>()
         repeat(5) {
@@ -133,7 +128,6 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
         return avg.roundToInt() to jitter.roundToInt()
     }
 
-    /** Streams a fixed payload and reports live + final Mbps. */
     private suspend fun measureDownload(onLive: (Float) -> Unit): Float {
         return withContext(Dispatchers.IO) {
             runCatching {

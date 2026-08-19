@@ -59,18 +59,17 @@ class InlinePromo() {
 
     fun fetchNativeAds(context: Activity, observer: NativeAdObserver? = null) {
         val adsPreference = PromoVault.getInstance(context)
-        // Ads toggle and type check
+
         if (!adsPreference.getBoolean("IsAdsON") || PromoKind.fromString(adsPreference.getString("IsAdType")) != PromoKind.GOOGLE) {
             observer?.onNativeAdFailed()
             return
         }
-        // Firebase "NativeBanner" master switch — disable native ad loading
+
         if (!adsPreference.getBoolean("NativeAd")) {
             observer?.onNativeAdFailed()
             return
         }
-        // Screen-wise aware: resolves to ScreenAds.default native id, or the
-        // global googleNative when screen_wise_ad is off.
+
         val adUnit = PerScreenPromo.inlineAdUnitId(context)
         if (adUnit.isEmpty()) {
             return
@@ -78,20 +77,12 @@ class InlinePromo() {
         val adLoader =
             AdLoader.Builder(context, adUnit)
                 .forNativeAd { nativeAds ->
-                    // Always cache the ad — even when the activity that
-                    // triggered this load is destroyed by the time the ad
-                    // lands. The cache is a static field; it survives
-                    // activity transitions and can be shown by the next
-                    // caller. Previously this branch destroyed the ad,
-                    // which is why "1 load → then nothing" was the symptom:
-                    // the splash refill landed after splash was gone, got
-                    // destroyed, and every subsequent show found null.
+
                     nativeAd?.destroy()
                     nativeAd = nativeAds
 
                     if (context.isActivityDestroyedCompat()) {
-                        // Originating activity is gone — cache only, skip
-                        // observer/log calls that need a live context.
+
                         return@forNativeAd
                     }
 
@@ -100,7 +91,6 @@ class InlinePromo() {
                         context.trackEvent("native_ads_load")
                     } catch (e: Exception) {
                     }
-
 
                     Log.e("NativeAds", "Google Load: nativeAd")
                 }
@@ -126,7 +116,6 @@ class InlinePromo() {
         adLoader.loadAd(AdRequest.Builder().build())
     }
 
-    //================================================================================BigNAtive
     fun renderBigNative(
         context: Activity,
         layout: FrameLayout,
@@ -138,10 +127,8 @@ class InlinePromo() {
 
         val adsPreference = PromoVault.getInstance(context)
 
-        // 🔥 1. Activity lifecycle safety
         if (context.isFinishing || context.isDestroyed) return
 
-        // 🔥 2. Network + Ads ON + InlinePromoStrip master switch
         if (!hasNetwork(context)
             || !adsPreference.getBoolean("IsAdsON")
             || !adsPreference.getBoolean("NativeAd")
@@ -155,7 +142,6 @@ class InlinePromo() {
             return
         }
 
-        // 🔥 3. Counter logic
         if (nativeCounter < adsPreference.getInt("NativeCounter")) {
             nativeCounter++
             layout.removeAllViews()
@@ -168,8 +154,6 @@ class InlinePromo() {
         }
         nativeCounter = 0
 
-
-        // 🔥 4. UI loading state
         layout.visible()
         shimmer?.startShimmer()
         shimmer?.isVisible = true
@@ -178,7 +162,7 @@ class InlinePromo() {
 
         when (PromoKind.fromString(adsPreference.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
-                layout.post {  // 🔥 UI thread safe
+                layout.post {
                     try {
                         if (context.isFinishing || context.isDestroyed) return@post
 
@@ -219,7 +203,6 @@ class InlinePromo() {
                             return@post
                         }
 
-                        // 🔥 GOOGLE FAIL → fallback
                         if (adsPreference.getBoolean("IsFail_FB")) {
                             renderFbFallback(context, layout, imageView, shimmer)
                         } else {
@@ -302,7 +285,6 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
-
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
@@ -350,13 +332,10 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
-
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
 
-
-    // Helper function for FB fallback
     private fun renderFbFallback(
         context: Activity,
         layout: FrameLayout,
@@ -428,20 +407,16 @@ class InlinePromo() {
         activity: Activity,
         adSize: String? = null
     ) {
-        // ✅ Make sure container is visible
+
         viewGroup.isVisible = true
 
-        // Unregister any old ad view
         nativeAd.unregisterView()
 
-        // ✅ Inflate layout with ViewBinding
         val binding = FbNativeBinding.inflate(LayoutInflater.from(activity), viewGroup, false)
 
-        // Clear old views and add new ad view
         viewGroup.removeAllViews()
         viewGroup.addView(binding.root)
 
-        // ✅ Add AdChoicesView
         val adOptionsView = AdOptionsView(activity, nativeAd, binding.nativview)
         binding.adChoicesContainer.removeAllViews()
         binding.adChoicesContainer.addView(adOptionsView, 0)
@@ -465,7 +440,7 @@ class InlinePromo() {
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }
-        // ✅ Bind ad data to views
+
         binding.nativeAdTitle.text = nativeAd.advertiserName
         binding.nativeAdBody.text = nativeAd.adBodyText
         binding.nativeAdSocialContext.text = nativeAd.adSocialContext
@@ -478,7 +453,6 @@ class InlinePromo() {
             binding.nativeAdCallToAction.isVisible = false
         }
 
-        // ✅ Register clickable views
         val clickableViews = listOf(binding.nativeAdTitle, binding.nativeAdCallToAction)
 
         nativeAd.registerViewForInteraction(
@@ -486,8 +460,6 @@ class InlinePromo() {
         )
     }
 
-    //================================================================================BigNAtive
-//================================================================================MidNAtive
     fun renderMidNative(
         context: Activity,
         layout: FrameLayout,
@@ -496,10 +468,9 @@ class InlinePromo() {
         ln: LinearLayout? = null
     ) {
         val adsPref = PromoVault.getInstance(context)
-        // 🔥 1. Activity lifecycle safety
+
         if (context.isFinishing || context.isDestroyed) return
 
-        // Check network & ad toggle + InlinePromoStrip master switch
         if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeAd")
@@ -513,7 +484,6 @@ class InlinePromo() {
             return
         }
 
-        // MidNative counter logic
         if (nativeCounter < adsPref.getInt("MidNativeCounter")) {
             nativeCounter += 1
             layout.removeAllViews()
@@ -532,7 +502,6 @@ class InlinePromo() {
         ln?.gone()
         layout.visible()
 
-
         when (PromoKind.fromString(adsPref.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
                 layout.post {
@@ -547,12 +516,11 @@ class InlinePromo() {
                             )
 
                             layout.removeAllViews()
-                            // Stop shimmer before adding real ad
+
                             shimmer?.stopShimmer()
                             shimmer?.isVisible = false
                             layout.addView(binding.root)
 
-                            // Log load
                             context.trackEvent("native_ads_show_mid_native_google")
 
                             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
@@ -562,10 +530,10 @@ class InlinePromo() {
                             }
 
                             nativeAd = null
-                            fetchNativeAds(context) // preload next Google ad
+                            fetchNativeAds(context)
                             return@post
                         }
-                        // Google failed → fallback
+
                         if (adsPref.getBoolean("IsFail_FB")) {
                             showMidFBNativeFallback(context, layout, shimmer, imageView)
                         } else {
@@ -582,7 +550,6 @@ class InlinePromo() {
                         Log.e("MidNativeAds", "Google MidNative failed: ${e.message}")
                     }
                 }
-
 
             }
 
@@ -675,20 +642,16 @@ class InlinePromo() {
         activity: Activity,
         adSize: String? = null
     ) {
-        // ✅ Make sure container is visible
+
         viewGroup.isVisible = true
 
-        // Unregister any old ad view
         nativeAd.unregisterView()
 
-        // ✅ Inflate layout with ViewBinding
         val binding = FbMidNativeBinding.inflate(LayoutInflater.from(activity), viewGroup, false)
 
-        // Clear old views and add new ad view
         viewGroup.removeAllViews()
         viewGroup.addView(binding.root)
 
-        // ✅ Add AdChoicesView
         val adOptionsView = AdOptionsView(activity, nativeAd, binding.nativview)
         binding.adChoicesContainer.removeAllViews()
         binding.adChoicesContainer.addView(adOptionsView, 0)
@@ -714,7 +677,6 @@ class InlinePromo() {
             setTextColor(Color.parseColor(btntxtColor))
         }
 
-        // ✅ Bind ad data to views
         binding.nativeAdTitle.text = nativeAd.advertiserName
         binding.nativeAdBody.text = nativeAd.adBodyText
         binding.nativeAdSocialContext.text = nativeAd.adSocialContext
@@ -727,7 +689,6 @@ class InlinePromo() {
             binding.nativeAdCallToAction.isVisible = false
         }
 
-        // ✅ Register clickable views
         val clickableViews = listOf(binding.nativeAdTitle, binding.nativeAdCallToAction)
 
         nativeAd.registerViewForInteraction(
@@ -779,7 +740,6 @@ class InlinePromo() {
         }
     }
 
-    // Extension helpers
     fun View.visible() {
         this.visibility = View.VISIBLE
     }
@@ -800,7 +760,6 @@ class InlinePromo() {
         }
     }
 
-
     fun renderMidNative2(
         context: Activity,
         layout: FrameLayout,
@@ -809,10 +768,9 @@ class InlinePromo() {
         ln: LinearLayout? = null
     ) {
         val adsPref = PromoVault.getInstance(context)
-        // 🔥 1. Activity lifecycle safety
+
         if (context.isFinishing || context.isDestroyed) return
 
-        // Check network & ad toggle
         if (!hasNetwork(context) || !adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("NativeAd")) {
             layout.removeAllViews()
             layout.invisible()
@@ -823,7 +781,6 @@ class InlinePromo() {
             return
         }
 
-        // MidNative counter logic
         if (nativeCounter < adsPref.getInt("MidNativeCounter")) {
             nativeCounter += 1
             layout.removeAllViews()
@@ -855,12 +812,11 @@ class InlinePromo() {
                             )
 
                             layout.removeAllViews()
-                            // Stop shimmer before adding real ad
+
                             shimmer?.stopShimmer()
                             shimmer?.isVisible = false
                             layout.addView(binding.root)
 
-                            // Log load
                             context.trackEvent("native_ads_show_mid_native2_google")
 
                             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
@@ -870,10 +826,10 @@ class InlinePromo() {
                             }
 
                             nativeAd = null
-                            fetchNativeAds(context) // preload next Google ad
+                            fetchNativeAds(context)
                             return@post
                         }
-                        // Google failed → fallback
+
                         layout.removeAllViews()
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
@@ -886,7 +842,6 @@ class InlinePromo() {
                         Log.e("MidNativeAds", "Google MidNative failed: ${e.message}")
                     }
                 }
-
 
             }
 
@@ -950,10 +905,8 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
-
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
-
 
 }

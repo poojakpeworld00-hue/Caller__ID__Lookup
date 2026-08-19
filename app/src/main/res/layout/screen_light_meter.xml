@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
-                <!-- Mid native (scrolls with content) -->
+                
                 <FrameLayout
                     android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
@@ -73,7 +73,7 @@
                         <include layout="@layout/googlemidnative2" />
                     </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
-                <!-- Gauge card -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
                         </LinearLayout>
                     </FrameLayout>
 
-                    <!-- Capture / Zero -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Min / Average / Max -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/crownBar" />
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -236,7 +236,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

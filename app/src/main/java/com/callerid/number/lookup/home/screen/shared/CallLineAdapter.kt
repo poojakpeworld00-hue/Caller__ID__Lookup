@@ -19,7 +19,6 @@ class CallLineAdapter(
 
     private var items: List<CallCardModel> = initial
 
-    /** Rows animate in once; scrolling back or re-submitting must not replay the stagger. */
     private var lastAnimated = -1
 
     @SuppressLint("NotifyDataSetChanged")
@@ -48,8 +47,6 @@ class CallLineAdapter(
             lblName.text = item.name
             lblSub.text = item.info
 
-            // Verdict container: spam rows read red before the text does; everything
-            // else sits on a neutral surface card with a primary-container avatar.
             rowCallVw.setBackgroundResource(
                 if (isSpam) R.drawable.form_home_tile_spam else R.drawable.form_home_tile
             )
@@ -68,8 +65,6 @@ class CallLineAdapter(
             picType.imageTintList = tint(subColorRes)
             lblSub.setTextColor(color(subColorRes))
 
-            // Spam → no action (auto-blocked); unknown number → Identify (opens Lookup);
-            // otherwise the Call button.
             val unknown = !item.identified && item.number.isNotBlank()
             when {
                 isSpam -> {
@@ -89,7 +84,6 @@ class CallLineAdapter(
             }
         }
 
-        // Claude Design's cid-rise-in stagger, once per row.
         if (position > lastAnimated) {
             lastAnimated = position
             HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)

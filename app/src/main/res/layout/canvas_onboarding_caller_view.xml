@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Onboarding step 1 — "Know who's calling".
-    A floating phone (obCard) shows a verified incoming caller, sitting inside a
-    soft blue halo with two expanding incoming-call rings (obRing1/obRing2 · obPulse).
-    The green verified badge pops in (obChip · obPop). Verdict colors are fixed.
--->
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,7 +8,7 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- glow halo -->
+    
     <ImageView
         android:layout_width="@dimen/_165sdp"
         android:layout_height="@dimen/_165sdp"
@@ -21,7 +16,7 @@
         android:contentDescription="@null"
         android:src="@drawable/form_onb_halo_blue" />
 
-    <!-- incoming pulse rings -->
+    
     <View
         android:id="@+id/obRing1Vw"
         android:layout_width="@dimen/_140sdp"
@@ -36,7 +31,7 @@
         android:layout_gravity="center"
         android:background="@drawable/form_onb_ring_incoming" />
 
-    <!-- phone -->
+    
     <LinearLayout
         android:id="@+id/obCardVw"
         android:layout_width="@dimen/_115sdp"

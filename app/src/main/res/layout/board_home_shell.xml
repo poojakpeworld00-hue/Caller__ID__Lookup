@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     The app's four-tab home UI. Hosted twice: by AppHomeActivity, where it is the screen, and
-     by the launcher's swipe-right side panel (see caller_panel_fragment.xml), so the two
-     surfaces can never drift apart.
 
-     Bottom insets and the bottom ad banner belong to whichever container is hosting this —
-     they differ per host — so nothing here pads for the navigation bar.
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,8 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Overlay-permission prompt: sits directly above the bottom nav once
-         call-log & contacts are granted but the overlay permission isn't. -->
+    
     <LinearLayout
         android:id="@+id/overlayBannerVw"
         android:layout_width="0dp"
@@ -71,7 +63,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Custom bottom navigation built with LinearLayout -->
+    
     <LinearLayout
         android:id="@+id/footerBar"
         android:layout_width="match_parent"

@@ -1,9 +1,7 @@
 package com.callerid.number.lookup.home.screen.identify
 
-/** Lightweight, offline number helpers: formatting + region from country code. */
 object NumberInfo {
 
-    /** DialCountry-calling-code -> human-readable region. Longest codes matched first. */
     private val regions: Map<String, String> = linkedMapOf(
         "+1" to "United States / Canada",
         "+44" to "United Kingdom",
@@ -30,17 +28,15 @@ object NumberInfo {
         "+20" to "Egypt"
     )
 
-    /** Removes everything except digits and a leading '+'. */
     fun normalize(raw: String): String {
         val trimmed = raw.trim()
         val plus = if (trimmed.startsWith("+")) "+" else ""
         return plus + trimmed.filter { it.isDigit() }
     }
 
-    /** Returns the matched country calling code (e.g. "+1") or empty string. */
     fun regionCode(normalized: String): String {
         if (!normalized.startsWith("+")) return ""
-        // Try longest prefixes first (up to 4 chars incl '+').
+
         for (len in 4 downTo 2) {
             val prefix = normalized.take(len)
             if (regions.containsKey(prefix)) return prefix
@@ -48,19 +44,17 @@ object NumberInfo {
         return ""
     }
 
-    /** Human-readable region, or null when it can't be determined. */
     fun regionName(normalized: String): String? {
         val code = regionCode(normalized)
         return regions[code]
     }
 
-    /** Pretty-print a normalized number in light groups. */
     fun format(normalized: String): String {
         if (normalized.isEmpty()) return normalized
         val hasPlus = normalized.startsWith("+")
         val digits = normalized.filter { it.isDigit() }
         if (digits.length < 7) return normalized
-        // Group the last 10 digits as (xxx) xxx-xxxx style when possible.
+
         val tail = digits.takeLast(10)
         val country = digits.dropLast(10)
         val grouped = when (tail.length) {

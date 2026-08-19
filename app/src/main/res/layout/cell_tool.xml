@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Compact tool card — icon tile + name + one-line hint, left-aligned. The tile
-    gradient and glyph are set per tool in ToolsAdapter (controlled 6-hue palette).
-    Kept dense (no dead space) so several rows fit on any phone.
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

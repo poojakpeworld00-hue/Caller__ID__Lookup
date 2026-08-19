@@ -45,7 +45,7 @@ class DirectoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun rebuild() {
-        // Tab filter (keeps name order so alpha grouping / fast-scroll stay valid).
+
         val byTab = when (_filter.value ?: ContactFilter.ALL) {
             ContactFilter.ALL -> allContacts
             ContactFilter.FAVORITES -> allContacts.filter { it.starred }

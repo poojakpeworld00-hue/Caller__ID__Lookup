@@ -16,7 +16,6 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.databinding.ScreenTimerBinding
 import java.util.Locale
 
-/** Countdown timer with +1:00 / +0:10 / +0:01 presets. */
 class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
 
     override val layoutId: Int = R.layout.screen_timer
@@ -39,7 +38,6 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.padStartPause.setOnClickListener { if (running) pause() else start() }
         binding.padReset.setOnClickListener { reset() }
@@ -115,7 +113,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
     }
 
     private fun renderTime() {
-        val totalSec = (remainingMs + 999) / 1000 // round up while counting down
+        val totalSec = (remainingMs + 999) / 1000
         binding.lblTime.text =
             String.format(Locale.getDefault(), "%02d:%02d", totalSec / 60, totalSec % 60)
     }

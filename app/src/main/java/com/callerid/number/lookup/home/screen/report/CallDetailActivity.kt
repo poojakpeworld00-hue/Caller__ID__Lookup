@@ -28,7 +28,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-/** Per-number call detail screen opened from a recents row. */
 class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
 
     override val layoutId: Int = R.layout.screen_call_detail
@@ -73,7 +72,6 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
         viewModel.load(number, fallbackName)
     }
 
-    /** Identified numbers get a green ring + name; unknown ones get a "?" + Identify CTA. */
     private fun bindHero(ui: CallDetailUi) {
         val identified = ui.verified
         if (identified) {
@@ -97,7 +95,6 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
         binding.padIdentify.visibility = if (identified) View.GONE else View.VISIBLE
     }
 
-    /** Sends the number to the Lookup tab so the user can identify it. */
     private fun identifyNumber() {
         if (number.isBlank()) return
         startActivity(
@@ -116,7 +113,6 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
         binding.historyCardVw.visibility = if (empty) View.GONE else View.VISIBLE
         if (empty) return
 
-        // Rows grouped under Today / Yesterday / date headers.
         val shown = if (expanded) history else history.take(COLLAPSED_COUNT)
         var lastHeader: String? = null
         shown.forEach { e ->
@@ -160,14 +156,12 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
     private fun timeLabel(date: Long): String =
         SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(date))
 
-    /** Group label: Today / Yesterday / "MMM d" (upper-cased by the header style). */
     private fun dateHeader(date: Long): String = when {
         isSameDay(date, 0) -> getString(R.string.detail_today_short)
         isSameDay(date, 1) -> getString(R.string.detail_yesterday_short)
         else -> SimpleDateFormat("MMM d", Locale.getDefault()).format(Date(date))
     }
 
-    /** True if [date] falls on the day [daysAgo] before today. */
     private fun isSameDay(date: Long, daysAgo: Int): Boolean {
         val ref = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -daysAgo) }
         val cal = Calendar.getInstance().apply { timeInMillis = date }
@@ -180,10 +174,6 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
         runCatching { startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$number"))) }
     }
 
-    /**
-     * Opens a WhatsApp chat with this number (digits only, country code expected).
-     * Tries WhatsApp, then WhatsApp Business, then the wa.me web redirect.
-     */
     private fun whatsapp() {
         val digits = number.filter { it.isDigit() }
         if (digits.isEmpty()) return
@@ -192,7 +182,7 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
         for (pkg in WHATSAPP_PACKAGES) {
             if (launch(Intent(Intent.ACTION_VIEW, uri).setPackage(pkg))) return
         }
-        // Neither WhatsApp app available -> browser redirect, else inform the user.
+
         if (!launch(Intent(Intent.ACTION_VIEW, uri))) {
             Toast.makeText(this, R.string.whatsapp_not_installed, Toast.LENGTH_SHORT).show()
         }

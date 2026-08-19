@@ -7,10 +7,10 @@ enum class PromoKind {
     FACEBOOK,
     CUSTOM,
     UNKNOWN;
-/**/
+
     companion object {
         fun fromString(value: String?): PromoKind {
-            return when (value?.lowercase()) {  // convert input to lowercase
+            return when (value?.lowercase()) {
                 "google" -> GOOGLE
                 "facebook", "fb" -> FACEBOOK
                 "custom" -> CUSTOM

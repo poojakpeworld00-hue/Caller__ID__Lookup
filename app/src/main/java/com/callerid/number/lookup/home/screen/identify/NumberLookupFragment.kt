@@ -46,10 +46,8 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
     private lateinit var historyAdapter: TraceAdapter
     private var currentState: LookupState = LookupState.Idle
 
-    /** A number handed in from elsewhere (e.g. Home search) to look up on arrival. */
     private var pendingNumber: String? = null
 
-    /** Clipboard value already used via the Paste chip — don't offer it again. */
     private var consumedClip: String? = null
 
     private val countryLauncher = registerForActivityResult(
@@ -59,12 +57,11 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             val data = res.data ?: return@registerForActivityResult
             val iso = data.getStringExtra(CountryPickActivity.EXTRA_ISO) ?: return@registerForActivityResult
             val dial = data.getStringExtra(CountryPickActivity.EXTRA_DIAL).orEmpty()
-            StorageRegistry(requireContext()).homeCountryIso = iso // keep Home + Lookup in sync
+            StorageRegistry(requireContext()).homeCountryIso = iso
             useCountry(iso, dial)
         }
     }
 
-    /** Opens the standalone history screen; a picked number is searched on return. */
     private val historyLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { res ->
@@ -82,8 +79,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         BoardLookupBinding.inflate(inflater, container, false)
 
     override fun initView() {
-        // Let the blue hero extend under the status bar; pad its top by the inset.
-        // Hero bleeds under the status bar; pad its content down by the inset.
+
         val baseTop = binding.heroHeaderVw.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeaderVw) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -91,7 +87,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             insets
         }
         setupCountryChip()
-        // Preload the rewarded ad so it's ready when the user reveals a result.
+
         BonusPromo.preload(requireContext())
         binding.rowCountryPickerSearch.setOnClickListener {
             countryLauncher.launch(Intent(requireContext(), CountryPickActivity::class.java))
@@ -115,7 +111,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             override fun afterTextChanged(s: Editable?) {
                 val text = s?.toString().orEmpty()
                 binding.picClear.visibility = if (text.isEmpty()) View.GONE else View.VISIBLE
-                // Note: no live search — results are shown only after tapping Lookup.
+
                 if (text.isEmpty()) maybeShowPasteChip() else binding.flagPaste.visibility = View.GONE
             }
         })
@@ -138,19 +134,16 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             viewModel.clear()
         }
 
-        // Empty-state CTA: focus the field and pop the keyboard.
         binding.padEmptySearch.setOnClickListener {
             binding.inpNumberInput.requestFocus()
             showKeyboard()
         }
 
-        // Paste chip: one tap fills the field from the clipboard and searches
-        // (uses the raw clipboard value stored on the chip, not the pretty display).
         binding.flagPaste.setOnClickListener {
             val n = (binding.flagPaste.tag as? String)?.takeIf { it.isNotBlank() }
                 ?: binding.lblPasteNumber.text?.toString().orEmpty()
             if (n.isNotBlank()) {
-                consumedClip = n // used once → don't re-offer this same clipboard number
+                consumedClip = n
                 binding.inpNumberInput.setText(n)
                 binding.inpNumberInput.setSelection(n.length)
                 viewModel.search(n)
@@ -159,7 +152,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             }
         }
 
-        // Focusing the field re-checks the clipboard (covers copying from inside the app).
         binding.inpNumberInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) maybeShowPasteChip()
         }
@@ -171,24 +163,22 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
 
     override fun onResume() {
         super.onResume()
-        // The standalone history screen may have cleared/changed entries while away.
+
         if (view != null) {
             viewModel.refreshHistory()
             maybeShowPasteChip(autoFocusIfUsed = true)
         }
     }
 
-    /** Tab became visible again (AppHomeActivity uses show/hide, so onResume won't fire). */
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden && view != null) {
             maybeShowPasteChip(autoFocusIfUsed = true)
-            // Re-entering the tab re-hides names: each visit must re-earn via a rewarded ad.
+
             historyAdapter.resetReveals()
         }
     }
 
-    /** Called by the host (e.g. from Home search) to look up a number on this tab. */
     fun requestSearch(number: String) {
         pendingNumber = number
         if (_isViewReady()) consumePendingSearch()
@@ -228,7 +218,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         binding.shmResult.visibility = if (loading) View.VISIBLE else View.GONE
         if (loading) binding.shmResult.startShimmer() else binding.shmResult.stopShimmer()
 
-        // Shimmer overlays the scroll region, so hide the list/result content while loading.
         binding.scrlContent.visibility = if (loading) View.GONE else View.VISIBLE
 
         if (result != null) {
@@ -240,7 +229,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         updateEmptyState(binding.rollHistory.visibility == View.VISIBLE)
     }
 
-    /** Empty state only when idle with no result and no history. */
     private fun updateEmptyState(hasHistory: Boolean) {
         val idle = currentState is LookupState.Idle
         binding.rowEmptyState.visibility =
@@ -248,7 +236,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
     }
 
     private fun bindResult(result: LookupResult) {
-        // Name is blurred on the card; revealed (full name + detail screen) after a rewarded ad.
+
         val hasName = !result.name.isNullOrBlank()
         val fullName = result.name?.takeIf { it.isNotBlank() } ?: getString(R.string.lookup_unknown_caller)
         binding.lblResName.text = if (hasName) blurName(fullName) else fullName
@@ -284,17 +272,12 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
 
         binding.padResCall.setOnClickListener { dial(result.rawNumber) }
         binding.padResShare.setOnClickListener { share(result) }
-        // Eye icon + "Show full detail" → watch a rewarded ad, then reveal.
+
         val reveal = { revealFullDetail(result, fullName) }
         binding.picRevealName.setOnClickListener { reveal() }
         binding.padShowFullDetail.setOnClickListener { reveal() }
     }
 
-    /**
-     * Reveals the caller: shows a "watch ad" confirmation dialog → rewarded ad →
-     * un-blurs the card name and opens [LookupResultActivity] (incl. nicknames).
-     * Goes straight through when ads are off.
-     */
     private fun revealFullDetail(result: LookupResult, fullName: String) {
         val act = activity ?: return
         val open = {
@@ -305,13 +288,11 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             }
         }
 
-        // Ads off → straight to detail, no ad, no dialog.
         if (!PromoVault.getInstance(act).getBoolean("IsAdsON")) {
             open()
             return
         }
 
-        // Ads on → confirm with a dialog, then play the rewarded ad, then open.
         val db = DlgWatchAdBinding.inflate(layoutInflater)
         val dialog = Dialog(act).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -329,11 +310,9 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         dialog.show()
     }
 
-    /** First letter + dots (e.g. "John" → "J•••"). */
     private fun blurName(name: String): String =
         if (name.isNotEmpty()) name[0] + "•".repeat(name.length - 1) else name
 
-    /** Recent-list name tap: gate the reveal behind a rewarded ad, then un-mask that row. */
     private fun revealHistoryName(entry: TraceRow) {
         val act = activity ?: return
         val name = entry.name ?: return
@@ -343,26 +322,25 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
     }
 
     private fun setupCountryChip() {
-        // 1) Honour an explicit choice from the country picker.
+
         val saved = StorageRegistry(requireContext()).homeCountryIso
         if (saved.length == 2) {
             useCountry(saved, dialFor(saved))
             return
         }
-        // 2) SIM/network country — the most accurate source for a phone.
+
         val sim = simCountryIso()
         if (sim != null) {
             useCountry(sim, dialFor(sim))
             return
         }
-        // 3) No SIM → device region immediately (never the globe), refined via IP.
+
         val region = Locale.getDefault().country
         val fallbackIso = if (region.length == 2) region else "US"
         useCountry(fallbackIso, dialFor(fallbackIso))
         detectCountryByIp()
     }
 
-    /** SIM (then network) registered country as an uppercase ISO-2, or null. No permission needed. */
     private fun simCountryIso(): String? {
         val tm = context?.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager ?: return null
         val iso = tm.simCountryIso?.takeIf { it.length == 2 }
@@ -373,21 +351,14 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
     private fun dialFor(iso: String): String =
         (DialCountries.byIso(iso)?.dial ?: DialCountries.dialOf(iso)).orEmpty()
 
-    /**
-     * Resolves the country from the user's IP via the shared, cache-first
-     * [RegionResolver] and updates the chip (best-effort). The country is detected
-     * once app-wide (PromoAnchorActivity) and reused here — no repeat network call.
-     * The resolved ISO maps to its dial code so the chip shows the flag 🇮🇳 and
-     * "+91". Failures leave the fallback.
-     */
     private fun detectCountryByIp() {
         viewLifecycleOwner.lifecycleScope.launch {
             val iso = RegionResolver.detectCountry(requireContext())?.iso ?: return@launch
-            // Bail if the view is gone or the user picked a country meanwhile.
+
             if (view == null || StorageRegistry(requireContext()).homeCountryIso.isNotBlank()) return@launch
             val dial = dialFor(iso)
             if (dial.isBlank()) return@launch
-            // Don't persist an auto-detected country — only the picker records a choice.
+
             useCountry(iso, dial)
         }
     }
@@ -398,7 +369,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         viewModel.setRegion(iso, dial)
     }
 
-    /** Styles the status pill (text, text/icon color, soft background) for one lookup state. */
     private fun bindStatusPill(textRes: Int, fgColor: Int, bgColor: Int, iconRes: Int) {
         val fg = color(fgColor)
         binding.lblResValid.apply {
@@ -441,10 +411,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         imm?.showSoftInput(binding.inpNumberInput, InputMethodManager.SHOW_IMPLICIT)
     }
 
-    /**
-     * Offers a one-tap "Paste <number>" chip when the clipboard holds something that
-     * looks like a phone number and the field is empty (idle, no result yet).
-     */
     private fun maybeShowPasteChip(autoFocusIfUsed: Boolean = false) {
         if (view == null) return
         val idleEmpty = currentState is LookupState.Idle && binding.inpNumberInput.text.isNullOrBlank()
@@ -454,15 +420,14 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         }
         val clip = clipboardPhone()
         when {
-            // A fresh phone number in the clipboard → offer the Paste chip.
+
             clip != null && clip != consumedClip -> {
-                binding.flagPaste.tag = clip // raw value used for the search
+                binding.flagPaste.tag = clip
                 binding.lblPasteNumber.text =
                     runCatching { NumberInfo.format(clip) }.getOrNull()?.takeIf { it.isNotBlank() } ?: clip
                 binding.flagPaste.visibility = View.VISIBLE
             }
-            // Already pasted this same number once → don't re-offer it; open the
-            // keyboard so the user can just type instead.
+
             clip != null && clip == consumedClip && autoFocusIfUsed -> {
                 binding.flagPaste.visibility = View.GONE
                 binding.inpNumberInput.requestFocus()
@@ -472,7 +437,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         }
     }
 
-    /** The clipboard text if it looks like a phone number, else null. */
     private fun clipboardPhone(): String? {
         val cm = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return null
         val clip = cm.primaryClip?.takeIf { it.itemCount > 0 }
@@ -480,7 +444,6 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         return clip.takeIf { looksLikePhone(it) }
     }
 
-    /** Loose phone-number check: 6–20 chars, mostly digits, only dialling characters. */
     private fun looksLikePhone(s: String): Boolean {
         if (s.length < 6 || s.length > 20) return false
         if (s.count { it.isDigit() } < 6) return false

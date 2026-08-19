@@ -10,11 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:applyWindowInsets="false" />
-    <!-- ===== Ad under the search bar =====
-         `launcher_ads.app_drawer.bottom_native`, and off unless Remote Config asks for it.
-         The app grid is laid out below this frame, so the ad stays put instead of scrolling
-         with the apps; renderSlot empties and hides the frame when the slot is off, and the
-         grid takes the space back. -->
+    
     <FrameLayout
         android:id="@+id/ad_native_frameVw"
         android:layout_width="match_parent"
@@ -68,6 +64,5 @@
         android:textSize="@dimen/bigger_text_size"
         android:textStyle="italic"
         android:visibility="gone" />
-
 
 </com.callerid.number.lookup.home.shell.panels.AppDrawerPanel>

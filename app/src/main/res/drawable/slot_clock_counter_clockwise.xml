@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Placeholder glyph — hand-built clock face; not a bundled Phosphor asset
-    (no offline access to fetch the real SVG), styled to match the other
-    ph_*.xml icons' duotone two-layer convention.
--->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"

@@ -5,7 +5,6 @@ import org.fossify.commons.extensions.normalizeString
 import org.fossify.commons.helpers.SORT_BY_TITLE
 import org.fossify.commons.helpers.SORT_DESCENDING
 
-// the order the app drawer and the side panel list launchers in
 val appLauncherComparator = compareBy<AppTile>(
     { it.title.normalizeString().lowercase() },
     { it.packageName }
@@ -15,7 +14,7 @@ data class AppTile(
     var id: Long?,
     var title: String,
     var packageName: String,
-    var activityName: String,   // some apps create multiple icons, this is needed at clicking them
+    var activityName: String,
     var order: Int,
     var thumbnailColor: Int,
 

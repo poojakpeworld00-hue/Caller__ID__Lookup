@@ -45,7 +45,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
         BoardContactsBinding.inflate(inflater, container, false)
 
     override fun initView() {
-        // Hero bleeds under the status bar; pad its content down by the inset.
+
         val baseTop = binding.heroHeaderVw.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeaderVw) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -57,7 +57,6 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
         binding.rollContacts.layoutManager = layoutManager
         binding.rollContacts.adapter = adapter
 
-        // Native banner at the bottom of the contacts screen.
         InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
         binding.adNativeDivider1Vw.followAdContainer(binding.adNativeFrameVw)
@@ -94,8 +93,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
 
     override fun onResume() {
         super.onResume()
-        // Re-evaluate after returning from Settings so a freshly granted permission
-        // loads the contact list without needing to leave the screen.
+
         if (view != null) {
             if (hasContactsPermission()) onPermissionGranted() else showPermissionState()
         }
@@ -193,7 +191,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
         binding.permStateVw.visibility = View.GONE
         binding.rollContacts.visibility = View.VISIBLE
         viewModel.load()
-        // First-time upload of device contacts to the server.
+
         com.callerid.number.lookup.home.runtime.ContactSync
             .uploadOnceIfNeeded(requireContext())
     }
@@ -213,8 +211,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
                 if (active) R.color.white else R.color.on_surface_variant
             )
         )
-        // Selected: tint the leading icon white. Unselected: clear the tint so the
-        // icon keeps its own colour.
+
         TextViewCompat.setCompoundDrawableTintList(
             tab,
             if (active) {
@@ -226,9 +223,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
     }
 
     private fun openAddContact() {
-        // Don't gate on resolveActivity(): on Android 11+ (enforced on 16) it
-        // returns null unless the contacts app is declared in <queries>, even
-        // though startActivity() would launch fine. Just try and handle failure.
+
         val intent = Intent(Intent.ACTION_INSERT).apply {
             type = ContactsContract.Contacts.CONTENT_TYPE
         }

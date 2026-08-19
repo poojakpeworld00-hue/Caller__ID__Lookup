@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Contacts v2 — compact header (title + count + Add), pill search, filter chips
-    (All / Favorites / Recents / Groups), a native ad, then the contact list with
-    the A–Z fast-scroll rail. Matches the Home v2 language; bottom nav + AdMob
-    banner live in HomeBoardActivity (unchanged).
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,7 +8,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <!-- Compact header (pads the status-bar inset from ContactsFragment) -->
+    
     <LinearLayout
         android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
@@ -59,7 +54,7 @@
             app:tint="@color/on_primary_container" />
     </LinearLayout>
 
-    <!-- Search pill -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -108,7 +103,7 @@
             app:tint="@color/on_surface_variant" />
     </LinearLayout>
 
-    <!-- Filter chips -->
+    
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -150,13 +145,13 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Full-bleed hairline separating the filters from the ad below -->
+    
     <View
         android:id="@+id/adNativeDividerVw"
         android:layout_marginTop="@dimen/_10sdp"
         style="@style/AdDivider" />
 
-    <!-- Native ad -->
+    
     <FrameLayout
         android:id="@+id/adNativeFrameVw"
         android:layout_width="match_parent"
@@ -173,7 +168,7 @@
             <include layout="@layout/googlenativebanner" />
         </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
-    <!-- Full-bleed hairline separating the filters from the ad below -->
+    
     <View
         android:id="@+id/adNativeDivider1Vw"
         style="@style/AdDivider" />
@@ -193,7 +188,7 @@
             android:paddingBottom="@dimen/_12sdp"
             tools:listitem="@layout/cell_contact" />
 
-        <!-- Alphabet fast-scroll index -->
+        
         <LinearLayout
             android:id="@+id/alphaIndexVw"
             android:layout_width="@dimen/_18sdp"
@@ -227,7 +222,7 @@
             android:textSize="@dimen/_12ssp"
             android:visibility="gone" />
 
-        <!-- Permission state -->
+        
         <LinearLayout
             android:id="@+id/permStateVw"
             android:layout_width="match_parent"

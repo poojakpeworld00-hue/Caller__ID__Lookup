@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.lookup.LookupHistoryActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@id/crownBar"
             tools:listitem="@layout/cell_search_history" />
 
-        <!-- Empty state — animated breathing search icon (no Lottie) -->
+        
         <LinearLayout
             android:id="@+id/emptyStateVw"
             android:layout_width="match_parent"

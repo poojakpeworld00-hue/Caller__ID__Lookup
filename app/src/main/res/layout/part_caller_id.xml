@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- The caller-ID card shown on an incoming call. Used both as a floating
-     WindowManager overlay (device unlocked) and inside IncomingCallActivity
-     (device locked). Plain layout (no data-binding) — bound via findViewById. -->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/incallCardVw"
@@ -10,7 +8,7 @@
     android:elevation="@dimen/_8sdp"
     android:orientation="vertical">
 
-    <!-- Header: blue strip with title + close -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +46,7 @@
             android:tint="@color/white" />
     </LinearLayout>
 
-    <!-- Identity row -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,7 +116,7 @@
         android:layout_marginHorizontal="@dimen/_14sdp"
         android:background="@color/neutral_soft" />
 
-    <!-- Stats footer: last-seen / call count / network -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -50,9 +50,6 @@ fun View.setupDrawerBackground(
     }
 }
 
-// the drawer sits on a translucent background over the wallpaper, so the search bar is
-// forced to the same fixed white-on-translucent skin instead of the theme colors.
-// must be called after MySearchMenu.updateColors(), which re-applies the theme tint.
 fun MySearchMenu.applyDrawerSkin() {
     setBackgroundColor(Color.TRANSPARENT)
     binding.toolbarContainer.background?.mutate()

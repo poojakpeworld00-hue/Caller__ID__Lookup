@@ -8,10 +8,6 @@ class LanguageViewModel : ShellViewModel() {
 
     val languages: List<LanguageItem> = LanguageCatalog.all
 
-    // The "Suggested" group is chosen by the user's region (GEO). "All languages"
-    // holds everything not already surfaced under Suggested, so nothing repeats.
-    // Both are LiveData because the region can arrive asynchronously (IP lookup),
-    // refining an initial guess made from the device locale.
     private val _suggested = MutableLiveData<List<LanguageItem>>()
     val suggested: LiveData<List<LanguageItem>> = _suggested
 
@@ -21,7 +17,6 @@ class LanguageViewModel : ShellViewModel() {
     private val _selectedTag = MutableLiveData(LanguageCatalog.all.first().tag)
     val selectedTag: LiveData<String> = _selectedTag
 
-    /** Remembers the last region applied so an IP result equal to it is a no-op. */
     private var appliedCountry: String? = "__none__"
 
     fun init(currentTag: String) {
@@ -30,11 +25,6 @@ class LanguageViewModel : ShellViewModel() {
         }
     }
 
-    /**
-     * Rebuilds the Suggested / All groups for the given country (ISO-3166 alpha-2,
-     * null when unknown). Idempotent for the same country so repeated calls from
-     * the locale guess and the IP refine don't thrash the lists.
-     */
     fun useCountry(iso2: String?) {
         val normalized = iso2?.uppercase()
         if (normalized == appliedCountry) return

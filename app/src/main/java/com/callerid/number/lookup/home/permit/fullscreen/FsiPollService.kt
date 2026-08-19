@@ -9,22 +9,6 @@ import android.os.IBinder
 import android.os.Looper
 import com.callerid.number.lookup.home.kit.LogRail
 
-/**
- * Auto-return watcher for the FSI grant round-trip. While the user sits on the
- * system "Manage full-screen intents" page it polls every [POLL_MS]; the instant
- * the toggle flips ON it broadcasts [FsiPermit.ACTION_FSI_GRANTED] so
- * [FsiReturnGuard] can do an in-task REORDER_TO_FRONT, then stops.
- *
- * NOTE: the primary, reliable auto-return for the after-Language screen is the
- * in-activity grant poll inside [FsiGateActivity] (a plain in-task
- * `startActivity` — no notification, no background-activity-start needed, because
- * the Settings page is opened in-task so the app keeps a foreground task). This
- * service + broadcast is only a secondary path for hosts that stay resident (e.g.
- * the AppHomeActivity dialog); on Android 12+/16 a background Service often cannot be
- * started on the way to Settings, so it is best-effort and never shows any UI.
- *
- * Registered in the manifest as `.permission.fsi.FsiPollService`.
- */
 class FsiPollService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())

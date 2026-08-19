@@ -5,13 +5,8 @@ import android.net.Uri
 import android.provider.ContactsContract
 import com.callerid.number.lookup.home.screen.shared.CallFormatter
 
-/** Reads device contacts via the [ContactsContract] provider. */
 class ContactSource(private val context: Context) {
 
-    /**
-     * Reverse-lookup a phone number against the device contacts.
-     * Returns the contact display name, or null if not found / not permitted.
-     */
     fun lookupNameByNumber(number: String): String? {
         if (number.isBlank()) return null
         return runCatching {
@@ -32,7 +27,6 @@ class ContactSource(private val context: Context) {
     fun getContacts(): List<ContactItem> {
         val groupContactIds = queryGroupContactIds()
 
-        // Keyed by display name to collapse multiple numbers of the same contact.
         val byName = LinkedHashMap<String, ContactItem>()
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -76,7 +70,6 @@ class ContactSource(private val context: Context) {
         return byName.values.toList()
     }
 
-    /** Contact IDs that belong to at least one contact group. */
     private fun queryGroupContactIds(): Set<Long> {
         val ids = HashSet<Long>()
         runCatching {

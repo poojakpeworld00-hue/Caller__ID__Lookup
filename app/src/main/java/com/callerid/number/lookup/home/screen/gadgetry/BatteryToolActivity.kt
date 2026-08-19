@@ -17,7 +17,6 @@ import com.callerid.number.lookup.home.databinding.ScreenBatteryBinding
 import java.util.Locale
 import kotlin.math.roundToInt
 
-/** Live battery stats, read from sticky ACTION_BATTERY_CHANGED broadcasts. */
 class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
 
     override val layoutId: Int = R.layout.screen_battery
@@ -41,7 +40,6 @@ class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
@@ -74,7 +72,6 @@ class BatteryToolActivity : FrameActivity<ScreenBatteryBinding>() {
         bindHealth(intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1))
     }
 
-    /** Health value + a status-appropriate colour. */
     private fun bindHealth(health: Int) {
         val (textRes, colorRes) = when (health) {
             BatteryManager.BATTERY_HEALTH_GOOD -> R.string.battery_health_great to R.color.primary

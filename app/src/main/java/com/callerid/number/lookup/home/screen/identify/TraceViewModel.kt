@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.callerid.number.lookup.home.store.identify.TraceArchive
 
-/** Backs the standalone search-history screen; reads/clears the shared history store. */
 class TraceViewModel(app: Application) : AndroidViewModel(app) {
 
     private val historyStore = TraceArchive(app)

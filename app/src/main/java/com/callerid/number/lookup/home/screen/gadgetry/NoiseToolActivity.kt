@@ -21,7 +21,6 @@ import java.util.Locale
 import kotlin.math.log10
 import kotlin.math.roundToInt
 
-/** Approximate sound-level meter using [MediaRecorder.getMaxAmplitude]. */
 class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
 
     override val layoutId: Int = R.layout.screen_sound_meter
@@ -53,7 +52,6 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.pbLevelVw.isIndeterminate = false
         binding.pbLevelVw.max = 100

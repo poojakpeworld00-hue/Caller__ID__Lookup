@@ -124,21 +124,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     override val hostActivity: AppCompatActivity get() = this
 
-    // Not `by lazy`: constructing this registers result launchers, which must happen before
-    // the Activity is STARTED. The caller panel's shell is committed much later than that,
-    // which is exactly why the Activity-bound half lives out here.
     override val homeShellController = HomeShellDriver(this)
 
-    /** Back inside the caller panel with its own tab history exhausted just closes it. */
     override fun onShellBackExhausted() {
         hideCallerPanel()
     }
 
-    /**
-     * Pull the launcher back to the front after a system-Settings round trip started from
-     * inside the panel. The panel is a view in this Activity, so it is still open when we
-     * land — the user returns to the tab they left.
-     */
     override fun bringHostToFront() {
         runCatching {
             startActivity(
@@ -185,28 +176,19 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         private const val APP_DRAWER_CLOSE_DELAY = 300L
         private const val APP_DRAWER_STATE = "app_drawer_state"
         private const val SWIPE_HINT_ANIMATION_DURATION = 900L
-        // long enough for the user to read the shade they just pulled down before the next
-        // hint appears underneath it
+
         private const val SHADE_HINT_RESUME_DELAY = 2500L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         useDynamicTheme = false
 
-        // Before super.onCreate, so the grid and both side panels inflate with the chosen
-        // language's resources. FrameActivity does this for every other screen; this one does
-        // not extend it, and it hosts the app's own home UI in the caller panel — without this
-        // a language picked during onboarding would not reach either.
         LanguageRegistry.applySaved(this)
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         appLaunched(BuildConfig.APPLICATION_ID)
-        // This is the device HOME, so it can be the first screen after a reboot — and the
-        // native-ad palette keys are global, only ever written by FrameActivity, which this is
-        // not. Without this the natives in the app-search panel, the app drawer and the caller
-        // panel's Home tab keep whatever mode some earlier screen left behind, or none at all on
-        // a cold boot straight to home: dark text on a dark card, effectively invisible.
+
         applyNativeAdTheme()
         setupEdgeToEdge(
             padTopSystem = listOf(
@@ -220,9 +202,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 binding.widgetsFragmentVw.widgetsListVw,
                 binding.leftPanelVw.panelScrollVw
             ),
-            // the panel's ad is pinned below its scroll area, so it — not the scroll — is what
-            // has to clear the navigation bar. System-only, deliberately: padding it for the IME
-            // too would make it leap above the keyboard while the user is typing a search.
+
             padBottomSystem = listOf(binding.homeScreenGridVw.root, binding.leftPanelVw.adNativeFrameVw)
         )
 
@@ -243,24 +223,18 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             fragment.beVisible()
         }
 
-        // The app-search panel is parked off screen to the right and slides in on a left
-        // fling. A right fling has no panel of its own — it opens the caller-ID app instead.
         binding.leftPanelVw.root.apply {
             setupFragment(this@HomeBoardActivity)
             x = mScreenWidth.toFloat()
             beVisible()
         }
 
-        // The caller panel comes in from the opposite edge, so it parks on the other side.
         binding.callerPanelVw.root.apply {
             setupFragment(this@HomeBoardActivity)
             x = -mScreenWidth.toFloat()
             beVisible()
         }
 
-        // Registration only (update launcher, contact upload, FSI watcher) — nothing visible.
-        // Gated on onboarding being done, because `onCreate` on a HOME activity is not a
-        // "the user opened the app" signal. The visible priming waits for the panel to open.
         if (OnboardRouter.wasOnboardingCompleted(this)) {
             homeShellController.onHostCreated()
         }
@@ -278,17 +252,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             )
         }
 
-        // onboarding already asks about this explicitly on first run (with a Skip option). If the
-        // user skipped it or later unset us, the "Setup Required" banner below nags instead of a
-        // dialog, same as the reference app. It also stays reachable via the long-press menu.
         binding.defaultLauncherBannerVw.root.setOnClickListener { requestSetAsDefaultLauncher() }
 
         setupWallpaperColorListener()
 
-        // Granting the home role makes the system open us immediately, over an onboarding task
-        // that is still mid-run — so the home screen can be the first thing a user sees while
-        // steps are still pending. Hand the run back its screen (it opens on top of this one)
-        // and leave the coach mark for the launch that really is the end of onboarding.
         if (OnboardRouter.resumeIfUnfinished(this)) {
             return
         }
@@ -296,17 +263,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         startSwipeHintRun()
     }
 
-    /**
-     * Opens a run of the coach mark, driven by `launcher_ads.home_hint`.
-     *
-     * The gestures in `swipeHints` are taught ONE AT A TIME, in order: the first hint stays up
-     * until the user actually makes that swipe, then the next one appears the next time they
-     * are back on the bare home screen, and so on until the list is exhausted.
-     *
-     * Whether a run starts at all is decided once per launch — `hintDue` spends a counter
-     * tick, so it must not be asked again on every resume. `once` latches on the launcher's own
-     * pref, so an install that has already been through the list never sees it again.
-     */
     private fun startSwipeHintRun() {
         val hint = ShellPromoConfig.boardHint(this)
         mHomeHint = hint
@@ -314,8 +270,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             return
         }
 
-        // An interrupted `once` run picks up where it left off rather than starting over; the
-        // repeating modes always begin a fresh pass through the list.
         val resuming = hint.mode == ShellPromoConfig.HintMode.ONCE &&
                 config.swipeHintIndex in 1 until hint.directions.size
 
@@ -333,11 +287,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
     }
 
-    /**
-     * Shows the hint the user has not made yet, or ends the run once they all have. Called
-     * whenever the bare home screen comes back into view — a hint over an open drawer or panel
-     * would be teaching a gesture that screen does not have.
-     */
     private fun showNextSwipeHint() {
         val hint = mHomeHint ?: return
         if (!mHintRunActive) {
@@ -351,10 +300,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             return
         }
 
-        // The caller panel counts too: it hosts the app's own home UI, and the hint overlay is
-        // declared after it in the layout, so a hint raised while the panel is open lands on
-        // top of the app's content teaching a gesture that content does not have. onResume
-        // reaches here with the panel open on every return from a permission round-trip.
         if (isAllAppsFragmentExpanded() || isWidgetsFragmentExpanded() || isLeftPanelExpanded() ||
             isCallerPanelExpanded()
         ) {
@@ -364,10 +309,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         showSwipeHint(hint.directions[config.swipeHintIndex], hint.autoHideSec)
     }
 
-    /**
-     * The user made the gesture the hint was teaching, so it is learned: move to the next one.
-     * Any other gesture leaves the index alone — the hint stays until its own swipe is made.
-     */
     private fun completeSwipeHint(direction: ShellPromoConfig.HintDirection) {
         if (!mHintRunActive || !binding.swipeHintVw.isVisible) {
             return
@@ -380,8 +321,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         config.swipeHintIndex = config.swipeHintIndex + 1
         hideSwipeHint()
 
-        // Swiping down only pulls the shade over us — the home screen is never left, so
-        // nothing else will come back to ask for the next hint.
         if (direction == ShellPromoConfig.HintDirection.DOWN) {
             binding.swipeHintVw.postDelayed({ showNextSwipeHint() }, SHADE_HINT_RESUME_DELAY)
         }
@@ -391,14 +330,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     private fun showSwipeHint(direction: ShellPromoConfig.HintDirection, autoHideSec: Int) {
         val travel = resources.getDimension(R.dimen.swipe_hint_travel)
 
-        // The overlay has to swallow the touches it covers: it is only a background, so without
-        // this a tap falls through to the home screen underneath and opens whatever is behind
-        // the hint — the search pill, or an app icon. The gesture detector is still fed, so
-        // both routes work: the taught swipe as usual, and a tap anywhere doing the same thing
-        // (see homeScreenClicked → performHintAction).
         binding.swipeHintVw.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                // the Activity's own ACTION_DOWN bookkeeping never runs for these events
+
                 mIgnoreXMoveEvents = false
                 mIgnoreYMoveEvents = false
                 mIgnoreUpEvent = false
@@ -416,9 +350,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         val chevrons = row.findViewById<View>(R.id.tip_chevrons)
         row.findViewById<TextView>(R.id.tip_label).setText(captionFor(direction))
 
-        // The chevrons are drawn pointing right, so each direction is that row rotated — and
-        // the drift then runs along the matching axis. Rotation happens in the row's own
-        // space; translation stays in the parent's, hence the axis switch.
         val (property, distance) = when (direction) {
             ShellPromoConfig.HintDirection.RIGHT -> View.TRANSLATION_X to travel
             ShellPromoConfig.HintDirection.LEFT -> View.TRANSLATION_X to -travel
@@ -432,9 +363,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             ShellPromoConfig.HintDirection.DOWN -> 90f
         }
 
-        // A quarter turn leaves the trio standing three chevrons tall in a row that only
-        // measured one, so a vertical row needs the extra height reserved — otherwise it draws
-        // over its own caption.
         if (property == View.TRANSLATION_Y) {
             val pad = resources.getDimensionPixelSize(R.dimen.swipe_hint_vertical_pad)
             row.setPadding(row.paddingLeft, pad, row.paddingRight, pad)
@@ -450,18 +378,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
         binding.swipeHintVw.beVisible()
 
-        // Auto-hide only takes this hint off the screen; the run stays where it is, so the
-        // same one is offered again next time the home screen comes back.
         if (autoHideSec > 0) {
             binding.swipeHintVw.postDelayed(mSwipeHintHider, autoHideSec * 1000L)
         }
     }
 
-    /**
-     * Runs the gesture the visible hint is teaching, as if the user had made it — the fling
-     * handlers own the ad pacing and mark the hint done, so a tap and a swipe land in exactly
-     * the same place.
-     */
     private fun performHintAction() {
         when (mHomeHint?.directions?.getOrNull(config.swipeHintIndex)) {
             ShellPromoConfig.HintDirection.RIGHT -> onFlingRight()
@@ -526,9 +447,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        // Same as onCreate: a home intent can land here with the first run still pending, once
-        // this activity already exists. It is only reachable that way after the role changed
-        // under us, so the run has a screen owing.
         if (OnboardRouter.resumeIfUnfinished(this)) {
             return
         }
@@ -550,16 +468,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             hideLeftPanel()
         }
 
-        // HOME means "take me to the home screen", and the caller panel is not it — leaving it
-        // up made a HOME press look like it had done nothing, and the resume that follows would
-        // then try to raise the launcher's coach mark over the app's own content.
         if (isCallerPanelExpanded()) {
             hideCallerPanel()
         }
 
         binding.allAppsFragmentVw.searchBarVw.closeSearch()
 
-        // scroll to first page when home button is pressed
         val alreadyOnHome = intent.flags and FLAG_ACTIVITY_BROUGHT_TO_FRONT == 0
         if (alreadyOnHome && !wasAnyFragmentOpen) {
             binding.homeScreenGridVw.root.skipToPage(0)
@@ -576,10 +490,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     override fun onResume() {
         super.onResume()
         wasJustPaused = false
-        // Catches a language picked while we were in the background (the app's Settings and the
-        // onboarding picker both live in other Activities). Same call FrameActivity makes here.
+
         LanguageRegistry.applySaved(this)
-        // Picks up an overlay / full-screen-intent grant made from inside the caller panel.
+
         homeShellController.onHostResume()
         refreshWallpaperSupportsDarkText()
         Handler(Looper.getMainLooper()).postDelayed({
@@ -590,8 +503,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
         }, ANIMATION_DURATION)
 
-        // Back on the home screen — offer the next hint the user has not made yet. Covers the
-        // first show too, since onResume always follows onCreate.
         showNextSwipeHint()
 
         with(binding.mainHolderVw) {
@@ -651,7 +562,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 .removeOnColorsChangedListener(wallpaperColorChangeListener!!)
         }
 
-        // the infinite chevron animators hold hard references to the rows they drive
         binding.swipeHintVw.removeCallbacks(mSwipeHintHider)
         mSwipeHintAnimators.forEach { it.cancel() }
         mSwipeHintAnimators.clear()
@@ -673,10 +583,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
             true
         } else if (isCallerPanelExpanded()) {
-            // Let the shell retrace its own tab history first — same contract as the app
-            // drawer below. This handler runs *before* the shell's OnBackPressedCallback (the
-            // Fossify base registers its callback after ours), so without asking, one back
-            // press would close the panel from whichever tab the user was on.
+
             if (binding.callerPanelVw.root.shell()?.onBackPressed() != true) {
                 hideCallerPanel()
             }
@@ -699,7 +606,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             binding.homeScreenGridVw.root.hideResizeLines()
             true
         } else {
-            // this is a home launcher app, prevent back press from doing anything
+
             true
         }
     }
@@ -768,7 +675,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
 
             MotionEvent.ACTION_MOVE -> {
-                // if the initial gesture was handled by some other view, fix the Down values
+
                 val hasFingerMoved = if (mTouchDownX == -1 || mTouchDownY == -1) {
                     mTouchDownX = event.x.toInt()
                     mTouchDownY = event.y.toInt()
@@ -902,7 +809,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 runOnUiThread {
                     binding.homeScreenGridVw.root.skipToPage(page)
                 }
-                // delay showing the shortcut both to let the user see adding it in realtime and hackily avoid concurrent modification exception at BoardGrid
+
                 Thread.sleep(2000)
 
                 try {
@@ -948,7 +855,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         return Pair(maxPage + 1, Rect(0, 0, 0, 0))
     }
 
-    // some devices ACTION_MOVE keeps triggering for the whole long press duration, but we are interested in real moves only, when coords change
     private fun hasFingerMoved(event: MotionEvent): Boolean {
         return mTouchDownX != -1 && mTouchDownY != -1 &&
                 (abs(mTouchDownX - event.x) > mMoveGestureThreshold || abs(mTouchDownY - event.y) > mMoveGestureThreshold)
@@ -994,16 +900,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun isLeftPanelExpanded() = binding.leftPanelVw.root.x != mScreenWidth.toFloat()
 
     private fun showLeftPanel() {
-        // ask for the ad before the slide starts, so it is in place by the time the panel lands
+
         binding.leftPanelVw.root.onPanelShown()
         showSidePanel(binding.leftPanelVw.root)
     }
 
-    /**
-     * Opens the app search panel from something other than a fling (the search-bar widget).
-     * Unlike the fling this is an explicit "I want to search", so the field takes focus and
-     * the keyboard comes up once the panel has finished sliding in.
-     */
     fun openAppSearch() {
         showLeftPanel()
         Handler(Looper.getMainLooper()).postDelayed({
@@ -1013,7 +914,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }, ANIMATION_DURATION)
     }
 
-    /** Opens the clock app behind the home screen clock, falling back to the alarm list. */
     fun openClockApp() {
         val intents = listOf(
             Intent(AlarmClock.ACTION_SHOW_ALARMS),
@@ -1023,7 +923,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         startFirstResolvable(intents)
     }
 
-    /** Opens the calendar on today, behind the home screen clock's date line. */
     fun openCalendarApp() {
         val todayUri = CalendarContract.CONTENT_URI.buildUpon()
             .appendPath("time")
@@ -1049,7 +948,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun hideLeftPanel() {
-        // clear the query only once it is off screen, else the sections visibly swap mid slide
+
         hideSidePanel(binding.leftPanelVw.root, mScreenWidth.toFloat()) {
             binding.leftPanelVw.root.resetSearch()
             showNextSwipeHint()
@@ -1057,9 +956,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun showSidePanel(panel: View) {
-        // Re-apply here, not just in onCreate: on a cold boot straight to this home screen
-        // onCreate runs before the Remote Config fetch lands, so there is no palette to copy
-        // yet. By the time a panel is opened there is. See [applyNativeAdTheme].
+
         applyNativeAdTheme()
         hideSwipeHint()
         animateSidePanelTo(panel, 0f)
@@ -1082,15 +979,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }, ANIMATION_DURATION)
     }
 
-    /**
-     * @param onParked runs once the panel has actually reached [parkedX]. Anything that asks
-     * "is a panel still open?" has to wait for that — the checks read the panel's `x`, and a
-     * plain postDelayed of the same length races the animator to the last frame.
-     */
     private fun hideSidePanel(panel: View, parkedX: Float, onParked: (() -> Unit)? = null) {
         animateSidePanelTo(panel, parkedX) {
-            // The animator's own end value can land a fraction short; the checks compare for
-            // equality, so snap it.
+
             panel.x = parkedX
             onParked?.invoke()
         }
@@ -1122,8 +1013,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun showFragment(fragment: ViewBinding, animationDuration: Long = ANIMATION_DURATION) {
-        // The app drawer carries its own native slot — same cold-boot reasoning as
-        // [showSidePanel].
+
         applyNativeAdTheme()
         ObjectAnimator.ofFloat(fragment.root, "y", 0f).apply {
             duration = animationDuration
@@ -1142,8 +1032,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         )
 
         if (fragment is BoardAllAppsBinding) {
-            // asked on every open so the slot renders whatever has been preloaded since the
-            // last one, the same way the side panel refreshes itself
+
             fragment.root.onDrawerShown()
 
             if (config.showSearchBar && config.autoShowKeyboardInAppDrawer) {
@@ -1153,7 +1042,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
         }
 
-        // fade the grid out behind the fragment, fragmentCollapsed() cancels this and restores it
         binding.homeScreenGridVw.root.animate()
             .alpha(0f)
             .setDuration(animationDuration)
@@ -1185,7 +1073,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 fragment.widgetsListVw.scrollToPosition(0)
                 fragment.root.touchDownY = -1
             }
-            // the home screen is bare again, so the next hint can have it
+
             showNextSwipeHint()
         }, animationDuration)
     }
@@ -1208,9 +1096,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun homeScreenClicked(eventX: Float, eventY: Float) {
-        // While the coach mark is up a tap belongs to it, not to the icon underneath: it does
-        // whatever the hint is teaching, so the panel (or the drawer, or the caller-ID app)
-        // opens by tap just as it does by swipe.
+
         if (binding.swipeHintVw.isVisible) {
             performHintAction()
             return
@@ -1495,7 +1381,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             velocityX: Float,
             velocityY: Float,
         ): Boolean {
-            // ignore fling events just after releasing an icon from dragging
+
             if (System.currentTimeMillis() - mLastUpEvent < 500L) {
                 return true
             }
@@ -1562,11 +1448,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         mIgnoreUpEvent = true
-        // A right fling opens the caller-ID panel, whichever page we are on. Paging is still
-        // available by dragging horizontally, which never reaches here.
+
         if (!isAllAppsFragmentExpanded() && !isWidgetsFragmentExpanded()) {
             completeSwipeHint(ShellPromoConfig.HintDirection.RIGHT)
-            // Paced by launcher_ads.swipe_right; the panel opens on every path regardless.
+
             ShellPromoConfig.run(this, ShellPromoConfig.Surface.SWIPE_RIGHT) {
                 showCallerPanel()
             }
@@ -1581,10 +1466,10 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
 
         mIgnoreUpEvent = true
-        // see onFlingRight: the panel wins over paging on a fling
+
         if (!isAllAppsFragmentExpanded() && !isWidgetsFragmentExpanded()) {
             completeSwipeHint(ShellPromoConfig.HintDirection.LEFT)
-            // Paced by launcher_ads.swipe_left; the panel opens on every path regardless.
+
             ShellPromoConfig.run(this, ShellPromoConfig.Surface.SWIPE_LEFT) {
                 showLeftPanel()
             }
@@ -1595,18 +1480,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     fun isCallerPanelExpanded() = binding.callerPanelVw.root.x != -mScreenWidth.toFloat()
 
-    /** Opens the caller panel from outside the fling gesture (deep links, widgets). */
     fun showCallerPanelExternally() = showCallerPanel()
 
-    /**
-     * Swipe right slides the caller-ID app's own home UI in over the grid. It is a panel in
-     * this Activity rather than a separate task, so Back closes it and Home never has to
-     * unwind another task — and the shell keeps its tab and scroll position between opens.
-     */
     private fun showCallerPanel() {
         showSidePanel(binding.callerPanelVw.root)
-        // Everything the panel shows *over itself* waits for the slide to finish — fired at
-        // the start it would land over the home grid the panel is still covering.
+
         Handler(Looper.getMainLooper()).postDelayed({
             if (!isCallerPanelExpanded()) return@postDelayed
             binding.callerPanelVw.root.onPanelOpened()
@@ -1618,10 +1496,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun hideCallerPanel() {
-        // Disabling the shell's back callback before the slide keeps it from swallowing the
-        // next back press — the drawer and the grid own those again once the panel is gone.
+
         binding.callerPanelVw.root.shell()?.setPanelVisible(false)
-        // Back on the grid: offer the next gesture the user has not been taught yet.
+
         hideSidePanel(binding.callerPanelVw.root, -mScreenWidth.toFloat()) { showNextSwipeHint() }
     }
 
@@ -1678,10 +1555,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         return allApps
     }
 
-    // matches the reference app, which has the clock and the search pill sitting on the home
-    // screen from the start rather than requiring them to be added from the widgets picker.
-    // Kept independent of wasHomeScreenInit / getDefaultAppPackages so it also backfills
-    // installs that already ran through that one-time seeding before these existed.
     private fun seedHomeWidgetsIfNeeded() {
         val needsSearchBar = !config.wasSearchBarSeeded
         val needsClock = !config.wasClockSeeded
@@ -1689,26 +1562,25 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             return
         }
 
-        // one shot either way, a user who removes them is not supposed to get them back
         config.wasSearchBarSeeded = true
         config.wasClockSeeded = true
 
         try {
             val lastColumn = config.homeColumnCount - 1
-            // the bottom row is the dock, the header may not eat everything above it
+
             val headerFits = config.homeRowCount - 1 > SEARCH_BAR_ROW
 
             val pageItems = homeScreenGridItemsDB.getAllItems()
                 .filter { it.page == 0 && !it.docked && it.parentId == null }
             val searchBar = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_SEARCH }
             val clock = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_CLOCK }
-            // whatever the user placed up there wins, we only seed into rows that are still empty
+
             val headerRowsFree = pageItems
                 .filter { it.id != searchBar?.id && it.id != clock?.id }
                 .none { item -> (0..SEARCH_BAR_ROW).any { it in item.top..item.bottom } }
 
             if (!headerFits || !headerRowsFree) {
-                // no room for the full header, fall back to the pill alone at the top
+
                 if (searchBar == null) {
                     insertPseudoWidget(
                         className = PSEUDO_WIDGET_SEARCH,
@@ -1744,7 +1616,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                     bottom = SEARCH_BAR_ROW
                 )
             } else {
-                // an older install already has the pill in the row the clock now wants
+
                 homeScreenGridItemsDB.updateItemPosition(
                     left = 0,
                     top = SEARCH_BAR_ROW,
@@ -2008,7 +1880,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
     }
 
-    // taken from https://gist.github.com/maxjvh/a6ab15cbba9c82a5065d
     private fun calculateAverageColor(bitmap: Bitmap): Int {
         var red = 0
         var green = 0

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Drawing area with Z translation so it is drawn over widgets -->
+    
     <com.callerid.number.lookup.home.shell.canvas.BoardGridCanvas
         android:id="@+id/drawing_areaVw"
         android:layout_width="match_parent"

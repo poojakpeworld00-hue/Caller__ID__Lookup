@@ -1,13 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    Onboarding step 1, built to the reference screen: Skip in the corner, the shield
-    mark on its pale halo with a verified badge, the Welcome heading and lead, three
-    feature tiles, and the ink CTA.
+<?xml version="1.0" encoding="utf-8"?>
 
-    No permission toggles here any more — the reference has none, so notifications and
-    phone state are requested straight off Continue instead (see HelloStepActivity).
--->
-<!-- fitsSystemWindows keeps Skip clear of the status bar and the CTA clear of the
-     gesture bar; the theme draws both system bars transparent. -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,12 +22,7 @@
         android:textColor="@color/cid_onb_muted"
         android:textSize="15sp" />
 
-    <!-- ===== bottom stack · mid native above the CTA =====
-         The ad sits ABOVE Continue, separated by a hairline, so the primary action stays
-         the bottom-most control and is never the thing a thumb lands on by accident. The
-         frame is full-bleed, so the horizontal inset lives on the button, not the footer.
-         With ads off, renderMidNative empties and hides the frame and followAdContainer
-         drops the hairline, leaving the screen exactly as it was before. -->
+    
     <LinearLayout
         android:id="@+id/onboarding_footerVw"
         android:layout_width="match_parent"
@@ -75,9 +62,7 @@
 
     </LinearLayout>
 
-    <!-- clip flags off all the way down, as on the set-as-default screen: the hero's slab
-         bleeds past the 24dp gutter and the ghost handset is rotated, so anything that clips
-         at the padding chops both of them off with a flat edge mid-screen. -->
+    
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -96,7 +81,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="24dp">
 
-            <!-- hero · halo, soft slab, ghost handset, shield, verified badge -->
+            
             <RelativeLayout
                 android:id="@+id/onboarding_heroVw"
                 android:layout_width="match_parent"
@@ -181,7 +166,7 @@
                 android:textColor="@color/cid_onb_muted"
                 android:textSize="15sp" />
 
-            <!-- three feature tiles -->
+            
             <LinearLayout
                 android:id="@+id/onboarding_featuresVw"
                 android:layout_width="match_parent"

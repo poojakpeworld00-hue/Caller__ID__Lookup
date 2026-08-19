@@ -5,10 +5,6 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import com.callerid.number.lookup.home.R
 
-/**
- * A page shows EITHER a composed [customArtRes] layout (when non-zero) or a
- * simple [artRes] drawable.
- */
 data class SlidePage(
     @param:StringRes val titleRes: Int,
     @param:StringRes val descRes: Int,

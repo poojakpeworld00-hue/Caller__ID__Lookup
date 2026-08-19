@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.callerid.number.lookup.home.shell.db.TileDatabase.Companion.TABLE_HIDDEN_ICONS
 import com.callerid.number.lookup.home.shell.entities.MaskedIcon
 
-/** Icons the user has hidden from the app drawer. */
 class MaskedIconDao(private val helper: SQLiteOpenHelper) {
 
     fun getHiddenIcons(): List<MaskedIcon> {

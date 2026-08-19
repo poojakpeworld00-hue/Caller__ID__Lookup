@@ -45,11 +45,11 @@ class FastActionsFragment : Fragment() {
     }
 
     private fun messga() {
-        val phoneNumber = "1234567890" // Replace with the recipient's number
+        val phoneNumber = "1234567890"
         val messageText = "Hello! This is a test message."
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("sms:$phoneNumber")  // Use "smsto:" also works
+            data = Uri.parse("sms:$phoneNumber")
             putExtra("sms_body", messageText)
         }
 
@@ -81,7 +81,6 @@ class FastActionsFragment : Fragment() {
 
         val ctx = context ?: return
 
-        // Build a mailto: intent — works with any installed email app
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
             putExtra(Intent.EXTRA_SUBJECT, subject)
@@ -91,9 +90,7 @@ class FastActionsFragment : Fragment() {
         try {
             startActivity(intent)
         } catch (e: android.content.ActivityNotFoundException) {
-            // No email app handles mailto: — fall back to a generic share chooser
-            // with text/plain so WhatsApp, Messages, etc. can also accept it.
-            // message/rfc822 is email-only and breaks non-email targets like WhatsApp.
+
             val fallback = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
@@ -109,8 +106,8 @@ class FastActionsFragment : Fragment() {
     }
 
     private fun addCalendarEvent() {
-        val startMillis = System.currentTimeMillis() + 60 * 60 * 1000 // 1 hour later
-        val endMillis = startMillis + 60 * 60 * 1000 // 1-hour event
+        val startMillis = System.currentTimeMillis() + 60 * 60 * 1000
+        val endMillis = startMillis + 60 * 60 * 1000
 
         val intent = Intent(Intent.ACTION_INSERT).apply {
             data = CalendarContract.Events.CONTENT_URI
@@ -145,7 +142,7 @@ class FastActionsFragment : Fragment() {
             startActivity(intent)
         } catch (e: Exception) {
             try {
-                // Fallback: try without Chrome package
+
                 intent.setPackage(null)
                 startActivity(intent)
             } catch (e2: Exception) {

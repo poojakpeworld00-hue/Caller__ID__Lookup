@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Claude Design "CID03" tokens, dark theme (.theme-dark in the design).
 
-    The design inverts the green ramp in dark mode: g-900 becomes the LIGHTEST
-    step and g-050 the darkest, so every "g-900 text on g-050 ground" pairing in
-    the layouts flips automatically without a single layout change.
--->
 <resources>
     <color name="cid_g_900">#FFE2E9FF</color>
     <color name="cid_g_800">#FFC7D5FF</color>
@@ -36,8 +30,7 @@
     <color name="cid_neutral_600">#FFA4A8B0</color>
     <color name="cid_neutral_700">#FFBEC2CA</color>
 
-    <!-- Onboarding, dark. Page ink and CTA invert; the shield stays a green mark and
-         the mock call screen keeps its light-on-dark call UI unchanged. -->
+    
     <color name="cid_onb_paper">#FF11131A</color>
     <color name="cid_onb_ink">#FFE2E9FF</color>
     <color name="cid_onb_muted">#FF9CA1AD</color>

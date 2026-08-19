@@ -11,35 +11,18 @@ import com.callerid.number.lookup.home.kit.AppPrefs.THEME_LIGHT
 import com.callerid.number.lookup.home.kit.AppPrefs.THEME_SYSTEM
 import org.json.JSONObject
 
-/**
- * Reads a getData blob into [PromoVault].
- *
- * Lifted out of PromoAnchorActivity so it is not tied to the splash: the same absorb has to run
- * when Remote Config pushes a change to a running app (see LiveConfigListener), and duplicating
- * it would leave two lists of keys to keep in step.
- *
- * Facebook SDK initialisation stays with the caller — it needs an Activity and only makes
- * sense once per process — so [absorb] hands the credentials back instead of applying them.
- */
 object PromoConfigLoader {
 
     private const val CONFIG_TAG = "AdConfig"
 
-    /** The Facebook credentials found in the blob; empty when the blob carries none. */
     data class FacebookKeys(val appId: String, val clientToken: String) {
         val usable: Boolean get() = appId.isNotEmpty() && clientToken.isNotEmpty()
     }
 
-    /**
-     * Reads every getData key from [root] into PromoVault (batched). [root] is
-     * either the flat response or one of its `marketing` / `organic` sub-objects
-     * (see [audienceBlock]). Safe to call again (funOnAdsLoad re-applies the correct
-     * audience once the referrer settles OnMaketing).
-     */
     fun absorb(context: Context, root: JSONObject): FacebookKeys {
         val adsPref = PromoVault.getInstance(context)
         adsPref.update {
-            // --- Booleans ---
+
             listOf(
                 "IsAdsON", "IsFail_FB", "isLoaderForFB", "IsCustomADS", "IsBack",
                 "NativeBanner", "BannerAds", "In_App_Update_Show", "In_App_Update_Force_Show",
@@ -50,7 +33,6 @@ object PromoConfigLoader {
                 "screen_wise_ad", "screen_wise_default"
             ).forEach { key -> if (root.has(key)) putBoolean(key, root.optBoolean(key, false)) }
 
-            // --- Strings ---
             listOf(
                 "IsAdType", "In_App_Update_Link", "CountryList_Counter_NShow",
                 "CountryList_Marketing_Counter_NShow", "PrivacyPolicy", "TermLink",
@@ -60,14 +42,12 @@ object PromoConfigLoader {
                 "faceB_NativeAds", "faceB_NativeBannerAds", "faceB_BannerAds",
                 "NativeTheme", "HD_VBC_Type", "NativeBgColor", "NativebtnColor",
                 "NativetxtColor", "NativebtntxtColor", "Perm_Sheet_Mode",
-                // API origin — see HttpClientFactory, which falls back to its compiled-in default
-                // when this is absent or malformed.
+
                 "api_base_url",
-                // Nested JSON objects stored as text (read back via JSONObject).
+
                 "intro_display", "ScreenAds", "launcher_ads"
             ).forEach { key -> if (root.has(key)) putString(key, root.optString(key, "")) }
 
-            // --- Integers ---
             listOf(
                 "InterCounter", "InterBackCounter", "MarketInterCounter", "MarketBackCounter",
                 "NativeCounter", "MarketNativeCounter", "MidNativeCounter", "BannerCounter",
@@ -75,9 +55,8 @@ object PromoConfigLoader {
                 "Perm_Sheet_Interval_Days", "HD_VBC_Hrs"
             ).forEach { key -> if (root.has(key)) putInt(key, root.optInt(key, 0)) }
 
-            applyInlineTheme(context, root) // DEFAULT theme
+            applyInlineTheme(context, root)
 
-            // --- Custom Ads ---
             val customAdsArray = root.optJSONArray("custom_ads")
             if (customAdsArray != null) {
                 putString("CUSTOM_ADS", customAdsArray.toString())
@@ -85,7 +64,6 @@ object PromoConfigLoader {
             }
         }
 
-        // Facebook Ad initialization parameters
         val fbAppId = root.optString("FbAppId", "")
         val fbClientToken = root.optString("FbClientToken", "")
 
@@ -104,11 +82,6 @@ object PromoConfigLoader {
         return FacebookKeys(fbAppId, fbClientToken)
     }
 
-    /**
-     * The audience-specific sub-object of a getData response — `marketing` or
-     * `organic` per [isMarketing], falling back to the other audience, then to the
-     * flat [response] itself (legacy, un-split config → unchanged behaviour).
-     */
     fun audienceBlock(response: JSONObject, isMarketing: Boolean): JSONObject {
         val preferred = if (isMarketing) "marketing" else "organic"
         val fallback = if (isMarketing) "organic" else "marketing"
@@ -160,7 +133,6 @@ object PromoConfigLoader {
             val marketingObj = it.optJSONObject("marketing")
             val defaultObj = it.optJSONObject("default")
 
-            // Convert JSONObjects to strings before storing in PromoVault
             val marketingStr = marketingObj?.toString() ?: "{}"
             val defaultStr = defaultObj?.toString() ?: "{}"
 

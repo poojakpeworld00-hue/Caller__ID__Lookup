@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    One blocked number. Row background, avatar tint, text colours and the
-    Unblock pill are swapped between the "spam" (red) and "neutral" treatments
-    in BlocklistAdapter. 64dp row per spec.
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

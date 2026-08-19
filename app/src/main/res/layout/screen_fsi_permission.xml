@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Full-Screen-Intent intro Activity (design: FSI Intro Activity). Radial hero
-    (navy dark / light-blue light), the incoming-call card floating in a halo of
-    glow + pulsing orbit rings, value copy, a 3-benefit card, and the glowing
-    Enable Now CTA. Title / desc / button copy set from Remote Config at runtime.
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fsScreenRootVw"
@@ -25,7 +20,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_22sdp">
 
-            <!-- Hero: floating card in a halo of glow + orbit rings -->
+            
             <FrameLayout
                 android:id="@+id/fsHeroVw"
                 android:layout_width="match_parent"
@@ -64,7 +59,7 @@
                     android:layout_marginHorizontal="@dimen/_26sdp" />
             </FrameLayout>
 
-            <!-- Copy -->
+            
             <TextView
                 android:id="@+id/fsScreenTitleVw"
                 android:layout_width="match_parent"
@@ -88,7 +83,7 @@
                 android:textColor="@color/fsi_subtitle"
                 android:textSize="@dimen/_10ssp" />
 
-            <!-- Benefits -->
+            
             <LinearLayout
                 android:id="@+id/fsScreenFeaturesVw"
                 android:layout_width="match_parent"
@@ -204,12 +199,12 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Full-bleed hairline separating the intro content from the ad below -->
+    
     <View
         android:id="@+id/adNativeDividerVw"
         style="@style/AdDivider" />
 
-    <!-- Mid native ad, pinned just above the CTA -->
+    
     <FrameLayout
         android:id="@+id/adNativeFrameVw"
         android:layout_width="match_parent"
@@ -227,7 +222,7 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
 
-    <!-- CTA -->
+    
     <TextView
         android:id="@+id/fsScreenButtonVw"
         android:layout_width="match_parent"

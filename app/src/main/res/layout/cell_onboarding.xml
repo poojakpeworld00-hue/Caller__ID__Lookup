@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One onboarding page: floating illustration card, headline, and body copy,
-     packed and centred. The art layout is inflated into artContainer. -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,11 +7,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/_20sdp">
 
-    <!-- The illustration is the elastic part of the page: 210sdp when there is room,
-         less when there is not. A native ad below can take nearly half the screen, and a
-         fixed-height illustration would push the body copy off the bottom of the pager
-         and clip it mid-line. SlideAdapter scales the artwork inside to whatever height
-         this ends up with, so the composition shrinks instead of overflowing. -->
+    
     <FrameLayout
         android:id="@+id/artContainerVw"
         android:layout_width="match_parent"

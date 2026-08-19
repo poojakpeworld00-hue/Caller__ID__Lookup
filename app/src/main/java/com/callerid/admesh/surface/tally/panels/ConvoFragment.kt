@@ -21,7 +21,6 @@ import com.callerid.number.lookup.home.kit.triggerClick
 
 class ConvoFragment : Fragment() {
 
-    /** Caller's number to text directly; null → user picks the recipient in their SMS app. */
     private val targetNumber: String? by lazy { arguments?.getString(ARG_NUMBER) }
 
     private lateinit var etCustomMessage: EditText
@@ -138,9 +137,7 @@ class ConvoFragment : Fragment() {
     }
 
     private fun sendMessage(message: String) {
-        // Text the caller directly when we know their number; otherwise open the
-        // SMS app with no recipient (the user picks). `smsto:` is kept either way
-        // so ACTION_SENDTO resolves only to SMS apps.
+
         val smsUri = if (!targetNumber.isNullOrBlank()) "smsto:${targetNumber}" else "smsto:"
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(smsUri)
@@ -153,7 +150,6 @@ class ConvoFragment : Fragment() {
     companion object {
         private const val ARG_NUMBER = "arg_number"
 
-        /** [number] = the caller to text directly (null/blank → recipient-less SMS). */
         fun newInstance(number: String?): ConvoFragment = ConvoFragment().apply {
             arguments = Bundle().apply { putString(ARG_NUMBER, number) }
         }

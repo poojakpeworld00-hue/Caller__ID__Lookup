@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.callerid.number.lookup.home.shell.db.TileDatabase.Companion.TABLE_APPS
 import com.callerid.number.lookup.home.shell.entities.AppTile
 
-/** The app-drawer cache, rebuilt from the installed launcher activities on every refresh. */
 class AppTileDao(private val helper: SQLiteOpenHelper) {
 
     fun getAppLaunchers(): List<AppTile> {
@@ -45,7 +44,7 @@ class AppTileDao(private val helper: SQLiteOpenHelper) {
                     put("title", launcher.title)
                     put("package_name", launcher.packageName)
                     put("activity_name", launcher.activityName)
-                    // `order` is a SQL keyword, so it has to stay quoted everywhere.
+
                     put("`order`", launcher.order)
                     put("thumbnail_color", launcher.thumbnailColor)
                 }

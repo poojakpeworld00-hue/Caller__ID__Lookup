@@ -16,7 +16,6 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.databinding.ScreenSimInfoBinding
 import java.util.Locale
 
-/** Carrier / SIM / network details from [TelephonyManager]. */
 class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
 
     override val layoutId: Int = R.layout.screen_sim_info
@@ -40,7 +39,6 @@ class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
@@ -55,7 +53,7 @@ class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
     ) == PackageManager.PERMISSION_GRANTED
 
     private fun render() {
-        // Permission-gated fields show a hint; the rest always populate.
+
         binding.lblStatus.visibility = if (hasPhonePermission()) View.GONE else View.VISIBLE
 
         binding.lblCarrier.text = tm.networkOperatorName.ifBlank { dash() }

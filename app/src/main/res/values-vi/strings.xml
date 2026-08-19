@@ -1,14 +1,14 @@
 <resources>
-    <!-- App -->
+    
     <string name="app_name">Caller ID Lookup</string>
     <string name="dash">&#8211;</string>
 
-    <!-- Splash -->
+    
     <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Biết ai đang gọi · Chặn spam</string>
     <string name="splash_footer">Ứng dụng này có thể chứa quảng cáo</string>
 
-    <!-- Language -->
+    
     <string name="language_title">Chọn ngôn ngữ</string>
     <string name="language_continue">Tiếp tục</string>
     <string name="language_search_hint">Tìm ngôn ngữ</string>
@@ -18,7 +18,7 @@
     <string name="language_info_msg">Đổi ngôn ngữ sẽ vẽ lại giao diện. Vài chi tiết theo vùng có thể khác đi tuỳ lựa chọn.</string>
     <string name="language_info_got_it">Đã hiểu</string>
 
-    <!-- Terms &amp; Conditions -->
+    
     <string name="terms_title">Điều khoản và Điều kiện</string>
     <string name="terms_body">Hãy dành chút thời gian cho các điều khoản này. Tiếp tục nghĩa là bạn chấp nhận:\n\n• Caller ID Lookup gọi tên cuộc gọi đến, đi và lạ ngay trong lúc cuộc gọi diễn ra.\n• Cuộc gọi làm phiền, lừa đảo và gian lận được đánh dấu để bạn chặn lại.\n• Có thể tra bất kỳ số nào để xem thông tin người gọi đang được lưu.\n• Nhật ký cuộc gọi và danh bạ có thể được đọc để ứng dụng làm việc đó.\n• Quyền vẽ đè lên ứng dụng khác chính là thứ đưa thông tin người gọi lên màn hình giữa cuộc gọi.\n• Những gì chúng tôi thu thập vẫn là của bạn, chỉ phục vụ việc gọi tên người gọi và chặn cuộc gọi làm phiền.\n\nChọn “Chấp nhận và tiếp tục” xác nhận bạn đã đọc và chấp nhận Điều khoản cùng Chính sách quyền riêng tư của chúng tôi.</string>
     <string name="terms_agree">Tôi đã đọc và chấp nhận Điều khoản cùng Chính sách quyền riêng tư.</string>
@@ -28,7 +28,7 @@
     <string name="overlay_system_permission">Quyền hệ thống</string>
     <string name="overlay_permission_desc">Vẽ đè lên ứng dụng khác cho phép thấy người gọi trong lúc bạn đang bận việc khác.</string>
 
-    <!-- Onboarding -->
+    
     <string name="onboarding_skip">Bỏ qua</string>
     <string name="onboarding_next">Tiếp theo</string>
     <string name="onboarding_title">Biết ai đang gọi</string>
@@ -39,7 +39,7 @@
     <string name="onboarding_desc_3">Tra bất kỳ số lạ nào và thấy ai đứng sau: tên, ở đâu, làm gì.</string>
     <string name="onboarding_get_started">Bắt đầu</string>
 
-    <!-- Home -->
+    
     <string name="home_title">Bạn đang được bảo vệ</string>
     <string name="home_subtitle">Nhận diện người gọi và chặn spam đang hoạt động</string>
     <string name="home_greeting">Chào buổi sáng</string>
@@ -50,44 +50,44 @@
     <string name="home_recent_activity">Hoạt động gần đây</string>
     <string name="see_all">Xem tất cả</string>
 
-    <!-- Quick actions -->
+    
     <string name="quick_dialer">Bàn phím</string>
     <string name="quick_lookup">Tra cứu</string>
     <string name="quick_blocklist">Danh sách chặn</string>
     <string name="quick_tools">Công cụ</string>
 
-    <!-- Bottom navigation -->
+    
     <string name="nav_home">Trang chủ</string>
     <string name="nav_recents">Gần đây</string>
     <string name="nav_contacts">Danh bạ</string>
     <string name="nav_lookup">Tra cứu</string>
     <string name="nav_settings">Cài đặt</string>
 
-    <!-- Recents -->
+    
     <string name="recents_today">Hôm nay</string>
     <string name="recents_yesterday">Hôm qua</string>
     <string name="recents_this_week">Tuần này</string>
     <string name="recents_earlier">Trước đó</string>
     <string name="recents_empty">Không có cuộc gọi gần đây</string>
 
-    <!-- Call filters -->
+    
     <string name="filter_all">Tất cả</string>
     <string name="filter_incoming">Gọi đến</string>
     <string name="filter_outgoing">Gọi đi</string>
     <string name="filter_missed">Nhỡ</string>
 
-    <!-- Call type labels -->
+    
     <string name="type_incoming">Gọi đến</string>
     <string name="type_outgoing">Gọi đi</string>
     <string name="type_missed">Nhỡ</string>
     <string name="type_blocked">Đã chặn</string>
 
-    <!-- Call log permission -->
+    
     <string name="perm_calllog_title">Xem cuộc gọi gần đây của bạn</string>
     <string name="perm_calllog_message">Cho ứng dụng đọc nhật ký cuộc gọi, các cuộc gọi gần đây sẽ hiện ở đây.</string>
     <string name="action_grant">Cấp quyền truy cập</string>
 
-    <!-- Lookup -->
+    
     <string name="lookup_hint">Nhập số điện thoại</string>
     <string name="lookup_verified_business">Doanh nghiệp đã xác minh</string>
     <string name="lookup_organization">Tổ chức</string>
@@ -105,13 +105,13 @@
     <string name="lookup_international">Quốc tế</string>
     <string name="lookup_carrier">Nhà mạng</string>
 
-    <!-- Contacts -->
+    
     <string name="contacts_search_hint">Tìm danh bạ</string>
     <string name="contacts_empty">Không tìm thấy liên hệ</string>
     <string name="perm_contacts_title">Xem danh bạ của bạn</string>
     <string name="perm_contacts_message">Cho ứng dụng đọc danh bạ, họ sẽ hiện ở đây.</string>
 
-    <!-- Settings actions -->
+    
     <string name="language_dialog_title">Chọn ngôn ngữ</string>
     <string name="blocklist_add">Thêm số</string>
     <string name="blocklist_empty">Chưa có số nào bị chặn</string>
@@ -124,7 +124,7 @@
     <string name="action_cancel">Hủy</string>
     <string name="action_remove">Xóa</string>
 
-    <!-- Settings -->
+    
     <string name="settings_language">Ngôn ngữ</string>
     <string name="settings_language_sub">Chọn ngôn ngữ ứng dụng</string>
     <string name="settings_blocklist">Danh sách chặn</string>
@@ -138,7 +138,7 @@
     <string name="theme_dark">Tối</string>
     <string name="theme_system">Mặc định hệ thống</string>
 
-    <!-- Call states -->
+    
     <string name="call_incoming">Cuộc gọi đến…</string>
     <string name="call_decline">Từ chối</string>
     <string name="call_accept">Trả lời</string>
@@ -147,7 +147,7 @@
     <string name="label_spam">Spam</string>
     <string name="label_verified">Đã xác minh</string>
 
-    <!-- Added translations -->
+    
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="onboarding_spam_id">ID spam</string>
     <string name="onboarding_caller_id">ID người gọi</string>
@@ -267,7 +267,7 @@
     </plurals>
     <string name="battery_activity_title">Thông tin pin</string>
 
-    <!-- Localized: remaining keys -->
+    
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">Hiển thị thông tin người gọi trên các ứng dụng khác</string>
     <string name="home_brand">Caller ID Lookup</string>
@@ -448,7 +448,7 @@
     <string name="contacts_tab_recents">Gần đây</string>
     <string name="contacts_tab_groups">Nhóm</string>
     <string name="call_screening_hint_tip">Bật lên để thấy ai đang gọi và chặn thứ làm phiền</string>
-    <!-- FSI intro Activity/Dialog + Home permission hint -->
+    
     <string name="home_perm_hint">Vẫn còn quyền đang tắt. Bật lên để nhận diện đầy đủ.</string>
     <string name="home_perm_manage">Quản lý</string>
     <string name="fsi_incoming_call">Cuộc gọi đến</string>

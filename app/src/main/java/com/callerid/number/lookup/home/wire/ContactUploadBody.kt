@@ -18,7 +18,6 @@ data class DigitUploadItem(
     val type: String,
 )
 
-/** Maps a device contact into the server upload shape. */
 fun ContactItem.toUploadModel(): ContactUploadBody {
     val parts = name.trim().split(" ").filter { it.isNotEmpty() }
     val firstName = parts.firstOrNull() ?: name

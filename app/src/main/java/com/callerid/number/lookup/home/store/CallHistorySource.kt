@@ -3,7 +3,6 @@ package com.callerid.number.lookup.home.store
 import android.content.Context
 import android.provider.CallLog
 
-/** A single entry from the system call log. */
 data class CallEntry(
     val name: String?,
     val number: String,
@@ -12,14 +11,12 @@ data class CallEntry(
     val durationSec: Long
 )
 
-/** A phone number aggregated by how often it appears in the call log. */
 data class FrequentDigit(
     val name: String?,
     val number: String,
     val count: Int
 )
 
-/** Reads the device call log via the [CallLog.Calls] content provider. */
 class CallHistorySource(private val context: Context) {
 
     fun getCalls(limit: Int = 500): List<CallEntry> {
@@ -68,10 +65,6 @@ class CallHistorySource(private val context: Context) {
         return result
     }
 
-    /**
-     * Returns the most frequently called numbers, busiest first.
-     * Caller must ensure READ_CALL_LOG is granted (otherwise the list is empty).
-     */
     fun getMostUsed(limit: Int = 20): List<FrequentDigit> =
         getCalls(limit = 1000)
             .filter { it.number.isNotBlank() && !it.number.equals("Unknown", ignoreCase = true) }

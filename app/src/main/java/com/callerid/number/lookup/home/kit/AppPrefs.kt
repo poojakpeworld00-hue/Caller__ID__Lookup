@@ -3,10 +3,6 @@ package com.callerid.number.lookup.home.kit
 import android.content.Context
 import android.content.SharedPreferences
 
-/**
- * Thin wrapper around a single SharedPreferences file for first-launch state,
- * language preference, and theme preference.
- */
 object AppPrefs {
 
     const val THEME_LIGHT = "light"
@@ -22,7 +18,6 @@ object AppPrefs {
     private const val KEY_NOTIFICATIONS_ON = "notifications_on"
     private const val KEY_PLANT_REMINDER_ON = "plant_reminder_on"
 
-    /** Marker value persisted when the user picks "Default" — empty = follow system locale. */
     const val LANGUAGE_DEFAULT = ""
 
     private fun prefs(ctx: Context): SharedPreferences =
@@ -56,10 +51,6 @@ object AppPrefs {
     fun setPlantReminderOn(ctx: Context, on: Boolean) =
         prefs(ctx).edit().putBoolean(KEY_PLANT_REMINDER_ON, on).apply()
 
-    /**
-     * First-seen timestamp, lazily seeded the first time this is read. Used by
-     * the Quick Stats card to show "days since install".
-     */
     fun installedAt(ctx: Context): Long {
         val p = prefs(ctx)
         val saved = p.getLong(KEY_INSTALLED_AT, 0L)

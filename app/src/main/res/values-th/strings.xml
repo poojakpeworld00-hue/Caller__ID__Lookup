@@ -1,14 +1,14 @@
 <resources>
-    <!-- App -->
+    
     <string name="app_name">Caller ID Lookup</string>
     <string name="dash">&#8211;</string>
 
-    <!-- Splash -->
+    
     <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">รู้ว่าใครโทรมา · บล็อกสแปม</string>
     <string name="splash_footer">แอปนี้อาจมีโฆษณา</string>
 
-    <!-- Language -->
+    
     <string name="language_title">เลือกภาษา</string>
     <string name="language_continue">ดำเนินการต่อ</string>
     <string name="language_search_hint">ค้นหาภาษา</string>
@@ -18,7 +18,7 @@
     <string name="language_info_msg">การเปลี่ยนภาษาจะวาดหน้าจอใหม่ รายละเอียดตามภูมิภาคบางอย่างอาจต่างไปตามที่คุณเลือก</string>
     <string name="language_info_got_it">เข้าใจแล้ว</string>
 
-    <!-- Terms &amp; Conditions -->
+    
     <string name="terms_title">ข้อกำหนดและเงื่อนไข</string>
     <string name="terms_body">สละเวลาสักครู่กับข้อกำหนดเหล่านี้ การไปต่อหมายถึงคุณยอมรับ:\n\n• Caller ID Lookup ระบุชื่อสายเรียกเข้า สายโทรออก และเบอร์แปลกหน้าในขณะที่สายกำลังเกิดขึ้น\n• สายกวนใจ สายหลอกลวง และสายฉ้อโกงจะถูกทำเครื่องหมายไว้ให้คุณกันออกไป\n• ค้นเบอร์ใดก็ได้เพื่อดูข้อมูลผู้โทรเท่าที่มีบันทึกไว้\n• แอปอาจอ่านบันทึกการโทรและรายชื่อผู้ติดต่อของคุณเพื่อทำงานเหล่านั้น\n• สิทธิ์วาดทับแอปอื่นคือสิ่งที่นำข้อมูลผู้โทรขึ้นจอระหว่างสาย\n• สิ่งที่เราเก็บยังเป็นของคุณ และใช้เพียงเพื่อระบุผู้โทรและกันสายกวนใจ\n\nการเลือก “ยอมรับและไปต่อ” ยืนยันว่าคุณได้อ่านและยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวของเรา</string>
     <string name="terms_agree">ฉันได้อ่านและยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัว</string>
@@ -28,7 +28,7 @@
     <string name="overlay_system_permission">สิทธิ์ของระบบ</string>
     <string name="overlay_permission_desc">สิทธิ์วาดทับแอปอื่นทำให้เห็นข้อมูลผู้โทรขณะคุณกำลังทำอย่างอื่น</string>
 
-    <!-- Onboarding -->
+    
     <string name="onboarding_skip">ข้าม</string>
     <string name="onboarding_next">ถัดไป</string>
     <string name="onboarding_title">รู้ว่าใครโทรมา</string>
@@ -39,7 +39,7 @@
     <string name="onboarding_desc_3">ค้นเบอร์แปลกหน้าใดก็ได้แล้วเห็นว่าใครอยู่เบื้องหลัง — ชื่อ ที่อยู่ กิจการ</string>
     <string name="onboarding_get_started">เริ่มต้นใช้งาน</string>
 
-    <!-- Home -->
+    
     <string name="home_title">คุณได้รับการปกป้อง</string>
     <string name="home_subtitle">การระบุผู้โทรและการบล็อกสแปมกำลังทำงาน</string>
     <string name="home_greeting">อรุณสวัสดิ์</string>
@@ -50,44 +50,44 @@
     <string name="home_recent_activity">กิจกรรมล่าสุด</string>
     <string name="see_all">ดูทั้งหมด</string>
 
-    <!-- Quick actions -->
+    
     <string name="quick_dialer">หน้าปัดโทร</string>
     <string name="quick_lookup">ค้นหา</string>
     <string name="quick_blocklist">รายการบล็อก</string>
     <string name="quick_tools">เครื่องมือ</string>
 
-    <!-- Bottom navigation -->
+    
     <string name="nav_home">หน้าแรก</string>
     <string name="nav_recents">ล่าสุด</string>
     <string name="nav_contacts">รายชื่อ</string>
     <string name="nav_lookup">ค้นหา</string>
     <string name="nav_settings">ตั้งค่า</string>
 
-    <!-- Recents -->
+    
     <string name="recents_today">วันนี้</string>
     <string name="recents_yesterday">เมื่อวาน</string>
     <string name="recents_this_week">สัปดาห์นี้</string>
     <string name="recents_earlier">ก่อนหน้านี้</string>
     <string name="recents_empty">ไม่มีสายล่าสุด</string>
 
-    <!-- Call filters -->
+    
     <string name="filter_all">ทั้งหมด</string>
     <string name="filter_incoming">สายเข้า</string>
     <string name="filter_outgoing">สายออก</string>
     <string name="filter_missed">สายที่ไม่ได้รับ</string>
 
-    <!-- Call type labels -->
+    
     <string name="type_incoming">สายเข้า</string>
     <string name="type_outgoing">สายออก</string>
     <string name="type_missed">ไม่ได้รับสาย</string>
     <string name="type_blocked">ถูกบล็อก</string>
 
-    <!-- Call log permission -->
+    
     <string name="perm_calllog_title">ดูสายล่าสุดของคุณ</string>
     <string name="perm_calllog_message">อนุญาตให้แอปอ่านบันทึกการโทร แล้วสายล่าสุดจะมาอยู่ตรงนี้</string>
     <string name="action_grant">อนุญาตการเข้าถึง</string>
 
-    <!-- Lookup -->
+    
     <string name="lookup_hint">ป้อนหมายเลขโทรศัพท์</string>
     <string name="lookup_verified_business">ธุรกิจที่ยืนยันแล้ว</string>
     <string name="lookup_organization">องค์กร</string>
@@ -105,13 +105,13 @@
     <string name="lookup_international">ระหว่างประเทศ</string>
     <string name="lookup_carrier">ผู้ให้บริการ</string>
 
-    <!-- Contacts -->
+    
     <string name="contacts_search_hint">ค้นหารายชื่อ</string>
     <string name="contacts_empty">ไม่พบรายชื่อ</string>
     <string name="perm_contacts_title">ดูรายชื่อของคุณ</string>
     <string name="perm_contacts_message">อนุญาตให้แอปอ่านรายชื่อผู้ติดต่อ แล้วจะมาอยู่ตรงนี้</string>
 
-    <!-- Settings actions -->
+    
     <string name="language_dialog_title">เลือกภาษา</string>
     <string name="blocklist_add">เพิ่มหมายเลข</string>
     <string name="blocklist_empty">ยังไม่มีหมายเลขที่ถูกบล็อก</string>
@@ -124,7 +124,7 @@
     <string name="action_cancel">ยกเลิก</string>
     <string name="action_remove">นำออก</string>
 
-    <!-- Settings -->
+    
     <string name="settings_language">ภาษา</string>
     <string name="settings_language_sub">เลือกภาษาของแอป</string>
     <string name="settings_blocklist">รายการบล็อก</string>
@@ -138,7 +138,7 @@
     <string name="theme_dark">มืด</string>
     <string name="theme_system">ค่าเริ่มต้นของระบบ</string>
 
-    <!-- Call states -->
+    
     <string name="call_incoming">สายเรียกเข้า…</string>
     <string name="call_decline">ปฏิเสธ</string>
     <string name="call_accept">รับสาย</string>
@@ -147,7 +147,7 @@
     <string name="label_spam">สแปม</string>
     <string name="label_verified">ยืนยันแล้ว</string>
 
-    <!-- Added translations -->
+    
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="onboarding_spam_id">ระบุสแปม</string>
     <string name="onboarding_caller_id">ระบุผู้โทร</string>
@@ -267,7 +267,7 @@
     </plurals>
     <string name="battery_activity_title">ข้อมูลแบตเตอรี่</string>
 
-    <!-- Localization batch (th) -->
+    
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">แสดงข้อมูลผู้โทรทับแอปอื่น</string>
     <string name="home_brand">Caller ID Lookup</string>
@@ -448,7 +448,7 @@
     <string name="incall_calls">%1$d สาย</string>
     <string name="incall_service_active">ระบุผู้โทรกำลังทำงาน</string>
     <string name="call_screening_hint_tip">เปิดสิ่งนี้เพื่อเห็นว่าใครโทรมาและกันสายกวนใจ</string>
-    <!-- FSI intro Activity/Dialog + Home permission hint -->
+    
     <string name="home_perm_hint">ยังมีสิทธิ์ที่ปิดอยู่ เปิดให้ครบเพื่อระบุได้เต็มที่</string>
     <string name="home_perm_manage">จัดการ</string>
     <string name="fsi_incoming_call">สายเรียกเข้า</string>

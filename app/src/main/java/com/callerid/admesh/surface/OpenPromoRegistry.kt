@@ -26,9 +26,6 @@ object OpenPromoRegistry {
     var callbackshow:Boolean = false
     var isOpenAppDismiss: Boolean = false
 
-    // When true, the next background→foreground transition skips the App Open
-    // ad exactly once. Set before app-initiated trips to system settings (e.g.
-    // the overlay-permission flow) so that programmatic return isn't monetised.
     var skipNextAppOpenAd: Boolean = false
 
     val isAdAvailable: Boolean
@@ -42,7 +39,7 @@ object OpenPromoRegistry {
             return
         }
         val adsPreference = PromoVault.getInstance(context)
-        // Firebase "AppopenAds" master switch — disable app-open loading entirely
+
         if (!adsPreference.getBoolean("AppopenAds")) {
             Log.e(LOG_TAG, "AppopenAds disabled by Firebase flag")
             return
@@ -50,7 +47,6 @@ object OpenPromoRegistry {
         if (PromoKind.fromString(adsPreference.getString("IsAdType")) == PromoKind.GOOGLE) {
             isLoadingAd = true
             val request = AdRequest.Builder().build()
-
 
             if (adsPreference.getString("IsAdType").equals("Google", true)) {
                 PromoVault.getInstance(context).getString("googleAppopen")?.let { adUnitId ->
@@ -94,7 +90,7 @@ object OpenPromoRegistry {
         if (!PromoVault.getInstance(activity).getBoolean("IsAdsON")) {
             return
         }
-        // Firebase "AppopenAds" master switch — skip showing app-open ads entirely
+
         if (!PromoVault.getInstance(activity).getBoolean("AppopenAds")) {
             Log.e(LOG_TAG, "AppopenAds disabled by Firebase flag")
             onShowAdCompleteListener.onShowAdComplete()
@@ -106,7 +102,7 @@ object OpenPromoRegistry {
             )
             return
         }
-        // Never cover a LightHouse rich-push overlay with an App Open ad.
+
         if (LightHouseRichPush.shouldDeferOverlay(activity)) {
             Log.e(LOG_TAG, "Deferring App Open — rich-push overlay active")
             return
@@ -181,7 +177,6 @@ object OpenPromoRegistry {
             }
         }
 
-        // Log load
         activity.trackEvent("appopen_ad_shown")
 
         if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)

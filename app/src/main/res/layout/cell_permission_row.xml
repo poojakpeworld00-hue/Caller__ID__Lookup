@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One compact permission row inside the permission bottom sheet:
-     icon · title/desc · Allow button (or a "Granted" chip once granted). -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -47,7 +46,7 @@
             tools:text="Get spam and call alerts" />
     </LinearLayout>
 
-    <!-- The row is hidden entirely once its permission is granted. -->
+    
     <TextView
         android:id="@+id/padAllow"
         android:layout_width="wrap_content"

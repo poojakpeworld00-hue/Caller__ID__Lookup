@@ -50,7 +50,7 @@ class PingCardWorker(context: Context, workerParams: WorkerParameters) :
         )
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher) // Replace with your own icon
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(message)
             .setContentIntent(pendingIntent)

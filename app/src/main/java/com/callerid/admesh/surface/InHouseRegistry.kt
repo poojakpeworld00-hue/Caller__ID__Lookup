@@ -22,7 +22,7 @@ class InHouseRegistry {
 
     companion object {
         private var cachedAds: List<InHouseSpot>? = null
-        
+
         fun clearCache() {
             cachedAds = null
         }
@@ -50,7 +50,6 @@ class InHouseRegistry {
 
         val pref = PromoVault.getInstance(context)
 
-        // Custom Ads OFF → fallback
         if (!pref.getBoolean("IsCustomADS")) {
             fallback(container, backupImage, backupLayout, onFail)
             return
@@ -98,7 +97,6 @@ class InHouseRegistry {
         bindData( view, ad)
         setClickListeners(view)
 
-        // Final UI setup (defer to next frame to avoid NestedScrollView layout issues)
         container.post {
             if (context.isHostActivityDead()) {
                 container.visibility = View.GONE
@@ -115,9 +113,6 @@ class InHouseRegistry {
         }
     }
 
-    // --------------------------------------------------------
-    // THEME APPLY
-    // --------------------------------------------------------
     private fun applyTheme(context: Context, view: View, pref: PromoVault) {
         try {
 
@@ -144,25 +139,20 @@ class InHouseRegistry {
             view.findViewById<TextView?>(R.id.only_banner_desc)?.setTextColor(txtColor)
 
         } catch (_: Exception) {
-            // Silent fail → do not crash
+
         }
     }
 
-    // --------------------------------------------------------
-    // DATA BINDING
-    // --------------------------------------------------------
     private fun bindData(view: View, ad: InHouseSpot) {
-        // Big / Mid Native
+
         view.findViewById<TextView?>(R.id.titileText)?.text = ad.title
         view.findViewById<TextView?>(R.id.Texttext)?.text = ad.description
         view.findViewById<TextView?>(R.id.btntext)?.text = ad.buttonText
 
-        // Banner Native
         view.findViewById<TextView?>(R.id.only_banner_title)?.text = ad.title
         view.findViewById<TextView?>(R.id.only_banner_desc)?.text = ad.description
         view.findViewById<TextView?>(R.id.only_banner_button)?.text = ad.buttonText
 
-        // Images
         view.findViewById<ImageView?>(R.id.gif_image)?.let { bindGlideSafe(it, ad.icon) }
         view.findViewById<ImageView?>(R.id.only_banner_logo)?.let { bindGlideSafe(it, ad.icon) }
         view.findViewById<ImageView?>(R.id.custom_native)?.let { bindGlideSafe(it, ad.bannerImage) }
@@ -192,9 +182,6 @@ class InHouseRegistry {
         }
     }
 
-    // --------------------------------------------------------
-    // CLICK ACTIONS
-    // --------------------------------------------------------
     private fun setClickListeners(view: View) {
         val click = View.OnClickListener {
             launchPromoLink(view.context)
@@ -205,9 +192,6 @@ class InHouseRegistry {
         view.findViewById<View?>(R.id.only_banner_button)?.setOnClickListener(click)
     }
 
-    // --------------------------------------------------------
-    // FALLBACK
-    // --------------------------------------------------------
     private fun fallback(
         container: FrameLayout,
         img: ImageView?,
@@ -231,7 +215,6 @@ class InHouseRegistry {
         }
     }
 
-    // Safe color parser
     private fun color(value: String?, default: String): Int {
         return try {
             Color.parseColor(value ?: default)

@@ -26,11 +26,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * Dialer screen: the on-screen keypad builds the number shown in
- * [ScreenDialerBinding.tvDialNumber] (dialed by Call, saved by "Add to contacts")
- * and filters the most-used list into the "Matches" section above the keypad sheet.
- */
 class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
 
     override val layoutId: Int = R.layout.screen_dialer
@@ -41,10 +36,7 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-        // Mirrors the manifest's windowSoftInputMode. `showSoftInputOnFocus =
-        // false` alone only blocks the tap/focus path — the window still enters
-        // with stateUnspecified, and OEM IMEs auto-open for the focused number
-        // field on entry. Setting it here too survives any theme override.
+
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
@@ -64,14 +56,11 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         binding.rollFrequent.layoutManager = LinearLayoutManager(this)
         binding.rollFrequent.adapter = adapter
 
-        // Keypad builds the dialed number display.
         binding.padBackspace.setOnClickListener { backspaceDial() }
         binding.padBackspace.setOnLongClickListener { setDial(""); true }
         binding.padDialCall.setOnClickListener { placeCall(dialedNumber()) }
         binding.rowAddContact.setOnClickListener { addToContacts(dialedNumber()) }
 
-        // Show a blinking cursor in the number field but keep our on-screen keypad
-        // as the only input: suppress the soft keyboard, then focus it.
         binding.lblDialNumber.showSoftInputOnFocus = false
         binding.lblDialNumber.requestFocus()
         hideSystemKeyboard()
@@ -87,22 +76,16 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
             val hasMatches = list.isNotEmpty()
             binding.lblEmpty.visibility = if (hasMatches) View.GONE else View.VISIBLE
             binding.lblMatchesLabel.visibility = if (hasMatches) View.VISIBLE else View.GONE
-            // Label reads "Matches" while dialing, "Frequently called" at rest.
+
             binding.lblMatchesLabel.setText(
                 if (dialedNumber().isEmpty()) R.string.dialer_frequent else R.string.dialer_matches
             )
-            // A named match means the dialed digits belong to a saved contact — no "Add".
+
             hasNamedMatch = dialedNumber().isNotEmpty() && list.any { !it.name.isNullOrBlank() }
             applyAddContactVisibility()
         }
     }
 
-    /**
-     * The keypad is the only input here, so the IME is dismissed whenever this
-     * window takes focus — including on return from Contacts/the call screen,
-     * where a keyboard left open by the previous screen would otherwise cover
-     * the dialpad.
-     */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) hideSystemKeyboard()
@@ -115,7 +98,6 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         }
     }
 
-    /** Wires every key cell to append its tag; long-pressing "0" inserts "+". */
     private fun setupKeypad() {
         val grid = binding.gridKeypadVw
         for (i in 0 until grid.childCount) {
@@ -127,8 +109,6 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         }
     }
 
-    /** Press-scale (0.94) with a spring release -- the design's key-press motion.
-     *  Returns false so the cell's own click/long-click listeners still fire. */
     @SuppressLint("ClickableViewAccessibility")
     private val keyPressScale = View.OnTouchListener { v, event ->
         when (event.actionMasked) {
@@ -162,24 +142,13 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
 
     private var addContactJob: Job? = null
 
-    /** The exact dialed number is a saved contact. */
     private var savedExact = false
 
-    /** The dialed digits match a saved (named) contact in the recents/matches list. */
     private var hasNamedMatch = false
 
-    /**
-     * Keeps "Add to contacts"/backspace visible only with a number, and refreshes
-     * the list so the keypad filters the recents just like the top search field.
-     *
-     * "Add to contacts" toggles INVISIBLE↔VISIBLE (never GONE) so its slot is always
-     * reserved — otherwise the keypad reflows on every keystroke and the number/pill
-     * appear to blink. We also don't pre-hide it before the async contact lookup
-     * (which caused a GONE→VISIBLE flash), and we cancel any stale lookup.
-     */
     private fun updateDialState() {
         val number = dialedNumber()
-        // Keep the cursor at the end after every keypad edit (setText resets it).
+
         binding.lblDialNumber.setSelection(number.length)
         val hasNumber = number.isNotEmpty()
         binding.padBackspace.visibility = if (hasNumber) View.VISIBLE else View.INVISIBLE
@@ -193,14 +162,13 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         viewModel.filter(number)
     }
 
-    /** Re-checks whether the exact dialed number is a saved contact, then updates the pill. */
     private fun refreshAddContact(number: String) {
         addContactJob?.cancel()
         addContactJob = lifecycleScope.launch {
             val saved = withContext(Dispatchers.IO) {
                 contactsRepo.lookupNameByNumber(number) != null
             }
-            // Drop stale results if the dialed number changed while querying.
+
             if (dialedNumber() == number) {
                 savedExact = saved
                 applyAddContactVisibility()
@@ -208,17 +176,11 @@ class DialPadActivity : FrameActivity<ScreenDialerBinding>() {
         }
     }
 
-    /**
-     * "Add to contacts" shows only for an unknown number: there is a dialed number,
-     * it isn't a saved contact, and it doesn't match any named contact in the list.
-     * Uses INVISIBLE (not GONE) so the keypad never reflows.
-     */
     private fun applyAddContactVisibility() {
         val show = dialedNumber().isNotEmpty() && !savedExact && !hasNamedMatch
         binding.rowAddContact.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
-    /** Shows a row's number in the dial display, then dials it. */
     private fun fillAndDial(number: String) {
         setDial(number)
         placeCall(number)

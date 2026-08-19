@@ -74,7 +74,7 @@
                 android:textStyle="bold"
                 tools:text="00:00" />
 
-            <!-- Presets -->
+            
             <LinearLayout
                 android:id="@+id/presetsVw"
                 android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_32sdp" />
 
-            <!-- Controls -->
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -187,7 +187,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

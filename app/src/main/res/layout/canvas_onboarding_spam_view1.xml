@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Onboarding step 3 — "Search any number".
-    A floating phone (obCard) searches a number: a search field, a radar with a
-    rotating sweep (obSweep) and a green match blip (obBlip), then the resolved
-    caller with a "CALLER FOUND" stamp (obStamp). Sits in a soft blue halo.
--->
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,7 +15,7 @@
         android:contentDescription="@null"
         android:src="@drawable/form_onb_halo_blue" />
 
-    <!-- searching pulse rings (blue, to match this step's theme) -->
+    
     <View
         android:id="@+id/obRing1Vw"
         android:layout_width="@dimen/_142sdp"
@@ -57,7 +52,7 @@
             android:layout_marginBottom="@dimen/_6sdp"
             android:background="@drawable/form_onb_notch" />
 
-        <!-- search field -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/_22sdp"
@@ -84,7 +79,7 @@
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
-        <!-- radar -->
+        
         <FrameLayout
             android:layout_width="@dimen/_64sdp"
             android:layout_height="@dimen/_64sdp"

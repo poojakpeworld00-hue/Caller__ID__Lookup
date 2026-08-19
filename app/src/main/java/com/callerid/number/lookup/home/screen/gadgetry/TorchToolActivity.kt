@@ -22,7 +22,6 @@ import com.callerid.number.lookup.home.databinding.ScreenFlashlightBinding
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-/** Torch with Steady / Strobe / SOS modes and (where supported) brightness control. */
 class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
 
     override val layoutId: Int = R.layout.screen_flashlight
@@ -39,7 +38,7 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var strobeOn = false
-    // SOS = ...---... : on/off durations in ms, looping.
+
     private val sosPattern = longArrayOf(
         200, 200, 200, 200, 200, 400,
         500, 200, 500, 200, 500, 400,
@@ -60,7 +59,6 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
@@ -114,7 +112,7 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
     private fun selectMode(target: Mode) {
         mode = target
         highlightModes()
-        if (active) startMode() // restart with the new mode
+        if (active) startMode()
         updateReadout()
     }
 
@@ -132,7 +130,6 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
         applyTorch(false)
     }
 
-    /** Turns the torch on/off, using the brightness level where the device supports it. */
     private fun applyTorch(on: Boolean) {
         val id = cameraId ?: return
         runCatching {
@@ -173,7 +170,7 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
 
     private fun updateReadout() {
         binding.lblBrightnessPct.text = "$brightnessPct%"
-        // Faux lumen output: scales with brightness while the torch is on.
+
         val lumen = if (active) (brightnessPct / 100f * NOMINAL_LUMENS).roundToInt() else 0
         binding.lblLumen.text = getString(R.string.flashlight_lm, lumen)
     }

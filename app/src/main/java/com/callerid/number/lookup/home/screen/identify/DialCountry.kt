@@ -1,6 +1,5 @@
 package com.callerid.number.lookup.home.screen.identify
 
-/** A selectable country with its ISO-2 code and international dialing code. */
 data class DialCountry(
     val name: String,
     val iso2: String,
@@ -9,7 +8,6 @@ data class DialCountry(
 
 object DialCountries {
 
-    /** Emoji flag for an ISO-2 country code (regional indicator symbols). */
     fun flag(iso2: String): String {
         if (iso2.length != 2) return "🌐"
         val base = 0x1F1E6
@@ -84,7 +82,6 @@ object DialCountries {
         DialCountry("Nepal", "NP", "977")
     )
 
-    /** International dialing code for any ISO-2 region (defaults the country chip). */
     fun dialOf(iso2: String): String? = DIAL_CODES[iso2.uppercase()]
 
     private val DIAL_CODES: Map<String, String> = mapOf(

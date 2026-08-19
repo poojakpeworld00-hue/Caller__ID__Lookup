@@ -7,14 +7,6 @@ import com.callerid.number.lookup.home.shell.contracts.AppTileDao
 import com.callerid.number.lookup.home.shell.contracts.MaskedIconDao
 import com.callerid.number.lookup.home.shell.contracts.BoardItemDao
 
-/**
- * The launcher's own store: the app-drawer cache, the home-screen grid and the icons the user has
- * hidden from the drawer.
- *
- * Plain SQLite rather than Room — AGP 9's built-in Kotlin support refuses to run KSP, and the
- * standalone Kotlin plugin that KSP would need does not support AGP 9. The DAOs keep the exact
- * method signatures Room used to generate, so nothing else in the launcher had to change.
- */
 class TileDatabase private constructor(context: Context) :
     SQLiteOpenHelper(context.applicationContext, DB_NAME, null, DB_VERSION) {
 
@@ -39,8 +31,7 @@ class TileDatabase private constructor(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // The drawer cache and the grid are both rebuilt from the installed apps on the next
-        // launch, so there is nothing here worth migrating.
+
         db.execSQL("DROP TABLE IF EXISTS $TABLE_APPS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_GRID_ITEMS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_HIDDEN_ICONS")

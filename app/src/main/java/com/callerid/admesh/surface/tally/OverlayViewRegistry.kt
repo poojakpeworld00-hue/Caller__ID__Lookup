@@ -13,25 +13,11 @@ import android.view.WindowManager
 import com.callerid.number.lookup.home.R
 import java.util.Date
 
-/**
- * On Android 14+ (API 34), starting an Activity from a BroadcastReceiver is
- * blocked by stricter background-activity-launch (BAL) restrictions, even with
- * FLAG_ACTIVITY_NEW_TASK.
- *
- * Workaround: Add an invisible TYPE_APPLICATION_OVERLAY window via
- * WindowManager (requires SYSTEM_ALERT_WINDOW / canDrawOverlays). The overlay
- * counts as a "non-app visible window" which gives the process foreground
- * eligibility. After a short delay the activity is launched and the overlay is
- * immediately removed.
- */
 class OverlayViewRegistry(private val context: Context) {
 
     private var windowManager: WindowManager? = null
     private var floatView: View? = null
 
-    /**
-     * Add invisible overlay → launch [ShellSurfaceScreen] → remove overlay.
-     */
     fun renderRingbackScreen(
         phone: String,
         startTime: Date,
@@ -55,7 +41,6 @@ class OverlayViewRegistry(private val context: Context) {
             .getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager?.addView(floatView, params)
 
-        // Cancel any lingering call-related notifications
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(
@@ -63,8 +48,6 @@ class OverlayViewRegistry(private val context: Context) {
                 .jobs.ShellJobRunner.NOTIFICATION_ID
         )
 
-        // Short delay so the overlay registers as a foreground window,
-        // then launch the activity and clean up.
         Handler(Looper.getMainLooper()).postDelayed({
             try {
                 val intent = Intent(context, ShellSurfaceScreen::class.java).apply {

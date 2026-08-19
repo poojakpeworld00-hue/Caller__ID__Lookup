@@ -34,31 +34,15 @@ class AppTileAdapter(
 ) : ListAdapter<AppTile, RecyclerView.ViewHolder>(AppTileDiff()),
     RecyclerViewFastScroller.OnPopupTextUpdate {
 
-    // the drawer is translucent black over the wallpaper, labels are always white on it
     private var textColor = Color.WHITE
     private var iconPadding = 0
 
-    /**
-     * The ad frame, carried as a row of the app list so it scrolls away with the apps instead of
-     * holding a strip of the drawer permanently. It is one long-lived view owned by the fragment
-     * — the holder re-parents it on bind rather than re-rendering it, so scrolling it out of
-     * view and back does not re-show (and re-count) the ad.
-     */
     private var adHeader: View? = null
 
-    /** Which row of the grid the ad occupies — `app_drawer.bottom_native.position` in RC. */
     private var adRow = 0
 
-    /** One extra item in the list when the ad is present. */
     private val headerCount: Int get() = if (adHeader != null) 1 else 0
 
-    /**
-     * Flat adapter index of the ad, or -1 when there is no ad.
-     *
-     * Derived rather than stored: it depends on the live column count (the user can change it in
-     * launcher settings) and on the list length, and both move underneath us. Clamped to the end
-     * of the list, so a row past the last app puts the ad last instead of dropping it.
-     */
     private val adPosition: Int
         get() {
             if (adHeader == null) return -1
@@ -83,13 +67,8 @@ class AppTileAdapter(
         notifyDataSetChanged()
     }
 
-    /** True when [position] is the ad row rather than an app. */
     fun isAdRow(position: Int): Boolean = position == adPosition
 
-    /**
-     * Maps an adapter position onto its index in the launcher list — everything after the ad row
-     * is shifted by one.
-     */
     private fun launcherIndex(position: Int): Int {
         val ad = adPosition
         return if (ad in 0 until position) position - 1 else position
@@ -157,10 +136,6 @@ class AppTileAdapter(
         }
     }
 
-    /**
-     * Holds the shared ad frame. Binding moves the one instance in, detaching it from the
-     * holder it was last in — recycling must not leave it parented to a dead row.
-     */
     class AdViewHolder(private val host: FrameLayout) : RecyclerView.ViewHolder(host) {
         fun attach(adView: View?) {
             if (adView == null || adView.parent === host) {
@@ -259,7 +234,6 @@ class AppTileAdapter(
         const val VIEW_TYPE_LAUNCHER = 0
         const val VIEW_TYPE_AD = 1
 
-        /** Stable ids are on, so the ad row needs one of its own that no launcher can collide with. */
         private const val AD_HEADER_ID = Long.MIN_VALUE
 
         private const val LAUNCHER_SCALE_NORMAL = 1f

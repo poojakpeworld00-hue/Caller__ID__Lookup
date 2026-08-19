@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.settings.SettingsHubActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
 
-                <!-- Native ad at the top of the settings list -->
+                
                 <FrameLayout
                     android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
 
-                <!-- PREFERENCES -->
+                
                 <TextView
                     style="@style/SettingsSection"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -128,13 +128,13 @@
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_weight="1" />
                 </LinearLayout>
-                <!-- PREFERENCES -->
+                
                 <TextView
                     style="@style/SettingsSection"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="@string/settings_section_call" />
 
-                <!-- Caller ID / call screening toggle (overlay permission) -->
+                
                 <LinearLayout
                     android:id="@+id/panelCallScreening"
                     android:layout_width="match_parent"
@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <!-- ACCOUNT & SUPPORT -->
+                
                 <TextView
                     android:id="@+id/sectionSupportVw"
                     style="@style/SettingsSection"
@@ -201,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp" />
 
-                <!-- LEGAL -->
+                
                 <TextView
                     style="@style/SettingsSection"
                     android:text="@string/settings_section_legal" />
@@ -221,7 +221,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -230,7 +230,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

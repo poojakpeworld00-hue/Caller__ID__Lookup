@@ -31,7 +31,6 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
 
     private var searchToken = 0
 
-    // DialCountry selected in the picker (defaults to device region).
     private var selectedIso: String? = null
     private var selectedDial: String? = null
 
@@ -42,7 +41,7 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
 
     fun search(raw: String) {
         val typed = NumberInfo.normalize(raw)
-        // Apply the chosen country's dialing code when the user didn't type a '+'.
+
         val normalized = when {
             typed.startsWith("+") -> typed
             !selectedDial.isNullOrBlank() -> "+" + selectedDial + typed.filter { it.isDigit() }
@@ -57,36 +56,29 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
         val token = ++searchToken
         _state.value = LookupState.Loading
         viewModelScope.launch {
-            // Never blank — a blank region makes libphonenumber fail to parse
-            // bare numbers, nulling out country/carrier/line-type/city.
+
             val region = (selectedIso ?: Locale.getDefault().country).ifBlank { "US" }
-            // Show the shimmer for a fixed minimum so the loading state is visible.
+
             val data = withContext(Dispatchers.IO) {
                 val contactName = contactsRepository.lookupNameByNumber(normalized)
-                val offline = LocalDigitResolver.lookup(normalized, region) // libphonenumber, no network
+                val offline = LocalDigitResolver.lookup(normalized, region)
                 val apiList = fetchFromApi(normalized)
                 Triple(contactName, offline, apiList)
             }
             delay(SHIMMER_MIN_MS)
-            if (token != searchToken) return@launch // a newer query superseded this one
+            if (token != searchToken) return@launch
 
             val (contactName, offline, apiList) = data
             val api = apiList.firstOrNull()
-            // Prefer the community/network name so a saved contact shows how OTHERS
-            // identify this number (not the name you already gave it). Fall back to
-            // your own contact name only when the network has no name at all.
+
             val apiPrimary = api?.name?.trim()?.takeIf { it.isNotBlank() }
             val displayName = apiPrimary ?: contactName
 
-            // Pull each enrichment field from whichever backend record has it,
-            // then fall back to the offline (libphonenumber) result.
             val apiCarrier = apiList.firstNotNullOfOrNull { it.carrierOrNull }
             val apiCountry = apiList.firstNotNullOfOrNull { it.country?.takeIf { c -> c.isNotBlank() } }
             val apiLineType = apiList.firstNotNullOfOrNull { it.lineTypeOrNull }
             val apiCity = apiList.firstNotNullOfOrNull { it.city?.takeIf { c -> c.isNotBlank() } }
 
-            // "Also known as": distinct network names, excluding the primary shown name
-            // AND your own saved contact name — so your own name is never echoed here.
             val nicknames = apiList
                 .mapNotNull { it.name?.trim()?.takeIf { n -> n.isNotBlank() } }
                 .distinct()
@@ -118,7 +110,6 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Queries the caller-ID API for this number; returns all matching records (may be empty). */
     private suspend fun fetchFromApi(phone: String): List<LookupPayload> = runCatching {
         if (!ApiCredentials.isConfigured) {
             Log.w(TAG, "checkPhoneNumber skipped: API credentials are placeholders")
@@ -158,7 +149,6 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
         _history.value = emptyList()
     }
 
-    /** Re-reads the persisted history (e.g. after the standalone history screen edits it). */
     fun refreshHistory() {
         _history.value = historyStore.all()
     }

@@ -11,11 +11,6 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.BlockedEntry
 import com.callerid.number.lookup.home.databinding.CellBlocklistBinding
 
-/**
- * Renders the blocklist as a flat list of blocked numbers. Each row carries a
- * red-tinted "spam" or a neutral treatment, an avatar, the number and a direct
- * Unblock pill. Tapping the row opens details; the pill unblocks in one step.
- */
 class BlockListAdapter(
     private val onUnblock: (BlockedEntry) -> Unit,
     private val onRowClick: (BlockedEntry) -> Unit,
@@ -40,7 +35,6 @@ class BlockListAdapter(
 
     override fun getItemCount(): Int = rows.size
 
-    /** Staggered spring-in the first time each row scrolls into view (40ms cascade). */
     private fun animateIn(view: View, position: Int) {
         if (position <= lastAnimated) return
         lastAnimated = position

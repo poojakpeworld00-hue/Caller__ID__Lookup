@@ -1,13 +1,12 @@
 package com.callerid.number.lookup.home.screen.identify
 
-/** Result of identifying a phone number (on-device + optional online metadata). */
 data class LookupResult(
-    val name: String?,        // contact name, or null if unknown
-    val number: String,       // formatted number
-    val rawNumber: String,    // original digits for dialing / saving
+    val name: String?,
+    val number: String,
+    val rawNumber: String,
     val inContacts: Boolean,
-    val regionCode: String,   // country calling code, e.g. "+1"
-    // Online enrichment (null when no API key / offline):
+    val regionCode: String,
+
     val country: String? = null,
     val carrier: String? = null,
     val lineType: String? = null,
@@ -15,10 +14,9 @@ data class LookupResult(
     val city: String? = null,
     val isSpam: Boolean = false,
     val spamType: String? = null,
-    val nicknames: List<String> = emptyList() // alternate names users saved this number under
+    val nicknames: List<String> = emptyList()
 )
 
-/** A persisted recent lookup shown in the history list. */
 data class TraceRow(
     val rawNumber: String,
     val number: String,
@@ -26,7 +24,6 @@ data class TraceRow(
     val subtitle: String?
 )
 
-/** UI state for the Lookup screen. */
 sealed interface LookupState {
     data object Idle : LookupState
     data object Loading : LookupState

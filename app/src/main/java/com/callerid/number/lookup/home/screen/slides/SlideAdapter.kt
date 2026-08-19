@@ -14,13 +14,12 @@ class SlideAdapter(
 ) : RecyclerView.Adapter<SlideAdapter.VH>() {
 
     private companion object {
-        /** Below this the illustration is more noise than help, so it stops shrinking. */
+
         const val MIN_ART_SCALE = 0.45f
     }
 
     inner class VH(val binding: CellOnboardingBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        /** Looping animators for the current page's illustration; cancelled on recycle. */
         private val anims = mutableListOf<Animator>()
 
         fun bind(page: SlidePage) {
@@ -30,8 +29,7 @@ class SlideAdapter(
 
             if (page.customArtRes != 0) {
                 LayoutInflater.from(container.context).inflate(page.customArtRes, container, true)
-                // Attach the exact per-element loop animations (float, pop, slide,
-                // pulse, shield, stamp, sweep, blip) by view id.
+
                 anims += SlideAnimations.attach(container)
             } else {
                 val image = ImageView(container.context).apply {
@@ -50,13 +48,6 @@ class SlideAdapter(
             fitArt(container)
         }
 
-        /**
-         * The illustrations are drawn at a fixed size around the centre of a 210sdp box. The
-         * box itself is elastic — a native ad at the bottom of the screen can leave far less
-         * than that — so scale the artwork by however much of the design height survived.
-         * Without this the fixed-size pieces just overflow the smaller box and collide with
-         * the headline (the container deliberately does not clip them).
-         */
         private fun fitArt(container: FrameLayout) {
             val art = container.getChildAt(0) ?: return
             container.doOnLayout {

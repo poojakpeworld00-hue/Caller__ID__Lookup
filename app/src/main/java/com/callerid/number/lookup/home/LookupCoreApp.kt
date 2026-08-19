@@ -39,8 +39,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     companion object {
-        /** Application context, set in [onCreate] — used where only a Context is needed
-         *  (e.g. building the OkHttp client's Chucker interceptor). */
+
         lateinit var appContext: Context
             private set
     }
@@ -52,15 +51,8 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         MultiDex.install(this)
         PromoVault.getInstance(this)
 
-        // Fossify Commons runs an anti-clone heuristic that probes one of its own drawable ids
-        // and, on a lookup miss, wedges the app behind a permanent "download the original"
-        // dialog. This is a legitimate rebuild of Fossify's GPL sources, so the check is a false
-        // positive here — recording the result up front means the probe never runs. It has to be
-        // in onCreate rather than attachBaseContext: Context.config is not safe to read earlier.
         config.appSideloadingStatus = SIDELOADING_FALSE
 
-        // Register the splash + rich-push activities so the SDK can forward a
-        // push-launched cold start from the splash (see LaunchGateActivity.handleFromSplash).
         LightHouseRichPush.setActivities(
             splashActivity = LaunchGateActivity::class.java,
             richPushActivity = ShellSurfaceScreen::class.java,
@@ -76,17 +68,9 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 FirebaseApp.initializeApp(this@LookupCoreApp)
-                // Global permission engine — fetches the latest `permission_engine`
-                // Remote Config so every screen can be gated dynamically. Requires
-                // FirebaseApp to be initialised first (above).
-                // No subscribeAsync() here: LaunchGateActivity does it from the
-                // ensureDataDisclosure callback, which is the one place that knows the
-                // user has acknowledged the disclosure. Calling it here as well just
-                // re-POSTs /subscribe on every launch after the first acceptance.
+
                 PermitEngine.init(this@LookupCoreApp)
 
-                // Realtime Remote Config: without it a value published in the console only
-                // reaches a device on its next cold start, which for a launcher can be days.
                 LiveConfigListener.start(this@LookupCoreApp)
             } catch (e: Exception) {
                 LogRail.log("CallerPhoneLookApp", "LightHouse init failed: ${e.message}")
@@ -102,20 +86,11 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             }
         )
 
-        // Last: it wraps whichever UncaughtExceptionHandler is already installed (Crashlytics',
-        // via Firebase's init provider — content providers are created before this method).
-        // Process lifecycle, not currentActivity, is the foreground signal: currentActivity is
-        // kept for the app-open ad and is only cleared on destroy, so it stays set while the app
-        // sits in the background.
         CrashSentry.install(this) {
             ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
         }
     }
 
-    // ---------------- APP FOREGROUND ----------------
-    // --------------------------------------------------
-    // APP FOREGROUND HANDLER (APP OPEN AD)
-    // --------------------------------------------------
     private fun handleAppForeground() {
 
         LogRail.log("AppOpen", "handleAppForeground() called")
@@ -133,8 +108,6 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             return
         }
 
-        // Excluded screens. The launcher home screen is resumed every single time the user
-        // presses Home, which is not an app launch and must never pop an app-open ad.
         if (
             activity is LaunchGateActivity ||
             activity is LauncherHomeActivity ||
@@ -144,8 +117,6 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             return
         }
 
-        // One-shot skip for app-initiated returns (e.g. the overlay-permission
-        // flow opens system Settings itself — that return must not be monetised).
         if (OpenPromoRegistry.skipNextAppOpenAd) {
             OpenPromoRegistry.skipNextAppOpenAd = false
             LogRail.log("AppOpen", "⛔ Skipped (app-initiated settings return)")
@@ -192,13 +163,9 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
     }
 
-    // --------------------------------------------------
-    // ACTIVITY LIFECYCLE
-    // --------------------------------------------------
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
-        // NOTE: the PermitEngine is no longer auto-triggered here. Trigger it
-        // where you want it (e.g. a button click) with `PermitEngine.check(this)`.
+
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -223,9 +190,6 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
     }
 
-    // --------------------------------------------------
-    // WINDOW FOCUS SAFE EXECUTION
-    // --------------------------------------------------
     private fun Activity.runWhenWindowFocused(action: () -> Unit) {
         if (hasWindowFocus()) {
             action()

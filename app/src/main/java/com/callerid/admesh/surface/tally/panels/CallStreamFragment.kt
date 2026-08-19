@@ -18,11 +18,6 @@ import com.callerid.admesh.surface.tally.lists.LogCallAdapter
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.CallHistorySource
 
-/**
- * Default ("first") tab of the post-call screen: a recent-call list. Each row's
- * call button places a direct outgoing call (ACTION_CALL), falling back to the
- * dialer only when CALL_PHONE isn't granted.
- */
 class CallStreamFragment : Fragment() {
 
     private val adapter = LogCallAdapter(::callNumber)
@@ -48,7 +43,6 @@ class CallStreamFragment : Fragment() {
         return view
     }
 
-    /** Reads recent calls (de-duped by number) when call-log access is granted. */
     private fun loadRecentCalls() = try {
         val granted = ContextCompat.checkSelfPermission(
             requireContext(), Manifest.permission.READ_CALL_LOG
@@ -65,7 +59,6 @@ class CallStreamFragment : Fragment() {
 
     private var pendingCallNumber: String? = null
 
-    /** Re-attempts the call (direct or dialer) once the CALL_PHONE prompt returns. */
     private val callPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -74,11 +67,6 @@ class CallStreamFragment : Fragment() {
         if (number != null) if (granted) startDirectCall(number) else openDialer(number)
     }
 
-    /**
-     * Places a direct outgoing call (ACTION_CALL) — no dialer. Requests CALL_PHONE
-     * first if it isn't granted; falls back to the dialer only if the user denies,
-     * so the action never crashes.
-     */
     private fun callNumber(number: String) {
         if (!isAdded || number.isBlank()) return
         if (ContextCompat.checkSelfPermission(

@@ -36,8 +36,6 @@
                 tools:tint="@color/primary" />
         </FrameLayout>
 
-
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/crestLayout"
             android:layout_width="match_parent"
@@ -227,13 +225,7 @@
                 android:textSize="@dimen/_8sdp" />
         </LinearLayout>
 
-        <!--
-            Third tab — generic WhatsApp launcher. Opens the WhatsApp main
-            screen via packageManager.getLaunchIntentForPackage instead of
-            sending the user to a specific phone/contact (the previous
-            wa.me/<digits> deep link). Falls back gracefully when neither
-            WhatsApp nor WhatsApp Business is installed.
-        -->
+        
         <LinearLayout
             android:id="@+id/pic_whatsapp"
             android:layout_width="match_parent"

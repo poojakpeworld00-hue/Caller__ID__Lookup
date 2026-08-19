@@ -1,7 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!-- Home-screen launcher. Ported from the reference launcher; kept in its own file
-     so it stays separable from the caller-ID app's own resources. -->
-
 
     <style name="LauncherBaseTheme" parent="AppTheme.Base" />
 
@@ -20,10 +17,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <!-- Onboarding runs on the Claude Design CID03 palette. Unlike the drawer and the side
-         panels it is not pinned to a fixed light look: the design ships a .theme-dark and the
-         cid_* tokens carry it, so these screens follow the user's theme and the light system-bar
-         icons are overridden in values-night. -->
+    
     <style name="OnboardingTheme" parent="LauncherBaseTheme">
         <item name="android:windowBackground">@drawable/form_onboarding_screen</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -32,8 +26,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
-    <!-- MaterialButton ignores android:background, and backgroundTint cannot carry a ripple, so
-         the CTA is a plain AppCompat button with the design's g-700 pill as its background -->
+    
     <style name="OnboardingButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/form_onboarding_cta</item>
         <item name="android:textColor">@color/cid_onb_on_cta</item>
@@ -46,8 +39,7 @@
         <item name="android:stateListAnimator">@null</item>
     </style>
 
-    <!-- The three feature tiles on the Welcome screen. Equal thirds of the row, so the
-         width is 0dp and the weight carries it. -->
+    
     <style name="OnbFeatureTile">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -87,7 +79,7 @@
         <item name="android:background">@drawable/form_onb_feature_rule</item>
     </style>
 
-    <!-- Mock incoming-call screen inside the Set-as-default illustration. -->
+    
     <style name="OnbMockLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

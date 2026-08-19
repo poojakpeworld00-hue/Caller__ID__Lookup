@@ -40,9 +40,8 @@ class InlinePromoStrip {
     fun fetchNativeBannerAds(activity: Activity) {
         val adsPref = PromoVault.getInstance(activity)
         if (!adsPref.getBoolean("IsAdsON")) return
-        // Firebase "NativeBanner" master switch — disable native banner loading
-        if (!adsPref.getBoolean("NativeBanner")) return
 
+        if (!adsPref.getBoolean("NativeBanner")) return
 
         when (PromoKind.fromString(adsPref.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
@@ -61,7 +60,6 @@ class InlinePromoStrip {
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         Log.e("InlinePromoStrip", "Ad failed to load: ${error.message}")
                         nativeAdBanner = null
-                        // No retry logic
 
                         try {
                             activity.trackEvent("native_banner_fail")
@@ -74,18 +72,17 @@ class InlinePromoStrip {
             }
 
             PromoKind.FACEBOOK -> {
-                // FB ad type → directly try FB
+
                 Log.e(TAG_EVENT, "AdType FaceBook NOt Pre load Google Native")
                 return
             }
 
             PromoKind.UNKNOWN, PromoKind.CUSTOM -> {
-                // Custom ad type
+
                 Log.e(TAG_EVENT, "AdType Custom NOt Pre load Google Native")
                 return
             }
         }
-
 
     }
 
@@ -95,9 +92,7 @@ class InlinePromoStrip {
         Log.e("NativeAds", "Google Show: nativeAd")
         val adsPref = PromoVault.getInstance(context)
 
-        // 🔥 CRASH FIX 1: Activity lifecycle safety
         if (context.isFinishing || context.isDestroyed) return
-
 
         if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
@@ -144,7 +139,7 @@ class InlinePromoStrip {
                             fetchNativeBannerAds(context)
                             return@post
                         } else {
-                            // Google failed → FB fallback or Custom
+
                             if (adsPref.getBoolean("IsFail_FB")) {
                                 showFBNativeBannerFallback(context, layout)
                             } else {
@@ -180,7 +175,7 @@ class InlinePromoStrip {
     private fun bindGoogleNativeAd(
         nativeAd: NativeAd, binding: GooglesmallnativeBinding, context: Activity
     ) {
-        // Log load
+
         context.trackEvent("native_banner_show_google")
 
         if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
@@ -199,7 +194,6 @@ class InlinePromoStrip {
 
             val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
             val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-
 
             val txtColor =
                 PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
@@ -224,7 +218,6 @@ class InlinePromoStrip {
 
             adCallToAction.backgroundTintList =
                 ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
-
 
             if (nativeAd.body != null) {
                 adBody.visibility = View.VISIBLE
@@ -263,7 +256,6 @@ class InlinePromoStrip {
             Color.parseColor(defaultColor)
         }
     }
-
 
     private fun showFBNativeBannerFallback(
         context: Activity, layout: FrameLayout, shimmer: ShimmerFrameLayout? = null
@@ -317,26 +309,21 @@ class InlinePromoStrip {
         activity: Activity,
         adSize: String? = null
     ) {
-        // ✅ Make sure container is visible
+
         viewGroup.isVisible = true
 
-        // Unregister any old ad view
         nativeAd.unregisterView()
 
-        // ✅ Inflate layout with ViewBinding
         val binding =
             FacebookNativeBannerBinding.inflate(LayoutInflater.from(activity), viewGroup, false)
 
-        // Clear old views and add new ad view
         viewGroup.removeAllViews()
         viewGroup.addView(binding.root)
 
-        // ✅ Add AdChoicesView
         val adOptionsView = AdOptionsView(activity, nativeAd, binding.nativview)
         binding.adChoicesContainer.removeAllViews()
         binding.adChoicesContainer.addView(adOptionsView, 0)
 
-        // ✅ Bind ad data to views
         binding.nativeAdTitle.text = nativeAd.advertiserName
         binding.nativeAdSocialContext.text = nativeAd.adSocialContext
         binding.nativeAdSponsoredLabel.text = nativeAd.sponsoredTranslation
@@ -367,7 +354,6 @@ class InlinePromoStrip {
             binding.nativeAdCallToAction.isVisible = false
         }
 
-        // ✅ Register clickable views
         val clickableViews = listOf(binding.nativeAdTitle, binding.nativeAdCallToAction)
 
         nativeAd.registerViewForInteraction(

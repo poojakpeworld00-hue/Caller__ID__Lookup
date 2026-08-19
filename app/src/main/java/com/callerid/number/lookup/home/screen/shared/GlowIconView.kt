@@ -11,16 +11,6 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.callerid.number.lookup.home.R
 
-/**
- * Reusable empty-state icon used by the Blocklist and Tools screens.
- *
- * Renders (back-to-front) an expanding ring, a soft disc and a centered glyph.
- * On attach it runs two looping animations that mirror the Claude Design:
- *  • the disc + glyph "breathe" — scale 1 → 1.05 → 1 over 3s (ease-in-out, reverse),
- *  • a ring expands 0.7 → 1.5 while fading 0.55 → 0 over 3s (ease-out, restart).
- *
- * Everything is theme-token driven via drawables, so it flips light/dark for free.
- */
 class GlowIconView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -35,8 +25,7 @@ class GlowIconView @JvmOverloads constructor(
     private var ringAnimator: ValueAnimator? = null
 
     init {
-        // The ring expands to 1.5× — let it draw past our bounds instead of being
-        // clipped into a hard square ("cut" animation).
+
         clipChildren = false
         clipToPadding = false
 
@@ -53,12 +42,10 @@ class GlowIconView @JvmOverloads constructor(
         val tint = a.getColor(R.styleable.GlowIconView_biv_iconTint, 0)
         a.recycle()
 
-        // Ring — fills the whole view, sits behind everything.
         ring.setImageDrawable(ContextCompat.getDrawable(context, ringRes))
         ring.scaleType = ImageView.ScaleType.FIT_XY
         addView(ring, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
-        // Pulsing disc + centered glyph.
         pulse.background = ContextCompat.getDrawable(context, discRes)
         addView(pulse, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 

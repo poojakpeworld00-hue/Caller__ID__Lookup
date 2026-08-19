@@ -21,17 +21,6 @@ import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenTermsBinding
 import com.callerid.number.lookup.home.screen.slides.SlideIntroActivity
 
-/**
- * Terms &amp; Conditions gate shown after language selection. The agreement
- * checkbox starts checked; the button is enabled only while it is.
- *
- * On accept it owns the overlay-permission step:
- *  1. Already granted (or not needed) -> go straight to the next screen.
- *  2. Otherwise open the system overlay Settings page and start a grant watcher.
- *  3. Three idempotent paths converge on [proceedToNextScreen]: the watcher
- *     fires (toggle detected ON), the launcher returns (Settings dismissed), or
- *     [onResume] runs after a real return from Settings (gated by settingsShown).
- */
 class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
     override val layoutId: Int = R.layout.screen_terms
@@ -43,7 +32,6 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
     private var proceeded = false
     private var watchRegistered = false
 
-    /** Fired by [OverlayWatchService] once the overlay permission flips ON. */
     private val overlayGrantedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             proceedToNextScreen()
@@ -57,7 +45,7 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         proceedToNextScreen() }
 
     override fun initView() {
-        // Record this intro show for the once/count frequency gate.
+
         RevealPolicy.markShown(this, RevealConfig.TERMS)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.termsRootVw) { v, insets ->
@@ -70,14 +58,10 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         setAcceptEnabled(true)
 
         binding.chkAgree.setOnCheckedChangeListener { _, checked -> setAcceptEnabled(checked) }
-        // Tapping the label toggles the box too.
+
         binding.lblAgree.setOnClickListener { binding.chkAgree.toggle() }
         binding.padAccept.setOnClickListener { onAccept() }
 
-        // Onboarding rule: system back must not exit the app — advance forward to
-        // the next screen (marking terms accepted so it isn't shown again). Stays
-        // enabled so back never falls through to FrameActivity's exit handler;
-        // proceedToNextScreen is itself idempotent.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 prefs.isTermsAccepted = true
@@ -88,11 +72,7 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
     override fun onResume() {
         super.onResume()
-        // Proceed only after we've genuinely returned from the system Settings
-        // page — settingsShown is set in onPause once Settings actually took the
-        // foreground. Without this gate a transient resume (e.g. an activity
-        // flashing on top and finishing) navigates away before the user ever
-        // sees the overlay-permission screen — the Android 16 "auto back" bug.
+
         if (awaitingOverlay && settingsShown) {
             awaitingOverlay = false
             settingsShown = false
@@ -102,9 +82,7 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
     override fun onPause() {
         super.onPause()
-        // Mark that the foreground actually moved away (to the Settings page),
-        // so the next onResume is treated as a real return rather than a spurious
-        // resume that would prematurely advance the flow.
+
         if (awaitingOverlay) settingsShown = true
     }
 
@@ -127,26 +105,18 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         openOverlayPermission()
     }
 
-    /** Requests the overlay permission, or skips ahead if it isn't needed. */
     private fun openOverlayPermission() {
         if (OverlayKit.isGranted(this)) {
             proceedToNextScreen()
             return
         }
 
-        // Open ONLY the system overlay-Settings page. We deliberately do NOT
-        // drop OverlayGateActivity on top here: launching our own activity
-        // back-to-back with the Settings page raced it for the foreground and,
-        // combined with the premature onResume proceed, auto-backed out of
-        // Settings on Android 16 before the user could grant. Grant detection is
-        // handled by OverlayWatchService (polls while we're behind Settings) and
-        // the genuine return is handled by onResume / the launcher result.
         val launched = runCatching {
             overlayLauncher.launch(OverlayKit.buildOverlayIntent(packageName))
         }.isSuccess
 
         if (!launched) {
-            // No overlay-settings screen on this device; don't block the flow.
+
             proceedToNextScreen()
             return
         }
@@ -154,8 +124,6 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         awaitingOverlay = true
         settingsShown = false
 
-        // Watch for the grant from a service so it keeps polling while we sit
-        // behind the system Settings screen.
         ContextCompat.registerReceiver(
             this,
             overlayGrantedReceiver,
@@ -166,17 +134,11 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         OverlayWatchService.start(this)
     }
 
-    /**
-     * Idempotent. Cancels the watcher and starts the next screen with
-     * CLEAR_TASK so this screen and any Settings remnant are wiped from the
-     * back stack.
-     */
     private fun proceedToNextScreen() {
         if (proceeded) return
         proceeded = true
         stopWatch()
 
-        // Onboarding follows the same RevealPolicy frequency gate as Splash.
         val next = if (RevealPolicy.shouldShowOnboarding(this)) SlideIntroActivity::class.java
         else OnboardRouter.homeActivity()
         if (next == OnboardRouter.homeActivity()) {
@@ -190,7 +152,6 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
         finish()
     }
 
-    /** Stops the grant watcher service and unregisters its receiver (idempotent). */
     private fun stopWatch() {
         if (watchRegistered) {
             runCatching { unregisterReceiver(overlayGrantedReceiver) }

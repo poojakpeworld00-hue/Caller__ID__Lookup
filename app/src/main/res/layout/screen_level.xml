@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.tools.LevelToolActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                     app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
                     app:layout_constraintTop_toBottomOf="@id/crownBar">
 
-                    <!-- Tilt readout -->
+                    
                     <TextView
                         android:id="@+id/lblTilt"
                         android:layout_width="wrap_content"
@@ -104,7 +104,7 @@
                         android:textSize="@dimen/_10ssp"
                         android:textStyle="bold" />
 
-                    <!-- Level dial (centered in remaining space) -->
+                    
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -156,7 +156,7 @@
                         </FrameLayout>
                     </FrameLayout>
 
-                    <!-- Dual-axis data card -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -275,12 +275,10 @@
                         app:iconTint="@color/white" />
                 </LinearLayout>
 
-
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -289,7 +287,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

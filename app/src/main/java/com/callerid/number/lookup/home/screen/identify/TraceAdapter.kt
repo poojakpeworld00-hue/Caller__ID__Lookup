@@ -12,17 +12,14 @@ import com.callerid.number.lookup.home.screen.shared.HomeAnim
 class TraceAdapter(
     private val onClick: (TraceRow) -> Unit,
     private val onCall: (TraceRow) -> Unit,
-    // Tapping a still-locked name asks the host to gate the reveal behind a
-    // rewarded ad; the host calls [revealName] once the reward is earned.
+
     private val onRevealName: (TraceRow) -> Unit = {}
 ) : RecyclerView.Adapter<TraceAdapter.VH>() {
 
     private val items = mutableListOf<TraceRow>()
 
-    /** rawNumbers whose caller name has been unlocked (rewarded ad watched) this session. */
     private val revealed = mutableSetOf<String>()
 
-    /** Rows animate in once; a reveal's partial rebind must not replay the stagger. */
     private var lastAnimated = -1
 
     @SuppressLint("NotifyDataSetChanged")
@@ -33,7 +30,6 @@ class TraceAdapter(
         notifyDataSetChanged()
     }
 
-    /** Un-masks [rawNumber]'s name after its rewarded ad and refreshes that row. */
     fun revealName(rawNumber: String) {
         if (revealed.add(rawNumber)) {
             val i = items.indexOfFirst { it.rawNumber == rawNumber }
@@ -41,10 +37,6 @@ class TraceAdapter(
         }
     }
 
-    /**
-     * Re-hides every name (drops all reveals). Call when the page is entered again
-     * so names must be re-earned with a fresh rewarded ad each visit.
-     */
     @SuppressLint("NotifyDataSetChanged")
     fun resetReveals() {
         if (revealed.isEmpty()) return
@@ -52,7 +44,6 @@ class TraceAdapter(
         notifyDataSetChanged()
     }
 
-    /** Whether this entry still hides its name behind a rewarded ad. */
     private fun isLocked(item: TraceRow): Boolean =
         item.name != null && item.rawNumber !in revealed
 
@@ -66,8 +57,7 @@ class TraceAdapter(
                 val p = bindingAdapterPosition
                 if (p != RecyclerView.NO_POSITION) onCall(items[p])
             }
-            // The name is revealed only via the explicit eye button (rewarded ad) —
-            // never by tapping the row/name directly.
+
             binding.picHistReveal.setOnClickListener {
                 val p = bindingAdapterPosition
                 if (p != RecyclerView.NO_POSITION) onRevealName(items[p])
@@ -87,13 +77,12 @@ class TraceAdapter(
         with(holder.binding) {
             lblHistAvatar.text = CallFormatter.initials(item.name, item.rawNumber)
             val locked = isLocked(item)
-            // Locked: blur the name and surface the eye button to unlock it.
+
             lblHistName.text = if (locked) blurName(item.name!!) else (item.name ?: item.number)
             picHistReveal.visibility = if (locked) View.VISIBLE else View.GONE
             lblHistSub.text = item.subtitle ?: item.number
         }
 
-        // Claude Design's cid-rise-in stagger, once per row per submit().
         if (position > lastAnimated) {
             lastAnimated = position
             HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
@@ -107,7 +96,6 @@ class TraceAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    /** First letter + dots (e.g. "John" → "J•••"), matching the lookup-card blur. */
     private fun blurName(name: String): String =
         if (name.isNotEmpty()) name[0] + "•".repeat(name.length - 1) else name
 }

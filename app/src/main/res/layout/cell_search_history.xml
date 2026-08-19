@@ -28,7 +28,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- Name + inline eye: the eye sits just to the right of the (blurred) name. -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:textSize="@dimen/_12ssp"
                 tools:text="+1 415 555 0132" />
 
-            <!-- Eye: shown only while the name is locked; tap plays a rewarded ad to reveal it. -->
+            
             <ImageView
                 android:id="@+id/picHistReveal"
                 android:layout_width="@dimen/_22sdp"

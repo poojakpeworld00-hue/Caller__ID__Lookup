@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Language — "Language + empty state".
-    Toolbar (back · title · info · filled confirm ✓) over two grouped cards:
-    a compact "Suggested" list and a scrollable "All languages" list, each row
-    56dp with the native name leading. Tapping a row previews the selection
-    (radio fills, row tints); the ✓ button confirms and applies. The native ad
-    stays pinned below the list as a standard labelled card — never mistakable
-    for the confirm action.
--->
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -22,7 +14,7 @@
         android:background="@color/background"
         tools:context=".ui.language.LanguageSelectActivity">
 
-        <!-- ===== Toolbar ===== -->
+        
         <ImageView
             android:id="@+id/padBack"
             android:layout_width="@dimen/_30sdp"
@@ -65,7 +57,7 @@
             app:layout_constraintTop_toTopOf="@id/padContinue"
             app:tint="@color/on_surface_variant" />
 
-        <!-- Filled confirm: "Done" pill (Claude Design's labelled confirm), not a bare glyph. -->
+        
         <LinearLayout
             android:id="@+id/padContinue"
             android:layout_width="wrap_content"
@@ -99,7 +91,7 @@
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 
-        <!-- ===== Suggested + All languages — one continuous scroll ===== -->
+        
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrl"
             android:layout_width="0dp"
@@ -116,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Suggested -->
+                
                 <TextView
                     android:id="@+id/lblSuggested"
                     android:layout_width="wrap_content"
@@ -147,7 +139,7 @@
                     tools:itemCount="2"
                     tools:listitem="@layout/cell_language" />
 
-                <!-- All languages -->
+                
                 <TextView
                     android:id="@+id/lblAll"
                     android:layout_width="wrap_content"
@@ -179,7 +171,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating the list from the ad below -->
+        
         <View
             android:id="@+id/adNativeDividerVw"
             style="@style/AdDivider"
@@ -188,7 +180,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- ===== Native ad (labelled card, pinned below the list) ===== -->
+        
         <FrameLayout
             android:id="@+id/adNativeFrameVw"
             android:layout_width="match_parent"

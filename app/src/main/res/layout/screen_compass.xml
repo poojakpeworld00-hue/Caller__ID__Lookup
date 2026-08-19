@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.tools.CompassToolActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -82,13 +82,13 @@
                     app:layout_constraintBottom_toTopOf="@id/bannerAdFrameVw"
                     app:layout_constraintTop_toBottomOf="@id/crownBar">
 
-                    <!-- Compass dial -->
+                    
                     <FrameLayout
                         android:id="@+id/compassAreaVw"
                         android:layout_width="@dimen/_280sdp"
                         android:layout_height="@dimen/_280sdp">
 
-                        <!-- Decorative blue-dot diamond pattern (rotates with the needle) -->
+                        
                         <ImageView
                             android:id="@+id/picDots"
                             android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                             android:contentDescription="@string/tools_compass"
                             android:src="@drawable/sym_compass_needle" />
 
-                        <!-- Heading readout -->
+                        
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,8 +154,7 @@
                                 tools:text="WNW" />
                         </LinearLayout>
 
-                        <!-- Cardinal labels ride on their own layer that rotates with the
-                             dial, so N always points to magnetic north. -->
+                        
                         <FrameLayout
                             android:id="@+id/dialLabelsVw"
                             android:layout_width="match_parent"
@@ -204,7 +203,7 @@
                         </FrameLayout>
                     </FrameLayout>
 
-                    <!-- Signal strength pill -->
+                    
                     <LinearLayout
                         android:id="@+id/signalPillVw"
                         android:layout_width="wrap_content"
@@ -253,7 +252,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/crownBar" />
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -262,7 +261,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

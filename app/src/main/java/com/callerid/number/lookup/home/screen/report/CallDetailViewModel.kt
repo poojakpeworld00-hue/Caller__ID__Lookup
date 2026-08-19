@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** Aggregated data for one number, shown on [CallDetailActivity]. */
 data class CallDetailUi(
     val name: String,
     val number: String,
@@ -44,7 +43,6 @@ class CallDetailViewModel(app: Application) : AndroidViewModel(app) {
                 ?: number
             val verified = mine.any { !it.name.isNullOrBlank() } || !fallbackName.isNullOrBlank()
 
-            // Both stat cards are scoped to the last 30 days (matches the subtitle).
             val recent = lastThirtyDays(mine)
 
             _ui.value = CallDetailUi(
@@ -59,13 +57,11 @@ class CallDetailViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Calls from this number within the trailing 30-day window. */
     private fun lastThirtyDays(calls: List<CallEntry>): List<CallEntry> {
         val cutoff = System.currentTimeMillis() - THIRTY_DAYS_MS
         return calls.filter { it.date >= cutoff }
     }
 
-    /** Describes the composition of [calls] for the Total Calls subtitle. */
     private fun callsSubtitle(calls: List<CallEntry>): String {
         val app = getApplication<Application>()
         if (calls.isEmpty()) return app.getString(R.string.detail_calls_none)

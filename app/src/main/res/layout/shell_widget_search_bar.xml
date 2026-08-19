@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Search pill sitting on the home screen. Tapping anywhere on it opens the app search
-    panel with the field already focused, so the whole pill is one target.
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="44dp"

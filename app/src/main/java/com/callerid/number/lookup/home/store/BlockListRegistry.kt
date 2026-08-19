@@ -2,10 +2,8 @@ package com.callerid.number.lookup.home.store
 
 import android.content.Context
 
-/** A blocked number together with when it was added. */
 data class BlockedEntry(val number: String, val addedAt: Long)
 
-/** Persists user-blocked phone numbers (and when they were blocked) in SharedPreferences. */
 class BlockListRegistry(context: Context) {
 
     private val prefs = context.applicationContext
@@ -14,7 +12,6 @@ class BlockListRegistry(context: Context) {
     fun getAll(): List<String> =
         prefs.getStringSet(KEY, emptySet()).orEmpty().sorted()
 
-    /** Blocked numbers as entries, newest first. */
     fun getEntries(): List<BlockedEntry> =
         prefs.getStringSet(KEY, emptySet()).orEmpty()
             .map { BlockedEntry(it, prefs.getLong(timeKey(it), 0L)) }
@@ -32,11 +29,6 @@ class BlockListRegistry(context: Context) {
         prefs.edit().remove(timeKey(number)).apply()
     }
 
-    /**
-     * True if [number] is blocked. Matches exactly first, then by normalized
-     * digits (last 10) so different formats of the same number still match
-     * (e.g. "+91 70164 14568" vs "7016414568").
-     */
     fun isBlocked(number: String): Boolean {
         val set = prefs.getStringSet(KEY, emptySet()).orEmpty()
         if (set.contains(number.trim())) return true

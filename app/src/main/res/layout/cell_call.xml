@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Recent-call row as a card: verdict-tinted avatar, name + type/time, and a
-     call action. Row background + avatar colors are set per verdict in CallAdapter
-     (spam rows get a red-tinted container). -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -87,7 +85,7 @@
         android:src="@drawable/slot_phone"
         app:tint="@color/primary" />
 
-    <!-- Shown instead of Call for unknown / unsaved numbers → opens Lookup. -->
+    
     <TextView
         android:id="@+id/padIdentify"
         android:layout_width="wrap_content"

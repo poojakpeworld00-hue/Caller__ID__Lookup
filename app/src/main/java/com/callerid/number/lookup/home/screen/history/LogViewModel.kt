@@ -57,10 +57,6 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
         rebuild()
     }
 
-    /**
-     * The call flavour a scope admits, or null when it admits everything. Expressing
-     * the scope as data removes the per-call branch that used to sit in `matches`.
-     */
     private val LogScope.admits: CallFlavor?
         get() = when (this) {
             LogScope.ALL -> null
@@ -69,7 +65,6 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
             LogScope.MISSED -> CallFlavor.MISSED
         }
 
-    /** Day buckets carry their own heading, so no int sentinel has to be mapped back. */
     private enum class DayBucket(@StringRes val title: Int) {
         TODAY(R.string.recents_today),
         YESTERDAY(R.string.recents_yesterday),
@@ -87,8 +82,6 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
             (wanted == null || call.type == wanted) && (q.isEmpty() || call.mentions(q))
         }
 
-        // Date orders keep the Today/Yesterday/… headings; name orders flatten,
-        // because a heading about recency means nothing in an alphabetical list.
         _rows.value = when (order) {
             LogOrder.NEWEST -> withHeadings(visible.sortedByDescending { it.date })
             LogOrder.OLDEST -> withHeadings(visible.sortedBy { it.date })
@@ -97,12 +90,10 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Matches the query against the caller's name, falling back to the number. */
     private fun CallEntry.mentions(lowercaseQuery: String): Boolean =
         name?.lowercase(Locale.getDefault())?.contains(lowercaseQuery) == true ||
             number.lowercase(Locale.getDefault()).contains(lowercaseQuery)
 
-    /** Name sorts on the caller's name when there is one, otherwise on the number. */
     private val CallEntry.sortKey: String
         get() = (name?.takeIf { it.isNotBlank() } ?: number).lowercase(Locale.getDefault())
 
@@ -113,11 +104,6 @@ class LogViewModel(app: Application) : AndroidViewModel(app) {
         else -> DayBucket.EARLIER
     }
 
-    /**
-     * Emits a heading each time the day bucket changes. The list is already ordered,
-     * so a change of bucket is a boundary in either direction — which is what lets
-     * OLDEST walk Earlier → Today and still read correctly.
-     */
     private fun withHeadings(calls: List<CallEntry>): List<LogRow> {
         if (calls.isEmpty()) return emptyList()
         val today = startOfToday()

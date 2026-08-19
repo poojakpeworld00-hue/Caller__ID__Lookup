@@ -7,18 +7,6 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 
-/**
- * Watches the device call state and fires [onEnded] once a call that was ringing or
- * active returns to IDLE.
- *
- * The manifest [com.callerid.number.lookup.home.runtime.incoming.PhoneStateReceiver]
- * already dismisses the caller-ID card on the IDLE broadcast, but the OS can delay or
- * drop later PHONE_STATE broadcasts to a manifest receiver — leaving the card on screen
- * after the call has ended. Listening directly (the card owns the listener) guarantees
- * it disappears the moment the ring stops.
- *
- * Requires READ_PHONE_STATE. [start]/[stop] must be called on a Looper thread (main).
- */
 class CallEndGuard(context: Context, private val onEnded: () -> Unit) {
 
     private val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
@@ -27,7 +15,6 @@ class CallEndGuard(context: Context, private val onEnded: () -> Unit) {
     private var legacy: PhoneStateListener? = null
     private var modern: TelephonyCallback? = null
 
-    /** Becomes true once we've seen RINGING/OFFHOOK, so the initial state isn't mistaken for an end. */
     private var sawActive = false
 
     @SuppressLint("MissingPermission")

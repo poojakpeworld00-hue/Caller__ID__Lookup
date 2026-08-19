@@ -58,7 +58,7 @@ class NudgePromptFragment : Fragment() {
         }
 
         requestNotificationPermissionIfNeeded()
-        loadReminders() // Load saved reminders
+        loadReminders()
 
         updateEmptyState()
 
@@ -88,7 +88,6 @@ class NudgePromptFragment : Fragment() {
             requestFocus()
         }
 
-        // Auto-show keyboard when dialog opens
         dialogView.post {
             val imm = context?.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager
             imm?.showSoftInput(etTitle, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
@@ -118,7 +117,6 @@ class NudgePromptFragment : Fragment() {
         npMinute.minValue = 0
         npMinute.maxValue = 59
         npMinute.value = cal.get(Calendar.MINUTE)
-
 
         val ctx = context ?: return
         val dialog = AlertDialog.Builder(ctx).setView(dialogView).create()

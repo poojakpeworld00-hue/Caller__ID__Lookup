@@ -42,16 +42,13 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
 
     override val layoutId: Int = R.layout.screen_settings
 
-    /** Theme segment order — must match cardTheme's segLight / segDark / segSystem. */
     private val themeOptions =
         listOf(AppPrefs.THEME_LIGHT, AppPrefs.THEME_DARK, AppPrefs.THEME_SYSTEM)
 
-    /** Guards the switch listener while we set its state programmatically. */
     private var isProgrammatic = false
 
     private val prefs by lazy { StorageRegistry(this) }
 
-    /** Re-syncs the call-screening switch after the role-request dialog returns. */
     private val screeningLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { refreshCallScreeningCard() }
@@ -69,10 +66,8 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Native ad at the top of the settings list (bottom adaptive banner auto-loads via FrameActivity).
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
-        // Preferences grid — Theme is an inline segmented toggle.
         setupThemeToggle()
         bindCard(
             binding.panelLanguage, R.drawable.sym_language, R.string.settings_language,
@@ -91,11 +86,8 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
             getString(R.string.settings_sim_sub), chevron = false
         ) { openSimManagement() }
 
-        // Call-screening toggle — backed by the Android 10+ CallScreening role.
         setupCallScreening()
 
-        // Account & support — each row is gated by its own Remote Config flag: true
-        // (or unset) → visible, false → gone.
         val ads = PromoVault.getInstance(this)
         val showRate = ads.getBoolean("is_rateus", true)
         val showShare = ads.getBoolean("is_share", true)
@@ -124,11 +116,9 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
             }
         }
 
-        // Both rows off would otherwise leave the heading stranded over nothing.
         binding.sectionSupportVw.visibility =
             if (showRate || showShare) View.VISIBLE else View.GONE
 
-        // Legal
         binding.rowPrivacyVw.picIcon.setImageResource(R.drawable.sym_policy)
         binding.rowPrivacyVw.lblTitle.setText(R.string.settings_privacy)
         binding.rowPrivacyVw.root.setOnClickListener { openPolicyLink() }
@@ -136,7 +126,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         binding.rowTermsVw.lblTitle.setText(R.string.settings_terms)
         binding.rowTermsVw.root.setOnClickListener { openTermLink() }
 
-        // First-run coach-mark nudging the user to enable the call-screening toggle.
         maybeShowCallScreeningHint()
     }
 
@@ -173,9 +162,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         refreshCallScreeningCard()
     }
 
-    // ── Call Screening (Android 10+ CallScreening role) ───────────────────
-
-    /** Wires the switch, hiding the whole card where the role isn't available. */
     private fun setupCallScreening() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             binding.panelCallScreening.visibility = View.GONE
@@ -193,23 +179,13 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         }
     }
 
-    /**
-     * First-run coach-mark: dims the whole Settings screen, spotlights the
-     * call-screening card through the scrim, and shows a hint bubble beneath it
-     * nudging the user to turn the toggle on. Shown only once (persisted via
-     * [StorageRegistry.isCallScreeningHintShown]); a tap anywhere dismisses it.
-     *
-     * Skipped when the card is hidden (role unavailable / pre-Android 10) or the
-     * toggle is already on.
-     */
     private fun maybeShowCallScreeningHint() {
         if (prefs.isCallScreeningHintShown) return
         if (binding.panelCallScreening.visibility != View.VISIBLE) return
         if (binding.swcCallScreening.isChecked) return
 
         val card = binding.panelCallScreening
-        // Wait for layout (native ad above can shift positions), scroll the card
-        // fully into view, then spotlight it on the next frame.
+
         binding.settingsScrollVw.post {
             if (isFinishing || isDestroyed) return@post
             val pad = (24 * resources.displayMetrics.density).toInt()
@@ -223,12 +199,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         }
     }
 
-    /**
-     * Syncs the CallScreening card to the current role state: the switch mirrors
-     * whether the role is held, and — once Caller ID is enabled — the whole card
-     * is hidden (nothing left to manage). It shows only while Caller ID is still
-     * off, and stays hidden where the role isn't available at all.
-     */
     private fun refreshCallScreeningCard() {
         if (!InstallIdRegistry.isRoleAvailable(this)) {
             binding.panelCallScreening.visibility = View.GONE
@@ -241,7 +211,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         isProgrammatic = false
     }
 
-    /** Launches the system role-request dialog for call screening. */
     private fun requestCallScreening() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
         val rm = getSystemService(RoleManager::class.java) ?: return
@@ -253,7 +222,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         screeningLauncher.launch(rm.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING))
     }
 
-    /** The role can't be revoked in-app — send the user to default-apps settings. */
     private fun openDefaultAppsSettings() {
         OpenPromoRegistry.skipNextAppOpenAd = true
         runCatching { startActivity(Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)) }
@@ -264,7 +232,6 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         LanguageCatalog.all.firstOrNull { it.tag == AppPrefs.selectedLanguage(this) }?.nativeName
             ?: LanguageCatalog.all.first().nativeName
 
-    /** Opens the system mobile-network screen, falling back to our in-app SIM info. */
     private fun openSimManagement() {
         val opened = runCatching {
             startActivity(Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS))
@@ -272,12 +239,10 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         if (!opened) openActivity<SimInfoActivity>()
     }
 
-
-    /** Inline Light / Dark / System segmented toggle inside the Theme card. */
     private fun setupThemeToggle() {
         val card = binding.panelTheme
         val cells =
-            listOf(card.segLightVw, card.segDarkVw, card.segSystemVw) // matches themeOptions order
+            listOf(card.segLightVw, card.segDarkVw, card.segSystemVw)
         val current = AppPrefs.selectedTheme(this).ifEmpty { AppPrefs.THEME_LIGHT }
         highlightTheme(cells, themeOptions.indexOf(current).coerceAtLeast(0))
 
@@ -289,14 +254,13 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
                     AppPrefs.setTheme(
                         this,
                         theme
-                    )              // store FrameActivity.applyTheme reads
-                    AppCompatDelegate.setDefaultNightMode(nightModeFor(theme)) // recreates activities
+                    )
+                    AppCompatDelegate.setDefaultNightMode(nightModeFor(theme))
                 }
             }
         }
     }
 
-    /** Maps an AppPrefs theme string to its AppCompat night-mode constant. */
     private fun nightModeFor(theme: String): Int = when (theme) {
         AppPrefs.THEME_DARK -> AppCompatDelegate.MODE_NIGHT_YES
         AppPrefs.THEME_SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

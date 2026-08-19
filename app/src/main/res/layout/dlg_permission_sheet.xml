@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Permission priming bottom sheet: grabber · title/subtitle · a scrollable
-     list of permission rows (added at runtime) · Continue button. Compact so it
-     stays roughly half-height; the row list scrolls if it ever overflows. -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,8 +32,7 @@
         android:textColor="@color/on_surface_variant"
         android:textSize="@dimen/_10ssp" />
 
-    <!-- Permission rows are inflated into containerRows at runtime. The scroll
-         view keeps the sheet bounded on small screens. -->
+    
     <androidx.core.widget.NestedScrollView
         android:id="@+id/rowsScrollVw"
         android:layout_width="match_parent"

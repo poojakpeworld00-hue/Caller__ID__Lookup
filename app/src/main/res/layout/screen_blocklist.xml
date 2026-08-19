@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.blocklist.BlockCenterActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -43,9 +43,9 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- ===== POPULATED ===== -->
+        
 
-        <!-- Slim summary strip (not a hero card celebrating a number) -->
+        
         <LinearLayout
             android:id="@+id/summaryStripVw"
             android:layout_width="match_parent"
@@ -141,7 +141,7 @@
             android:visibility="gone"
             app:constraint_referenced_ids="summaryStrip,tvHeaderBlocked,rvBlocklist,fabAdd" />
 
-        <!-- ===== EMPTY STATE: breathing icon + headline + the three methods ===== -->
+        
         <androidx.core.widget.NestedScrollView
             android:id="@+id/emptyScrollVw"
             android:layout_width="match_parent"
@@ -196,7 +196,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -205,7 +205,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom banner (auto-loaded by BaseActivity.showBottomBanner). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

@@ -34,7 +34,6 @@
             android:textColor="@color/text_secondary"
             android:textSize="@dimen/_13ssp" />
 
-
     </LinearLayout>
 
     <ImageView

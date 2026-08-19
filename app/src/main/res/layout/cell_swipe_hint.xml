@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    One direction of the home-screen coach mark: a chevron trio that drifts the way the user
-    should swipe, with a caption under it. HomeBoardActivity inflates one of these per entry in
-    `launcher_ads.home_hint.swipeHints`, rotating the chevrons to point the right way.
--->
-<!-- clipChildren=false throughout: a row rotated to point up or down draws its chevrons
-     outside the bounds the un-rotated trio measured, and would otherwise be cut off. -->
+<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

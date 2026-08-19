@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    One-time coach-mark shown under the Settings call-screening card. The caret
-    points up at the toggle; tapping anywhere on this view dismisses it (handled
-    in BoardSettingsActivity via CoachMarkOverlay).
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

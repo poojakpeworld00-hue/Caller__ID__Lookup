@@ -42,11 +42,6 @@ class BlockListViewModel(app: Application) : AndroidViewModel(app) {
         _rows.value = entries.map { it.toRow() }
     }
 
-    /**
-     * A blocked number the user added has no spam classification, so it renders
-     * with the neutral treatment; the label is the contact name when we can
-     * resolve one, otherwise a friendly fallback.
-     */
     private fun BlockedEntry.toRow(): BlockedRowUi {
         val name = contacts.lookupNameByNumber(number)?.takeIf { it.isNotBlank() }
         return BlockedRowUi(

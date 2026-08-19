@@ -21,23 +21,14 @@ import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.facebook.ads.AdView as FbAdView
 
-// --------------------------------------------------------------
-// ENUMS
-// --------------------------------------------------------------
 enum class StripScale { ADAPTIVE, INLINE, NORMAL }
 enum class StripKind { AUTO, GOOGLE, FACEBOOK, CUSTOM }
 
-// --------------------------------------------------------------
-// OBSERVER
-// --------------------------------------------------------------
 interface StripWatcher {
     fun onAdLoaded() {}
     fun onAdFailed() {}
 }
 
-// --------------------------------------------------------------
-// BANNER ADS MANAGER
-// --------------------------------------------------------------
 class StripPromo {
 
     private var googleBanner: AdView? = null
@@ -47,9 +38,6 @@ class StripPromo {
         var bannerCounter = 0
     }
 
-    // -----------------------------
-    // SHOW BANNER ENTRY POINT
-    // -----------------------------
     fun renderBanner(
         activity: Activity,
         container: FrameLayout,
@@ -63,14 +51,12 @@ class StripPromo {
     ) {
         val pref = PromoVault.getInstance(activity)
 
-        // Ads OFF
         if (!hasNetwork(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds")) {
             hide(container)
             observer?.onAdFailed()
             return
         }
 
-        // Banner counter logic
         if (bannerCounter < pref.getInt("BannerCounter")) {
             bannerCounter++
             hide(container)
@@ -140,9 +126,6 @@ class StripPromo {
         }
     }
 
-    // -----------------------------
-    // GOOGLE BANNER
-    // -----------------------------
     private fun loadGoogleBanner(
         activity: Activity,
         container: FrameLayout,
@@ -163,14 +146,13 @@ class StripPromo {
         }
 
         hide(container)
-        // Show shimmer while loading
+
         shimmer?.startShimmer()
         shimmer?.visibility = View.VISIBLE
         container.removeAllViews()
         shimmer?.let { container.addView(it) }
         container.visibility = View.VISIBLE
 
-        // Preload banner
         if (googleBanner == null) googleBanner = AdView(activity)
         googleBanner?.adUnitId = adUnitId
 
@@ -187,7 +169,7 @@ class StripPromo {
                     "BannerAds",
                     "Ad loaded. adView.isCollapsible() is ${googleBanner?.isCollapsible}.",
                 )
-                // Log load
+
                 activity.trackEvent("banner_load")
 
                 if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
@@ -195,7 +177,6 @@ class StripPromo {
                 googleBanner!!.setOnPaidEventListener {
                     PromoRevenueGauge.reportPaidEvent(activity, it)
                 }
-
 
                 shimmer?.stopShimmer()
                 shimmer?.visibility = View.GONE
@@ -277,9 +258,6 @@ class StripPromo {
         return (display.widthPixels / display.density).toInt()
     }
 
-    // -----------------------------
-    // FACEBOOK BANNER
-    // -----------------------------
     private fun loadFacebookBanner(
         activity: Activity,
         container: FrameLayout,
@@ -304,7 +282,7 @@ class StripPromo {
         }
 
         hide(container)
-        // Show shimmer while loading
+
         shimmer?.startShimmer()
         shimmer?.visibility = View.VISIBLE
         container.removeAllViews()
@@ -354,9 +332,6 @@ class StripPromo {
         )
     }
 
-    // -----------------------------
-    // FALLBACK
-    // -----------------------------
     private fun fallbackToFBOrCustom(
         activity: Activity,
         container: FrameLayout,
@@ -365,10 +340,10 @@ class StripPromo {
     ) {
         val pref = PromoVault.getInstance(activity)
         if (pref.getBoolean("IsFail_FB")) {
-            // Pass shimmer to Facebook banner loader
+
             loadFacebookBanner(activity, container, shimmer, observer)
         } else {
-            // Optionally, you can show shimmer for custom ads if InHouseRegistry supports it
+
             shimmer?.startShimmer()
             shimmer?.visibility = View.VISIBLE
             InHouseRegistry().fetchHouseAd(
@@ -379,9 +354,6 @@ class StripPromo {
         }
     }
 
-    // -----------------------------
-    // HIDE
-    // -----------------------------
     private fun hide(container: FrameLayout) {
         container.removeAllViews()
         container.visibility = View.GONE

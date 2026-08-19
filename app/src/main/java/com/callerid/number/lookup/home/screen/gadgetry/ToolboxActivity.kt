@@ -13,25 +13,18 @@ import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenToolsBinding
 import com.callerid.number.lookup.home.kit.openActivity
 
-/**
- * Grid of mini-tools grouped into Measure · Device · Time, with instant search
- * and a friendly empty state. Each tile launches its own activity.
- */
 class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
 
     override val layoutId: Int = R.layout.screen_tools
 
     private val adapter = ToolAdapter { tool -> openActivity(Intent(this, tool.target)) }
 
-    /** Full tool set, in display order, with the controlled 6-hue palette. */
     private val tools: List<ToolUi> by lazy {
         val measure = getString(R.string.tools_cat_measure)
         val device = getString(R.string.tools_cat_device)
         val time = getString(R.string.tools_cat_time)
         listOf(
-            // Tile colour per tool matches Claude Design's exact assignment
-            // (g-700 / teal / clay / amber -- bg_tile_blue/teal/violet/amber
-            // are now flat fills in those colours, not the old 6-hue gradients).
+
             ToolUi(getString(R.string.tools_compass), getString(R.string.tools_compass_sub),
                 R.drawable.sym_tool_compass, R.drawable.form_tile_blue, measure, CompassToolActivity::class.java),
             ToolUi(getString(R.string.tools_level), getString(R.string.tools_level_sub),
@@ -55,7 +48,6 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
         )
     }
 
-    /** Category display order for grouping. */
     private val categoryOrder: List<String> by lazy {
         listOf(
             getString(R.string.tools_cat_measure),
@@ -103,7 +95,6 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
         binding.padResetSearch.setOnClickListener { binding.inpSearch.setText("") }
     }
 
-    /** Accent ring on the search pill while focused or typing. */
     private fun updateSearchChrome(query: String) {
         val active = query.isNotEmpty() || binding.inpSearch.hasFocus()
         binding.searchBarVw.setBackgroundResource(
@@ -127,7 +118,6 @@ class ToolboxActivity : FrameActivity<ScreenToolsBinding>() {
         }
     }
 
-    /** Groups filtered tools under their category headers, in display order. */
     private fun buildRows(items: List<ToolUi>): List<ToolRow> {
         val rows = mutableListOf<ToolRow>()
         for (category in categoryOrder) {

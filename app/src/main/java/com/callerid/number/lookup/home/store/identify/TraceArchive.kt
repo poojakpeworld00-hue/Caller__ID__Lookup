@@ -5,10 +5,6 @@ import com.callerid.number.lookup.home.screen.identify.TraceRow
 import org.json.JSONArray
 import org.json.JSONObject
 
-/**
- * Persists recent number lookups in SharedPreferences (most-recent first,
- * de-duplicated by raw number, capped at [MAX]).
- */
 class TraceArchive(context: Context) {
 
     private val prefs = context.applicationContext

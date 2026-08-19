@@ -44,7 +44,6 @@ class AppDrawerPanel(
     private var launchers = emptyList<AppTile>()
     private val nativePromo = InlinePromo()
 
-    /** `launcher_ads.app_drawer.bottom_native`, resolved once with the drawer. */
     private var adSlot = ShellPromoConfig.Slot(
         enabled = false,
         adType = ShellPromoConfig.SlotAd.NONE,
@@ -66,39 +65,22 @@ class AppDrawerPanel(
             return@setOnTouchListener false
         }
 
-        // Warm the slot only — the renderers draw what is already preloaded, and at this point
-        // nothing is. The show happens in onDrawerShown(), each time the drawer comes up.
         adSlot = ShellPromoConfig.drawerSlot(activity)
         if (adSlot.needsNativePreload) {
             nativePromo.fetchNativeAds(activity)
         }
 
-        // The frame is declared in the layout for the view binding, but it belongs to the app
-        // list: lifted out here and handed to the adapter as row 0, so it scrolls away with the
-        // apps instead of holding a strip of the drawer permanently.
         (binding.adNativeFrameVw.parent as? ViewGroup)?.removeView(binding.adNativeFrameVw)
     }
 
-    /** The ad frame the adapter carries as a list row — null when the slot is switched off. */
     private fun adHeaderView(): View? = binding.adNativeFrameVw.takeIf { adSlot.visible }
 
-    /** Called every time the drawer is flung open. */
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
         ShellPromoConfig.renderSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
-    /**
-     * Re-reads `app_drawer.bottom_native` before showing.
-     *
-     * The slot used to be resolved once in [setupFragment], which runs in the launcher's
-     * onCreate — and a home-screen activity is effectively never recreated, so a Remote Config
-     * change to the row position, ad type or enabled flag never reached a running device no
-     * matter how promptly the blob itself was updated.
-     *
-     * Only the row hand-off is guarded, since [AppTileAdapter.setAdSlot] rebuilds the grid.
-     */
     private fun refreshSlot(activity: HomeBoardActivity) {
         val fresh = ShellPromoConfig.drawerSlot(activity)
         if (fresh == adSlot) return
@@ -122,7 +104,7 @@ class AppDrawerPanel(
         val layoutManager = binding.allAppsGridVw.layoutManager as MyGridLayoutManager
         if (layoutManager.spanCount != context.config.drawerColumnCount) {
             onConfigurationChanged()
-            // Force redraw due to changed item size
+
             (binding.allAppsGridVw.adapter as AppTileAdapter).notifyDataSetChanged()
         }
     }
@@ -151,20 +133,19 @@ class AppDrawerPanel(
 
             MotionEvent.ACTION_MOVE -> {
                 if (ignoreTouches) {
-                    // some devices ACTION_MOVE keeps triggering for the whole long press duration, but we are interested in real moves only, when coords change
+
                     if (lastTouchCoords.first != event.x || lastTouchCoords.second != event.y) {
                         touchDownY = -1
                         return true
                     }
                 }
 
-                // pull the whole fragment down if it is scrolled way to the top and the user pulls it even further
                 if (touchDownY != -1) {
                     val distance = event.y.toInt() - touchDownY
                     shouldIntercept =
                         distance > 0 && binding.allAppsGridVw.computeVerticalScrollOffset() == 0
                     if (shouldIntercept) {
-                        // Hiding is expensive, only do it if focused
+
                         if (binding.searchBarVw.hasFocus()) {
                             activity?.hideKeyboard()
                         }
@@ -197,9 +178,6 @@ class AppDrawerPanel(
                     val host = activity
                     val launcher = clicked as AppTile
 
-                    // Same app_click gate as the swipe-left panel. The launch itself is in the
-                    // callback, which ShellPromoConfig.run invokes on every path, so a tap is
-                    // never swallowed when there is no ad to show.
                     val openApp = {
                         host?.launchApp(launcher.packageName, launcher.activityName)
                         if (host?.config?.closeAppDrawer == true) {
@@ -218,7 +196,6 @@ class AppDrawerPanel(
                 }
             }
 
-            // The ad row is full width; without this it would be squeezed into one grid cell.
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
                     if (getAdapter()?.isAdRow(position) == true) layoutManager.spanCount else 1
@@ -254,7 +231,7 @@ class AppDrawerPanel(
         binding.allAppsFastscrollerVw.updateColors(context.getProperPrimaryColor())
         binding.allAppsGridVw.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                // Hiding is expensive, only do it if focused
+
                 if (binding.searchBarVw.hasFocus() && dy > 0 && binding.allAppsGridVw.computeVerticalScrollOffset() > 0) {
                     activity?.hideKeyboard()
                 }

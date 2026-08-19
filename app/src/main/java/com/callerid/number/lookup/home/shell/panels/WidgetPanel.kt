@@ -92,7 +92,7 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
         }
 
         if (ignoreTouches) {
-            // some devices ACTION_MOVE keeps triggering for the whole long press duration, but we are interested in real moves only, when coords change
+
             if (lastTouchCoords.first != event.x || lastTouchCoords.second != event.y) {
                 touchDownY = -1
                 return true
@@ -102,7 +102,6 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
         lastTouchCoords = Pair(event.x, event.y)
         var shouldIntercept = false
 
-        // pull the whole fragment down if it is scrolled way to the top and the users pulls it even further
         if (touchDownY != -1) {
             shouldIntercept =
                 touchDownY - event.y.toInt() < 0 && binding.widgetsListVw.computeVerticalScrollOffset() == 0
@@ -121,7 +120,7 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
     @SuppressLint("WrongConstant")
     fun getAppWidgets() {
         ensureBackgroundThread {
-            // get the casual widgets
+
             var appWidgets = ArrayList<GadgetInfo>()
             appWidgets.addAll(getPseudoWidgets())
             val manager = AppWidgetManager.getInstance(context)
@@ -156,7 +155,6 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
                 appWidgets.add(widget)
             }
 
-            // show also the widgets that are technically shortcuts
             val intent = Intent(Intent.ACTION_CREATE_SHORTCUT, null)
             val list =
                 packageManager.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED)
@@ -200,7 +198,6 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
         }
     }
 
-    // widgets we render ourselves on the grid, they have no provider to be listed from
     private fun getPseudoWidgets(): List<GadgetInfo> {
         val appMetadata = getAppMetadataFromPackage(context.packageName) ?: return emptyList()
         return listOf(
@@ -338,7 +335,7 @@ class WidgetPanel(context: Context, attributeSet: AttributeSet) :
             page = 0,
             packageName = appWidget.appPackageName,
             activityName = "",
-            // pseudo widgets have no provider to read an accessibility label from later on
+
             title = if (appWidget.className.startsWith(PSEUDO_WIDGET_PREFIX)) {
                 appWidget.widgetTitle
             } else {

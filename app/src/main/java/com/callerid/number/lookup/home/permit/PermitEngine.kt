@@ -8,50 +8,17 @@ import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.number.lookup.home.kit.LogRail
 import java.lang.ref.WeakReference
 
-/**
- * Global, Firebase-controlled permission engine.
- *
- * A single entry point — [check] — is the trigger. Call it from wherever you
- * want the flow to run (a button click, a specific screen's onResume, etc.):
- *
- * ```
- * someButton.setOnClickListener { PermitEngine.check(this) }
- * ```
- *
- * It is NOT auto-triggered anymore; [init] (called once from the Application)
- * only warms the Remote Config so the config is ready by the time you trigger.
- *
- * For the Activity it is called with, the engine:
- *  1. reads the `permission_engine` Remote Config (via [PermitSource]),
- *  2. finds rules that target this Activity by simple name ([ScreenGlob]),
- *  3. drops permissions that are already granted, not applicable on this SDK, or
- *     already shown when `show_once` is set,
- *  4. orders the rest by `priority` ([PermitQueue]),
- *  5. waits each rule's `delay` ([PermitScheduler]) then shows the request
- *     ([PermitLauncher]) — advancing to the next only after the previous
- *     one completes (sequential flow).
- *
- * All state is guarded so repeated `onResume` calls, fast screen switches, and
- * Activity teardown can't double-prompt or leak.
- */
 object PermitEngine {
 
     private const val TAG = "PermitEngine"
 
     private val scheduler = PermitScheduler()
 
-    /** The Activity whose queue is currently being processed. */
     private var activeRef: WeakReference<Activity>? = null
     private var running = false
 
-    /** Fired once when the current run finishes normally (see [check]). */
     private var pendingOnComplete: (() -> Unit)? = null
 
-    /**
-     * One-time startup hook. Kicks a fresh Remote Config fetch so the newest
-     * configuration is active as early as possible. Safe to call from
-     * `Application.onCreate` (after `FirebaseApp.initializeApp`).
-     */
     fun init(context: Context) {
         try {
             PermitSource.refreshFromRemote()
@@ -60,24 +27,6 @@ object PermitEngine {
         }
     }
 
-    /**
-     * Trigger the permission flow for [activity].
-     *
-     * [onComplete] (optional) fires **once, on the main thread, when the flow is
-     * done** — i.e. after every configured permission has been asked, or
-     * immediately when there was nothing to ask. Use it to redirect:
-     *
-     * ```
-     * PermitEngine.check(this) {
-     *     startActivity(Intent(this, NextActivity::class.java))
-     *     finish()
-     * }
-     * ```
-     *
-     * It does NOT fire when a run is interrupted (a different Activity triggers
-     * the engine, or the Activity is torn down mid-flow) — in those cases a
-     * redirect would be inappropriate.
-     */
     @JvmStatic
     @JvmOverloads
     fun check(activity: Activity, onComplete: (() -> Unit)? = null) {
@@ -88,13 +37,11 @@ object PermitEngine {
             }
             val name = activity::class.java.simpleName
 
-            // Already working on this exact Activity → let it finish; don't stack.
             val current = activeRef?.get()
             if (running && current === activity) return
-            // A different Activity is now in the foreground → abandon the old run.
+
             if (running && current !== activity) abort()
 
-            // From here on, completion is owned by complete()/abort().
             pendingOnComplete = onComplete
 
             val allRules = PermitSource.rules()
@@ -124,20 +71,6 @@ object PermitEngine {
         }
     }
 
-    /**
-     * Requests a single permission by config [key] on demand, **independent of
-     * the Activity-matching used by [check]**.
-     *
-     * Use this for an explicit trigger point (e.g. the FSI "Enable" button)
-     * where you want exactly one permission asked — regardless of whether the
-     * current Activity is listed in that permission's `activities` — and then to
-     * continue. This is why the FSI screens can prime `notification` even though
-     * the Remote Config only lists Splash/Main for it.
-     *
-     * [onComplete] always fires once, on the main thread, when done: after the
-     * OS dialog resolves, or immediately when the permission is already granted,
-     * not applicable on this SDK, gated off, or its `show_once` was already used.
-     */
     @JvmStatic
     @JvmOverloads
     fun request(activity: Activity, key: String, onComplete: (() -> Unit)? = null) {
@@ -157,11 +90,6 @@ object PermitEngine {
                 fireComplete(onComplete); return
             }
 
-            // Config lookup: rule is keyed by permission (not by Activity), so a
-            // targeted request works from any screen. When the rule exists but is
-            // disabled in Remote Config, honour that and skip — this is the remote
-            // off-switch for the FSI notification prime. (A missing rule = no
-            // config for this key → still ask, driven by the spec alone.)
             val rule = PermitSource.rules().firstOrNull { it.key == key }
             if (rule != null && !rule.enabled) {
                 LogRail.log(TAG, "request(): '$key' disabled in config — skipped")
@@ -190,7 +118,6 @@ object PermitEngine {
         }
     }
 
-    /** Drops permissions that don't need requesting right now. */
     private fun isStillNeeded(
         activity: Activity,
         rule: PermitRule,
@@ -219,7 +146,7 @@ object PermitEngine {
         if (activity == null || activity.isFinishing || activity.isDestroyed) {
             abort(); return
         }
-        // Re-verify — the user may have granted it via Settings meanwhile.
+
         if (PermitKit.isGranted(activity, spec)) {
             processNext(queue); return
         }
@@ -237,23 +164,20 @@ object PermitEngine {
             prefs.markAsked(rule.key)
             if (rule.showOnce) prefs.markShown(rule.key)
 
-            // Analytics — mirrors the app's existing permission events
-            // (Permission_<NAME>_Show / _Allow / _Deny).
             val shortName = spec.androidPermission.substringAfterLast('.').lowercase(Locale.ROOT)
             act.trackEvent("perm_${shortName}_show")
 
             LogRail.log(TAG, "Requesting '${rule.key}' on ${act::class.java.simpleName}")
             PermitLauncher.launch(act, spec.androidPermission) { granted ->
-                // Report on the same Activity context that launched the request.
+
                 (activeRef?.get() ?: act).logPermissionResult(spec.androidPermission, granted)
                 LogRail.log(TAG, "Result '${rule.key}' granted=$granted")
-                // Sequential: only now advance to the next permission.
+
                 processNext(queue)
             }
         }
     }
 
-    /** Normal end of a run — resets state and fires [pendingOnComplete]. */
     private fun complete() {
         scheduler.clear()
         running = false
@@ -263,7 +187,6 @@ object PermitEngine {
         fireComplete(cb)
     }
 
-    /** Interrupted end (teardown / hijack) — resets state, does NOT redirect. */
     private fun abort() {
         scheduler.clear()
         running = false

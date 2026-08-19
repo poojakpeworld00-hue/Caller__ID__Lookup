@@ -17,10 +17,8 @@ class ShellJobRunner : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         Log.d("CallJobService", "Job started")
 
-        // Optional: Create Notification Channel (for compatibility)
         createNotificationChannel()
 
-        // Register the BroadcastReceiver
         callReceiver = PhoneStateReceiver()
         val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED).apply {
             priority = IntentFilter.SYSTEM_HIGH_PRIORITY
@@ -33,7 +31,6 @@ class ShellJobRunner : JobService() {
             Log.e("CallJobService", "Failed to register CallReceiver: ${e.message}")
         }
 
-        // Finish the job immediately
         jobFinished(params, false)
         return false
     }
@@ -50,7 +47,6 @@ class ShellJobRunner : JobService() {
         return false
     }
 
-    // Optional: Create notification channel (used in other parts of your app)
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = CHANNEL_ID

@@ -49,7 +49,6 @@ fun launchPromoLink(context: Context?) {
     Log.e("===>","bhbjhb")
     val activity = context as? Activity ?: return
 
-    // Activity lifecycle safety
     if (activity.isFinishing || activity.isDestroyed) return
 
     val adsPref = PromoVault.getInstance(activity)
@@ -70,11 +69,10 @@ fun launchPromoLink(context: Context?) {
             .setToolbarColor(ContextCompat.getColor(activity, R.color.black))
             .build()
 
-        // ❌ DO NOT force Chrome
         customTabsIntent.launchUrl(activity, uri)
 
     } catch (e: Exception) {
-        // Fallback to system browser
+
         try {
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             activity.startActivity(browserIntent)
@@ -82,7 +80,6 @@ fun launchPromoLink(context: Context?) {
     }
 }
 
-/** helper to check if package is installed */
 private fun isPackageInstalled(context: Context, packageName: String): Boolean {
     return try {
         context.packageManager.getPackageInfo(packageName, 0)
@@ -91,7 +88,6 @@ private fun isPackageInstalled(context: Context, packageName: String): Boolean {
         false
     }
 }
-
 
 fun Activity.showAppRedirectPopup(onDismiss: (() -> Unit)? = null) {
     val appUrl = PromoVault(this).getString("In_App_Update_Link")
@@ -135,10 +131,10 @@ fun showDialog(
     dialog.window?.apply {
         setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        // ⭐ KEEP DIM BEHIND (default 0.5f)
+
         clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        // Optional: control dim amount
+
         setDimAmount(0.6f)
     }
 
@@ -175,15 +171,6 @@ fun Context.setLast_Result_HD_VBC_Type() {
     pref.result_HD_VBC_Type = if (pref.result_HD_VBC_Type == "b") "n" else "b"
 }
 
-/**
- * Opens an Activity with optional interstitial ad before navigation.
- *
- * @param isNeedToClearTop  Clear back stack before opening (FLAG_ACTIVITY_NEW_TASK | CLEAR_TASK)
- * @param isAdd             true  → show interstitial ad first, then open activity
- *                          false → open activity directly (no ad)
- * @param extras            Optional Bundle to pass to the target activity
- * @param launcher          Optional ActivityResultLauncher; skips ad if provided
- */
 inline fun <reified T : Activity> Context.openActivity(
     isNeedToClearTop: Boolean = false,
     isAdd: Boolean = true,
@@ -199,19 +186,16 @@ inline fun <reified T : Activity> Context.openActivity(
 
     val activity = this as? Activity
 
-    // ActivityResultLauncher path — skip ad
     if (launcher != null) {
         launcher.launch(intent)
         return
     }
 
-    // No-ad path (e.g. splash → next screen)
     if (!isAdd || activity == null) {
         startActivity(intent)
         return
     }
 
-    // Show interstitial first, open activity in the close callback
     FlowInterstitial().renderInterstitial(activity) {
         activity.startActivity(intent)
     }

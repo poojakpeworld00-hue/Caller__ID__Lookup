@@ -20,28 +20,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * Full-screen caller-ID card shown when a call rings while the device is **locked**.
- * Declared with showWhenLocked + turnScreenOn so it appears over the keyguard.
- *
- * [IdentOverlayService] launches this instead of the floating overlay when the
- * keyguard is up; it self-dismisses when [PhoneStateReceiver] broadcasts call end.
- */
 class RingScreenActivity : AppCompatActivity() {
 
     private val number by lazy { intent.getStringExtra(EXTRA_NUMBER).orEmpty() }
 
-    /** Backup to the broadcast: dismiss the moment the call leaves the active state. */
     private val callEndWatcher by lazy { CallEndGuard(this) { finish() } }
 
-    /** Dismisses the locked-screen card when the user leaves via Home / Recents. */
     private val systemDialogHelper by lazy {
         OsDialogKit(this) {
             if (!isFinishing && !isDestroyed) finish()
         }
     }
 
-    /** Finishes the screen as soon as the call stops ringing. */
     private val endReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == PhoneStateReceiver.ACTION_CALL_ENDED) finish()
@@ -117,10 +107,6 @@ class RingScreenActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_NUMBER = "extra_number"
 
-        /**
-         * True while the locked-screen incoming card is in the foreground —
-         * PhoneStateReceiver checks it to suppress a duplicate post-call notification (B2).
-         */
         @Volatile
         var isActive = false
 

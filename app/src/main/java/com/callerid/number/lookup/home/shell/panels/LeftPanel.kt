@@ -25,9 +25,6 @@ import com.callerid.number.lookup.home.shell.entities.AppTile
 import com.callerid.number.lookup.home.shell.entities.appLauncherComparator
 import kotlin.math.abs
 
-/**
- * Panel sliding in from the side of the home screen, offering app suggestions and a search field.
- */
 class LeftPanel(
     context: Context,
     attributeSet: AttributeSet,
@@ -37,7 +34,6 @@ class LeftPanel(
     private var resultsCap = COLLAPSED_RESULTS
     private val nativePromo = InlinePromo()
 
-    /** `launcher_ads.right_panel.bottom_native`, resolved once with the panel. */
     private var adSlot = ShellPromoConfig.Slot(
         enabled = false,
         adType = ShellPromoConfig.SlotAd.NONE,
@@ -46,7 +42,6 @@ class LeftPanel(
         adUnitId = "",
     )
 
-    /** `launcher_ads.right_panel.suggested_banner` — the slot under the suggested grid. */
     private var suggestedSlot = ShellPromoConfig.Slot(
         enabled = false,
         adType = ShellPromoConfig.SlotAd.NONE,
@@ -60,7 +55,6 @@ class LeftPanel(
     private lateinit var resultsAdapter: DrawerAppsAdapter
     private lateinit var searchInAdapter: DrawerAppsAdapter
 
-    // the panel covers the whole screen while open, so HomeBoardActivity never sees these events
     private val gestureDetector = GestureDetectorCompat(context, object : SimpleOnGestureListener() {
         override fun onFling(
             e1: MotionEvent?,
@@ -81,13 +75,9 @@ class LeftPanel(
         this.activity = activity
         this.binding = BoardLeftPanelBinding.bind(this)
 
-        // Only warm the slot here. Showing it now would be too early: the native renderers
-        // draw whatever InlinePromo has already preloaded, and at HomeBoardActivity.onCreate that
-        // is still null — the frame would hide itself and, since the panel is never
-        // re-created, never come back. The actual show happens in onPanelShown().
         adSlot = ShellPromoConfig.sidePanelSlot(activity)
         suggestedSlot = ShellPromoConfig.sidePanelSuggestedSlot(activity)
-        // A banner slot loads on show, so only a native one is worth warming.
+
         if (adSlot.needsNativePreload || suggestedSlot.needsNativePreload) {
             nativePromo.fetchNativeAds(activity)
         }
@@ -131,16 +121,9 @@ class LeftPanel(
         }
     }
 
-    /**
-     * Called every time the panel slides in. The native renderers draw whatever InlinePromo
-     * has preloaded and then queue the next one, so asking on each open keeps the slot fresh —
-     * and gives it a second chance if the very first fling beat the preload.
-     */
     fun onPanelShown() {
         val activity = activity ?: return
 
-        // Re-read both slots first: resolving them once in setupFragment left a running
-        // launcher on whatever config was live when it started (see AppDrawerPanel.refreshSlot).
         val freshAd = ShellPromoConfig.sidePanelSlot(activity)
         val freshSuggested = ShellPromoConfig.sidePanelSuggestedSlot(activity)
         if (freshAd != adSlot || freshSuggested != suggestedSlot) {
@@ -160,14 +143,13 @@ class LeftPanel(
         )
     }
 
-    /** Called when the panel is opened from the search pill rather than by a fling. */
     fun focusSearch() {
         binding.panelSearchVw.requestFocus()
         activity?.showKeyboard(binding.panelSearchVw)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        // do not swallow the event, the lists still have to scroll
+
         gestureDetector.onTouchEvent(event)
         return super.dispatchTouchEvent(event)
     }
@@ -193,7 +175,6 @@ class LeftPanel(
         it.title.normalizeString().contains(query.normalizeString(), ignoreCase = true)
     }
 
-    /** Enter on the keyboard opens the top hit, the way the app drawer's search does. */
     private fun launchFirstResult(): Boolean {
         val query = getQuery()
         if (query.isEmpty()) {
@@ -227,7 +208,6 @@ class LeftPanel(
             )
             resultsAdapter.submitList(results.take(resultsCap))
 
-            // still offered when no app matched, searching the web for it is the point
             val searchTargets = launchers.filter { it.packageName in SEARCH_IN_PACKAGES }
             binding.panelSearchInHeaderVw.beVisibleIf(searchTargets.isNotEmpty())
             binding.panelSearchInListVw.beVisibleIf(searchTargets.isNotEmpty())
@@ -250,8 +230,6 @@ class LeftPanel(
     private fun launchLauncher(launcher: AppTile) {
         val activity = activity ?: return
 
-        // The app always launches — ShellPromoConfig.run calls back on every path, including
-        // ads off, no fill and no network, so a tap is never swallowed by a missing ad.
         ShellPromoConfig.run(activity, ShellPromoConfig.Surface.APP_CLICK) {
             activity.launchApp(launcher.packageName, launcher.activityName)
             activity.hideLeftPanel()
@@ -274,7 +252,7 @@ class LeftPanel(
             activity?.startActivity(intent)
             activity?.hideLeftPanel()
         } catch (_: ActivityNotFoundException) {
-            // the app is installed but cannot handle it, let the system pick a handler
+
             launchLauncher(launcher)
         }
     }
@@ -283,7 +261,7 @@ class LeftPanel(
         private const val SUGGESTED_COUNT = 8
         private const val RECENT_COUNT = 4
         private const val COLLAPSED_RESULTS = 5
-        // "See more" reveals every match, hiding hits behind a second cap is just confusing
+
         private const val EXPANDED_RESULTS = Int.MAX_VALUE
 
         private const val PACKAGE_CHROME = "com.android.chrome"

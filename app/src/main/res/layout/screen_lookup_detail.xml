@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Centered identity hero -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                         tools:text="Valid · Identified" />
                 </LinearLayout>
 
-                <!-- Actions -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Detail card — one scannable card of rows (icon · label · value) -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                     android:orientation="vertical"
                     android:paddingHorizontal="@dimen/_14sdp">
 
-                    <!-- Country -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                         android:layout_height="1dp"
                         android:background="@color/outline" />
 
-                    <!-- Carrier -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -279,7 +279,7 @@
                         android:layout_height="1dp"
                         android:background="@color/outline" />
 
-                    <!-- Line type -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -317,7 +317,7 @@
                         android:layout_height="1dp"
                         android:background="@color/outline" />
 
-                    <!-- City -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -351,7 +351,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Spam type (only when flagged) -->
+                
                 <LinearLayout
                     android:id="@+id/spamRowVw"
                     android:layout_width="match_parent"
@@ -371,7 +371,7 @@
                         tools:text="Telemarketer" />
                 </LinearLayout>
 
-                <!-- Also known as — per-name reveal (one rewarded ad per name) -->
+                
                 <LinearLayout
                     android:id="@+id/nicknamesSectionVw"
                     android:layout_width="match_parent"
@@ -428,7 +428,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -437,7 +437,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

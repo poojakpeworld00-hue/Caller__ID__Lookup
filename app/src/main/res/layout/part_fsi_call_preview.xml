@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    Floating incoming-call caller-ID card — the hero of the FSI intro. Always
-    white in both themes. Shared by the Screen and the priming Dialog. Avatar
-    pulse rings (fsAvatarRing1/2) are animated by the host. Compact sizing.
--->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fsCallPreviewVw"
@@ -12,7 +8,7 @@
     android:elevation="@dimen/_2sdp"
     android:orientation="vertical">
 
-    <!-- Blue header -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +50,7 @@
             app:tint="#FFFFFF" />
     </LinearLayout>
 
-    <!-- Body: avatar + identity -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,7 +151,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:background="#EEF0F6" />
 
-    <!-- Footer: call meta -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

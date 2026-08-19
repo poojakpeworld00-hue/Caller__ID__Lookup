@@ -12,7 +12,7 @@
         android:background="@color/background"
         tools:context=".ui.tools.BatteryToolActivity">
 
-        <!-- Top bar -->
+        
         <LinearLayout
             android:id="@+id/crownBar"
             android:layout_width="match_parent"
@@ -57,8 +57,6 @@
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
 
-
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +65,7 @@
                     android:text="@string/battery_activity_sub"
                     android:textColor="@color/on_surface_variant"
                     android:textSize="@dimen/_11ssp" />
-                <!-- Mid native (scrolls with content) -->
+                
                 <FrameLayout
                     android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
@@ -83,7 +81,7 @@
                         <include layout="@layout/googlemidnative" />
                     </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
-                <!-- Card -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +90,7 @@
                     android:orientation="vertical"
                     android:padding="@dimen/_18sdp">
 
-                    <!-- Secured pill -->
+                    
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -122,7 +120,7 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <!-- Level + battery glyph -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -174,7 +172,7 @@
                         android:alpha="0.15"
                         android:background="@color/on_surface_variant" />
 
-                    <!-- Row 1: Voltage / Temperature / Health -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -213,7 +211,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Row 2: Status / Power source / Technology -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -256,7 +254,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -265,7 +263,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

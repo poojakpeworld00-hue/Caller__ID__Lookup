@@ -42,7 +42,7 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
         BoardRecentsBinding.inflate(inflater, container, false)
 
     override fun initView() {
-        // Hero bleeds under the status bar; pad its content down by the inset.
+
         val baseTop = binding.heroHeaderVw.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(binding.heroHeaderVw) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -57,7 +57,6 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
         binding.rollRecents.layoutManager = LinearLayoutManager(requireContext())
         binding.rollRecents.adapter = adapter
 
-        // Native banner at the bottom of the recents screen.
         InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
         binding.adNativeDivider1Vw.followAdContainer(binding.adNativeFrameVw)
@@ -91,8 +90,7 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
 
     override fun onResume() {
         super.onResume()
-        // Re-evaluate after returning from Settings (or a system dialog) so a freshly
-        // granted permission shows the list without needing to leave the screen.
+
         if (view != null) {
             if (hasCallLogPermission()) onPermissionGranted() else showPermissionState()
         }
@@ -120,8 +118,7 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
                 if (active) R.color.white else R.color.on_surface_variant
             )
         )
-        // Selected: tint the leading icon white. Unselected: clear the tint so the
-        // icon keeps its own colour.
+
         TextViewCompat.setCompoundDrawableTintList(
             tab,
             if (active) {
@@ -137,10 +134,6 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
             requireContext(), Manifest.permission.READ_CALL_LOG
         ) == PackageManager.PERMISSION_GRANTED
 
-    /**
-     * Custom sort popup: a styled card anchored under the filter button that changes the
-     * list order (date / name). Type filtering stays on the tabs.
-     */
     private fun showSortMenu(anchor: View) {
         val options = listOf(
             R.string.sort_newest to LogOrder.NEWEST,

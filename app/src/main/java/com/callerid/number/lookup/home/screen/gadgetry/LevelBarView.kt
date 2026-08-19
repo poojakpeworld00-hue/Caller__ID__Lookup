@@ -9,11 +9,6 @@ import androidx.core.content.ContextCompat
 import com.callerid.number.lookup.home.R
 import java.util.Random
 
-/**
- * Lightweight audio-level visualizer: a row of bars whose heights react to the
- * current sound level. Not a true FFT — there's no PCM/frequency data from the
- * amplitude meter — so it's a stylized spectrum.
- */
 class LevelBarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
@@ -28,7 +23,6 @@ class LevelBarView @JvmOverloads constructor(
     }
     private var level = 0f
 
-    /** Push a new 0..1 level; bars ease toward fresh random heights scaled by it. */
     fun setLevel(value: Float) {
         level = value.coerceIn(0f, 1f)
         for (i in 0 until barCount) {

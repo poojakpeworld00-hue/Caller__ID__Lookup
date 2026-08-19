@@ -13,9 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * ViewModel for [HomeMainFragment]. Exposes protection stats and the latest calls.
- */
 class OverviewViewModel(app: Application) : AndroidViewModel(app) {
 
     private val callLogRepository = CallHistorySource(app)
@@ -30,12 +27,11 @@ class OverviewViewModel(app: Application) : AndroidViewModel(app) {
     val recent: LiveData<List<CallCardModel>> = _recent
 
     init {
-        // TODO: derive from real protection history once available.
+
         _blockedCount.value = 128
         _spamCount.value = 37
     }
 
-    /** Loads the two most-recent calls. Caller must ensure READ_CALL_LOG is granted. */
     fun loadRecent() {
         viewModelScope.launch {
             val calls = withContext(Dispatchers.IO) { callLogRepository.getCalls(limit = 2) }

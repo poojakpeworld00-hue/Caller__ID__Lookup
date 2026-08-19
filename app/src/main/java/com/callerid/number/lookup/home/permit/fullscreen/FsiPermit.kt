@@ -14,34 +14,14 @@ import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.kit.LogRail
 import java.util.Locale
 
-/**
- * All gating + mechanics for the Firebase-controlled Full-Screen-Intent flow.
- *
- * The flow runs only when EVERY condition holds — the five from the spec:
- *  1. `Build.SDK_INT >= config.minSdk` (Android 14 / API 34),
- *  2. the FSI permission is NOT granted,
- *  3. the global feature is enabled ([FsiSettings.enabled]),
- *  4. the user's country is allowed ([isCountryAllowed]),
- *  5. the specific surface (Screen or Dialog) is enabled.
- *
- * Nothing here is hardcoded — [FsiSettings] supplies every value from Remote Config.
- * The Screen appears once after Language; the Dialog appears in AppHomeActivity,
- * rate-limited by `show_after_days` + `max_show_count`. Once the permission is
- * granted, neither ever shows again.
- */
 object FsiPermit {
 
-    // One tag for the whole flow → filter with:  adb logcat -s FSI
     private const val TAG = "FSI"
     private const val ACTION_MANAGE = "android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENT"
 
-    /** Broadcast fired by [FsiPollService] when the FSI toggle flips on. */
     const val ACTION_FSI_GRANTED =
         "com.callerid.number.lookup.home.action.FSI_GRANTED"
 
-    // --- Grant state ---
-
-    /** Android 14+ grant check. Below 34 the permission doesn't exist → treated as usable. */
     fun isGranted(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < 34) return true
         return runCatching {
@@ -50,14 +30,6 @@ object FsiPermit {
         }.getOrDefault(false)
     }
 
-    // --- DialCountry gate (reuses the app's existing IP + SIM country signals) ---
-
-    /**
-     * True when the device's country is NOT in the config's block-list. Fail-open:
-     * when the filter is off, the list is empty, or the country can't be resolved,
-     * the feature is shown. Matches the IP country ([PromoVault.userCountry]),
-     * the SIM/network ISO, and the locale country against the excluded list.
-     */
     fun isCountryAllowed(context: Context, config: FsiSettings): Boolean {
         if (!config.countryFilterEnabled || config.excludedCountries.isEmpty()) {
             LogRail.log(TAG, "country: ALLOWED (filter off or empty list)")
@@ -74,7 +46,6 @@ object FsiPermit {
         return !blocked
     }
 
-    /** Best-effort country signals: IP country, SIM ISO, network ISO, locale — no permission needed. */
     private fun deviceCountrySignals(context: Context): List<String> {
         val out = mutableListOf<String>()
         PromoVault.getInstance(context).userCountry.takeIf { it.isNotBlank() }?.let { out += it.trim() }
@@ -87,9 +58,6 @@ object FsiPermit {
         return out.distinct()
     }
 
-    // --- Master gate ---
-
-    /** The five spec conditions, minus the per-surface switch (checked by callers). */
     fun canRun(context: Context, config: FsiSettings): Boolean {
         val sdkOk = Build.VERSION.SDK_INT >= config.minSdk
         val granted = isGranted(context)
@@ -102,9 +70,6 @@ object FsiPermit {
         return result
     }
 
-    // --- Surface decisions ---
-
-    /** Screen (after Language): master gate + `screen.enabled` + `show_once` ledger. */
     fun shouldShowScreen(context: Context, config: FsiSettings = FsiSettings.load(context)): Boolean {
         if (!canRun(context, config) || !config.screen.enabled) {
             LogRail.log(TAG, "SCREEN → NO (canRun failed or screen.enabled=${config.screen.enabled})")
@@ -116,7 +81,6 @@ object FsiPermit {
         return result
     }
 
-    /** Dialog (AppHomeActivity): master gate + `dialog.enabled` + interval + max-count. */
     fun shouldShowDialog(context: Context, config: FsiSettings = FsiSettings.load(context)): Boolean {
         if (!canRun(context, config) || !config.dialog.enabled) {
             LogRail.log(TAG, "DIALOG → NO (canRun failed or dialog.enabled=${config.dialog.enabled})")
@@ -139,8 +103,6 @@ object FsiPermit {
         return result
     }
 
-    // --- Ledger stamps ---
-
     fun markScreenShown(context: Context) {
         StorageRegistry(context).fsiScreenShown = true
         LogRail.log(TAG, "ledger: screen marked shown")
@@ -153,29 +115,12 @@ object FsiPermit {
         LogRail.log(TAG, "ledger: dialog shown, count now ${prefs.fsiDialogShowCount}")
     }
 
-    // --- Grant round-trip ---
-
-    /**
-     * The "Manage full-screen intents" intent. `NO_HISTORY` + `EXCLUDE_FROM_RECENTS`
-     * so the page disposes of itself on return and never sits in Recents.
-     *
-     * NOTE: intentionally **no** `FLAG_ACTIVITY_NEW_TASK` — the page must open
-     * *in the caller's task* (launched for-result). With NEW_TASK it lands in a
-     * separate task where NO_HISTORY doesn't fire on an auto-back (REORDER brings
-     * a different task forward), so the Settings page lingered as a hidden
-     * background task and resurfaced when the user backed out of the app.
-     */
     private fun manageIntent(context: Context) =
         Intent(ACTION_MANAGE, Uri.parse("package:${context.packageName}"))
             .addFlags(
                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
             )
 
-    /**
-     * Opens the system "Manage full-screen intents" page **in the host's task**
-     * via [launcher] (matching the working overlay flow) and arms the auto-return
-     * watcher. The App Open ad is suppressed for the return.
-     */
     fun openSettings(activity: Activity, launcher: ActivityResultLauncher<Intent>) {
         OpenPromoRegistry.skipNextAppOpenAd = true
         val launched = runCatching { launcher.launch(manageIntent(activity)) }.isSuccess
@@ -187,6 +132,5 @@ object FsiPermit {
         }
     }
 
-    /** Stop the watcher — call from the host's onResume once it's back. Idempotent. */
     fun stopWatch(context: Context) = FsiPollService.stop(context)
 }

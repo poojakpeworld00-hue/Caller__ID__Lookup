@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- sits below the grid the same way the reference app stacks it: the grid is transparent, so
-         the banner shows through, and opening the drawer or a side panel covers it -->
+    
     <include
         android:id="@+id/default_launcher_bannerVw"
         layout="@layout/part_launcher_banner"
@@ -32,14 +31,13 @@
         layout="@layout/board_left_panel"
         android:visibility="gone" />
 
-    <!-- The "−1" panel: the caller-ID app's own home UI, slid in on a fling RIGHT -->
+    
     <include
         android:id="@+id/caller_panelVw"
         layout="@layout/board_caller_panel"
         android:visibility="gone" />
 
-    <!-- one item_swipe_hint row per direction in `launcher_ads.home_hint.swipeHints`,
-         inflated by HomeBoardActivity.showSwipeHint -->
+    
     <LinearLayout
         android:id="@+id/swipe_hintVw"
         android:layout_width="match_parent"

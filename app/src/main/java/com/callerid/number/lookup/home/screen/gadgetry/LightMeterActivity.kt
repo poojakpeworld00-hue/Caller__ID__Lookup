@@ -15,7 +15,6 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.databinding.ScreenLightMeterBinding
 import kotlin.math.roundToInt
 
-/** Ambient light meter (lux) using the device light sensor. */
 class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEventListener {
 
     override val layoutId: Int = R.layout.screen_light_meter
@@ -42,7 +41,6 @@ class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEvent
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.pbLevelVw.isIndeterminate = false
         binding.pbLevelVw.max = 100
@@ -78,7 +76,7 @@ class LightMeterActivity : FrameActivity<ScreenLightMeterBinding>(), SensorEvent
         if (event.sensor.type != Sensor.TYPE_LIGHT || held) return
         val lux = event.values[0]
         binding.lblLux.text = lux.roundToInt().toString()
-        // Arc fills toward MAX_SCALE lux (bright indoor / overcast daylight).
+
         binding.pbLevelVw.setProgressCompat((lux / MAX_SCALE * 100f).roundToInt().coerceIn(0, 100), true)
 
         if (lux < min) min = lux

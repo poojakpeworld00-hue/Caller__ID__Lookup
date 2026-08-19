@@ -20,59 +20,6 @@ import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
 import org.json.JSONObject
 
-/**
- * The `launcher_ads` Remote Config block — everything the launcher does around ads, the
- * home-screen coach mark and the first-run route. The full schema lives in
- * `docs/launcher-ads-config.md`; the short version:
- *
- * ```json
- * {
- *   "app_click":   { "enabled": true, "ad_type": "inter", "ads_counter": 3, … },
- *   "swipe_right": { … },
- *   "swipe_left":  { … },
- *   "home_hint":   { "enabled": true, "swipeHints": ["right","left","up"], "show_mode": "once" },
- *   "right_panel": { "bottom_native": { "enabled": true, "ad_type": "native", … } },
- *   "default_home_screen": { "enabled": true, "skip_if_default": true, "skip_rest_on_grant": true },
- *   "onboarding":  { "order": [ … ], "welcome": { "inter_enabled": false, "slot": { … } }, … },
- *   "defaultHome":    { … },
- *   "notDefaultHome": { … }
- * }
- * ```
- *
- * Stored as a JSON string in PromoVault and read back with [JSONObject], the same route
- * `intro_display` and `ScreenAds` take — see `PromoAnchorActivity.ingestConfig`.
- *
- * ## Variants
- *
- * Everything outside `defaultHome` / `notDefaultHome` is the base. Exactly one variant is
- * merged on top of it per read, picked by whether we hold the HOME role, and the merge is
- * deep: a key present in the variant wins, a key absent inherits, at every level. Arrays are
- * replaced whole. So `"defaultHome": { "swipe_right": { "ads_counter": 1 } }` changes the one
- * counter and leaves the rest of `swipe_right` alone.
- *
- * ## Pacing
- *
- * **`ads_counter`** paces ONE "ad moment" — it is how many events are SKIPPED before that
- * moment lands. `3` skips three and fires on the fourth; `0` fires every time. Each surface
- * counts in its own pref, so the pacing survives the launcher process being killed. The
- * counter never advances while there is nothing at all to show, so flipping ads back on does
- * not immediately fire one.
- *
- * These gates sit ON TOP of the ones inside [FlowInterstitial.renderInterstitial], which still
- * applies the network check, `IsAdsON`, the `InterAds` master switch and the global
- * `InterCounter`.
- *
- * One limitation worth knowing: `renderInterstitial` reports no-fill and network failures only to
- * its own close callback, so from out here a failed interstitial is indistinguishable from a
- * shown one. The link therefore substitutes when the interstitial is turned OFF
- * (`ad_type: "link"`), not when it merely fails to fill.
- *
- * A second: the native renderers draw from one preloaded pool and take no per-call ad unit,
- * so a slot's `ad_unit_id` is honoured for `banner` only — a native slot inherits the global
- * `googleNative` (or its screen-wise id) as it always has.
- *
- * In DEBUG every decision is logged under the tag `ShellPromoConfig`.
- */
 object ShellPromoConfig {
 
     private const val TAG = "ShellPromoConfig"
@@ -81,16 +28,12 @@ object ShellPromoConfig {
     private const val VARIANT_DEFAULT_HOME = "defaultHome"
     private const val VARIANT_NOT_DEFAULT_HOME = "notDefaultHome"
 
-    // ===================== gestures =====================
-
-    /** The three gestures that leave the home screen, with the pref each one counts in. */
     enum class Surface(val block: String, val counterKey: String) {
         APP_CLICK("app_click", "__launcher_ads_app_click_count"),
         SWIPE_RIGHT("swipe_right", "__launcher_ads_swipe_right_count"),
         SWIPE_LEFT("swipe_left", "__launcher_ads_swipe_left_count"),
     }
 
-    /** What fills a gesture's ad moment. */
     enum class GestureAd { INTER, LINK, NONE }
 
     data class Rule(
@@ -105,7 +48,6 @@ object ShellPromoConfig {
             get() = adType == GestureAd.LINK && fallbackLinkEnabled && fallbackLink.isNotBlank()
     }
 
-    /** Everything off — what a missing or unparseable block resolves to. */
     private val DISABLED = Rule(
         enabled = false,
         adType = GestureAd.NONE,
@@ -121,8 +63,6 @@ object ShellPromoConfig {
         val link = block.optString("fallback_link", "")
         val interEnabled = block.optBoolean("inter_enabled", false)
 
-        // `ad_type` wins when present; otherwise it is derived from the v1 `inter_enabled`
-        // switch, so a config written before this key existed behaves exactly as it did.
         val adType = when (block.optString("ad_type").trim().lowercase()) {
             "inter" -> GestureAd.INTER
             "link" -> GestureAd.LINK
@@ -143,13 +83,6 @@ object ShellPromoConfig {
         )
     }
 
-    /**
-     * Runs [surface]'s monetisation, then [proceed].
-     *
-     * [proceed] is invoked exactly once on every path — ad shown, ad skipped, ads off, no
-     * network, load failure — so the gesture the user made never gets swallowed by an ad
-     * that did not turn up.
-     */
     fun run(activity: Activity, surface: Surface, proceed: () -> Unit) {
         val rule = rule(activity, surface)
 
@@ -158,8 +91,6 @@ object ShellPromoConfig {
             return proceed()
         }
 
-        // Nothing is available to fill the slot, so don't spend a counter tick on it —
-        // otherwise turning ads back on would fire one immediately.
         if (!rule.canShowInter && !rule.canOpenLink) {
             log("${surface.block}: nothing enabled (ad_type=${rule.adType})")
             return proceed()
@@ -180,9 +111,6 @@ object ShellPromoConfig {
         proceed()
     }
 
-    // ===================== ad slots =====================
-
-    /** What fills an on-screen ad frame. */
     enum class SlotAd { NATIVE, BANNER, NONE }
 
     data class Slot(
@@ -191,36 +119,20 @@ object ShellPromoConfig {
         val nativeType: String,
         val bannerType: String,
         val adUnitId: String,
-        /**
-         * Where the slot sits in a *list* that carries it, counted in *rows* from the top.
-         *
-         * Only the app drawer reads this — its grid scrolls the ad along with the apps, so the
-         * ad needs a place in the list rather than a fixed edge. `0` is the top of the list and
-         * the behaviour that shipped before this field existed; a row past the end of the list
-         * clamps to the end, so a deliberately large number reads as "last".
-         *
-         * Rows, not item indexes: the drawer is a grid, and dropping a full-width ad between
-         * two icons of the same row would leave a hole in it.
-         */
+
         val position: Int = 0,
     ) {
         val visible: Boolean get() = enabled && adType != SlotAd.NONE
-        /** True when the slot needs the native pool warmed before it can render. */
+
         val needsNativePreload: Boolean get() = visible && adType == SlotAd.NATIVE
     }
 
-    /** The frame at the bottom of the swipe-in app panel. Defaults to today's mid2 native. */
     fun sidePanelSlot(context: Context): Slot = slot(
         block = config(context).optJSONObject("right_panel")?.optJSONObject("bottom_native"),
         defaultNativeType = "mid2",
         label = "right_panel.bottom_native",
     )
 
-    /**
-     * The frame under the panel's suggested-apps grid. Off unless Remote Config asks for it,
-     * and a native banner by default — it sits between two sections, so the tall renderers
-     * would push the recents and the search results off the screen.
-     */
     fun sidePanelSuggestedSlot(context: Context): Slot {
         val block = config(context).optJSONObject("right_panel")?.optJSONObject("suggested_banner")
             ?: return Slot(false, SlotAd.NONE, "native_banner", "adaptive", "")
@@ -228,10 +140,6 @@ object ShellPromoConfig {
         return slot(block, defaultNativeType = "native_banner", label = "right_panel.suggested_banner")
     }
 
-    /**
-     * The frame at the bottom of the swipe-up app drawer. Off unless Remote Config asks for
-     * it — the drawer shipped without an ad, so a missing block keeps it that way.
-     */
     fun drawerSlot(context: Context): Slot {
         val block = config(context).optJSONObject("app_drawer")?.optJSONObject("bottom_native")
             ?: return Slot(false, SlotAd.NONE, "mid2", "adaptive", "")
@@ -239,10 +147,6 @@ object ShellPromoConfig {
         return slot(block, defaultNativeType = "mid2", label = "app_drawer.bottom_native")
     }
 
-    /**
-     * Renders [slot] into [container]. Hides the frame outright when the slot is off, so a
-     * screen that follows the frame's visibility (the hairline dividers do) collapses with it.
-     */
     fun renderSlot(
         activity: Activity,
         slot: Slot,
@@ -269,8 +173,6 @@ object ShellPromoConfig {
             }
             log("slot: banner type=${slot.bannerType} collapsible=$collapsible")
 
-            // disableInternalFallback=true → StripPromo reports a single onAdFailed() so the
-            // native-banner fallback owns the failure path, same as PerScreenPromo.renderAd.
             StripPromo().renderBanner(
                 activity = activity,
                 container = container,
@@ -301,7 +203,7 @@ object ShellPromoConfig {
 
     private fun slot(block: JSONObject?, defaultNativeType: String, label: String): Slot {
         if (block == null) {
-            // No entry at all → the frame behaves exactly as it did before the block existed.
+
             return Slot(true, SlotAd.NATIVE, defaultNativeType, "adaptive", "")
         }
 
@@ -317,12 +219,10 @@ object ShellPromoConfig {
             nativeType = block.optString("native_type").ifBlank { defaultNativeType },
             bannerType = block.optString("banner_type").ifBlank { "adaptive" },
             adUnitId = block.optString("ad_unit_id", ""),
-            // Negative values would push the ad off the front of the list — floor at the top.
+
             position = block.optInt("position", 0).coerceAtLeast(0),
         ).also { log("$label → $it") }
     }
-
-    // ===================== home-screen coach mark =====================
 
     enum class HintDirection(val key: String) {
         RIGHT("right"), LEFT("left"), UP("up"), DOWN("down");
@@ -333,7 +233,6 @@ object ShellPromoConfig {
         }
     }
 
-    /** How often the hint comes back. */
     enum class HintMode { ONCE, ALWAYS, APP_LAUNCHES }
 
     data class HomeHint(
@@ -360,7 +259,7 @@ object ShellPromoConfig {
         val listed = block.optJSONArray("swipeHints")
         val directions = when {
             listed == null -> DEFAULT_HINT.directions
-            // A present-but-empty list is an explicit "teach nothing", not a fallback.
+
             else -> (0 until listed.length()).mapNotNull { HintDirection.from(listed.optString(it)) }
         }
 
@@ -377,24 +276,11 @@ object ShellPromoConfig {
         ).also { log("home_hint → $it") }
     }
 
-    /**
-     * Whether an `app_launches` hint is due on this launch. `once` and `always` are decided by
-     * the caller (the launcher's own `wasSwipeHintShown` pref latches `once`, so an install
-     * that has already seen the hint does not see it again after an update).
-     */
     fun hintDue(context: Context, hint: HomeHint): Boolean =
         isDue(context, HINT_COUNTER_KEY, hint.interval, "home_hint")
 
     private const val HINT_COUNTER_KEY = "__launcher_ads_home_hint_count"
 
-    // ===================== onboarding =====================
-
-    /**
-     * The first-run screens, with the ad behaviour each one had before this block existed:
-     * Welcome and the default-home ask carry a mid native and no interstitial, the intro
-     * carousel a mid2 native, the language picker a big native, both with an interstitial on
-     * the way out.
-     */
     enum class OnboardScreen(
         val key: String,
         private val interByDefault: Boolean,
@@ -415,22 +301,12 @@ object ShellPromoConfig {
         }
     }
 
-    /** The ad frame on a first-run screen. */
     fun onboardSlot(context: Context, screen: OnboardScreen): Slot = slot(
         block = onboardingBlock(context, screen)?.optJSONObject("slot"),
         defaultNativeType = screen.defaults().second,
         label = "onboarding.${screen.key}.slot",
     )
 
-    /**
-     * The parts of a first-run screen that are not ads.
-     *
-     * [skipEnabled] hides the Skip affordance when false, which turns the screen into a
-     * required step — the CTA (or Back, where the screen offers it) is then the only way on.
-     *
-     * [backAdvances] applies to the intro carousel: `true` makes Back leave for the next
-     * screen instead of walking forward through the remaining pages.
-     */
     data class ScreenUi(val skipEnabled: Boolean, val backAdvances: Boolean)
 
     fun onboardUi(context: Context, screen: OnboardScreen): ScreenUi {
@@ -442,10 +318,6 @@ object ShellPromoConfig {
         ).also { log("onboarding.${screen.key}.ui → $it") }
     }
 
-    /**
-     * Runs [screen]'s exit interstitial, then [proceed] — invoked exactly once on every path,
-     * so a first-run screen never dead-ends on a missing ad.
-     */
     fun runOnboardInterstitial(activity: Activity, screen: OnboardScreen, proceed: () -> Unit) {
         val block = onboardingBlock(activity, screen)
         val enabled = block?.optBoolean("inter_enabled", screen.defaults().first)
@@ -465,11 +337,6 @@ object ShellPromoConfig {
         FlowInterstitial().renderInterstitial(activity) { proceed() }
     }
 
-    /**
-     * The first-run sequence. Unknown names are dropped; an empty or missing `order` falls
-     * back to the historical flow. Repeats are kept — listing `set_default` twice asks again
-     * at the end — and are resolved by the caller, which skips an entry with nothing to do.
-     */
     fun onboardOrder(context: Context): List<OnboardScreen> {
         val listed = config(context).optJSONObject("onboarding")?.optJSONArray("order")
             ?: return DEFAULT_ORDER
@@ -488,15 +355,12 @@ object ShellPromoConfig {
     private fun onboardingBlock(context: Context, screen: OnboardScreen): JSONObject? =
         config(context).optJSONObject("onboarding")?.optJSONObject(screen.key)
 
-    // ===================== the "set as default launcher" step =====================
-
     data class DefaultHomeStep(
         val enabled: Boolean,
         val skipIfDefault: Boolean,
         val skipRestOnGrant: Boolean,
     )
 
-    /** Defaults reproduce the shipped flow: shown, skipped when already default, grant → home. */
     fun defaultBoardStep(context: Context): DefaultHomeStep {
         val block = config(context).optJSONObject("default_home_screen")
         return DefaultHomeStep(
@@ -506,13 +370,6 @@ object ShellPromoConfig {
         )
     }
 
-    // ===================== plumbing =====================
-
-    /**
-     * The parsed block with the right variant merged in. Cached per (raw config, role) pair —
-     * the merge runs on the UI thread from gesture handlers, and the raw string only changes
-     * when a fresh config is ingested.
-     */
     @Volatile
     private var cache: Pair<String, JSONObject>? = null
 
@@ -538,11 +395,6 @@ object ShellPromoConfig {
         return merged
     }
 
-    /**
-     * Copies [overlay] onto [base] in place: nested objects merge key by key, everything else
-     * (scalars, arrays) is replaced whole. Arrays deliberately do not merge — a variant's
-     * `swipeHints` is the whole list, not additions to the base list.
-     */
     private fun deepMerge(base: JSONObject, overlay: JSONObject) {
         overlay.keys().forEach { key ->
             val overlayValue = overlay.opt(key)
@@ -555,10 +407,6 @@ object ShellPromoConfig {
         }
     }
 
-    /**
-     * Skip-then-show, counted in prefs so it survives the launcher process being killed —
-     * which happens often, and an in-memory counter would reset the pacing every time.
-     */
     private fun isDue(context: Context, counterKey: String, target: Int, label: String): Boolean {
         if (target <= 0) return true
 

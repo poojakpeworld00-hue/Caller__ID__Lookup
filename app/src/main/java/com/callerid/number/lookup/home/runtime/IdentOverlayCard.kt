@@ -12,16 +12,8 @@ import com.callerid.number.lookup.home.store.CallHistorySource
 import com.callerid.number.lookup.home.store.ContactSource
 import com.callerid.number.lookup.home.screen.shared.CallFormatter
 
-/**
- * Resolves caller details and renders them into [R.layout.part_caller_id].
- *
- * Shared by [com.callerid.number.lookup.home.runtime.incoming.IdentOverlayService] (floating window, device unlocked) and
- * RingScreenActivity (full screen, device locked) so the card looks and reads
- * identically in both states.
- */
 object IdentOverlayCard {
 
-    /** The bits we surface on the card; resolved off the main thread. */
     data class Info(
         val name: String?,
         val known: Boolean,
@@ -29,11 +21,6 @@ object IdentOverlayCard {
         val network: String?
     )
 
-    /**
-     * Blocking lookup — call from a background thread.
-     * Combines the contact name, how many times this number appears in the call
-     * log, and the SIM operator name.
-     */
     fun resolve(context: Context, number: String): Info {
         val name = runCatching { ContactSource(context).lookupNameByNumber(number) }.getOrNull()
 
@@ -51,7 +38,6 @@ object IdentOverlayCard {
         return Info(name = name, known = !name.isNullOrBlank(), callCount = callCount, network = network)
     }
 
-    /** Binds [number] + resolved [info] into an inflated overlay card [root]. */
     fun bind(context: Context, root: View, number: String, info: Info) {
         val displayName = info.name?.takeIf { it.isNotBlank() }
             ?: context.getString(R.string.incall_unknown)
@@ -71,7 +57,6 @@ object IdentOverlayCard {
             info.network?.takeIf { it.isNotBlank() } ?: "—"
     }
 
-    /** Green "Known Contact" vs neutral "Unknown" pill. */
     private fun bindStatusPill(context: Context, pill: TextView, known: Boolean) {
         val textRes = if (known) R.string.incall_known else R.string.incall_unknown
         val fgRes = if (known) R.color.success else R.color.on_surface_variant
@@ -86,7 +71,6 @@ object IdentOverlayCard {
         TextViewCompat.setCompoundDrawableTintList(pill, ColorStateList.valueOf(fg))
     }
 
-    /** Last 9 digits — tolerant comparison that ignores country code / formatting. */
     private fun digitsTail(number: String): String =
         number.filter { it.isDigit() }.takeLast(9)
 }

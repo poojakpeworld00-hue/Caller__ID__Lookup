@@ -10,10 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.shell.entities.AppTile
 
-/**
- * Minimal launcher list used by the left panel, one instance per section. The row layouts all
- * share the same two ids, so a single adapter covers grids and lists alike.
- */
 class DrawerAppsAdapter(
     private val layoutRes: Int,
     private val itemClick: (AppTile) -> Unit,
@@ -31,7 +27,7 @@ class DrawerAppsAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bindView(launcher: AppTile) {
             itemView.findViewById<TextView>(R.id.item_titleVw).text = launcher.title
-            // the icons are already loaded in memory by the drawer, no need for Glide here
+
             itemView.findViewById<ImageView>(R.id.item_iconVw).setImageDrawable(launcher.drawable)
             itemView.setOnClickListener { itemClick(launcher) }
         }

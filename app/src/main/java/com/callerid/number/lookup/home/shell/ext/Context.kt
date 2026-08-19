@@ -42,7 +42,7 @@ val Context.roleManager: RoleManager
 fun Context.getDrawableForPackageName(packageName: String): Drawable? {
     var drawable: Drawable? = null
     try {
-        // try getting the properly colored launcher icons
+
         val launcher = getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val activityList = launcher.getActivityList(packageName, Process.myUserHandle())[0]
         drawable = activityList.getBadgedIcon(0)

@@ -21,7 +21,6 @@ class DirectoryAdapter(
 
     private var rows: List<ContactRow> = emptyList()
 
-    /** Rows animate in once; scrolling back or re-submitting must not replay the stagger. */
     private var lastAnimated = -1
 
     @SuppressLint("NotifyDataSetChanged")
@@ -49,7 +48,6 @@ class DirectoryAdapter(
             is ContactRow.Item -> (holder as ContactVH).bind(row)
         }
 
-        // Claude Design's cid-rise-in stagger, once per row per submit().
         if (position > lastAnimated) {
             lastAnimated = position
             HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
@@ -85,7 +83,6 @@ class DirectoryAdapter(
             binding.root.setOnClickListener { onOpen(c) }
         }
 
-        /** Shows the real contact photo over the initials, falling back to initials. */
         private fun loadContactPhoto(c: ContactItem) {
             val iv = binding.picAvatar
             val uri = c.photoUri

@@ -15,10 +15,6 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenLookupHistoryBinding
 
-/**
- * Standalone list of recent number lookups. Tapping a row returns its number to the
- * caller (Lookup tab) to re-run the search; the phone icon dials directly.
- */
 class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
 
     override val layoutId: Int = R.layout.screen_lookup_history
@@ -45,7 +41,7 @@ class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
         binding.padClearAll.setOnClickListener { viewModel.clear() }
         binding.rollHistory.layoutManager = LinearLayoutManager(this)
         binding.rollHistory.adapter = adapter
-        // Warm up the rewarded ad that gates revealing caller names.
+
         BonusPromo.preload(this)
     }
 
@@ -60,7 +56,7 @@ class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
 
     override fun onResume() {
         super.onResume()
-        // Reload in case the list changed while away (e.g. a new lookup was run).
+
         viewModel.load()
     }
 
@@ -69,7 +65,6 @@ class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
         finish()
     }
 
-    /** Gate the name reveal behind a rewarded ad, then un-mask that row. */
     private fun revealName(entry: TraceRow) {
         val name = entry.name ?: return
         BonusReveal.reveal(this, name, entry.number) { adapter.revealName(entry.rawNumber) }

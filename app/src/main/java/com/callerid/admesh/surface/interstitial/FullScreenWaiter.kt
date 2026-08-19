@@ -15,10 +15,6 @@ object FullScreenWaiter {
 
     private var dialog: Dialog? = null
 
-    /**
-     * Shows a full-screen transparent loader.
-     * Checks if activity is alive before showing.
-     */
     @Suppress("DEPRECATION")
     fun show(activity: Activity, isLoader: Boolean) {
         if (!isLoader) return
@@ -26,7 +22,6 @@ object FullScreenWaiter {
         try {
             if (activity.isFinishing || activity.isDestroyed) return
 
-            // Dismiss existing one if still active
             dismissSafely()
 
             dialog = Dialog(activity).apply {
@@ -42,13 +37,11 @@ object FullScreenWaiter {
 
                 window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
-                // FLAG_NOT_FOCUSABLE before show() prevents status-bar flicker
                 window?.setFlags(
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 )
 
-                // Immersive sticky — hide status bar + nav bar
                 window?.decorView?.systemUiVisibility =
                     (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -59,7 +52,6 @@ object FullScreenWaiter {
 
                 show()
 
-                // Restore focusability after show so touches register
                 window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
             }
 
@@ -87,11 +79,10 @@ object FullScreenWaiter {
                 }
             }
         } catch (e: Exception) {
-            // Log.e("FullScreenWaiter", "Error dismissing loader", e)
+
         } finally {
             dialog = null
         }
     }
 }
-
 

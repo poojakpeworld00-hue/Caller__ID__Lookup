@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    The three "block by…" methods. In the empty state these ARE the primary path
-    (no FAB competing); they're also reused inside the FAB chooser dialog.
-    Gradient icon tiles per the 2026 Visual System.
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -12,7 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/_2sdp">
 
-    <!-- Add a number -->
+    
     <LinearLayout
         android:id="@+id/rowAddNumberVw"
         android:layout_width="match_parent"
@@ -70,7 +66,7 @@
         android:layout_marginHorizontal="@dimen/_14sdp"
         android:background="@color/outline" />
 
-    <!-- From contacts -->
+    
     <LinearLayout
         android:id="@+id/rowFromContactsVw"
         android:layout_width="match_parent"
@@ -128,7 +124,7 @@
         android:layout_marginHorizontal="@dimen/_14sdp"
         android:background="@color/outline" />
 
-    <!-- Block from recent calls -->
+    
     <LinearLayout
         android:id="@+id/rowFromRecentsVw"
         android:layout_width="match_parent"

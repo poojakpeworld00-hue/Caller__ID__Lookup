@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    
     <style name="Base.Theme.CallerIdLookup" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- App-wide Poppins font (regular 400) -->
+        
         <item name="android:fontFamily">@font/figtree_regular</item>
         <item name="fontFamily">@font/figtree_regular</item>
 
@@ -19,11 +19,7 @@
 
     <style name="Theme.CallerIdLookup" parent="Base.Theme.CallerIdLookup" />
 
-    <!--
-        Transparent host for the overlay-permission guide. The window is
-        translucent so the screen behind shows through, with a system-applied
-        dim to focus attention on the bottom guide card.
-    -->
+    
     <style name="Theme.OverlayGuide" parent="Theme.CallerIdLookup">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>

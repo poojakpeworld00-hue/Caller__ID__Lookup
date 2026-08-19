@@ -9,20 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.callerid.number.lookup.home.kit.LogRail
 
-/**
- * Performs a single runtime-permission request without requiring any code
- * inside the host Activity.
- *
- * It works by attaching an invisible [Fragment] to the Activity's
- * FragmentManager (the same battle-tested approach used by libraries like
- * RxPermissions). The fragment owns a proper `registerForActivityResult`
- * launcher, so results are delivered reliably and survive configuration
- * changes, then it detaches itself.
- *
- * If the host is somehow not a [FragmentActivity], it falls back to
- * [ActivityCompat.requestPermissions] (best-effort — the grant state is then
- * re-checked by the engine on the next resume).
- */
 class PermitLauncher : Fragment() {
 
     private var androidPermission: String? = null
@@ -33,8 +19,7 @@ class PermitLauncher : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Registration must happen before the fragment is STARTED — onCreate is
-        // the correct, lifecycle-safe place.
+
         launcher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
@@ -47,7 +32,7 @@ class PermitLauncher : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        // Fire exactly once, after the registry is fully live.
+
         val perm = androidPermission
         if (!launched && perm != null) {
             launched = true
@@ -75,11 +60,6 @@ class PermitLauncher : Fragment() {
         private const val TAG = "PermitEngine"
         private const val FRAGMENT_TAG = "permission_launcher_fragment"
 
-        /**
-         * Requests [androidPermission] against [activity] and reports the grant
-         * result on the main thread. Returns false-through-[onResult] if it
-         * cannot attach.
-         */
         fun launch(
             activity: Activity,
             androidPermission: String,
@@ -88,12 +68,12 @@ class PermitLauncher : Fragment() {
             if (activity is FragmentActivity && !activity.isFinishing && !activity.isDestroyed) {
                 val fm = activity.supportFragmentManager
                 if (fm.isStateSaved) {
-                    // Too late in the lifecycle to commit safely — skip cleanly.
+
                     LogRail.log(TAG, "State already saved; skipping request for $androidPermission")
                     onResult(false)
                     return
                 }
-                // Reuse-safe: always a fresh instance per request.
+
                 val fragment = PermitLauncher().apply {
                     this.androidPermission = androidPermission
                     this.onResult = onResult
@@ -107,7 +87,7 @@ class PermitLauncher : Fragment() {
                     onResult(false)
                 }
             } else {
-                // Fallback: classic request; result is observed on next resume.
+
                 LogRail.log(TAG, "Host is not a FragmentActivity; using ActivityCompat fallback")
                 runCatching {
                     ActivityCompat.requestPermissions(
@@ -118,7 +98,6 @@ class PermitLauncher : Fragment() {
             }
         }
 
-        /** Request code used only by the non-FragmentActivity fallback path. */
         private const val FALLBACK_REQUEST_CODE = 7301
     }
 }

@@ -31,22 +31,8 @@ import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.screen.consent.OverlayKit
 import com.callerid.number.lookup.home.kit.LogRail
 
-/**
- * Bottom-sheet replacement for AppHomeActivity's old sequential first-run
- * permission chain. Lists every permission the app wants (notification,
- * phone state, call log, contacts, overlay) with a live grant status, lets the
- * user grant them individually, and offers a single **Continue** button that
- * requests everything still missing and then closes.
- *
- * Self-contained: it owns its own result launchers, so AppHomeActivity only has to
- * `show()` it. Runtime permissions go through the OS dialog; the overlay
- * ("display over other apps") permission opens system Settings via
- * [OverlayKit]. `phone_state` is only listed when `HD_VBC_Show` is on — the
- * same geo gate the rest of the app uses.
- */
 class PermitSheetDialog : BottomSheetDialogFragment() {
 
-    /** Invoked once when the sheet finishes (Continue or dismiss). */
     var onFinished: (() -> Unit)? = null
 
     private data class Row(
@@ -56,16 +42,14 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         @DrawableRes val icon: Int,
         val isOverlay: Boolean = false,
         val androidPermission: String? = null,
-        /** Requested via [PermitEngine] (RC-driven) instead of directly. */
+
         val engineManaged: Boolean = false,
     )
 
     private lateinit var rows: List<Row>
 
-    /** True while a Continue-initiated batch request is running. */
     private var continueInProgress = false
 
-    /** True when we opened the overlay screen as the last step of Continue. */
     private var finishAfterOverlay = false
 
     private val requestPerms = registerForActivityResult(
@@ -109,7 +93,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             rowView.findViewById<TextView>(R.id.lblTitle).setText(row.title)
             rowView.findViewById<TextView>(R.id.lblDesc).setText(row.desc)
             rowView.findViewById<TextView>(R.id.padAllow).setOnClickListener { requestSingle(row) }
-            // Granted (and permanently-denied engine rows) are hidden entirely.
+
             rowView.visibility = if (shouldHideRow(row)) View.GONE else View.VISIBLE
             rowsContainer.addView(rowView)
         }
@@ -126,19 +110,14 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        // Let our rounded @drawable/form_overlay_sheet show instead of the default
-        // opaque bottom-sheet background.
+
         (dialog as? BottomSheetDialog)
             ?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             ?.setBackgroundColor(Color.TRANSPARENT)
 
-        // Keep the sheet compact: cap the scrollable row area to ~half the screen
-        // so many rows scroll instead of stretching the sheet full-height.
         view?.findViewById<View>(R.id.rowsScrollVw)?.let { scroll ->
             scroll.post {
-                // The sheet may have been dismissed before this runnable fires
-                // (e.g. a quick Not-now/swipe) — bail if we're already detached,
-                // and read metrics off the view itself, not requireContext().
+
                 if (!isAdded) return@post
                 val maxH = (scroll.resources.displayMetrics.heightPixels * 0.5f).toInt()
                 if (scroll.height > maxH) {
@@ -154,14 +133,10 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         refreshRows()
     }
 
-    // --- Row model ---
-
     private fun buildRows(): List<Row> {
         val ctx = requireContext()
         val list = mutableListOf<Row>()
 
-        // Notification + phone state are handled by the PermitEngine (see
-        // requestSingle / onContinueClicked), so the sheet only primes them here.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             list += Row(
                 "notification", R.string.perm_notification_title, R.string.perm_notification_desc,
@@ -169,8 +144,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
                 engineManaged = true,
             )
         }
-        // Read-phone-state powers caller ID / post-call detection — same geo gate
-        // as the rest of the app.
+
         if (PromoVault.getInstance(ctx).getBoolean("HD_VBC_Show")) {
             list += Row(
                 "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
@@ -203,32 +177,20 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    // --- UI refresh ---
-
     private fun refreshRows() {
         val root = view ?: return
         val rowsContainer = root.findViewById<LinearLayout>(R.id.holderRows)
         rows.forEach { row ->
             val rowView = rowsContainer.findViewWithTag<View>(row.key) ?: return@forEach
-            // Once granted (or permanently denied for engine rows) the row disappears.
+
             rowView.visibility = if (shouldHideRow(row)) View.GONE else View.VISIBLE
         }
-        // When every row is resolved via the individual Allow buttons, there's
-        // nothing left to show — close the sheet automatically instead of leaving
-        // it open empty (the Continue flow handles its own dismissal, so skip it
-        // while a Continue batch is running).
+
         if (!continueInProgress && !finishAfterOverlay && rows.all { shouldHideRow(it) }) {
             finishFlow()
         }
     }
 
-    /**
-     * A row is hidden when its permission is already granted, and — for the
-     * engine-managed rows (notification / phone state) only — also once the user
-     * has denied it twice (Android's permanent-denial state, reached after the
-     * 2nd decline from *any* screen). Call log / contacts / overlay always stay
-     * visible until granted.
-     */
     private fun shouldHideRow(row: Row): Boolean {
         if (isGranted(row)) return true
         if (!row.engineManaged) return false
@@ -237,12 +199,10 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         return isPermanentlyDenied(act, row.key, perm)
     }
 
-    // --- Requests ---
-
     private fun requestSingle(row: Row) {
         if (isGranted(row)) return
         when {
-            // Notification / phone state → delegate to the engine (RC-driven).
+
             row.engineManaged -> PermitEngine.check(requireActivity()) {
                 if (isAdded) refreshRows()
             }
@@ -252,15 +212,12 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun onContinueClicked() {
-        // Notification + phone state are managed by the PermitEngine; once it
-        // finishes, request the sheet's own permissions (call log / contacts) and
-        // then the overlay step.
+
         PermitEngine.check(requireActivity()) {
             if (isAdded) requestSheetOwnedThenOverlay()
         }
     }
 
-    /** Requests the sheet-owned runtime permissions (not engine-managed), then overlay. */
     private fun requestSheetOwnedThenOverlay() {
         val missing = rows
             .filter { !it.isOverlay && !it.engineManaged && !isGranted(it) }
@@ -273,7 +230,6 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    /** After runtime permissions are handled, do the overlay step (if needed) then finish. */
     private fun proceedToOverlayOrFinish() {
         val overlayRow = rows.firstOrNull { it.isOverlay }
         if (overlayRow != null && !isGranted(overlayRow)) {
@@ -284,27 +240,21 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun launchOverlay(finishAfter: Boolean) {
-        // Reuse the home shell's overlay flow — it opens the system page with the
-        // NO_HISTORY/EXCLUDE_FROM_RECENTS intent, watches the grant with an in-activity
-        // poll, auto-returns the app, and drops the Settings page. The sheet's own
-        // launcher had none of that (no auto-back, page lingered).
+
         val controller = (activity as? HomeShellOwner)?.homeShellController
         if (controller != null) {
             controller.startOverlayPermissionFlow()
-            // Continue's last step closes the sheet; the single-row Allow keeps it
-            // open so onResume can hide the overlay row once granted.
+
             if (finishAfter) finishFlow()
             return
         }
 
-        // Fallback (not hosted by a home shell): own launcher, no auto-back, but
-        // still the flagged intent so the Settings page doesn't linger.
         finishAfterOverlay = finishAfter
         OpenPromoRegistry.skipNextAppOpenAd = true
         runCatching {
             overlayLauncher.launch(OverlayKit.buildOverlayIntent(requireContext().packageName))
         }.onSuccess {
-            // The coach-mark goes on top of the page we just opened; see OverlayKit.showGuide.
+
             OverlayKit.showGuide(requireActivity())
         }.onFailure {
             LogRail.error("PermissionSheet", "Failed to open overlay settings", it)
@@ -320,7 +270,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: android.content.DialogInterface) {
         super.onDismiss(dialog)
-        // If dismissed by swipe/outside tap (not via finishFlow), still notify once.
+
         onFinished?.invoke()
         onFinished = null
     }
@@ -328,18 +278,11 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "permission_sheet"
 
-        /**
-         * True when at least one of the sheet's permissions still needs granting
-         * — use it to decide whether to trigger the sheet at all (avoids showing
-         * an empty sheet once everything is granted). Mirrors [buildRows]' gating.
-         */
         @JvmStatic
         fun hasPending(activity: FragmentActivity): Boolean {
             fun granted(perm: String) =
                 ContextCompat.checkSelfPermission(activity, perm) == PackageManager.PERMISSION_GRANTED
-            // Notification / phone state are "resolved" once granted OR denied
-            // twice (permanent denial) — the sheet stops offering them, so they no
-            // longer count as pending (avoids showing an all-hidden sheet).
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                 !granted(Manifest.permission.POST_NOTIFICATIONS) &&
                 !isPermanentlyDenied(activity, "notification", Manifest.permission.POST_NOTIFICATIONS)
@@ -354,14 +297,6 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             return false
         }
 
-        /**
-         * True once the user has denied [perm] to the point Android no longer
-         * shows its system dialog — i.e. it was requested at least once (from any
-         * screen: the engine records it in [PermitVault], the Home quick
-         * actions in [StorageRegistry]) and `shouldShowRequestPermissionRationale` is
-         * now false while still ungranted. On Android 11+ this is reached after
-         * the 2nd decline.
-         */
         @JvmStatic
         fun isPermanentlyDenied(activity: FragmentActivity, key: String, perm: String): Boolean {
             if (ContextCompat.checkSelfPermission(activity, perm) == PackageManager.PERMISSION_GRANTED) {
@@ -373,40 +308,18 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             return !ActivityCompat.shouldShowRequestPermissionRationale(activity, perm)
         }
 
-        /**
-         * Decides whether the sheet should pop up **automatically** on app launch.
-         * Combines [hasPending] with the shared [RevealPolicy] frequency gate,
-         * driven by the `permission_sheet` entry of the `intro_display` Remote Config
-         * block (`enabled` + `prompt_frequency` = always | once | every_days |
-         * app_launches | never, with `prompt_interval`). The ledger is stamped by
-         * [RevealPolicy.markShown] in [show]. This gate is for the
-         * **auto-launch only** — a manual "Manage" tap calls [show] directly and
-         * always opens (subject to [hasPending]).
-         */
         @JvmStatic
         fun shouldAutoShow(activity: FragmentActivity): Boolean {
             if (!hasPending(activity)) return false
             return RevealPolicy.shouldShowPermissionSheet(activity)
         }
 
-        /**
-         * Shows the permission sheet on demand. Call from any click listener:
-         *
-         * ```
-         * someButton.setOnClickListener { PermitSheetDialog.show(this) }
-         * ```
-         *
-         * Safe to call repeatedly — it no-ops if the sheet is already showing or
-         * the host isn't in a valid state to commit a transaction. [onFinished]
-         * runs once when the sheet closes (Continue, Not now, or dismiss).
-         */
         @JvmStatic
         @JvmOverloads
         fun show(activity: FragmentActivity, onFinished: (() -> Unit)? = null) {
             val fm = activity.supportFragmentManager
             if (fm.isStateSaved || fm.findFragmentByTag(TAG) != null) return
-            // Stamp the shared ledger so the frequency gate (once / every_days /
-            // app_launches) can measure from here.
+
             RevealPolicy.markShown(activity, RevealConfig.PERMISSION_SHEET)
             PermitSheetDialog().apply { this.onFinished = onFinished }
                 .show(fm, TAG)

@@ -119,7 +119,7 @@
                 android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <!-- nothing matched the query, shown instead of the results list -->
+            
             <TextView
                 android:id="@+id/panel_no_resultsVw"
                 android:layout_width="match_parent"
@@ -156,10 +156,7 @@
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="4" />
 
-            <!-- Second panel slot, under the suggested apps —
-                 `launcher_ads.right_panel.suggested_banner`, off unless Remote Config asks
-                 for it. It scrolls with the panel content; the frame at the bottom of the
-                 panel is the pinned one. -->
+            
             <FrameLayout
                 android:id="@+id/ad_suggested_frameVw"
                 android:layout_width="match_parent"
@@ -226,12 +223,7 @@
 
     </ScrollView>
 
-    <!-- ===== Native ad, pinned to the bottom of the panel =====
-         The app list scrolls above it (panel_scroll is layout_above this frame), so the ad
-         stays put rather than riding along with the results. renderMidNative2 empties and hides
-         the frame when ads are off, the network is down, or the counter says skip, and the
-         ScrollView then takes the space back. HomeBoardActivity pads this frame for the navigation
-         bar via setupEdgeToEdge. -->
+    
     <FrameLayout
         android:id="@+id/ad_native_frameVw"
         android:layout_width="match_parent"

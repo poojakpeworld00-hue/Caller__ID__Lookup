@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layoutAnimation="@anim/tool_layout_in"
                 android:orientation="vertical">
-                <!-- Mid native (scrolls with content) -->
+                
                 <FrameLayout
                     android:id="@+id/adNativeFrameVw"
                     android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                         <include layout="@layout/googlemidnative2" />
                     </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
-                <!-- Gauge card -->
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                     android:orientation="vertical"
                     android:padding="@dimen/_18sdp">
 
-                    <!-- Security pill -->
+                    
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Upload -->
+                
                 <LinearLayout style="@style/SpeedStatCard">
 
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_upload" />
@@ -194,7 +194,7 @@
                         style="@style/SpeedStatBar" />
                 </LinearLayout>
 
-                <!-- Latency -->
+                
                 <LinearLayout style="@style/SpeedStatCard">
 
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_latency" />
@@ -209,7 +209,7 @@
                         style="@style/SpeedStatBar" />
                 </LinearLayout>
 
-                <!-- Jitter -->
+                
                 <LinearLayout style="@style/SpeedStatCard">
 
                     <TextView style="@style/SpeedStatLabel" android:text="@string/speedtest_jitter" />
@@ -243,7 +243,7 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- Full-bleed hairline separating app content from the ad below -->
+        
         <View
             android:id="@+id/adBannerDividerVw"
             style="@style/AdDivider"
@@ -252,7 +252,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Bottom adaptive banner (auto-loaded by BaseActivity, type from ScreenAds config). -->
+        
         <include
             layout="@layout/part_bottom_banner"
             android:layout_width="0dp"

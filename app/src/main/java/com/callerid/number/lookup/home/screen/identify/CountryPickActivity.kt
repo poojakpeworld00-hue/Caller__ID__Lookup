@@ -10,7 +10,6 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenCountryPickerBinding
 
-/** Searchable country list. Returns the chosen country's ISO/dial/name. */
 class CountryPickActivity : FrameActivity<ScreenCountryPickerBinding>() {
 
     override val layoutId: Int = R.layout.screen_country_picker

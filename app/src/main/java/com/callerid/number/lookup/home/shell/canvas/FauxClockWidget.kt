@@ -14,11 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Root of [R.layout.shell_widget_digital_clock]: two plain TextViews showing the current
- * time and weekday. The system ticks us once a minute while the home screen is up, which is
- * all the resolution the clock needs, so there is no timer of our own to leak.
- */
 class FauxClockWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -67,7 +62,6 @@ class FauxClockWidget @JvmOverloads constructor(
         }
     }
 
-    // the minute tick does not fire while the screen is off, so catch up on the way back
     override fun onWindowVisibilityChanged(visibility: Int) {
         super.onWindowVisibilityChanged(visibility)
         if (visibility == VISIBLE) {

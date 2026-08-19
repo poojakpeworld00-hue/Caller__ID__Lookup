@@ -1,14 +1,14 @@
 <resources>
-    <!-- App -->
+    
     <string name="app_name">Caller ID Lookup</string>
     <string name="dash">&#8211;</string>
 
-    <!-- Splash -->
+    
     <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">Kimin aradığını bilin · Spam\'i engelleyin</string>
     <string name="splash_footer">Bu uygulama reklam içerebilir</string>
 
-    <!-- Language -->
+    
     <string name="language_title">Dil seçin</string>
     <string name="language_continue">Devam</string>
     <string name="language_search_hint">Dil ara</string>
@@ -18,7 +18,7 @@
     <string name="language_info_msg">Dili değiştirmek arayüzü yeniden çizer. Seçiminize göre bazı bölgesel ayrıntılar değişebilir.</string>
     <string name="language_info_got_it">Anladım</string>
 
-    <!-- Terms &amp; Conditions -->
+    
     <string name="terms_title">Şartlar ve Koşullar</string>
     <string name="terms_body">Bu koşullara biraz vakit ayırın. Devam etmek kabul etmek demektir:\n\n• Caller ID Lookup gelen, giden ve tanınmayan aramaları tam o anda adlandırır.\n• Rahatsız edici, dolandırıcılık ve sahtekârlık aramaları işaretlenir, siz de dışarıda bırakırsınız.\n• Herhangi bir numara aranarak arayan hakkında kayıtlı bilgiler görülebilir.\n• Uygulamanın bu işi yapabilmesi için arama kaydınız ve kişileriniz okunabilir.\n• Diğer uygulamaların üzerine çizim, arama sırasında arayan bilgisini ekrana getiren şeydir.\n• Topladığımız sizde kalır ve yalnızca arayanı adlandırmaya ve rahatsız edici aramaları savmaya yarar.\n\n“Kabul et ve devam et” demek, Koşullarımızı ve Gizlilik Politikamızı okuduğunuzu ve kabul ettiğinizi doğrular.</string>
     <string name="terms_agree">Koşulları ve Gizlilik Politikasını okudum ve kabul ediyorum.</string>
@@ -28,7 +28,7 @@
     <string name="overlay_system_permission">Sistem izni</string>
     <string name="overlay_permission_desc">Diğer uygulamaların üzerine çizim, siz başka işle meşgulken arayanı görmenizi sağlar.</string>
 
-    <!-- Onboarding -->
+    
     <string name="onboarding_skip">Atla</string>
     <string name="onboarding_next">İleri</string>
     <string name="onboarding_title">Kimin aradığını bilin</string>
@@ -39,7 +39,7 @@
     <string name="onboarding_desc_3">Tanınmayan herhangi bir numarayı arayın ve arkasındakini görün: ad, yer, iş.</string>
     <string name="onboarding_get_started">Başla</string>
 
-    <!-- Home -->
+    
     <string name="home_title">Korunuyorsunuz</string>
     <string name="home_subtitle">Arayan kimliği ve spam engelleme etkin</string>
     <string name="home_greeting">Günaydın</string>
@@ -50,44 +50,44 @@
     <string name="home_recent_activity">Son etkinlikler</string>
     <string name="see_all">Tümünü gör</string>
 
-    <!-- Quick actions -->
+    
     <string name="quick_dialer">Tuş takımı</string>
     <string name="quick_lookup">Sorgula</string>
     <string name="quick_blocklist">Engel listesi</string>
     <string name="quick_tools">Araçlar</string>
 
-    <!-- Bottom navigation -->
+    
     <string name="nav_home">Ana sayfa</string>
     <string name="nav_recents">Son aramalar</string>
     <string name="nav_contacts">Kişiler</string>
     <string name="nav_lookup">Sorgula</string>
     <string name="nav_settings">Ayarlar</string>
 
-    <!-- Recents -->
+    
     <string name="recents_today">Bugün</string>
     <string name="recents_yesterday">Dün</string>
     <string name="recents_this_week">Bu hafta</string>
     <string name="recents_earlier">Daha önce</string>
     <string name="recents_empty">Son arama yok</string>
 
-    <!-- Call filters -->
+    
     <string name="filter_all">Tümü</string>
     <string name="filter_incoming">Gelen</string>
     <string name="filter_outgoing">Giden</string>
     <string name="filter_missed">Cevapsız</string>
 
-    <!-- Call type labels -->
+    
     <string name="type_incoming">Gelen</string>
     <string name="type_outgoing">Giden</string>
     <string name="type_missed">Cevapsız</string>
     <string name="type_blocked">Engellendi</string>
 
-    <!-- Call log permission -->
+    
     <string name="perm_calllog_title">Son aramalarınızı görün</string>
     <string name="perm_calllog_message">Uygulamanın arama kaydınızı okumasına izin verin, son aramalar burada belirsin.</string>
     <string name="action_grant">Erişime izin ver</string>
 
-    <!-- Lookup -->
+    
     <string name="lookup_hint">Telefon numarası girin</string>
     <string name="lookup_verified_business">Doğrulanmış işletme</string>
     <string name="lookup_organization">Kuruluş</string>
@@ -105,13 +105,13 @@
     <string name="lookup_international">Uluslararası</string>
     <string name="lookup_carrier">Operatör</string>
 
-    <!-- Contacts -->
+    
     <string name="contacts_search_hint">Kişilerde ara</string>
     <string name="contacts_empty">Kişi bulunamadı</string>
     <string name="perm_contacts_title">Kişilerinizi görün</string>
     <string name="perm_contacts_message">Uygulamanın kişilerinizi okumasına izin verin, burada belirsinler.</string>
 
-    <!-- Settings actions -->
+    
     <string name="language_dialog_title">Dil seçin</string>
     <string name="blocklist_add">Numara ekle</string>
     <string name="blocklist_empty">Henüz engellenen numara yok</string>
@@ -124,7 +124,7 @@
     <string name="action_cancel">İptal</string>
     <string name="action_remove">Kaldır</string>
 
-    <!-- Settings -->
+    
     <string name="settings_language">Dil</string>
     <string name="settings_language_sub">Uygulama dilini seçin</string>
     <string name="settings_blocklist">Engel listesi</string>
@@ -138,7 +138,7 @@
     <string name="theme_dark">Koyu</string>
     <string name="theme_system">Sistem varsayılanı</string>
 
-    <!-- Call states -->
+    
     <string name="call_incoming">Gelen arama…</string>
     <string name="call_decline">Reddet</string>
     <string name="call_accept">Kabul et</string>
@@ -147,7 +147,7 @@
     <string name="label_spam">Spam</string>
     <string name="label_verified">Doğrulandı</string>
 
-    <!-- Added translations -->
+    
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="onboarding_spam_id">Spam Kimliği</string>
     <string name="onboarding_caller_id">Arayan Kimliği</string>
@@ -269,7 +269,7 @@
     </plurals>
     <string name="battery_activity_title">Pil Bilgisi</string>
 
-    <!-- Batch translations -->
+    
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="overlay_banner_desc">Arayan bilgilerini diğer uygulamaların üzerinde göster</string>
     <string name="home_brand">Caller ID Lookup</string>
@@ -450,7 +450,7 @@
     <string name="app_redirect_desc">O uygulama bu cihazda yok. Play Store sayfasını açalım mı?</string>
     <string name="settings_section_call">ARAYAN KORUMASI</string>
     <string name="call_screening_hint_tip">Bunu açın, kimin aradığını görün ve rahatsız edeni savın</string>
-    <!-- FSI intro Activity/Dialog + Home permission hint -->
+    
     <string name="home_perm_hint">Hâlâ kapalı izinler var. Tam tanıma için onları açın.</string>
     <string name="home_perm_manage">Yönet</string>
     <string name="fsi_incoming_call">Gelen Arama</string>

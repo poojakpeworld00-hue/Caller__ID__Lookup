@@ -1,14 +1,14 @@
 <resources>
-    <!-- App -->
+    
     <string name="app_name">Caller ID Lookup</string>
     <string name="dash">&#8211;</string>
 
-    <!-- Splash -->
+    
     <string name="splash_title">Caller ID Lookup</string>
     <string name="splash_tagline">発信者を確認 · 迷惑電話をブロック</string>
     <string name="splash_footer">このアプリには広告が含まれる場合があります</string>
 
-    <!-- Language -->
+    
     <string name="language_title">言語を選択</string>
     <string name="language_continue">続ける</string>
     <string name="language_search_hint">言語を検索</string>
@@ -18,7 +18,7 @@
     <string name="language_info_msg">言語を変えると画面が描き直されます。選択によって地域ごとの細部が変わることがあります。</string>
     <string name="language_info_got_it">OK</string>
 
-    <!-- Terms &amp; Conditions -->
+    
     <string name="terms_title">利用規約</string>
     <string name="terms_body">この規約に少しだけ目を通してください。続けることは同意を意味します:\n\n• Caller ID Lookup は着信・発信・見知らぬ番号を、その通話のさなかに名前で示します。\n• 迷惑・詐欺・不正の電話には印が付き、締め出せるようになります。\n• どの番号も検索でき、記録に残る発信者情報を確認できます。\n• そのために、通話履歴と連絡先を読み取ることがあります。\n• 他のアプリの上に描画する権限が、通話中に発信者情報を画面へ出しています。\n• 集めたものはあなたのものであり、発信者の特定と迷惑電話対策にのみ使われます。\n\n「同意して続行」を選ぶことで、当社の利用規約とプライバシーポリシーを読み、同意したことを確認します。</string>
     <string name="terms_agree">利用規約とプライバシーポリシーを読み、同意します。</string>
@@ -28,7 +28,7 @@
     <string name="overlay_system_permission">システム権限</string>
     <string name="overlay_permission_desc">他のアプリの上に描画する権限があると、別の作業中でも発信者情報が見えます。</string>
 
-    <!-- Onboarding -->
+    
     <string name="onboarding_skip">スキップ</string>
     <string name="onboarding_next">次へ</string>
     <string name="onboarding_title">発信者をすぐに確認</string>
@@ -39,7 +39,7 @@
     <string name="onboarding_desc_3">見知らぬ番号を検索すれば、その先にいる相手が分かります — 名前、所在地、事業。</string>
     <string name="onboarding_get_started">始める</string>
 
-    <!-- Home -->
+    
     <string name="home_title">あなたは保護されています</string>
     <string name="home_subtitle">発信者識別と迷惑電話ブロックが有効です</string>
     <string name="home_greeting">おはようございます</string>
@@ -50,44 +50,44 @@
     <string name="home_recent_activity">最近のアクティビティ</string>
     <string name="see_all">すべて表示</string>
 
-    <!-- Quick actions -->
+    
     <string name="quick_dialer">ダイヤル</string>
     <string name="quick_lookup">検索</string>
     <string name="quick_blocklist">ブロックリスト</string>
     <string name="quick_tools">ツール</string>
 
-    <!-- Bottom navigation -->
+    
     <string name="nav_home">ホーム</string>
     <string name="nav_recents">履歴</string>
     <string name="nav_contacts">連絡先</string>
     <string name="nav_lookup">検索</string>
     <string name="nav_settings">設定</string>
 
-    <!-- Recents -->
+    
     <string name="recents_today">今日</string>
     <string name="recents_yesterday">昨日</string>
     <string name="recents_this_week">今週</string>
     <string name="recents_earlier">それ以前</string>
     <string name="recents_empty">最近の通話はありません</string>
 
-    <!-- Call filters -->
+    
     <string name="filter_all">すべて</string>
     <string name="filter_incoming">着信</string>
     <string name="filter_outgoing">発信</string>
     <string name="filter_missed">不在着信</string>
 
-    <!-- Call type labels -->
+    
     <string name="type_incoming">着信</string>
     <string name="type_outgoing">発信</string>
     <string name="type_missed">不在着信</string>
     <string name="type_blocked">ブロック済み</string>
 
-    <!-- Call log permission -->
+    
     <string name="perm_calllog_title">最近の通話を表示</string>
     <string name="perm_calllog_message">通話履歴の読み取りを許可すると、最近の通話がここに並びます。</string>
     <string name="action_grant">アクセスを許可</string>
 
-    <!-- Lookup -->
+    
     <string name="lookup_hint">電話番号を入力</string>
     <string name="lookup_verified_business">認証済み事業者</string>
     <string name="lookup_organization">組織</string>
@@ -105,13 +105,13 @@
     <string name="lookup_international">国際</string>
     <string name="lookup_carrier">通信事業者</string>
 
-    <!-- Contacts -->
+    
     <string name="contacts_search_hint">連絡先を検索</string>
     <string name="contacts_empty">連絡先が見つかりません</string>
     <string name="perm_contacts_title">連絡先を表示</string>
     <string name="perm_contacts_message">連絡先の読み取りを許可すると、ここに並びます。</string>
 
-    <!-- Settings actions -->
+    
     <string name="language_dialog_title">言語を選択</string>
     <string name="blocklist_add">番号を追加</string>
     <string name="blocklist_empty">ブロックした番号はまだありません</string>
@@ -124,7 +124,7 @@
     <string name="action_cancel">キャンセル</string>
     <string name="action_remove">削除</string>
 
-    <!-- Settings -->
+    
     <string name="settings_language">言語</string>
     <string name="settings_language_sub">アプリの言語を選択</string>
     <string name="settings_blocklist">ブロックリスト</string>
@@ -138,7 +138,7 @@
     <string name="theme_dark">ダーク</string>
     <string name="theme_system">システムのデフォルト</string>
 
-    <!-- Call states -->
+    
     <string name="call_incoming">着信中…</string>
     <string name="call_decline">拒否</string>
     <string name="call_accept">応答</string>
@@ -147,7 +147,7 @@
     <string name="label_spam">迷惑</string>
     <string name="label_verified">認証済み</string>
 
-    <!-- Added translations -->
+    
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="onboarding_spam_id">迷惑電話の識別</string>
     <string name="onboarding_caller_id">発信者番号</string>
@@ -267,7 +267,7 @@
     </plurals>
     <string name="battery_activity_title">バッテリー情報</string>
 
-    <!-- Localization batch: missing keys -->
+    
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="action_back">戻る</string>
     <string name="action_block">ブロック</string>
@@ -448,7 +448,7 @@
     <string name="whatsapp">WhatsApp</string>
     <string name="whatsapp_not_installed">WhatsApp がインストールされていません</string>
     <string name="call_screening_hint_tip">これを入れると誰からの着信か分かり、迷惑は締め出せます</string>
-    <!-- FSI intro Activity/Dialog + Home permission hint -->
+    
     <string name="home_perm_hint">まだ切れている権限があります。完全に特定するには入れてください。</string>
     <string name="home_perm_manage">管理</string>
     <string name="fsi_incoming_call">着信</string>

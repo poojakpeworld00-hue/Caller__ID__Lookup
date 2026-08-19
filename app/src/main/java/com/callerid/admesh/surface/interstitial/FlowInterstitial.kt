@@ -37,7 +37,7 @@ class FlowInterstitial {
         private var googleInterAd: InterstitialAd? = null
         private var preloadedFbAd: com.facebook.ads.InterstitialAd? = null
         private var isFbPreloading = false
-        // Forwarding callbacks — set just before ad.show(), fired by the preload listener
+
         private var fbOnDismissed: (() -> Unit)? = null
         private var fbOnFail: (() -> Unit)? = null
         var isOpened = false
@@ -49,7 +49,7 @@ class FlowInterstitial {
             onTabClosed?.invoke()
             onTabClosed = null
 
-            releaseSession(context) // 🔥 ADD THIS
+            releaseSession(context)
         }
         private var customTabsClient: CustomTabsClient? = null
         private var customTabsSession: CustomTabsSession? = null
@@ -87,7 +87,7 @@ class FlowInterstitial {
                             fbOnDismissed = null
                         }
                         override fun onInterstitialDismissed(ad: com.facebook.ads.Ad?) {
-                            preloadFbAd(context)   // replenish
+                            preloadFbAd(context)
                             fbOnDismissed?.invoke()
                             fbOnDismissed = null
                             fbOnFail = null
@@ -126,7 +126,6 @@ class FlowInterstitial {
             }
         }
 
-        // Use CustomTabsSession to track tab close
         private fun getSession(
             context: Context,
             onReady: (CustomTabsSession?) -> Unit
@@ -171,11 +170,11 @@ class FlowInterstitial {
                     addCategory(Intent.CATEGORY_BROWSABLE)
                 }
                 context.startActivity(intent)
-//                safeLog("browser_opened")
+
             } catch (e: Exception) {
-//                context.safeLog("browser_open_failed")
+
             } finally {
-                // Ensure callback is always called
+
                 isOpened = false
                 onTabClosed?.invoke()
                 onTabClosed = null
@@ -183,19 +182,14 @@ class FlowInterstitial {
             }
         }
 
-
     }
 
-
-    // ----------------------------------------------------------------------
-    // LOAD INTER AD (Google)
-    // ----------------------------------------------------------------------
     fun fetchInterstitial(activity: Activity) {
         val pref = PromoVault.getInstance(activity)
         if (!pref.getBoolean("IsAdsON")) return
-        // Firebase "InterAds" master switch — disable interstitial loading entirely
+
         if (!pref.getBoolean("InterAds")) return
-        // Only preload when is_preload_ads = true; on-demand path loads at show time
+
         if (!pref.getBoolean("is_preload_ads")) return
 
         val adType = PromoKind.fromString(pref.getString("IsAdType"))
@@ -224,16 +218,10 @@ class FlowInterstitial {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // PUBLIC SHOW METHOD
-    // ----------------------------------------------------------------------
     fun renderInterstitial(activity: Activity?, adsClose: () -> Unit) {
         showAdInternal(activity, adsClose)
     }
 
-    // ----------------------------------------------------------------------
-    // MAIN INTER AD SHOW
-    // ----------------------------------------------------------------------
     private fun showAdInternal(activity: Activity?, adsClose: () -> Unit) {
         val act = activity ?: return adsClose()
         act.safeLog("inter_request_start")
@@ -245,16 +233,14 @@ class FlowInterstitial {
             if (hasClosed) return
             hasClosed = true
             act.safeLog("inter_closed_$reason")
-            adsClose()   // OPEN NEXT ACTIVITY INSTANTLY
+            adsClose()
         }
 
-        // Network check
         if (!hasNetwork(act)) return safeClose("no_network")
         if (!pref.getBoolean("IsAdsON")) return safeClose("ads_off")
-        // Firebase "InterAds" master switch — skip showing interstitials entirely
+
         if (!pref.getBoolean("InterAds")) return safeClose("inter_ads_disabled")
 
-        // Counter logic
         val target = pref.getInt("InterCounter")
         if (interCounter != target) {
             interCounter++
@@ -312,9 +298,6 @@ class FlowInterstitial {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // GOOGLE INTERSTITIAL
-    // ----------------------------------------------------------------------
     private fun renderGoogleInterstitial(
         activity: Activity,
         pref: PromoVault,
@@ -327,7 +310,6 @@ class FlowInterstitial {
             return handleGoogleFail(activity, pref, safeClose)
         }
 
-        // Log load
         activity.trackEvent("google_inter_show_attempt")
 
         if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
@@ -369,9 +351,6 @@ class FlowInterstitial {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // GOOGLE ON-DEMAND (is_preload_ads = false)
-    // ----------------------------------------------------------------------
     private fun loadAndShowGoogleOnDemand(
         activity: Activity,
         pref: PromoVault,
@@ -402,9 +381,6 @@ class FlowInterstitial {
         )
     }
 
-    // ----------------------------------------------------------------------
-    // FACEBOOK PRELOADED SHOW (is_preload_ads = true)
-    // ----------------------------------------------------------------------
     private fun showPreloadedFbAd(
         activity: Activity,
         onDismissed: () -> Unit,
@@ -417,7 +393,7 @@ class FlowInterstitial {
             return
         }
         preloadedFbAd = null
-        // Wire forwarding callbacks (listener was set at load time in preloadFbAd)
+
         fbOnDismissed = onDismissed
         fbOnFail = onFail
         try {
@@ -461,9 +437,6 @@ class FlowInterstitial {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // FACEBOOK INTERSTITIAL
-    // ----------------------------------------------------------------------
     fun loadAndRenderFbInterstitial(
         context: Context,
         onDismissed: () -> Unit,
@@ -477,8 +450,6 @@ class FlowInterstitial {
 
         val inter = com.facebook.ads.InterstitialAd(context, fbId)
 
-        // ⬅ FULLSCREEN LOADER (only if Activity)
-        // Show loader only if isLoader == true
         if (context is Activity) FullScreenWaiter.show(context, isLoader)
 
         inter.loadAd(
@@ -539,9 +510,6 @@ class FlowInterstitial {
         else safeClose("fb_fail_no_custom")
     }
 
-    // ----------------------------------------------------------------------
-    // SAFE LOG WRAPPER
-    // ----------------------------------------------------------------------
     private fun Context.safeLog(event: String) {
         try {
             trackEvent(event)

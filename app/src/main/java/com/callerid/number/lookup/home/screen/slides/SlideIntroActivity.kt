@@ -31,16 +31,13 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
     private val pages = SlideCatalog.all
     private val dots = mutableListOf<View>()
 
-    // Spring settle (dampingRatio 0.8 / stiffness 380 ≈ this overshoot) — the design's
-    // default motion, used for the dot pill stretch and the CTA morph.
     private val spring = PathInterpolator(0.34f, 1.56f, 0.64f, 1f)
     private var wasLast = false
 
-    /** One-shot guard so a first-page back can't fire the forward flow twice. */
     private var forwarding = false
 
     override fun initView() {
-        // Record this intro show for the once/count frequency gate.
+
         RevealPolicy.markShown(this, RevealConfig.ONBOARDING)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.onboardingRootVw) { v, insets ->
@@ -49,8 +46,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
             insets
         }
 
-        // Ad frame pinned at the bottom, `launcher_ads.onboarding.intro.slot` — a mid2 native
-        // unless Remote Config switches it to a banner or turns it off.
         ShellPromoConfig.renderSlot(
             activity = this,
             slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.INTRO),
@@ -64,8 +59,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         buildDots()
         updateDots(0)
 
-        // Parallax: the illustration tracks the swipe fully; the title (0.85×) and
-        // body (0.7×) lag behind it as they scroll.
         binding.vuPager.setPageTransformer { page, position ->
             val w = page.width.toFloat()
             page.findViewById<View?>(R.id.lblTitle)?.translationX = position * w * 0.15f
@@ -76,8 +69,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
             override fun onPageSelected(position: Int) = updateDots(position)
         })
 
-        // `onboarding.intro.skip_enabled: false` hides Skip, so the carousel has to be paged
-        // through to its end (Back still moves forward, see below).
         val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.INTRO)
         binding.padSkip.beVisibleIf(ui.skipEnabled)
 
@@ -91,13 +82,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
             }
         }
 
-        // Back walks FORWARD through the pages (1 → 2 → 3) with the pager's smooth
-        // scroll, so every page is seen before the user can leave. Only once the
-        // last page is showing does back skip out — same path as the Skip button.
-        // `back_action: "next_screen"` overrides that: any Back leaves for the next
-        // screen straight away, wherever the carousel has got to.
-        // The callback stays enabled so back never falls through to FrameActivity's
-        // exit handler; `forwarding` blocks a double finish.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val current = binding.vuPager.currentItem
@@ -129,14 +113,13 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         val activeWidth = dp(24)
         val size = dp(8)
         dots.forEachIndexed { i, dot ->
-            // Active dot stretches into a pill; the others shrink back — spring settle.
+
             animateDotWidth(dot, if (i == active) activeWidth else size)
             dot.setBackgroundResource(
                 if (i == active) R.drawable.form_dot_active else R.drawable.form_dot
             )
         }
-        // Final step: the CTA morphs to "Get Started" on the hero gradient — the
-        // one place onboarding uses the gradient (Visual System rule).
+
         val last = active == pages.lastIndex
         binding.padNext.setText(if (last) R.string.onboarding_get_started else R.string.onboarding_next)
         binding.padNext.setBackgroundResource(
@@ -148,7 +131,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         }
     }
 
-    /** Springs a dot's width to [target] (the pill-stretch shared-bounds effect). */
     private fun animateDotWidth(dot: View, target: Int) {
         val lp = dot.layoutParams as LinearLayout.LayoutParams
         if (lp.width == target) return
@@ -165,7 +147,6 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         }
     }
 
-    /** Width/scale spring when the CTA morphs between Next and Get Started. */
     private fun popCta() {
         binding.padNext.animate().cancel()
         binding.padNext.scaleX = 0.94f
@@ -181,12 +162,9 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         prefs.isOnboardingDone = true
         trackEvent("onboarding_completed")
         PermitEngine.check(this) {
-            // Permission done → show this screen's interstitial (`onboarding.intro.
-            // inter_enabled`, on by default; the callback fires immediately when there is
-            // nothing to show) → THEN navigate.
+
             ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.INTRO) {
-                // In the launcher's first run, hand back to the order — usually the language
-                // picker, but the order decides. Outside it, this is the last screen.
+
                 if (OnboardRouter.isOnboardingActive(this)) {
                     OnboardRouter.advance(this)
                 } else {

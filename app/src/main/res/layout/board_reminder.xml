@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="@dimen/_8sdp" />
-        <!-- Empty View (hidden by default) -->
+        
         <LinearLayout
             android:id="@+id/emptyLayoutVw"
             android:layout_width="match_parent"

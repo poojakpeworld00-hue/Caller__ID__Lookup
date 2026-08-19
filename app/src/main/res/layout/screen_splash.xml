@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Splash — "Caller Information".
-    A centred app icon breathes inside a dashed orbit ring while a blue AI-scan
-    ring sweeps around it. Three caller-info elements pop in and then slowly
-    orbit the icon (staying upright): an "Incoming call…" pill, a red "Fraud
-    blocked" pill, and a green-verified caller avatar. Title + tagline rise in,
-    a progress bar fills, and an ad-disclosure / secure-version footer sits at
-    the bottom. All motion is driven from SplashActivity (UI only — navigation
-    is owned by getData()).
--->
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -24,7 +15,7 @@
         android:clipToPadding="false"
         tools:context=".ui.splash.LaunchGateActivity">
 
-        <!-- ===== Ambient orbs + twinkling stars ===== -->
+        
         <ImageView
             android:id="@+id/orb1Vw"
             android:layout_width="@dimen/_150sdp"
@@ -47,7 +38,7 @@
             app:layout_constraintHorizontal_bias="0.96"
             app:layout_constraintVertical_bias="0.82" />
 
-        <!-- Scattered organically across the upper "sky" (not one-per-corner). -->
+        
         <View
             android:id="@+id/star1Vw"
             android:layout_width="@dimen/_4sdp"
@@ -88,7 +79,7 @@
             app:layout_constraintHorizontal_bias="0.40"
             app:layout_constraintVertical_bias="0.27" />
 
-        <!-- ===== Caller-info composition (icon + rings + orbiting elements) ===== -->
+        
         <FrameLayout
             android:id="@+id/compositionVw"
             android:layout_width="@dimen/_300sdp"
@@ -102,7 +93,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed">
 
-            <!-- Dashed orbit ring -->
+            
             <ImageView
                 android:id="@+id/orbitRingVw"
                 android:layout_width="@dimen/_240sdp"
@@ -111,7 +102,7 @@
                 android:contentDescription="@null"
                 android:src="@drawable/form_splash_orbit_ring" />
 
-            <!-- Blue AI-scan ring around the icon -->
+            
             <ImageView
                 android:id="@+id/scanRingVw"
                 android:layout_width="@dimen/_134sdp"
@@ -121,7 +112,7 @@
                 android:contentDescription="@null"
                 android:src="@drawable/form_splash_scan_arc" />
 
-            <!-- Centred app icon tile -->
+            
             <FrameLayout
                 android:id="@+id/iconTileVw"
                 android:layout_width="@dimen/_72sdp"
@@ -139,7 +130,7 @@
                     android:src="@drawable/sym_phone_solid" />
             </FrameLayout>
 
-            <!-- Orbit layer: rotates as a whole; children counter-rotate to stay upright -->
+            
             <FrameLayout
                 android:id="@+id/orbitLayerVw"
                 android:layout_width="match_parent"
@@ -148,7 +139,7 @@
                 android:clipChildren="false"
                 android:clipToPadding="false">
 
-                <!-- Incoming call pill (upper-left) -->
+                
                 <FrameLayout
                     android:id="@+id/incomingWrapVw"
                     android:layout_width="wrap_content"
@@ -194,7 +185,7 @@
                     </LinearLayout>
                 </FrameLayout>
 
-                <!-- Fraud blocked pill (lower-left) -->
+                
                 <FrameLayout
                     android:id="@+id/fraudWrapVw"
                     android:layout_width="wrap_content"
@@ -232,7 +223,7 @@
                     </LinearLayout>
                 </FrameLayout>
 
-                <!-- Verified caller avatar (right) -->
+                
                 <FrameLayout
                     android:id="@+id/avatarWrapVw"
                     android:layout_width="wrap_content"
@@ -275,7 +266,7 @@
             </FrameLayout>
         </FrameLayout>
 
-        <!-- ===== Title + tagline ===== -->
+        
         <TextView
             android:id="@+id/lblAppName"
             android:layout_width="wrap_content"
@@ -308,7 +299,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblAppName" />
 
-        <!-- ===== Progress bar (fills as the app boots) ===== -->
+        
         <View
             android:id="@+id/progTrack"
             android:layout_width="@dimen/_110sdp"
@@ -329,7 +320,7 @@
             app:layout_constraintStart_toStartOf="@id/progTrack"
             app:layout_constraintTop_toTopOf="@id/progTrack" />
 
-        <!-- ===== Ad disclosure + secure version footer ===== -->
+        
         <LinearLayout
             android:id="@+id/footerVw"
             android:layout_width="wrap_content"

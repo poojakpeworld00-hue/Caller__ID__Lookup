@@ -10,28 +10,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import org.json.JSONObject
 
-/**
- * Applies Remote Config changes while the app is running.
- *
- * Without this the blob is only read at splash, so a value published in the console reaches a
- * device on its next cold start — which for a launcher can be days, since the home screen is
- * rarely killed.
- *
- * Realtime Remote Config pushes the change instead: [ConfigUpdateListener.onUpdate] fires,
- * the new values are activated, and the same absorb the splash runs re-populates PromoVault, so
- * every gate that reads from it — ad slots, the permission engine, the settings rows — picks
- * the change up on its next read.
- *
- * The install-referrer step is deliberately not re-run: the audience a user landed in does not
- * change because a config value did, and re-running it would re-POST attribution.
- */
 object LiveConfigListener {
 
     private const val TAG = "LiveConfig"
 
     private var registration: com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration? = null
 
-    /** Idempotent: a second call replaces the previous registration rather than stacking one. */
     fun start(context: Context) {
         val app = context.applicationContext
         stop()
@@ -46,7 +30,7 @@ object LiveConfigListener {
                     }
 
                     override fun onError(error: FirebaseRemoteConfigException) {
-                        // Not fatal: the splash fetch still applies the change on next launch.
+
                         LogRail.error(TAG, "realtime updates unavailable", error)
                     }
                 }
@@ -83,7 +67,6 @@ object LiveConfigListener {
                 PromoConfigLoader.audienceBlock(response, onMarketing),
             )
 
-            // The permission engine caches its own parsed copy of the same blob.
             PermitSource.reload()
             LogRail.log(TAG, "applied live config (marketing=$onMarketing)")
         }.onFailure { LogRail.error(TAG, "live config could not be applied", it) }

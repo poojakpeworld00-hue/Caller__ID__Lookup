@@ -14,26 +14,12 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.main.HomeShellOwner
 
-/**
- * The AppHomeActivity Full-Screen-Intent priming dialog. Same visual language as the
- * Screen (incoming-call preview + remote-driven copy). "Enable" opens the system
- * FSI page in-task (via AppHomeActivity's launcher) and arms [FsiPollService]; the
- * dialog dismisses so the auto-return lands on a clean AppHomeActivity.
- *
- * A single live dialog is tracked so the host can [dismissIfShowing] on return.
- */
 object FsiPrimerDialog {
 
     private var current: Dialog? = null
 
     fun isShowing(): Boolean = current?.isShowing == true
 
-    /**
-     * Shows the priming dialog. [onFinished] fires once when it closes, with
-     * `enabled = true` if the user tapped **Enable** (and is being taken to the
-     * system FSI page) or `false` for **Not now** / cancel / outside-tap — so the
-     * host can sequence what comes next (e.g. a follow-up permission sheet).
-     */
     fun show(
         activity: Activity,
         config: FsiSettings,
@@ -54,15 +40,11 @@ object FsiPrimerDialog {
             window?.setBackgroundDrawableResource(android.R.color.transparent)
         }
 
-        // True only when the user chose Enable (we're navigating to the FSI page),
-        // so the dismiss listener can tell Enable apart from Not now / cancel.
         var enableTapped = false
 
         view.findViewById<TextView>(R.id.fsDialogButtonVw).setOnClickListener {
             activity.trackEvent("fsi_dialog_enable")
-            // Close the dialog first, then ask notification (targeted request), and
-            // only after that launch FSI settings in-task via the shell controller's
-            // launcher. The watcher + the host's onResume handle the return.
+
             enableTapped = true
             dialog.dismiss()
             PermitEngine.request(activity, "notification") {
@@ -88,11 +70,6 @@ object FsiPrimerDialog {
         activity.trackEvent("fsi_dialog_show")
     }
 
-    /**
-     * Card springs up from the bottom; the glow breathes, the orbit rings and the
-     * avatar rings pulse outward, and the CTA breathes — the same halo motion as
-     * the intro Screen, at dialog scale.
-     */
     private fun animateIn(root: View) {
         val dy = 40f * root.resources.displayMetrics.density
         root.alpha = 0f
@@ -113,7 +90,6 @@ object FsiPrimerDialog {
         root.findViewById<View>(R.id.fsDialogButtonVw)?.let { loopCta(it) }
     }
 
-    /** Expanding ring pulse (scale up + fade out), repeating while the dialog is showing. */
     private fun loopRing(v: View?, delay: Long, from: Float, to: Float, alpha: Float, dur: Long) {
         v ?: return
         v.postDelayed({
@@ -130,7 +106,6 @@ object FsiPrimerDialog {
         }, delay)
     }
 
-    /** Ambient glow alpha breathe. */
     private fun loopGlow(v: View?) {
         v ?: return
         if (!isShowing()) return
@@ -144,7 +119,6 @@ object FsiPrimerDialog {
             }.start()
     }
 
-    /** Subtle idle breathe on the CTA to pull the tap. */
     private fun loopCta(v: View) {
         if (!isShowing()) return
         v.animate().scaleX(1.02f).scaleY(1.05f).setDuration(1300)
@@ -156,7 +130,6 @@ object FsiPrimerDialog {
             }.start()
     }
 
-    /** Dismiss the live dialog if any (e.g. after the FSI grant auto-returns the app). */
     fun dismissIfShowing() {
         runCatching { current?.dismiss() }
         current = null

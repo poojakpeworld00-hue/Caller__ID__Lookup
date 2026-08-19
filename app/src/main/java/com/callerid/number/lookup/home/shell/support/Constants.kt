@@ -5,7 +5,6 @@ const val WIDGET_LIST_ITEMS_HOLDER = 1
 
 const val REPOSITORY_NAME = "Launcher"
 
-// shared prefs
 const val WAS_HOME_SCREEN_INIT = "was_home_screen_init"
 const val WAS_ONBOARDING_COMPLETED = "was_onboarding_completed"
 const val WAS_SEARCH_BAR_SEEDED = "was_search_bar_seeded"
@@ -22,7 +21,6 @@ const val AUTO_SHOW_KEYBOARD_IN_APP_DRAWER = "auto_show_keyboard_in_app_drawer"
 const val SHOW_DRAWER_APP_LABELS = "show_drawer_app_labels"
 const val SHOW_HOME_APP_LABELS = "show_home_app_labels"
 
-// default home screen grid size
 const val ROW_COUNT = 6
 const val COLUMN_COUNT = 5
 const val MIN_ROW_COUNT = 2
@@ -41,13 +39,10 @@ const val ITEM_TYPE_WIDGET = 1
 const val ITEM_TYPE_SHORTCUT = 2
 const val ITEM_TYPE_FOLDER = 3
 
-// widgets rendered by ourselves directly on the grid, they are stored as ITEM_TYPE_WIDGET rows
-// with these sentinels in the className column, so no schema change is needed
 const val PSEUDO_WIDGET_PREFIX = "com.callerid.number.lookup.home.shell.pseudo."
 const val PSEUDO_WIDGET_CLOCK = "${PSEUDO_WIDGET_PREFIX}DigitalClock"
 const val PSEUDO_WIDGET_SEARCH = "${PSEUDO_WIDGET_PREFIX}SearchBar"
 
-// default home screen header: the clock sits in the top rows, the search pill right below it
 const val CLOCK_ROW_SPAN = 2
 const val SEARCH_BAR_ROW = CLOCK_ROW_SPAN
 

@@ -84,27 +84,13 @@ open class PromoAnchorActivity : AppCompatActivity() {
     private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
     private companion object {
-        /** One grep-able tag for the whole splash AppOpen/interstitial load+show path. */
+
         const val APPOPEN_TAG = "AppOpenAd"
 
-        /** One grep-able tag for the getData Remote Config → prefs ingestion path. */
         const val CONFIG_TAG = "GetDataConfig"
 
-        /**
-         * Which audience a DEBUG build runs as — flip this one line to test the other side.
-         * `true` = marketing, `false` = organic.
-         *
-         * A build installed from Studio or adb has no install referrer and no LightHouse
-         * attribution, so it always resolves to organic on its own and the `marketing` half
-         * of the config could never be exercised on a test device. Release builds ignore
-         * this entirely and keep using the real attribution.
-         */
         const val DEBUG_AUDIENCE_MARKETING = true
 
-        /**
-         * How long the audience gate waits for LightHouse's install-referrer verdict before
-         * settling for what it has. First launch only — the SDK caches it afterwards.
-         */
         const val ATTRIBUTION_WAIT_MS = 5_000L
     }
 
@@ -117,7 +103,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // We defer MobileAds.initialize() until after consent is obtained.
 
                 if (!hasInternet(this@PromoAnchorActivity)) {
                     withContext(Dispatchers.Main) {
@@ -126,7 +111,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // Consent and SDK initialization
                 withContext(Dispatchers.Main) {
                     try {
                         val googleMobileAdsConsentManager =
@@ -135,13 +119,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             )
 
                         googleMobileAdsConsentManager.gatherConsent(this@PromoAnchorActivity) { consentError: FormError? ->
-                            // Always drive the flow forward once consent gathering
-                            // completes. initializeMobileAdsSdk() is what kicks off
-                            // remote config → prefs → permissions → navigation, and
-                            // it's idempotent. If we only called it when canRequestAds
-                            // is true, a consent failure (e.g. "Error making request"
-                            // on a slow network) would silently dead-end the splash —
-                            // no permission prompt, no navigation, hangs forever.
+
                             if (consentError != null) {
                                 Log.w("PromoAnchorActivity", "Consent error: ${consentError.message} — proceeding without ads consent")
                             }
@@ -151,14 +129,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             }
                         }
 
-                        // Fast path: if consent is already available, start the SDK +
-                        // downstream flow immediately instead of waiting on the callback.
                         if (googleMobileAdsConsentManager.canRequestAds()) {
                             initializeMobileAdsSdk()
                         }
                     } catch (e: Exception) {
                         Log.e("PromoAnchorActivity", "Consent manager error", e)
-                        initializeMobileAdsSdk() // Fallback
+                        initializeMobileAdsSdk()
                         withContext(Dispatchers.Main) {
                             onGetData?.onError()
                         }
@@ -178,13 +154,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
         val connectivityManager =
             context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        // For Android 10 (API level 29) and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val network = connectivityManager.activeNetwork
             val capabilities = connectivityManager.getNetworkCapabilities(network)
             return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         } else {
-            // For older Android versions
+
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             return activeNetworkInfo != null && activeNetworkInfo.isConnected
         }
@@ -195,7 +170,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
             return
         }
 
-        // Initialize MobileAds on a background thread after consent
         if (!isMobileAdsInitialized.getAndSet(true)) {
             backgroundExecutor.execute {
                 try {
@@ -228,7 +202,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     private fun setResponceInPref(remoteConfig: FirebaseRemoteConfig) {
-        // Run everything in a background thread to prevent cold-start stutters and ANR
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val blobKey = if (BuildConfig.DEBUG) "DEBUG_GET_DATA_LIST" else "GET_DATA_LIST"
@@ -250,22 +224,11 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         "OnMaketing=$onMarketing "
                 )
 
-                // Persist the raw blob + whether it uses a top-level audience split,
-                // so funOnAdsLoad can re-apply the correct audience once the install
-                // referrer has resolved OnMaketing (not known on the first launch).
                 adsPref.putString("GET_DATA_RAW", configString)
                 adsPref.putBoolean("__cfg_audience_split", isSplit)
 
-                // Top-level audience split: every key is read from
-                // response.marketing / response.organic (chosen by OnMaketing). A
-                // flat response (no wrapper) is used verbatim → legacy config is
-                // unchanged.
                 ingestConfig(this@PromoAnchorActivity, audienceBlock(response, onMarketing))
 
-                // Resolve the install referrer, then hand off to funOnAdsLoad. Must
-                // run AFTER ingestConfig so funOnAdsLoad reads the freshly-persisted
-                // config (GET_DATA_RAW / __cfg_audience_split / ad gates), not stale
-                // or half-written values.
                 checkInstallerRefere()
 
             } catch (e: Exception) {
@@ -274,10 +237,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Delegates to [PromoConfigLoader], then initialises the Facebook SDK, which needs an Activity
-     * and so cannot live with the rest of the absorb.
-     */
     private fun ingestConfig(context: Context, root: JSONObject) {
         val fb = PromoConfigLoader.absorb(context, root)
         if (fb.usable) setApplication(fb.appId, fb.clientToken)
@@ -287,7 +246,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         PromoConfigLoader.audienceBlock(response, isMarketing)
 
     fun resolveInlineThemeKey(context: Context): String = PromoConfigLoader.inlineThemeKey(context)
-
 
     private fun checkInstallerRefere() {
         if (activity!!.getPreferences(MODE_PRIVATE).getBoolean("isReferrerDone", false)) {
@@ -299,17 +257,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         backgroundExecutor.execute(Runnable { readInstallReferrer(referrerClient) })
     }
 
-    /**
-     * The single exit from the install-referrer probe.
-     *
-     * Every path out of [readInstallReferrer] — resolved, unsupported, unavailable,
-     * developer/permission error, or the service dropping before it ever finished — has to end
-     * up here, because [funOnAdsLoad] is what writes the audience flag and re-ingests the right
-     * half of the config. A path that quietly returns instead leaves the app on whichever
-     * audience the pre-referrer absorb happened to pick.
-     *
-     * Guarded so the extra exits can never double-run the IP lookup and the re-absorb.
-     */
     private fun onReferrerSettled() {
         if (referrerHandoffDone.compareAndSet(false, true)) {
             funOnAdsLoad()
@@ -321,9 +268,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
             val adsPreference = PromoVault.getInstance(activity)
             lifecycleScope.launch(Dispatchers.IO) {
 
-                // Fetch IP geo once. Use the ISO country code to set the app's
-                // country (Home search chip + Lookup country picker) unless the
-                // user already picked one, then feed the ads country-counter logic.
                 val location = fetchGeoFromIp()
                 location?.countryCode?.takeIf { it.isNotBlank() }?.let { iso ->
                     val prefs = StorageRegistry(activity)
@@ -343,10 +287,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 }
                 adsPreference.putBoolean("OnMaketing", isMarketingOn)
 
-                // Top-level audience split only: OnMaketing is now final (referrer
-                // resolved), so re-apply the correct audience's keys — the first
-                // absorb ran before the referrer and may have used the wrong side.
-                // Flat config skips this entirely (behaviour unchanged).
                 val isSplitConfig = adsPreference.getBoolean("__cfg_audience_split")
                 if (isSplitConfig) {
                     val raw = adsPreference.getString("GET_DATA_RAW", "")
@@ -373,18 +313,16 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             Log.d("LocationCheck", "City: ${loc.city}")
                         }
 
-                        // Save country
                         PromoVault.getInstance(activity).userCountry = loc.country!!
                         PromoVault.getInstance(activity).userRegion = loc.regionName!!
                         PromoVault.getInstance(activity).userCity = loc.city!!
-                        // Get stored list from preferences (marketing or organic list).
+
                         val storedListStr =
                             adsPreference.getString(countryListKey, "") ?: ""
 
                         val allowedLocations =
                             storedListStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 
-                        // Check if current country, region, or city is in the list
                         val isAllowed = allowedLocations.any { allowed ->
                             val match = allowed.equals(
                                 loc.country, ignoreCase = true
@@ -398,7 +336,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             if (BuildConfig.DEBUG) Log.d(
                                 "LocationCheck", "✅ Location IN list ($countryListKey) → HD_VBC_Show=false (real ads)"
                             )
-                            // Do not show CB
+
                             adsPreference.putBoolean("HD_VBC_Show", false)
 
                         } else {
@@ -413,14 +351,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     if (BuildConfig.DEBUG) Log.d("LocationCheck", "Country check is disabled in preferences")
                 }
 
-                // (marketing state already decided above as `isMarketingOn`)
-
-                // --------------------
-                // 1️⃣ Apply marketing counters (ONLY if marketing ON).
-                //     Skipped for a top-level split config — its `marketing` block
-                //     already carries the final counters/links, so copying the
-                //     *Market* keys (absent there) would zero them out.
-                // --------------------
                 if (isMarketingOn && !isSplitConfig) {
                     with(adsPreference) {
                         putInt("InterCounter", getInt("MarketInterCounter"))
@@ -434,19 +364,16 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         putBoolean("is_intro", true)
                     }
                 }
-                // --------------------
-                // 2️⃣ Apply NativeTheme (Marketing or Default)
-                // --------------------
+
                 val savedMarketingStr = adsPreference.getString("NativeTheme_marketing", "{}")
                 val savedDefaultStr = adsPreference.getString("NativeTheme_default", "{}")
 
                 val marketingObj = JSONObject(savedMarketingStr)
                 val defaultObj = JSONObject(savedDefaultStr)
 
-                // Decide theme source
                 val themeSource = if (isMarketingOn) marketingObj else defaultObj
                 val modeKey = resolveInlineThemeKey(activity)
-                // Get the correct modeKey (e.g., "NativeDark" or "NativeLight")
+
                 val themeJson = themeSource.optJSONObject(modeKey)
 
                 themeJson?.let { theme ->
@@ -465,10 +392,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
                     val isAdsOn = adsPreference.getBoolean("IsAdsON")
 
-
                     withContext(Dispatchers.Main) {
 
-                        // 🔹 Native ads (never block navigation)
                         if (isAdsOn && isSplash == false) {
                             Log.d(APPOPEN_TAG, "isSplash=false → BS Native path (splash AppOpen is NOT attempted here)")
                             launch(Dispatchers.Main) {
@@ -478,18 +403,9 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             return@withContext
                         }
 
-                        // Splash owns its permission priming explicitly (notification
-                        // → phone_state) via PermitEngine.request() — the targeted,
-                        // activity-independent path — rather than check()'s Activity-name
-                        // matching. This guarantees the OS Allow/Deny dialogs fire HERE,
-                        // on the splash, BEFORE the splash ad, even when the Remote Config
-                        // permission_engine rules don't list LaunchGateActivity. Resolving
-                        // notification now also stops LightHouse's later
-                        // subscribeAsync()/data-disclosure from re-prompting for it on the
-                        // next screen. Order is: permission(s) → ad → dismiss/fail → next.
                         primeSplashPermissions(activity) {
                             if (!isAdsOn) {
-                                // Ads OFF → continue
+
                                 Log.w(APPOPEN_TAG, "IsAdsON=false → ads disabled, no AppOpen, continuing to app")
                                 onGetData?.onSuccess()
                             } else {
@@ -500,8 +416,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                     BackInterstitial().fetchBackInterstitial(activity)
                                 }
 
-                                // Splash ads gated by Firebase "is_splash_ads" flag
-                                // AND days-since-install check
                                 val isSplashAdsEnabled = adsPreference.getBoolean("is_splash_ads")
                                 Log.d(
                                     APPOPEN_TAG,
@@ -509,11 +423,11 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                         "IsAdType=${adsPreference.getString("IsAdType")}, appopenId=${adsPreference.getString("googleAppopen")}"
                                 )
                                 if (!isSplashAdsEnabled) {
-                                    // Splash ads disabled from Firebase → skip entirely
+
                                     Log.w(APPOPEN_TAG, "is_splash_ads=false → skipping splash ad entirely, continuing to app")
                                     onGetData?.onSuccess()
                                 } else {
-                                    // Ads ON + splash enabled + gate passed → preload → show → continue
+
                                     warmAds(adsPreference, activity) {
                                         renderPreloadedAd(activity, adsPreference) {
                                             onGetData?.onSuccess()
@@ -530,40 +444,14 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Splash no longer requests any runtime permission directly. Notification
-     * and READ_PHONE_STATE are now owned entirely by the global
-     * [com.callerid.number.lookup.home.permit.PermitEngine]
-     * (Remote Config-driven, per-Activity, with the HD_VBC_Show gate preserved
-     * for phone state). Kept as a thin pass-through so the splash navigation
-     * flow is unchanged. [hdVbcShow] is intentionally unused now.
-     */
     private fun requestUserPermissions(
         @Suppress("UNUSED_PARAMETER") hdVbcShow: Boolean, onContinue: () -> Unit
     ) {
         onContinue()
     }
 
-    /**
-     * Sequentially primes the splash's runtime permissions — notification, then
-     * phone_state — through [PermitEngine.request], then runs [onDone].
-     *
-     * Uses request() (targeted by permission key) so the prompts fire HERE, in
-     * this exact order, before the splash ad — but only for keys whose Remote
-     * Config rule actually lists this screen (see [targetsScreen]). So dropping
-     * `LaunchGateActivity` from a permission's `activities` list keeps it off the
-     * splash, and it is then asked wherever it *is* listed (e.g. AppHomeActivity).
-     * Each request still honours SDK applicability (notification only on API
-     * 33+), the `HD_VBC_Show` gate (phone_state), already-granted, `show_once`,
-     * and the remote enable off-switch. Each callback always fires once on the
-     * main thread, so [onDone] runs exactly once after both resolve (or are
-     * skipped).
-     */
     private fun primeSplashPermissions(activity: Activity, onDone: () -> Unit) {
-        // OnMaketing is only final a few lines above (LightHouse attribution), and
-        // the engine may have cached its rules earlier — at Application startup,
-        // when the audience was still unknown. Re-parse so the marketing/organic
-        // split below is read from the right side of the config.
+
         runCatching { PermitSource.reload() }
         val screen = activity::class.java.simpleName
         val prime: (String, () -> Unit) -> Unit = { key, next ->
@@ -577,11 +465,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * True when the Remote Config rule for [key] targets [screen]. A key with no
-     * configured rule returns true — there is nothing to opt out of, so the
-     * splash keeps its previous behaviour of asking.
-     */
     private fun targetsScreen(key: String, screen: String): Boolean {
         val rule = PermitSource.rules().firstOrNull { it.key == key } ?: return true
         val targets = rule.activities.any { ScreenGlob.refersTo(it, screen) }
@@ -595,10 +478,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    // ------------------------
-    // AppOpenAd
-    // ------------------------
-    // Preload all ads in sequence or parallel
     fun warmAds(adsPreference: PromoVault, activity: Activity, onComplete: () -> Unit) {
         bindCustomTabs(activity)
         val adType = PromoKind.fromString(adsPreference.getString("IsAdType"))
@@ -630,14 +509,14 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         onFailed = { onComplete() },
                         onDismissed = {
                             onComplete()
-                        }// fallback
+                        }
                     )
                 } else {
                     onComplete()
                 }
             }
 
-            PromoKind.CUSTOM, PromoKind.UNKNOWN -> onComplete() // nothing to preload
+            PromoKind.CUSTOM, PromoKind.UNKNOWN -> onComplete()
         }
     }
 
@@ -659,7 +538,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         if (!fbId.isNullOrEmpty() && fbInterstitial != null) {
                             renderFbInterstitial { onDismissed() }
                         } else if (adsPreference.getBoolean("IsCustomADS")) {
-                            // All failed + custom ads ON → fallback to custom link
+
                             launchCustomAdLink(
                                 activity, adsPreference.getString("DirectLink")!!
                             ) {
@@ -669,7 +548,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             onDismissed()
                         }
                     } else if (adsPreference.getBoolean("IsCustomADS")) {
-                        // All failed + custom ads ON → fallback to custom link
+
                         launchCustomAdLink(
                             activity, adsPreference.getString("DirectLink")!!
                         ) {
@@ -753,7 +632,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             AdRequest.Builder().build(),
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    // The single most useful line for "why didn't it load".
+
                     Log.e(
                         APPOPEN_TAG,
                         "load FAILED → code=${loadAdError.code}, domain=${loadAdError.domain}, " +
@@ -789,7 +668,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     OpenPromoRegistry.isShowingAd = true
                 }
             }
-            // Log load
+
             activity.trackEvent("app_open_loaded")
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
@@ -799,15 +678,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
             }
             ad.show(activity)
         } ?: run {
-            // Ad not loaded yet
+
             Log.w(APPOPEN_TAG, "show() → AppOpen ad is null (not loaded in time) → skipping show")
             onDismissed?.invoke()
         }
     }
 
-    // ------------------------
-// Google Interstitial
-// ------------------------
     private var interstitialAd: InterstitialAd? = null
 
     fun fetchGoogleInterstitial(
@@ -845,7 +721,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 }
             }
 
-            // Log load
             activity.trackEvent("interstitial_splash_loaded")
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
@@ -857,9 +732,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         } ?: run { onDismissed?.invoke() }
     }
 
-    // ------------------------
-// Facebook Interstitial
-// ------------------------
     private var fbInterstitial: com.facebook.ads.InterstitialAd? = null
 
     fun fetchFbInterstitial(
@@ -867,7 +739,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         adUnitId: String,
         onLoaded: (() -> Unit)? = null,
         onFailed: (() -> Unit)? = null,
-        onDismissed: (() -> Unit)? = null // Added parameter
+        onDismissed: (() -> Unit)? = null
     ) {
         fbInterstitial = com.facebook.ads.InterstitialAd(activity, adUnitId)
         fbInterstitial?.loadAd(
@@ -901,7 +773,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    // 1️⃣ Bind Custom Tabs
     private fun bindCustomTabs(activity: Activity) {
         if (customTabsClient != null) return
 
@@ -927,7 +798,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
             })
     }
 
-    // 2️⃣ Handle close in one function
     private fun handleCustomTabClose() {
         if (isFinishing || isDestroyed) return
         if (!isCloseHandled) {
@@ -949,7 +819,6 @@ open class PromoAnchorActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    // 3️⃣ Launch Custom Tab
     private fun launchCustomAdLink(activity: Activity, url: String, onClosed: () -> Unit) {
         bindCustomTabs(activity)
 
@@ -963,7 +832,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         try {
             customTabsIntent.launchUrl(activity, Uri.parse(url))
         } catch (e: Exception) {
-            // fallback to browser
+
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             handleCustomTabClose()
         }
@@ -987,15 +856,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             activity?.let {
                                 PromoVault.getInstance(it).putString("FinalString", ref)
                             }
-                            // Audience (OnMaketing) is no longer derived from the
-                            // referrer string — funOnAdsLoad() now resolves it from
-                            // LightHouse.isOrganicUser(). We still store the raw
-                            // referrer (FinalString) and drive the flow forward.
+
                             onReferrerSettled()
 
                             activity?.getPreferences(MODE_PRIVATE)?.edit()?.apply {
                                 putBoolean("isReferrerDone", true)
-                                apply() // Use apply() for efficiency
+                                apply()
                             }
                         } catch (e: RemoteException) {
                             onReferrerSettled()
@@ -1005,16 +871,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
                     }
 
-                    // Everything else — unsupported, unavailable, and the DEVELOPER_ERROR /
-                    // PERMISSION_ERROR codes that used to fall off the end of this when —
-                    // still has to hand off, or the audience flag is never written.
                     else -> onReferrerSettled()
                 }
             }
 
             override fun onInstallReferrerServiceDisconnected() {
-                // The service can drop before setup ever finishes; without this the probe
-                // would end here and the flow would stall on the pre-referrer audience.
+
                 onReferrerSettled()
             }
         })

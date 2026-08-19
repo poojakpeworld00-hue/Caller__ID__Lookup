@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    
     <style name="Base.Theme.CallerIdLookup" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- App-wide Poppins font (regular 400) -->
+        
         <item name="android:fontFamily">@font/figtree_regular</item>
         <item name="fontFamily">@font/figtree_regular</item>
 

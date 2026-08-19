@@ -5,7 +5,7 @@ import okhttp3.Interceptor
 class SignedInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val request = chain.request().newBuilder()
-            // .addHeader("Authorization", "Bearer YOUR_TOKEN")
+
             .build()
         return chain.proceed(request)
     }

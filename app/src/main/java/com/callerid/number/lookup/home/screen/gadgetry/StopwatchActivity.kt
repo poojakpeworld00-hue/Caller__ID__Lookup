@@ -16,7 +16,6 @@ import com.callerid.number.lookup.home.databinding.ScreenStopwatchBinding
 import com.callerid.number.lookup.home.databinding.CellLapBinding
 import java.util.Locale
 
-/** Stopwatch with lap recording. */
 class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
 
     override val layoutId: Int = R.layout.screen_stopwatch
@@ -41,7 +40,6 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.padStartPause.setOnClickListener { if (running) pause() else start() }
         binding.padReset.setOnClickListener { reset() }
@@ -101,7 +99,7 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         row.lblLapName.text = getString(R.string.stopwatch_lap_n, lapCount)
         row.lblLapSplit.text = format(split)
         row.lblLapTotal.text = format(total)
-        binding.rowLaps.addView(row.root, 0) // newest on top
+        binding.rowLaps.addView(row.root, 0)
 
         binding.rowLaps.visibility = View.VISIBLE
         binding.emptyStateVw.visibility = View.GONE
@@ -124,7 +122,6 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         binding.lblTotal.text = text
     }
 
-    /** mm:ss.cc (centiseconds). */
     private fun format(ms: Long): String {
         val totalSec = ms / 1000
         val cs = (ms % 1000) / 10

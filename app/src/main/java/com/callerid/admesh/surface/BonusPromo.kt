@@ -12,21 +12,12 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 
-/**
- * Preload-and-show pattern for Google AdMob Rewarded ads.
- * Falls back to openDirectLink when the rewarded ad fails to load or show.
- *
- * Usage:
- *   BonusPromo.preload(activity)          // call early (setupViews / onResume)
- *   BonusPromo().show(activity) { ... }   // call on item click
- */
 class BonusPromo {
 
     companion object {
         private var loadedAd: RewardedAd? = null
         private var isLoading = false
 
-        /** Call this early (e.g. setupViews / onResume) to warm up the ad. */
         fun preload(context: Context) {
             val pref = PromoVault.getInstance(context)
             if (!pref.getBoolean("IsAdsON")) return
@@ -58,7 +49,6 @@ class BonusPromo {
             )
         }
 
-        /** Show DirectLink fallback, then invoke [onClosed] when it's done. */
         private fun showDirectLinkFallback(activity: Activity, onClosed: () -> Unit) {
             val pref = PromoVault.getInstance(activity)
             if (pref.getBoolean("IsCustomADS")) {
@@ -70,13 +60,6 @@ class BonusPromo {
         }
     }
 
-    /**
-     * Show the preloaded rewarded ad.
-     * - Ads OFF → [onRewarded] called immediately.
-     * - No preloaded ad → DirectLink fallback, then [onRewarded].
-     * - Ad shown → [onRewarded] fires only after reward is earned.
-     * - Ad fails to show → DirectLink fallback, then [onRewarded].
-     */
     fun show(activity: Activity, onRewarded: () -> Unit) {
         val pref = PromoVault.getInstance(activity)
 
@@ -93,7 +76,6 @@ class BonusPromo {
             return
         }
 
-        // Consume the held reference so we don't show it twice
         loadedAd = null
 
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {

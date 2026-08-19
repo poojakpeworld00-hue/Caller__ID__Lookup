@@ -8,7 +8,6 @@ import com.callerid.number.lookup.home.shell.db.TileDatabase.Companion.TABLE_GRI
 import com.callerid.number.lookup.home.shell.support.RoomConverters
 import com.callerid.number.lookup.home.shell.entities.BoardItem
 
-/** Everything placed on the home screen: icons, folders, shortcuts and widgets. */
 class BoardItemDao(private val helper: SQLiteOpenHelper) {
 
     private val converters = RoomConverters()
@@ -96,7 +95,6 @@ class BoardItemDao(private val helper: SQLiteOpenHelper) {
         helper.writableDatabase.delete(TABLE_GRID_ITEMS, "parent_id = ?", arrayOf(id.toString()))
     }
 
-    /** Removes an item and, if it was a folder, everything that was inside it. */
     fun deleteById(id: Long) = inTransaction {
         deleteItemById(id)
         deleteItemsWithParentId(id)
@@ -116,10 +114,6 @@ class BoardItemDao(private val helper: SQLiteOpenHelper) {
         )
     }
 
-    /**
-     * Slides the items after [shiftFrom] inside a folder over by [shiftBy], leaving the item
-     * being moved ([excludingId]) where it is.
-     */
     fun shiftFolderItems(folderId: Long, shiftFrom: Int, shiftBy: Int, excludingId: Long? = null) {
         helper.writableDatabase.execSQL(
             "UPDATE $TABLE_GRID_ITEMS SET `left` = `left` + ? " +
@@ -135,7 +129,6 @@ class BoardItemDao(private val helper: SQLiteOpenHelper) {
         )
     }
 
-    /** Removes an app's icon along with any copies of it sitting inside folders. */
     fun deleteByPackageName(packageName: String) = inTransaction {
         deleteItemByPackageName(packageName)
         deleteItemsByParentPackageName(packageName)

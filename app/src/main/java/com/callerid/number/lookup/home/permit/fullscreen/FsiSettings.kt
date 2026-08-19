@@ -7,24 +7,6 @@ import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.kit.LogRail
 import org.json.JSONObject
 
-/**
- * Parsed, audience-resolved view of the `permission_engine.fullscreen_permission`
- * Remote Config block that drives the whole Full-Screen-Intent flow.
- *
- * Everything the flow does — whether it runs at all, the min SDK, the country
- * block-list, and the Screen / Dialog behaviour and copy — comes from here. No
- * country, screen, dialog, or on/off logic is hardcoded in the app.
- *
- * Source resolution mirrors [com.callerid.number.lookup.home.permit.PermitSource]:
- *  1. a dedicated `permission_engine` Remote Config parameter, or
- *  2. the `permission_engine` key nested in the app's `GET_DATA_LIST` /
- *     `DEBUG_GET_DATA_LIST` blob.
- *
- * **Audience split:** when the user is Organic (`PromoVault.OnMaketing == false`)
- * and the block carries an `organic` object, its keys override the base — so
- * Marketing and Organic users can get different on/off, caps, and copy from the
- * one JSON block (see [applyOrganic]).
- */
 data class FsiSettings(
     val enabled: Boolean,
     val minSdk: Int,
@@ -56,18 +38,15 @@ data class FsiSettings(
 
     companion object {
         private const val TAG = "FsiSettings"
-        private const val LOG = "FSI" // shared debug tag with FsiPermit (adb logcat -s FSI)
+        private const val LOG = "FSI"
         private const val RC_KEY = "permission_engine"
         private const val BLOCK = "fullscreen_permission"
 
-        // Copy fallbacks — used only when the RC copy field is blank. Matches the
-        // approved Screen design; Remote Config overrides them at runtime.
         private const val DEF_TITLE = "Never miss who's calling"
         private const val DEF_DESC =
             "Show verified caller details on your lock screen — the instant a call comes in."
         private const val DEF_BUTTON = "Enable Now"
 
-        /** Fully-off config — returned whenever the block is missing or unreadable. */
         val DISABLED = FsiSettings(
             enabled = false,
             minSdk = 34,
@@ -77,7 +56,6 @@ data class FsiSettings(
             dialog = Dialog(false, 1000, 2, 3, 5, DEF_TITLE, DEF_DESC, DEF_BUTTON),
         )
 
-        /** Reads + parses the current config, applying the Organic override when relevant. */
         fun load(context: Context): FsiSettings {
             return try {
                 val block = rawBlock()
@@ -103,7 +81,6 @@ data class FsiSettings(
             }
         }
 
-        /** The `fullscreen_permission` object from Remote Config, or null when absent. */
         private fun rawBlock(): JSONObject? {
             val engine = rawEngineJson() ?: return null
             val obj = JSONObject(engine)
@@ -118,8 +95,7 @@ data class FsiSettings(
                 val blob = rc.getString(blobKey)
                 if (blob.isNotBlank()) {
                     val obj = JSONObject(blob)
-                    // Top-level audience split: descend into marketing/organic first,
-                    // then fall back to the flat top level (legacy config).
+
                     val root = audienceBlock(obj)
                     if (root.has(RC_KEY)) return root.getJSONObject(RC_KEY).toString()
                     if (obj.has(RC_KEY)) return obj.getJSONObject(RC_KEY).toString()
@@ -131,7 +107,6 @@ data class FsiSettings(
             }
         }
 
-        /** marketing/organic sub-object (by OnMaketing), else the flat blob. */
         private fun audienceBlock(obj: JSONObject): JSONObject {
             val isMarketing = PromoVault.getOrNull()?.getBoolean("OnMaketing") ?: false
             val preferred = if (isMarketing) "marketing" else "organic"
@@ -174,11 +149,10 @@ data class FsiSettings(
             )
         }
 
-        /** Overlays the optional `organic` object's keys over this (base) config. */
         private fun FsiSettings.applyOrganic(org: JSONObject): FsiSettings {
             val s = org.optJSONObject("screen")
             val d = org.optJSONObject("dialog")
-            // Organic can carry its own block-list; absent → inherit the base list.
+
             val orgExcluded = org.optJSONArray("excluded_countries")?.let { arr ->
                 (0 until arr.length()).mapNotNull { arr.optString(it).trim().uppercase().ifBlank { null } }
             } ?: excludedCountries

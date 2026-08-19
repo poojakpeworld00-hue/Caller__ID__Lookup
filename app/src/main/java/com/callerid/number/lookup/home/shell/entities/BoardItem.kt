@@ -7,7 +7,6 @@ import android.graphics.Point
 import android.graphics.drawable.Drawable
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_ICON
 
-// grid cells are from 0-5 by default. Icons and shortcuts occupy 1 slot only, widgets can be bigger
 data class BoardItem(
     var id: Long?,
     var left: Int,
@@ -16,19 +15,19 @@ data class BoardItem(
     var bottom: Int,
     var page: Int,
     var packageName: String,
-    var activityName: String,   // needed at apps that create multiple icons at install, not just the launcher
+    var activityName: String,
     var title: String,
     var type: Int,
     var className: String,
     var widgetId: Int,
-    var shortcutId: String,   // used at pinned shortcuts at startLauncher call
-    var icon: Bitmap? = null,        // store images of pinned shortcuts, those cannot be retrieved after creating
-    var docked: Boolean = false,   // special flag, meaning that page, top and bottom don't matter for this item, it is always at the bottom of the screen
-    var parentId: Long? = null, // id of folder this item is in (if it is in any)
+    var shortcutId: String,
+    var icon: Bitmap? = null,
+    var docked: Boolean = false,
+    var parentId: Long? = null,
 
     var drawable: Drawable? = null,
-    var providerInfo: AppWidgetProviderInfo? = null,    // used at widgets
-    var activityInfo: ActivityInfo? = null,             // used at shortcuts
+    var providerInfo: AppWidgetProviderInfo? = null,
+    var activityInfo: ActivityInfo? = null,
     var widthCells: Int = 1,
     var heightCells: Int = 1
 ) {

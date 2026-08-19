@@ -69,15 +69,8 @@ fun Activity.launchAppInfo(packageName: String) {
     }
 }
 
-/**
- * Tries, in order: the system's home-app picker, the Q+ role request (shows a one-tap system
- * confirmation instead of a settings list), the generic default-apps settings, then plain
- * Settings. Used by the long-press "Set as default" menu item and by onboarding.
- */
 fun Activity.requestSetAsDefaultLauncher() {
-    // second = whether the page is a list the user has to find this app in, and so
-    // whether the coach mark helps. The Q+ role request is a one-tap confirmation
-    // with nothing to hunt for, and a card over it would just cover the buttons.
+
     val intents = buildList {
         add(Intent(Settings.ACTION_HOME_SETTINGS) to true)
         if (isQPlus()) {
@@ -213,22 +206,6 @@ fun Activity.handleGridItemPopupMenu(
     }
 }
 
-/**
- * Drops this app's tasks out of the recents list at runtime.
- *
- * The `excludeFromRecents` manifest attribute is not enough for the onboarding screens: it
- * only applies to the ROOT activity of a task, and those screens are started into the task
- * the caller-ID splash already rooted (`rootOfTask=false`). Setting it on the AppTask works
- * whatever the root is.
- *
- * It also takes the system's "Default apps" page and the role dialog with it — both are
- * started for a result, so they run inside this same task and inherit its recents state.
- * That is what stops the settings page lingering in recents, and being resumable in the
- * background, once the user has allowed or denied.
- *
- * Best-effort: some OEM shells refuse the call, and it is decoration rather than behaviour,
- * so a failure is logged and swallowed rather than surfaced.
- */
 fun Activity.excludeAppFromRecents() {
     try {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return

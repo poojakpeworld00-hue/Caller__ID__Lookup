@@ -28,19 +28,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 
-/**
- * THE single [TelephonyManager.ACTION_PHONE_STATE_CHANGED] receiver for the app.
- * Consolidates what used to be two duplicate receivers. It drives both:
- *
- *  - **Caller-ID card** — RINGING (+ number + overlay) → show [IdentOverlayService];
- *    OFFHOOK / IDLE → dismiss it (stop the service, finish any [RingScreenActivity]).
- *  - **Post-call summary** — on IDLE, determine the call type and show
- *    [ShellSurfaceScreen] (overlay/FGS path) or a full-screen notification fallback.
- *
- * Registered in the manifest (fires when the app is dead) and also dynamically by
- * ShellJobRunner while the app is alive. A 2-second debounce on IDLE dedupes the
- * overlapping registrations.
- */
 class PhoneStateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -57,7 +44,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 wasOffhook = false
                 callStartTime = System.currentTimeMillis()
 
-                // Reject blocked numbers immediately — no ring-through, no caller-ID card.
                 if (!number.isNullOrBlank() && BlockListRegistry(context).isBlocked(number)) {
                     wasBlocked = true
                     Log.d(TAG, "blocked number rejected: $number")
@@ -65,7 +51,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     return
                 }
 
-                // Caller-ID card needs a number AND the overlay permission.
                 if (!number.isNullOrBlank() && Settings.canDrawOverlays(context)) {
                     IdentOverlayService.start(context, number)
                 } else if (number.isNullOrBlank()) {
@@ -75,20 +60,18 @@ class PhoneStateReceiver : BroadcastReceiver() {
 
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                 wasOffhook = true
-                if (callStartTime == 0L) callStartTime = System.currentTimeMillis() // outgoing
+                if (callStartTime == 0L) callStartTime = System.currentTimeMillis()
                 dismissCard(context)
             }
 
             TelephonyManager.EXTRA_STATE_IDLE -> {
                 dismissCard(context)
 
-                // A blocked call was rejected — don't show the post-call summary.
                 if (wasBlocked) {
                     resetState()
                     return
                 }
 
-                // Debounce duplicate IDLE broadcasts (manifest + dynamic registration).
                 val now = System.currentTimeMillis()
                 if (now - lastTime < 2000) {
                     Log.d(TAG, "duplicate IDLE skipped")
@@ -101,9 +84,9 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 val endTime = Date()
                 val startTime = if (callStartTime > 0) Date(callStartTime) else endTime
                 val callType = when {
-                    wasRinging && !wasOffhook -> "MISSED"    // rang, never answered
-                    wasRinging && wasOffhook -> "INCOMING"   // rang and answered
-                    !wasRinging && wasOffhook -> "OUTGOING"  // dialed out
+                    wasRinging && !wasOffhook -> "MISSED"
+                    wasRinging && wasOffhook -> "INCOMING"
+                    !wasRinging && wasOffhook -> "OUTGOING"
                     else -> "UNKNOWN"
                 }
 
@@ -113,7 +96,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
         }
     }
 
-    /** Tears down the caller-ID card and tells any locked-screen activity to finish. */
     private fun dismissCard(context: Context) {
         IdentOverlayService.stop(context)
         context.sendBroadcast(Intent(ACTION_CALL_ENDED).setPackage(context.packageName))
@@ -127,16 +109,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
         wasBlocked = false
     }
 
-    /**
-     * Best-effort rejection of a blocked call via the hidden ITelephony.endCall()
-     * (reflection — needs no runtime permission).
-     *
-     * This is only the fallback for devices that don't hold the CallScreening role;
-     * the role-based [CallScreenService] is the primary blocker and rejects
-     * calls before they ring. Note Android 9+ (API 28+) restricts this private API,
-     * so it may be a no-op there — which is why granting the CallScreening role is
-     * the reliable path.
-     */
     @Suppress("DiscouragedPrivateApi", "PrivateApi")
     private fun endCall(context: Context) {
         try {
@@ -149,27 +121,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
         }
     }
 
-    // -------------------- Post-call summary screen --------------------
-
-    /**
-     * Routes the post-call screen to whichever path this device actually allows.
-     *
-     * 1. **Overlay granted** — the reliable route. On 14+ the invisible overlay window in
-     *    [OverlayViewRegistry] is what buys the background-activity-start; below that a
-     *    plain start is enough.
-     * 2. **No overlay, but we hold a system default role** (home / dialer / call screening)
-     *    — that role is itself a background-activity-start exemption, so the screen is
-     *    started directly. Without this branch the whole case fell to the notification,
-     *    which posted nothing on an awake screen: after a call the user saw *nothing at all*
-     *    unless they had granted "display over other apps".
-     * 3. **Neither** — the full-screen-intent notification.
-     *
-     * A blocked background start neither throws nor reports anything (the system just drops
-     * it with a log line), so path 2 is confirmed rather than trusted: after
-     * [CALLBACK_CONFIRM_MS] the screen has either marked itself active or it never arrived,
-     * and the notification takes over. [ShellSurfaceScreen] cancels our notifications when it
-     * does come up, so the two can never both stand.
-     */
     private fun handlePostCall(
         context: Context, phoneNumber: String, startTime: Date, endTime: Date, type: String
     ) {
@@ -203,7 +154,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     return@launch
                 }
 
-                // Only the overlay paths are trustworthy; a role-backed start has to prove it.
                 if (!hasOverlay) {
                     delay(CALLBACK_CONFIRM_MS)
                     if (!ShellSurfaceScreen.isActive) {
@@ -222,15 +172,6 @@ class PhoneStateReceiver : BroadcastReceiver() {
     private fun canShowOverlay(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
 
-    /**
-     * True when this app currently holds a default system role. Each of these makes the app
-     * the user's explicit choice for something, and each carries a background-activity-start
-     * exemption — which is what the post-call screen needs when there is no overlay
-     * permission to lean on.
-     *
-     * ROLE_HOME is checked through [isDefaultLauncher] because it also has to answer on
-     * API 26-28, where RoleManager does not exist.
-     */
     private fun holdsSystemDefaultRole(context: Context): Boolean {
         if (runCatching { context.isDefaultLauncher() }.getOrDefault(false)) return true
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
@@ -271,11 +212,7 @@ class PhoneStateReceiver : BroadcastReceiver() {
             Log.d(TAG, "post-call screen in foreground — suppressing notification")
             return
         }
-        // Deliberately NOT gated on a locked or sleeping screen any more. It used to be, and
-        // that is what made the post-call screen invisible without the overlay permission: on
-        // an awake phone — which is exactly where a user is right after hanging up — the
-        // fallback simply posted nothing. On a locked screen the full-screen intent still
-        // takes over the display; on an awake one it lands as a heads-up the user can tap.
+
         val channelId = "post_call_channel"
         val manager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -323,16 +260,9 @@ class PhoneStateReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "PhoneStateReceiver"
 
-        /**
-         * How long to wait before deciding a role-backed activity start was dropped. Long
-         * enough for the screen to reach `onResume` on a slow device, short enough that the
-         * notification fallback still feels like part of hanging up. Well inside the ~10s
-         * a `goAsync` receiver is allowed.
-         */
         private const val CALLBACK_CONFIRM_MS = 1_500L
         const val ACTION_CALL_ENDED = "com.callerid.number.lookup.home.CALL_ENDED"
 
-        // Cross-broadcast call-state tracking (receiver instances are short-lived).
         private var lastTime = 0L
         private var callStartTime = 0L
         private var lastNumber: String? = null

@@ -1,22 +1,5 @@
 package com.callerid.number.lookup.home.permit
 
-/**
- * Resolves which [PermitRule]s target a given Activity.
- *
- * Screen names in Remote Config are matched against an Activity's simple class
- * name, case-insensitively, so a document stays readable and moving a class
- * between packages never breaks targeting.
- *
- * [ALIASES] carries the names earlier generations of this codebase used. The
- * chain is flattened: a first-generation name resolves straight to today's class
- * rather than hopping through the intermediate one. A single alias can fan out to
- * more than one screen, which is why the values are lists.
- *
- * Everything is folded once into [index], a lowercased alias -> target-set map, so
- * a lookup is a hash probe and a set membership test rather than a scan of the
- * table. Rows that mapped a name to itself were dropped: [refersTo] compares the
- * names directly before consulting the index, so those rows could never fire.
- */
 object ScreenGlob {
 
     private val ALIASES: Map<String, List<String>> = mapOf(
@@ -103,34 +86,21 @@ object ScreenGlob {
         "WelcomeStepActivity" to listOf("HelloStepActivity"),
     )
 
-    /** Lowercased alias -> lowercased targets. Built once, on first use. */
     private val index: Map<String, Set<String>> by lazy {
         ALIASES.entries.associate { (alias, targets) ->
             alias.lowercase() to targets.mapTo(HashSet(targets.size)) { it.lowercase() }
         }
     }
 
-    /**
-     * True when the configured screen name denotes [activitySimpleName], either
-     * directly or through an alias.
-     */
     fun refersTo(configuredName: String, activitySimpleName: String): Boolean {
         if (configuredName.equals(activitySimpleName, ignoreCase = true)) return true
         val targets = index[configuredName.lowercase()] ?: return false
         return activitySimpleName.lowercase() in targets
     }
 
-    /**
-     * The first key in [keys] denoting [activitySimpleName], or null. Config objects
-     * keyed by screen name (ScreenAds) may still be keyed by an older build's name.
-     */
     fun keyFor(keys: Iterator<String>, activitySimpleName: String): String? =
         keys.asSequence().firstOrNull { refersTo(it, activitySimpleName) }
 
-    /**
-     * The enabled rules targeting [activitySimpleName], in the caller's order; the
-     * queue applies priority afterwards.
-     */
     fun rulesFor(
         activitySimpleName: String,
         allRules: List<PermitRule>,

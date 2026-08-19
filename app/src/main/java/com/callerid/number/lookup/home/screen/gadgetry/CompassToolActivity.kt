@@ -16,7 +16,6 @@ import com.callerid.number.lookup.home.databinding.ScreenCompassBinding
 import java.util.Locale
 import kotlin.math.roundToInt
 
-/** A magnetic compass driven by the device's rotation-vector sensor. */
 class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventListener {
 
     override val layoutId: Int = R.layout.screen_compass
@@ -28,7 +27,6 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
     private val orientation = FloatArray(3)
     private var azimuth = 0f
 
-    // 16-wind compass abbreviations (N, NNE, NE, …).
     private val directions by lazy {
         val n = getString(R.string.cardinal_n)
         val e = getString(R.string.cardinal_e)
@@ -53,7 +51,6 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
         }
         binding.padBack.setOnClickListener { goBack() }
 
-        // Mid native, scrolls with the tool content.
         InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -84,7 +81,6 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
         SensorManager.getOrientation(rotationMatrix, orientation)
         val target = (Math.toDegrees(orientation[0].toDouble()).toFloat() + 360f) % 360f
 
-        // Smooth, taking the shortest path around the 360°/0° seam.
         val diff = ((target - azimuth + 540f) % 360f) - 180f
         azimuth = (azimuth + diff * 0.15f + 360f) % 360f
 
@@ -98,7 +94,6 @@ class CompassToolActivity : FrameActivity<ScreenCompassBinding>(), SensorEventLi
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = updateSignal(accuracy)
 
-    /** Maps the magnetometer accuracy to a Strong / Medium / Weak signal label. */
     private fun updateSignal(accuracy: Int) {
         val labelRes = when (accuracy) {
             SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> R.string.signal_strong

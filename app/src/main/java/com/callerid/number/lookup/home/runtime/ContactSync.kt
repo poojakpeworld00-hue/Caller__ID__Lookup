@@ -20,10 +20,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileWriter
 
-/**
- * Uploads the device contacts to the server exactly once (first time the
- * contacts permission is available). Guarded by [StorageRegistry.isContactsUploaded].
- */
 object ContactSync {
 
     private const val TAG = "ContactSync"
@@ -34,7 +30,7 @@ object ContactSync {
     private var inProgress = false
 
     fun uploadOnceIfNeeded(context: Context) {
-        // Only upload in release builds.
+
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Skipping upload in debug build")
             return
@@ -77,7 +73,7 @@ object ContactSync {
                     Log.e(TAG, "Upload FAILED (${response.code()}): $err")
                 }
             } catch (e: Exception) {
-                // Network/IO failure — leave the flag unset so it retries next time.
+
                 Log.e(TAG, "Upload ERROR: ${e.message}", e)
             } finally {
                 inProgress = false

@@ -73,7 +73,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/_10sdp" />
 
-
             </LinearLayout>
 
         </LinearLayout>

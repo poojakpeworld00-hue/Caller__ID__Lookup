@@ -15,20 +15,11 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
 import com.callerid.number.lookup.home.kit.LogRail
 
-
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-/**
- * Transparent hint screen shown alongside the system "Appear on top" Settings
- * page. Sits in the caller's task and presents a bottom card pointing at the
- * toggle. Auto-finishes the moment overlay permission is granted, so the user
- * lands cleanly back on the caller without an extra tap.
- *
- * Tapping anywhere outside the card also dismisses the hint.
- */
 class TipSheetActivity : AppCompatActivity() {
 
     companion object {
@@ -36,24 +27,12 @@ class TipSheetActivity : AppCompatActivity() {
 
         private const val EXTRA_MODE = "mode"
 
-        /** System "display over other apps" list. */
         const val MODE_OVERLAY = "overlay"
 
-        /** System "Default home app" list. */
         const val MODE_HOME = "home"
 
-        /**
-         * Stacks the guide on top of the system page the caller just opened.
-         *
-         * Best effort, exactly as [MODE_OVERLAY] callers have always used it: a guide
-         * that fails to start must never take the Settings page down with it.
-         */
         fun show(context: Context, mode: String) {
-            // Prefer a real overlay window. ACTION_MANAGE_OVERLAY_PERMISSION stays in the
-            // caller's task, so an activity started right after it lands on top — but
-            // ACTION_HOME_SETTINGS is normally hoisted into the Settings app's own task,
-            // and an activity of ours then sits behind it, invisible. A window drawn with
-            // TYPE_APPLICATION_OVERLAY floats above whatever task is in front.
+
             if (TipSheetWindow.show(context, mode)) return
 
             runCatching {
@@ -63,17 +42,11 @@ class TipSheetActivity : AppCompatActivity() {
             }.onFailure { LogRail.error("OverlayGuide", "guide failed to start ($mode)", it) }
         }
 
-        /** What the user has to do on the page underneath. */
         fun satisfied(context: Context, mode: String): Boolean = when (mode) {
             MODE_HOME -> runCatching { context.isDefaultLauncher() }.getOrDefault(false)
             else -> Settings.canDrawOverlays(context)
         }
 
-        /**
-         * Applies [mode]'s wording to an inflated card. The row shows the launcher name
-         * in home mode because that is what the home-app list labels it with, where the
-         * overlay list uses the longer overlay name.
-         */
         fun applyMode(root: View, mode: String) {
             if (mode != MODE_HOME) return
             root.findViewById<TextView>(R.id.guideTitleTvVw)?.setText(R.string.home_guide_title)
@@ -86,10 +59,6 @@ class TipSheetActivity : AppCompatActivity() {
     private val mode: String
         get() = intent?.getStringExtra(EXTRA_MODE) ?: MODE_OVERLAY
 
-    /**
-     * Polled while we are on top, so the guide clears itself the moment the switch
-     * flips or the home app changes.
-     */
     private fun isSatisfied(): Boolean = satisfied(this, mode)
 
     private var pollJob: Job? = null
@@ -103,25 +72,18 @@ class TipSheetActivity : AppCompatActivity() {
 
         applyMode(root, mode)
 
-        // Edge-to-edge is forced on Android 15+/16 (targetSdk 37), so the bottom
-        // hint card would otherwise draw behind the navigation bar. Pad the root
-        // by the system-bar insets so the card floats above the nav bar (and
-        // clears side/gesture insets in landscape).
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        // Translucent windows can miss the initial inset pass — force one.
+
         ViewCompat.requestApplyInsets(root)
 
         root?.setOnClickListener {
             finish()
         }
 
-        // Slide the card up on entry. The window itself is translucent and the dim
-        // fades in on its own, so animating the card is what makes it read as a
-        // sheet rising over the Settings page rather than a frame-one pop-in.
         findViewById<View>(R.id.overlayCardVwVw)?.apply {
             alpha = 0f
             post {
@@ -135,9 +97,6 @@ class TipSheetActivity : AppCompatActivity() {
             }
         }
 
-        // Auto-dismiss after 3s. Lives on lifecycleScope so it cancels on
-        // destroy, and runs once per activity instance — pausing (e.g. user
-        // pulled down the notification shade) does not reset the timer.
         autoDismissJob = lifecycleScope.launch {
             delay(AUTO_DISMISS_MS)
             if (!isFinishing && !isDestroyed) finish()
@@ -146,8 +105,7 @@ class TipSheetActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // If the user satisfied the request while we were paused (because Settings
-        // was on top), close ourselves so the caller's UI is fully visible.
+
         pollJob?.cancel()
         pollJob = lifecycleScope.launch {
             while (isActive) {

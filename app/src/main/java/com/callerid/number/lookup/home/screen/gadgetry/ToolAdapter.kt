@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.callerid.number.lookup.home.databinding.CellToolBinding
 import com.callerid.number.lookup.home.databinding.CellToolHeaderBinding
 
-/** One tool tile: a white glyph on a gradient tile, plus a launch target. */
 data class ToolUi(
     val name: String,
     val hint: String,
@@ -19,7 +18,6 @@ data class ToolUi(
     val target: Class<*>,
 )
 
-/** A row in the tools grid — a category header (full width) or a tool card. */
 sealed interface ToolRow {
     data class Header(val title: String) : ToolRow
     data class Tool(val tool: ToolUi) : ToolRow
@@ -35,7 +33,7 @@ class ToolAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun submit(list: List<ToolRow>) {
         rows = list
-        lastAnimated = -1   // re-cascade after a search filter (fade-through)
+        lastAnimated = -1
         notifyDataSetChanged()
     }
 
@@ -63,7 +61,6 @@ class ToolAdapter(
 
     override fun getItemCount(): Int = rows.size
 
-    /** Cards cascade in with a 40ms stagger + scale 0.94 → 1. */
     private fun animateIn(view: View, position: Int) {
         if (position <= lastAnimated) return
         lastAnimated = position
@@ -95,7 +92,6 @@ class ToolAdapter(
             }
         }
 
-        /** Tap feedback — icon tile springs 1 → 0.9 → 1. */
         private fun springIcon(view: View) {
             view.animate().scaleX(0.9f).scaleY(0.9f).setDuration(90L)
                 .withEndAction {

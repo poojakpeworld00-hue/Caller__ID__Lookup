@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 
-/** Bitmap <-> BLOB for the pinned-shortcut icons stored in the grid table. */
 class RoomConverters {
     fun toBitmap(bytes: ByteArray?): Bitmap? {
         return if (bytes == null) {

@@ -66,8 +66,7 @@ class BoardSettingsActivity : ShellBaseActivity() {
 
     private fun setupCustomizeColors() {
         binding.settingsColorCustomizationHolderVw.setOnClickListener {
-            // see ShellBaseActivity.withFossifyPackageNameSpoofed — startCustomizationActivity()
-            // carries its own copy of the anti-rebrand check, separate from the one in onCreate()
+
             withFossifyPackageNameSpoofed { startCustomizationActivity() }
         }
     }

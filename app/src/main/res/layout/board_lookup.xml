@@ -7,7 +7,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <!-- Compact header (pads the status-bar inset from LookupFragment) -->
+    
     <LinearLayout
         android:id="@+id/heroHeaderVw"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             app:tint="@color/on_primary_container" />
     </LinearLayout>
 
-    <!-- Single search pill: +country · number · clear · search -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -135,8 +135,7 @@
             app:tint="@color/on_primary" />
     </LinearLayout>
 
-    <!-- Paste suggestion — shown only when the clipboard holds a phone number.
-         40dp lavender pill: clipboard glyph + "Paste" + mono number (per design). -->
+    
     <LinearLayout
         android:id="@+id/flagPaste"
         android:layout_width="wrap_content"
@@ -187,7 +186,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Shimmer skeleton shown during search loading -->
+        
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shmResult"
             android:layout_width="match_parent"
@@ -251,7 +250,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Result Card -->
+                
                 <LinearLayout
                     android:id="@+id/cvResultVw"
                     android:layout_width="match_parent"
@@ -263,7 +262,7 @@
                     android:padding="@dimen/_13sdp"
                     android:visibility="gone">
 
-                    <!-- Header: identity on the left, quick actions on the right -->
+                    
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -374,7 +373,7 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <!-- Dashed separator -->
+                    
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_1sdp"
@@ -382,7 +381,7 @@
                         android:background="@drawable/form_divider_dashed"
                         android:layerType="software" />
 
-                    <!-- Country + Carrier tiles -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -473,7 +472,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Line type tile (full width) -->
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -515,7 +514,7 @@
                             tools:text="Mobile" />
                     </LinearLayout>
 
-                    <!-- Show full detail (full width) -->
+                    
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/padShowFullDetail"
                         style="@style/Widget.Material3.Button"
@@ -534,7 +533,7 @@
                         app:iconTint="@android:color/white" />
                 </LinearLayout>
 
-                <!-- Empty state — animated breathing search icon (no Lottie) -->
+                
                 <LinearLayout
                     android:id="@+id/rowEmptyState"
                     android:layout_width="match_parent"
@@ -608,7 +607,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- History Header -->
+                
                 <LinearLayout
                     android:id="@+id/rowHistoryHeader"
                     android:layout_width="match_parent"

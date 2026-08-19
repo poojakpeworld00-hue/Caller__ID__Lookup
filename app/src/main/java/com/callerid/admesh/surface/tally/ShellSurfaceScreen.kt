@@ -29,17 +29,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Post-call screen shown after an incoming/outgoing/missed call. Hosts three
- * tabs (Message, PingCard, WhatsApp) and an ad slot. Extends the project's
- * [FrameActivity] so it picks up the standard DataBinding + locale/theme
- * plumbing.
- *
- * Note: the consent + Mobile Ads init that used to live here (via the
- * `getData(...)` call inherited from `PromoAnchorActivity`) is expected to run
- * once during app startup. This screen only triggers ad rendering, not SDK
- * initialization.
- */
 class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
     override val layoutId: Int = R.layout.screen_call_back_screen
@@ -53,11 +42,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         lifecycle.addObserver(systemDialogHelper)
         if (handleRichPushIfQueued()) return
         OpenPromoRegistry.callbackshow = true
-        // Android 15+/16 forces edge-to-edge (no opt-out at targetSdk 35/36), so
-        // the top bar and bottom ad would draw under the status/navigation bars.
-        // Pad the root by the system-bar insets to keep all content visible, and
-        // fold in the IME inset so the bottom message input rides above the
-        // keyboard instead of being hidden behind it (with or without an ad).
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.mainVw) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -78,27 +63,23 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         val endTimeMillis = intent.getLongExtra("end_time", 0L)
         val callType = intent.getStringExtra("call_type") ?: "UNKNOWN"
 
-        // Resolve the contact name for this number; fall back to the raw number.
         val callerName = if (phone.isNotBlank() && !phone.equals("Private Number", ignoreCase = true))
             ContactSource(this).lookupNameByNumber(phone)?.takeIf { it.isNotBlank() }
         else null
         binding.txtCallerNameVw.text = callerName ?: phone
         binding.txtCallTypeVw.text = getCallTypeText(callType)
 
-        // Duration — format as MM:SS
         val durationSec = if (startTimeMillis > 0 && endTimeMillis > startTimeMillis)
             ((endTimeMillis - startTimeMillis) / 1000).toInt() else 0
         val minutes = durationSec / 60
         val seconds = durationSec % 60
         binding.txtDurationVw.text = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 
-        // Time — show end time if available
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         binding.txtTimeVw.text = timeFormat.format(
             if (endTimeMillis > 0) Date(endTimeMillis) else Date()
         )
 
-        // Recent-call list is the default ("first") tab of the post-call screen.
         supportFragmentManager.beginTransaction()
             .replace(R.id.frag_container, CallStreamFragment())
             .commit()
@@ -115,7 +96,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         onBackPressedDispatcher.addCallback(this) {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.frag_container)
             when (currentFragment) {
-                // The recents list is "home" — back from it closes the screen.
+
                 is CallStreamFragment -> finish()
                 else -> {
                     if (!isFinishing && !isDestroyed) {
@@ -140,17 +121,11 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         binding.picRecent, binding.picMes, binding.picReminder, binding.picWhatsapp
     )
 
-    /** The caller's number from the launching intent, or null for private/unknown. */
     private val callerNumber: String? by lazy {
         intent.getStringExtra("phone")?.trim()
             ?.takeIf { it.isNotEmpty() && !it.equals("Private Number", ignoreCase = true) }
     }
 
-    /**
-     * Places a direct outgoing call via the shared CALL_PHONE flow: requests the
-     * permission if needed, dials directly (ACTION_CALL) once granted, and falls
-     * back to the dialer only if it isn't.
-     */
     private fun callNumber(number: String) = placeCall(number)
 
     private fun setupClickListeners() {
@@ -173,7 +148,6 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
             }
         }
 
-        // WhatsApp tab — opens a chat directly with the caller's number.
         binding.picWhatsapp.triggerClick {
             if (isFinishing || isDestroyed) return@triggerClick
             selectTab(binding.picWhatsapp, allTabs)
@@ -181,11 +155,6 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         }
     }
 
-    /**
-     * Opens a WhatsApp chat with [number] (digits only). Tries WhatsApp then
-     * WhatsApp Business, then the wa.me web redirect. Falls back to WhatsApp's
-     * main screen when the number is private/unknown.
-     */
     private fun openWhatsApp(number: String?) {
         val digits = number?.filter { it.isDigit() }
         if (digits.isNullOrBlank()) {
@@ -199,18 +168,13 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
             }.getOrDefault(false)
             if (ok) return
         }
-        // No WhatsApp app handled it directly — browser redirect, else main screen.
+
         val opened = runCatching {
             startActivity(Intent(Intent.ACTION_VIEW, uri)); true
         }.getOrDefault(false)
         if (!opened) openWhatsAppApp()
     }
 
-    /**
-     * Launches WhatsApp's main screen without targeting any contact. Tries
-     * `com.whatsapp` first, then `com.whatsapp.w4b` (WhatsApp Business). If
-     * neither is installed, surfaces a one-line toast.
-     */
     private fun openWhatsAppApp() {
         val packages = listOf("com.whatsapp", "com.whatsapp.w4b")
         for (pkg in packages) {
@@ -220,7 +184,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
                 return
             } catch (e: Exception) {
                 Log.e("ShellSurfaceScreen", "Failed to launch $pkg", e)
-                // try next package
+
             }
         }
         Toast.makeText(this, "WhatsApp not installed", Toast.LENGTH_SHORT).show()
@@ -289,11 +253,6 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
         handleRichPushIfQueued()
     }
 
-    /**
-     * Mounts the LightHouse rich-push ad overlay when this launch came from a
-     * rich push. Returns true when handled. Shared by the cold path (initView)
-     * and the warm path (onNewIntent).
-     */
     private fun handleRichPushIfQueued(): Boolean {
         if (!LightHouseRichPush.shouldHandle(intent)) return false
         LightHouseRichPush.handle(
@@ -313,10 +272,7 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
     }
 
     companion object {
-        /**
-         * True while this post-call screen is in the foreground — PhoneStateReceiver
-         * checks it to suppress a duplicate post-call notification (B2).
-         */
+
         @Volatile
         var isActive = false
     }

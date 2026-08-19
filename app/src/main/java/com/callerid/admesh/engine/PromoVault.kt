@@ -16,7 +16,6 @@ class PromoVault constructor(context: Context) {
         const val IsFirsttime = "IsFirsttime"
         const val IS_PERMISSION = "isPermission"
 
-        // ⭐ NEW FIELDS (From AppPreferences)
         var VD_SELECTED_LANGUAGE = "VD_selected_app_language"
         private const val VD_SELECTED_THEME = "VD_selected_theme"
         private const val VD_PERMISSIONS_GRANTED = "VD_permissions_granted"
@@ -37,17 +36,8 @@ class PromoVault constructor(context: Context) {
             }
         }
 
-        /**
-         * The already-initialised instance, or null if [getInstance] was never
-         * called. Lets context-less callers (e.g. PermitSource) read a
-         * flag such as `OnMaketing` — it's initialised early in the launch flow.
-         */
         fun getOrNull(): PromoVault? = instance
     }
-
-    // ------------------------------------------------
-    // OLD PROPERTIES
-    // ------------------------------------------------
 
     var IsIntro: Boolean
         get() = preferences.getBoolean(IS_INTRO, false)
@@ -69,23 +59,16 @@ class PromoVault constructor(context: Context) {
         get() = preferences.getString("result_HD_VBC_Type", "b") ?: "b"
         set(value) = preferences.edit { putString("result_HD_VBC_Type", value) }
 
-    // ------------------------------------------------
-    // ⭐ NEW PROPERTIES FROM AppPreferences
-    // ------------------------------------------------
-
-    // Language
     var selectedLanguage: String
         get() = preferences.getString(VD_SELECTED_LANGUAGE, "") ?: ""
         set(value) {
-            preferences.edit().putString(VD_SELECTED_LANGUAGE, value).apply() // asynchronous
+            preferences.edit().putString(VD_SELECTED_LANGUAGE, value).apply()
         }
 
-    // Permissions
     var permissionsGranted: Boolean
         get() = preferences.getBoolean(VD_PERMISSIONS_GRANTED, false)
         set(value) = preferences.edit { putBoolean(VD_PERMISSIONS_GRANTED, value) }
 
-    // Save country
     var userCountry: String
         get() = preferences.getString("user_country", "") ?: ""
         set(value) = preferences.edit { putString("user_country", value) }
@@ -97,7 +80,6 @@ class PromoVault constructor(context: Context) {
         get() = preferences.getString("user_City", "") ?: ""
         set(value) = preferences.edit { putString("user_City", value) }
 
-    // termssPermissions
     var termssPermissions: Boolean
         get() = preferences.getBoolean(VD_TERMS_PERMISSIONS_GRANTED, false)
         set(value) = preferences.edit { putBoolean(VD_TERMS_PERMISSIONS_GRANTED, value) }
@@ -114,10 +96,6 @@ class PromoVault constructor(context: Context) {
     fun update(block: SharedPreferences.Editor.() -> Unit) {
         preferences.edit().apply(block).apply()
     }
-
-    // ------------------------------------------------
-    // UTILITY METHODS
-    // ------------------------------------------------
 
     fun putString(key: String?, value: String?) {
         return preferences.edit().putString(key, value).apply()
@@ -170,6 +148,5 @@ class PromoVault constructor(context: Context) {
     fun clear() {
         preferences.edit().clear().apply()
     }
-
 
 }

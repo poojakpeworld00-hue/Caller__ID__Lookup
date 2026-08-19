@@ -1,5 +1,4 @@
-<!-- Settings · Share — baked icon tile (soft indigo square + filled share glyph),
-     matching the Rate/Privacy/Blocklist icon style. -->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="56dp"
     android:height="56dp"

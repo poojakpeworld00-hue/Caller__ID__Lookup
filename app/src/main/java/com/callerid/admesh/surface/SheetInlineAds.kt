@@ -42,10 +42,6 @@ class SheetInlineAds {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed
     }
 
-    //    =====================================================================================BAnner
-    // ------------------------------------------------------------------------------------------
-    // SHOW BANNER
-    // ------------------------------------------------------------------------------------------
     fun renderBannerAd(
         activity: Activity,
         adContainer: FrameLayout,
@@ -98,9 +94,9 @@ class SheetInlineAds {
     fun Context.adsWidth(): Int {
         val displayMetrics = resources.displayMetrics
         val adWidthPixels = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val activity = this as? Activity // Safe cast
+            val activity = this as? Activity
             val windowMetrics: WindowMetrics? = activity?.windowManager?.currentWindowMetrics
-            windowMetrics?.bounds?.width() ?: displayMetrics.widthPixels // Fallback if null
+            windowMetrics?.bounds?.width() ?: displayMetrics.widthPixels
         } else {
             displayMetrics.widthPixels
         }
@@ -109,9 +105,6 @@ class SheetInlineAds {
         return (adWidthPixels / density).toInt()
     }
 
-    // ------------------------------------------------------------------------------------------
-    // GOOGLE BANNER
-    // ------------------------------------------------------------------------------------------
     private fun loadGoogleBanner(
         activity: Activity,
         adContainer: FrameLayout,
@@ -196,9 +189,6 @@ class SheetInlineAds {
         bannerAdView.loadAd(adRequest)
     }
 
-    // ------------------------------------------------------------------------------------------
-    // FACEBOOK BANNER
-    // ------------------------------------------------------------------------------------------
     private fun showFbBanner(activity: Activity, layout: FrameLayout) {
 
         val fbId = PromoVault.getInstance(activity)
@@ -250,8 +240,6 @@ class SheetInlineAds {
         adContainer.visibility = View.GONE
     }
 
-
-    //    =====================================================================================BAnner
     companion object {
         private var BCnativeAd: NativeAd? = null
     }
@@ -316,7 +304,6 @@ class SheetInlineAds {
         Log.e("NativeAds", "Google Show: nativeAd")
         val adsPreference = PromoVault.getInstance(context)
 
-        // --- No Internet ---
         if (!hasNetwork(context)) {
             Log.w("987654321", "Native No Internet")
             layout.removeAllViews()
@@ -326,7 +313,6 @@ class SheetInlineAds {
             return
         }
 
-        // --- Ads OFF ---
         if (!adsPreference.getBoolean("IsAdsON")) {
             Log.w("987654321", "Native Ads Off")
             layout.removeAllViews()
@@ -336,13 +322,10 @@ class SheetInlineAds {
             return
         }
 
-        // --- Prepare UI ---
-
         imageView?.gone()
         ln?.gone()
         layout.visible()
 
-        // --- Based on PromoKind ---
         Log.w(
             "987654321",
             "Native Ads Type: ${PromoKind.fromString(adsPreference.getString("IsAdType"))}"
@@ -358,8 +341,7 @@ class SheetInlineAds {
                                 nativeAds.destroy()
                                 return@forNativeAd
                             }
-//                            BCnativeAd?.destroy()
-//                            BCnativeAd = nativeAds
+
                             try {
                                 val binding = GooglebignativeBinding.inflate(context.layoutInflater)
                                 bigNativeTemplate(nativeAds, binding, context)
@@ -370,7 +352,6 @@ class SheetInlineAds {
                                     layout.addView(binding.root)
                                 }
 
-                                // Revenue callback
                                 try {
                                     nativeAds.setOnPaidEventListener { adValue ->
                                         val revenue = adValue.valueMicros / 1_000_000.0
@@ -383,7 +364,7 @@ class SheetInlineAds {
 
                             } catch (e: Exception) {
                                 Log.e("987654321", "Google ad failed: ${e.message}")
-//                                 Google failed → fallback
+
                                 if (adsPreference.getBoolean("IsFail_FB")) {
                                     Log.w("987654321", "Native Ads Null")
                                     layout.post {
@@ -407,7 +388,6 @@ class SheetInlineAds {
                             }
                             Log.e("987654321", "Google Load: nativeAd")
 
-
                         }
                         .withAdListener(object : AdListener() {
                             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -419,7 +399,7 @@ class SheetInlineAds {
                                 )
                                 try {
                                     context.trackEvent("native_ads_bs_fail")
-                                    // Google failed → fallback
+
                                     if (adsPreference.getBoolean("IsFail_FB")) {
                                         Log.w("987654321", "Native Ads Null")
                                         layout.post {
@@ -512,19 +492,15 @@ class SheetInlineAds {
                 (binding.mainNativeadView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
             }
 
-
             binding.mainNativeadView.callToActionView?.apply {
                 visibility = if (nativeAd.callToAction == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
-
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
 
-
-    // Helper function for FB fallback
     fun renderFbFallback(
         context: Activity,
         layout: FrameLayout,
@@ -534,7 +510,7 @@ class SheetInlineAds {
         val fbId = adsPref.getString("faceB_NativeAds")
 
         if (fbId.isNullOrEmpty()) {
-            // FB not configured → show custom
+
             InHouseRegistry().fetchHouseAd(
                 context, layout,
                 InHouseRegistry.CustomAdType.BIG_NATIVE,
@@ -559,7 +535,7 @@ class SheetInlineAds {
                 override fun onError(ad: Ad?, adError: AdError?) {
                     if (context.isActivityDestroyedCompat()) return
                     Log.e("NativeAds", "FB ad failed: ${adError?.errorMessage}")
-                    // fallback to Custom
+
                     layout.post {
                         if (context.isActivityDestroyedCompat()) return@post
                         InHouseRegistry().fetchHouseAd(
@@ -588,20 +564,16 @@ class SheetInlineAds {
         activity: Activity,
         adSize: String? = null
     ) {
-        // ✅ Make sure container is visible
+
         viewGroup.isVisible = true
 
-        // Unregister any old ad view
         nativeAd.unregisterView()
 
-        // ✅ Inflate layout with ViewBinding
         val binding = FbNativeBinding.inflate(LayoutInflater.from(activity), viewGroup, false)
 
-        // Clear old views and add new ad view
         viewGroup.removeAllViews()
         viewGroup.addView(binding.root)
 
-        // ✅ Add AdChoicesView
         val adOptionsView = AdOptionsView(activity, nativeAd, binding.nativview)
         binding.adChoicesContainer.removeAllViews()
         binding.adChoicesContainer.addView(adOptionsView, 0)
@@ -625,7 +597,7 @@ class SheetInlineAds {
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }
-        // ✅ Bind ad data to views
+
         binding.nativeAdTitle.text = nativeAd.advertiserName
         binding.nativeAdBody.text = nativeAd.adBodyText
         binding.nativeAdSocialContext.text = nativeAd.adSocialContext
@@ -638,7 +610,6 @@ class SheetInlineAds {
             binding.nativeAdCallToAction.isVisible = false
         }
 
-        // ✅ Register clickable views
         val clickableViews = listOf(binding.nativeAdTitle, binding.nativeAdCallToAction)
 
         nativeAd.registerViewForInteraction(

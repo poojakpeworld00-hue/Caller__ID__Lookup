@@ -132,7 +132,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     private var draggingLeftFolderAt: Long? = null
     private var draggingEnteredNewFolderAt: Long? = null
 
-    // apply fake margins at the home screen. Real ones would cause the icons be cut at dragging at screen sides
     var sideMargins = Rect()
 
     private var gridItems = ArrayList<BoardItem>()
@@ -146,7 +145,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     private val accessibilityHelper = HomeScreenGridTouchHelper(this)
     var itemClickListener: ((BoardItem) -> Unit)? = null
     var itemLongClickListener: ((BoardItem) -> Unit)? = null
-
 
     init {
         ViewCompat.setAccessibilityDelegate(this, accessibilityHelper)
@@ -272,7 +270,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             iconMargin =
                 (context.resources.getDimension(R.dimen.icon_side_margin) * 5 / columnCount).toInt()
             isFirstDraw = true
-            // pseudo widgets keep their id, it is only used as a tag and is not reallocated here
+
             gridItems
                 .filter { it.type == ITEM_TYPE_WIDGET && it.pseudoWidgetLayout() == null }
                 .forEach { appWidgetHost.deleteAppWidgetId(it.widgetId) }
@@ -453,7 +451,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         redrawGrid()
     }
 
-    // figure out at which cell was the item dropped, if it is empty
     fun itemDraggingStopped() {
         widgetViews.forEach {
             it.hasLongPressed = false
@@ -495,7 +492,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 allGridItems = otherGridItems
             )
             binding.resizeFrameVw.beVisible()
-            binding.resizeFrameVw.z = 1f     // make sure the frame isnt behind the widget itself
+            binding.resizeFrameVw.z = 1f
             binding.resizeFrameVw.onClickListener = {
                 hideResizeLines()
             }
@@ -585,10 +582,9 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             val xIndex = gridCells.x
             val yIndex = gridCells.y
 
-            // check if the destination cell is empty
             var isDroppingPositionValid = true
             val wantedCell = Pair(xIndex, yIndex)
-            // No moving folder into the dock
+
             if (draggedHomeGridItem?.type == ITEM_TYPE_FOLDER && yIndex == rowCount - 1) {
                 isDroppingPositionValid = false
             } else {
@@ -692,7 +688,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 xIndex = gridCells.x
                 yIndex = gridCells.y
 
-                // check if the destination cell is empty or a folder
                 isDroppingPositionValid = true
                 val wantedCell = Pair(xIndex, yIndex)
                 gridItems.filterVisibleOnCurrentPageOnly().filter { it.id != draggedItem?.id }
@@ -824,7 +819,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         } else {
             xIndex
         }
-        // we are moving an existing home screen item from one place to another
+
         if (draggedHomeGridItem != null) {
             draggedHomeGridItem.apply {
                 val oldParentId = parentId
@@ -900,7 +895,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 }
             }
         } else if (draggedItem != null) {
-            // we are dragging a new item at the home screen from the All Apps fragment
+
             val newHomeScreenGridItem = BoardItem(
                 id = null,
                 left = finalXIndex,
@@ -1025,7 +1020,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 }
 
                 ensureBackgroundThread {
-                    // store the new widget at creating it, else just move the existing one
+
                     if (widgetItem.id == null) {
                         val itemId = context.homeScreenGridItemsDB.insert(widgetItem)
                         widgetItem.id = itemId
@@ -1061,7 +1056,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                             page = pager.getCurrentPage()
                         }
 
-
                         if (widgetItem.page != oldPage && oldPage != 0) {
                             if (gridItems.none { it.page == oldPage && it.parentId == null }) {
                                 deletePage(oldPage)
@@ -1084,7 +1078,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         redrawGrid()
     }
 
-    // pseudo widgets are inflated by us, there is no provider to look up or bind to
     private fun BoardItem.pseudoWidgetLayout() = when (className) {
         PSEUDO_WIDGET_CLOCK -> R.layout.shell_widget_digital_clock
         PSEUDO_WIDGET_SEARCH -> R.layout.shell_widget_search_bar
@@ -1097,7 +1090,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         }
 
         if (item.pseudoWidgetLayout() != null) {
-            // still allocate an id, it is what identifies the host view in widgetViews
+
             item.widgetId = appWidgetHost.allocateAppWidgetId()
             ensureBackgroundThread {
                 context.homeScreenGridItemsDB.updateWidgetId(item.widgetId, item.id!!)
@@ -1153,20 +1146,19 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         item: BoardItem,
     ) {
         val pseudoWidgetLayout = item.pseudoWidgetLayout()
-        // we have to pass the base context here, else there will be errors with the themes
+
         val widgetView = if (pseudoWidgetLayout != null) {
             GadgetHostView((context as HomeBoardActivity).baseContext).apply {
                 View.inflate(context, pseudoWidgetLayout, this)
                 val activity = this@BoardGrid.context as HomeBoardActivity
                 when (item.className) {
                     PSEUDO_WIDGET_SEARCH -> {
-                        // The reference app opened its AI chat here; the search bar's natural
-                        // counterpart in this build is the launcher's own app search panel.
+
                         setOnClickListener { activity.openAppSearch() }
                     }
 
                     PSEUDO_WIDGET_CLOCK -> {
-                        // the two halves go where their content points, like every other launcher
+
                         findViewById<View>(R.id.widget_text_clockVw)?.setOnClickListener {
                             activity.openClockApp()
                         }
@@ -1203,9 +1195,8 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         addView(widgetView, widgetSize.width, widgetSize.height)
         widgetViews.add(widgetView)
 
-        // remove the drawable so that it gets refreshed on long press
         item.drawable = null
-        // Delete existing widget if it has already been loaded to the list
+
         gridItems.removeIf { it.id == item.id }
         gridItems.add(item)
         (context as HomeBoardActivity).clearWidgetsSearch()
@@ -1226,8 +1217,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         val widgetDpWidth = (widgetWidth / density).toInt()
         val widgetDpHeight = (widgetHeight / density).toInt()
 
-        // pseudo widgets are never bound to a provider, telling the AppWidgetManager about
-        // their size would throw
         if (widgetView.appWidgetInfo != null) {
             if (isSPlus()) {
                 val sizes = listOf(SizeF(widgetDpWidth.toFloat(), widgetDpHeight.toFloat()))
@@ -1256,7 +1245,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         )
     }
 
-    // convert stuff like 102x192 to grid cells like 0x1
     private fun getClosestGridCells(center: Point): Point? {
         return cells.entries.firstOrNull { (_, cell) -> center.x == cell.centerX() && center.y == cell.centerY() }?.key
     }
@@ -1369,7 +1357,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 }
         }
 
-        // Only draw page indicators when there is a need for it
         if (pager.shouldDisplayPageChangeIndicator()) {
             val pageCount = pager.getPageCount()
             val pageIndicatorsRequiredWidth =
@@ -1381,7 +1368,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             val pageIndicatorY = pageIndicatorsYPos.toFloat() + sideMargins.top + iconMargin
             val pageIndicatorStep = pageIndicatorRadius * 2 + pageIndicatorMargin
             emptyPageIndicatorPaint.alpha = pager.getPageChangeIndicatorsAlpha()
-            // Draw empty page indicators
+
             for (page in 0 until pageCount) {
                 canvas.drawCircle(
                     currentPageIndicatorLeft + pageIndicatorRadius,
@@ -1392,7 +1379,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 currentPageIndicatorLeft += pageIndicatorStep
             }
 
-            // Draw current page indicator on exact position
             val currentIndicatorPosition =
                 pageIndicatorsStart + pager.getCurrentViewPositionInFullPageSpace() * pageIndicatorStep
             currentPageIndicatorPaint.alpha = pager.getPageChangeIndicatorsAlpha()
@@ -1475,7 +1461,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                         dragShadowCirclePaint
                     )
                 } else {
-                    // draw a circle under the current cell
+
                     val center = gridCenters.minBy {
                         abs(it.x - draggedItemCurrentCoords.first + sideMargins.left) + abs(it.y - draggedItemCurrentCoords.second + sideMargins.top)
                     }
@@ -1497,7 +1483,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                     }
                 }
 
-                // show the app icon itself at dragging, move it above the finger a bit to make it visible
                 val drawableX = (draggedItemCurrentCoords.first - iconSize / 1.5f).toInt()
                 val drawableY = (draggedItemCurrentCoords.second - iconSize / 1.2f).toInt()
                 val newDrawable = if (draggedItem?.type == ITEM_TYPE_FOLDER) {
@@ -1513,7 +1498,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 )
                 newDrawable?.draw(canvas)
             } else if (draggedItem!!.type == ITEM_TYPE_WIDGET) {
-                // at first draw we are loading the widget from the database at some exact spot, not dragging it
+
                 if (!isFirstDraw) {
                     val center = gridCenters.minBy {
                         abs(it.x - draggedItemCurrentCoords.first + sideMargins.left) + abs(it.y - draggedItemCurrentCoords.second + sideMargins.top)
@@ -1538,7 +1523,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                         )
                     }
 
-                    // show the widget preview itself at dragging
                     draggedItem!!.drawable?.also { drawable ->
                         val aspectRatio = drawable.minimumHeight / drawable.minimumWidth.toFloat()
                         val drawableX =
@@ -1603,8 +1587,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 
     fun fragmentCollapsed() {
-        // the grid fades out behind an expanding fragment, bring it back right away so that
-        // it is visible during the closing animation
+
         animate().cancel()
         alpha = 1f
         widgetViews.forEach {
@@ -1612,7 +1595,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         }
     }
 
-    // get the clickable area around the icon, it includes text too
     fun getClickableRect(item: BoardItem): Rect {
         if (cells.isEmpty()) {
             fillCellSizes()
@@ -1635,8 +1617,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             } + sideMargins.top
         }
         val additionalHeight = if (!item.docked && context.config.showHomeAppLabels) {
-            // multiply line count by line height to get label height
-            // we multiply all line heights by 2 so all widgets get the same clickable area and 2 is the max line count
+
             (2 * (textPaint.fontMetrics.bottom - textPaint.fontMetrics.top)).toInt()
         } else 0
         return Rect(
@@ -1647,7 +1628,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         )
     }
 
-    // drag the center of the widget, not the top left corner
     private fun getWidgetOccupiedRect(item: Point): Rect {
         val left = item.x - floor((draggedItem!!.getWidthInCells() - 1) / 2.0).toInt()
         val rect = Rect(
@@ -1691,7 +1671,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             }
         }
 
-        // if a folder is open, we only want to allow clicks on items in the folder
         if (currentlyOpenFolder != null) {
             return null
         }
@@ -1778,7 +1757,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             val viewLocation = IntArray(2)
             getLocationOnScreen(viewLocation)
 
-            // home screen
             if (virtualViewId == -1) {
                 node.text = context.getString(R.string.app_name)
                 val viewBounds = Rect(left, top, right, bottom)
@@ -1880,7 +1858,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 
     fun getCurrentIconSize(): Int = iconSize
-
 
     fun setSwipeMovement(diffX: Float) {
         if (draggedItem == null) {
@@ -2237,10 +2214,6 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     }
 }
 
-/**
- * Helper class responsible for managing current page and providing utilities for animating page changes,
- * as well as partial dragigng between pages
- */
 private class GridPagerAnim(
     private val getMaxPage: () -> Int,
     private val redrawGrid: () -> Unit,
@@ -2278,7 +2251,6 @@ private class GridPagerAnim(
     fun isItemOnLastPage(item: BoardItem) = item.page == lastPage
 
     fun getPageCount() = max(getMaxPage(), currentPage) + 1
-
 
     fun isOutsideOfPageRange() = currentPage > getMaxPage()
 

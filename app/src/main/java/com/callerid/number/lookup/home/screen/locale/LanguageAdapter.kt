@@ -22,7 +22,6 @@ class LanguageAdapter(
     private val items = mutableListOf<LanguageItem>()
     private var selectedTag: String = ""
 
-    /** The language currently applied; its row shows "Current language". */
     private var currentTag: String = ""
 
     @SuppressLint("NotifyDataSetChanged")
@@ -32,11 +31,6 @@ class LanguageAdapter(
         notifyDataSetChanged()
     }
 
-    /**
-     * Moves the selection. Only the two affected rows are notified, and with a
-     * payload, so RecyclerView rebinds nothing else and the row can animate the
-     * change instead of snapping to it.
-     */
     fun setSelected(tag: String) {
         if (tag == selectedTag) return
         val previous = items.indexOfFirst { it.tag == selectedTag }
@@ -52,7 +46,6 @@ class LanguageAdapter(
 
     inner class VH(val binding: CellLanguageBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        /** Kept so a recycled row can cancel a half-finished animation. */
         private var running: Animator? = null
 
         init {
@@ -64,7 +57,6 @@ class LanguageAdapter(
             }
         }
 
-        /** Quick press-in / release bounce so the tap registers immediately. */
         private fun tapFeedback(view: View) {
             view.animate().cancel()
             view.animate()
@@ -103,8 +95,6 @@ class LanguageAdapter(
                 return
             }
 
-            // Radio pops, the row tint fades in, and the leading label
-            // cross-fades to the on-container colour.
             val pop = ObjectAnimator.ofPropertyValuesHolder(
                 binding.rdo,
                 android.animation.PropertyValuesHolder.ofFloat(View.SCALE_X, POP_FROM, 1f),
@@ -126,8 +116,7 @@ class LanguageAdapter(
             }
 
             running = AnimatorSet().apply {
-                // Only the row gaining selection fills in; the outgoing row just
-                // clears, so two tints are never visible at once.
+
                 if (selected) playTogether(pop, tint, text) else playTogether(pop, text)
                 start()
             }

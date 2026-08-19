@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Enable-Caller-ID bottom sheet (design: "Enable Caller ID Dialog").
-    Shown from the Block List when the CallScreening role is off. The sheet springs
-    up over a dimmed scrim; the shield pops with a pulse ring + drawing checkmark,
-    a "next step" hint strip previews the system toggle, and the CTA breathes.
-    Animations are wired in BlocklistActivity.animateEnableCallerIdDialog().
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -16,7 +10,7 @@
     android:paddingTop="@dimen/_22sdp"
     android:paddingBottom="@dimen/_16sdp">
 
-    <!-- Shield tile with pulse ring -->
+    
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -45,7 +39,7 @@
         </FrameLayout>
     </FrameLayout>
 
-    <!-- Title -->
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +50,7 @@
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold" />
 
-    <!-- Description -->
+    
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,7 +60,7 @@
         android:textColor="@color/fsi_subtitle"
         android:textSize="@dimen/_12ssp" />
 
-    <!-- "Next step" hint strip: previews the system Caller-ID toggle -->
+    
     <LinearLayout
         android:id="@+id/tipStrip"
         android:layout_width="match_parent"
@@ -96,7 +90,7 @@
             android:paddingTop="@dimen/_8sdp"
             android:paddingBottom="@dimen/_12sdp">
 
-            <!-- App-icon tile -->
+            
             <FrameLayout
                 android:layout_width="@dimen/_34sdp"
                 android:layout_height="@dimen/_34sdp"
@@ -137,7 +131,7 @@
                     android:textSize="@dimen/_9ssp" />
             </LinearLayout>
 
-            <!-- Demo toggle (animated off→on in code) -->
+            
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -168,7 +162,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Actions -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

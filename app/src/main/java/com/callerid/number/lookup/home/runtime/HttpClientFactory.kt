@@ -15,24 +15,14 @@ object HttpClientFactory {
 
     private const val TAG = "HttpClientFactory"
 
-    /**
-     * Compiled-in API base URL, and the fallback whenever Remote Config has nothing usable.
-     *
-     * Kept as the fallback rather than removed: this is the one config value the app cannot ask
-     * the network for, since it *is* the network address. A blank or malformed [RC_KEY] must
-     * leave the app working, not offline.
-     */
     const val BASE_URL = "https://callerid.kpeworld.com/"
 
-    /** Remote Config key that overrides [BASE_URL] — a full origin, e.g. `https://api.host/`. */
     private const val RC_KEY = "api_base_url"
 
     private val okHttpClient: OkHttpClient by lazy {
         val builder = OkHttpClient.Builder()
             .addInterceptor(SignedInterceptor())
-            // On-device HTTP inspector. Real in debug (captures + shows a Chucker
-            // notification/UI); the release no-op variant is a pass-through, so
-            // nothing is captured or shown to users.
+
             .addInterceptor(ChuckerInterceptor.Builder(LookupCoreApp.appContext).build())
 
         if (BuildConfig.DEBUG) {
@@ -45,13 +35,6 @@ object HttpClientFactory {
         builder.build()
     }
 
-    /**
-     * The base URL to use right now: [RC_KEY] when Remote Config supplies something that parses,
-     * otherwise [BASE_URL].
-     *
-     * Normalises the trailing slash, because Retrofit rejects a base URL without one outright —
-     * so a console value typed as `https://api.host` would otherwise take the whole API down.
-     */
     fun resolvedBaseUrl(): String {
         val raw = runCatching {
             PromoVault.getInstance(LookupCoreApp.appContext).getString(RC_KEY, "").orEmpty()
@@ -60,8 +43,7 @@ object HttpClientFactory {
         if (raw.isBlank()) return BASE_URL
 
         val normalized = if (raw.endsWith("/")) raw else "$raw/"
-        // toHttpUrlOrNull also rejects anything that is not http/https, which is what we want:
-        // Retrofit would throw on those, and a throw here reaches every API caller.
+
         if (normalized.toHttpUrlOrNull() == null) {
             LogRail.error(TAG, "ignoring malformed $RC_KEY='$raw' — using $BASE_URL")
             return BASE_URL
@@ -70,16 +52,9 @@ object HttpClientFactory {
         return normalized
     }
 
-    /** The service, paired with the base URL it was built for. */
     @Volatile
     private var cached: Pair<String, LookupApi>? = null
 
-    /**
-     * Resolved per access rather than once, so a Remote Config fetch that lands *after* the first
-     * API call still takes effect — nothing is readable at the top of a cold start, and the app
-     * can reach this before the fetch completes. Retrofit is only rebuilt when the URL actually
-     * changes, which for a whole session is normally never.
-     */
     val api: LookupApi
         get() {
             val url = resolvedBaseUrl()

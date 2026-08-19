@@ -18,7 +18,6 @@ import com.callerid.admesh.engine.PromoVault
 import com.callerid.number.lookup.home.R
 import java.io.InputStream
 
-
 fun isNightMode(context: Context): Boolean {
     val mode = context.resources.configuration.uiMode and
             Configuration.UI_MODE_NIGHT_MASK
@@ -37,13 +36,12 @@ fun Activity.setStatusBar(
 
 fun Activity.setTransparentStatusBarWhiteText() {
 
-    // Make status bar transparent
     window.statusBarColor = Color.TRANSPARENT
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val controller = window.insetsController
         controller?.setSystemBarsAppearance(
-            0, // ❌ remove LIGHT_STATUS_BARS
+            0,
             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
         )
     } else {
@@ -51,7 +49,7 @@ fun Activity.setTransparentStatusBarWhiteText() {
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        // ⚠️ DO NOT add LIGHT_STATUS_BAR → keeps icons WHITE
+
     }
 }
 
@@ -98,7 +96,6 @@ fun Context.rateApp() {
     }
 }
 
-/** Open privacy policy link via Chrome Custom Tabs (if available) */
 fun Context.openPolicyLink() {
     try {
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -112,7 +109,7 @@ fun Context.openPolicyLink() {
             )
             putExtra("android.support.customtabs.extra.EXTRA_ENABLE_INSTANT_APPS", true)
 
-            setPackage("com.android.chrome") // Optional: Use Chrome
+            setPackage("com.android.chrome")
             data =
                 Uri.parse(PromoVault.getInstance(this@openPolicyLink).getString("PrivacyPolicy"))
         }
@@ -122,7 +119,6 @@ fun Context.openPolicyLink() {
     }
 }
 
-/** Open privacy policy link via Chrome Custom Tabs (if available) */
 fun Context.openTermLink() {
     try {
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -136,7 +132,7 @@ fun Context.openTermLink() {
             )
             putExtra("android.support.customtabs.extra.EXTRA_ENABLE_INSTANT_APPS", true)
 
-            setPackage("com.android.chrome") // Optional: Use Chrome
+            setPackage("com.android.chrome")
             data =
                 Uri.parse(PromoVault.getInstance(this@openTermLink).getString("TermLink"))
         }
@@ -146,7 +142,6 @@ fun Context.openTermLink() {
     }
 }
 
-/** Share app via other apps */
 fun Context.shareApp() {
     val appPackageName = packageName
     val shareText =
@@ -158,10 +153,6 @@ fun Context.shareApp() {
     startActivity(Intent.createChooser(shareIntent, "Share app via"))
 }
 
-/**
- * Open an asset image — tries .webp first, falls back to .png.
- * Usage: openThemeAsset(assets, "theme/th_1/background")
- */
 fun openThemeAsset(am: AssetManager, basePath: String): InputStream? {
     return try {
         am.open("$basePath.webp")

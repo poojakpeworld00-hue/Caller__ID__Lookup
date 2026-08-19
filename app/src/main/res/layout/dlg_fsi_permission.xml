@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Full-Screen-Intent priming Dialog (design: FSI Incoming Call Dialog). The
-    incoming-call card floats in a small halo of glow + pulsing orbit rings,
-    above remote-driven title/description and the FSI-blue "Enable Now" CTA.
-    Card springs up, rings/glow pulse, CTA breathes (driven by FsiPrimingDialog).
--->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fsDialogCardVw"
     android:layout_width="match_parent"
@@ -15,7 +10,7 @@
     android:paddingTop="@dimen/_12sdp"
     android:paddingBottom="@dimen/_14sdp">
 
-    <!-- Hero: floating card in a small halo of glow + orbit rings -->
+    
     <FrameLayout
         android:id="@+id/fsDialogHeroVw"
         android:layout_width="match_parent"

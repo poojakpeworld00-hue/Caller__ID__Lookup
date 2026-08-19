@@ -11,19 +11,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** Backs [DialPadActivity]: loads the top-used numbers and filters them by the typed query. */
 class DialPadViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repository = CallHistorySource(app)
 
-    /** Full pool of used numbers (busiest first) searched while typing. */
     private val all = mutableListOf<FrequentDigit>()
     private var query = ""
 
     private val _frequent = MutableLiveData<List<FrequentDigit>>(emptyList())
     val frequent: LiveData<List<FrequentDigit>> = _frequent
 
-    /** Loads used numbers. Caller must ensure READ_CALL_LOG is granted. */
     fun load() {
         viewModelScope.launch {
             val list = withContext(Dispatchers.IO) { repository.getMostUsed(limit = 200) }
@@ -39,7 +36,7 @@ class DialPadViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun applyFilter() {
-        // No query → show only the 20 most-used. Typing searches the whole pool.
+
         if (query.isEmpty()) {
             _frequent.value = all.take(TOP_LIMIT)
             return

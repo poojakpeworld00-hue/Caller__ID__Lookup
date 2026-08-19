@@ -1,13 +1,13 @@
 <resources>
-    <!-- App -->
+    
     <string name="app_name">Caller ID Lookup</string>
     <string name="dash">&#8211;</string>
 
-    <!-- Splash -->
+    
     <string name="splash_tagline">Sachez qui appelle · Bloquez le spam</string>
     <string name="splash_footer">Cette application peut contenir des publicités</string>
 
-    <!-- Language -->
+    
     <string name="language_title">Choisir la langue</string>
     <string name="language_continue">Continuer</string>
     <string name="language_search_hint">Rechercher des langues</string>
@@ -17,7 +17,7 @@
     <string name="language_info_msg">Changer de langue redessine l\'interface. Quelques détails régionaux peuvent varier selon votre choix.</string>
     <string name="language_info_got_it">Compris</string>
 
-    <!-- Terms &amp; Conditions -->
+    
     <string name="terms_title">Conditions générales</string>
     <string name="terms_body">Prenez un moment pour ces conditions. Continuer vaut acceptation :\n\n• Caller ID Lookup nomme les appels entrants, sortants et inconnus au moment où ils arrivent.\n• Les appels indésirables, d\'arnaque et de fraude sont signalés pour que vous puissiez les écarter.\n• N\'importe quel numéro peut être recherché pour voir les informations connues sur l\'appelant.\n• Votre journal d\'appels et vos contacts peuvent être lus pour que l\'application fasse ce travail.\n• L\'affichage par-dessus les autres applications sert à montrer l\'appelant pendant l\'appel.\n• Ce que nous collectons reste à vous et ne sert qu\'à nommer les appelants et écarter les indésirables.\n\nChoisir « Accepter et continuer » confirme que vous avez lu, et acceptez, nos Conditions générales et notre Politique de confidentialité.</string>
     <string name="terms_agree">J\'ai lu, et j\'accepte, les Conditions générales et la Politique de confidentialité.</string>
@@ -27,7 +27,7 @@
     <string name="overlay_system_permission">Autorisation système</string>
     <string name="overlay_permission_desc">L\'affichage par-dessus les autres applications permet de voir l\'appelant pendant que vous faites autre chose.</string>
 
-    <!-- Onboarding -->
+    
     <string name="onboarding_skip">Ignorer</string>
     <string name="onboarding_next">Suivant</string>
     <string name="onboarding_title">Sachez qui appelle</string>
@@ -38,7 +38,7 @@
     <string name="onboarding_desc_3">Cherchez n\'importe quel numéro inconnu et découvrez qui se cache derrière : nom, lieu, activité.</string>
     <string name="onboarding_get_started">Commencer</string>
 
-    <!-- Home -->
+    
     <string name="home_title">Vous êtes protégé</string>
     <string name="home_subtitle">L\'identification et le blocage du spam sont actifs</string>
     <string name="home_greeting">Bonjour</string>
@@ -49,20 +49,20 @@
     <string name="home_recent_activity">Activité récente</string>
     <string name="see_all">Tout voir</string>
 
-    <!-- Quick actions -->
+    
     <string name="quick_dialer">Clavier</string>
     <string name="quick_lookup">Recherche</string>
     <string name="quick_blocklist">Liste de blocage</string>
     <string name="quick_tools">Outils</string>
 
-    <!-- Bottom navigation -->
+    
     <string name="nav_home">Accueil</string>
     <string name="nav_recents">Récents</string>
     <string name="nav_contacts">Contacts</string>
     <string name="nav_lookup">Recherche</string>
     <string name="nav_settings">Paramètres</string>
 
-    <!-- Call states -->
+    
     <string name="call_incoming">Appel entrant…</string>
     <string name="call_decline">Refuser</string>
     <string name="call_accept">Accepter</string>
@@ -71,31 +71,31 @@
     <string name="label_spam">Spam</string>
     <string name="label_verified">Vérifié</string>
 
-    <!-- Recents -->
+    
     <string name="recents_today">Aujourd\'hui</string>
     <string name="recents_yesterday">Hier</string>
     <string name="recents_this_week">Cette semaine</string>
     <string name="recents_earlier">Plus anciens</string>
     <string name="recents_empty">Aucun appel récent</string>
 
-    <!-- Call filters -->
+    
     <string name="filter_all">Tous</string>
     <string name="filter_incoming">Entrants</string>
     <string name="filter_outgoing">Sortants</string>
     <string name="filter_missed">Manqués</string>
 
-    <!-- Call type labels -->
+    
     <string name="type_incoming">Entrant</string>
     <string name="type_outgoing">Sortant</string>
     <string name="type_missed">Manqué</string>
     <string name="type_blocked">Bloqué</string>
 
-    <!-- Call log permission -->
+    
     <string name="perm_calllog_title">Voir vos appels récents</string>
     <string name="perm_calllog_message">Laissez l\'application lire votre journal et vos appels récents apparaîtront ici.</string>
     <string name="action_grant">Autoriser l\'accès</string>
 
-    <!-- Lookup -->
+    
     <string name="lookup_hint">Saisir un nom ou un numéro</string>
     <string name="lookup_verified_business">Entreprise vérifiée</string>
     <string name="lookup_organization">Organisation</string>
@@ -113,13 +113,13 @@
     <string name="lookup_international">International</string>
     <string name="lookup_carrier">Opérateur</string>
 
-    <!-- Contacts -->
+    
     <string name="contacts_search_hint">Rechercher des contacts</string>
     <string name="contacts_empty">Aucun contact trouvé</string>
     <string name="perm_contacts_title">Voir vos contacts</string>
     <string name="perm_contacts_message">Laissez l\'application lire vos contacts et ils apparaîtront ici.</string>
 
-    <!-- Settings -->
+    
     <string name="settings_language">Langue</string>
     <string name="settings_language_sub">Choisir la langue de l\'app</string>
     <string name="settings_blocklist">Liste de blocage</string>
@@ -133,7 +133,7 @@
     <string name="theme_dark">Sombre</string>
     <string name="theme_system">Système par défaut</string>
 
-    <!-- Settings actions -->
+    
     <string name="language_dialog_title">Choisir la langue</string>
     <string name="blocklist_add">Ajouter un numéro</string>
     <string name="blocklist_empty">Aucun numéro bloqué pour l\'instant</string>
@@ -146,7 +146,7 @@
     <string name="action_cancel">Annuler</string>
     <string name="action_remove">Retirer</string>
 
-    <!-- Added translations -->
+    
     <string name="app_name_overlay">Caller ID Lookup</string>
     <string name="onboarding_spam_id">Identification du spam</string>
     <string name="onboarding_caller_id">Identification de l\'appelant</string>
@@ -269,7 +269,7 @@
     <string name="splash_title">Caller ID Lookup</string>
     <string name="battery_activity_title">Infos batterie</string>
 
-    <!-- French localization additions -->
+    
     <string name="app_label">&#160;&#160;Caller ID Lookup</string>
     <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Recherche de numéro</string>
@@ -450,7 +450,7 @@
     <string name="app_redirect_desc">Cette application n\'est pas sur l\'appareil. On ouvre sa page Play Store ?</string>
     <string name="settings_section_call">PROTECTION DES APPELS</string>
     <string name="call_screening_hint_tip">Activez ceci pour voir qui appelle et écarter les indésirables</string>
-    <!-- FSI intro Activity/Dialog + Home permission hint -->
+    
     <string name="home_perm_hint">Des autorisations sont encore désactivées. Activez-les pour tout identifier.</string>
     <string name="home_perm_manage">Gérer</string>
     <string name="fsi_incoming_call">Appel entrant</string>
