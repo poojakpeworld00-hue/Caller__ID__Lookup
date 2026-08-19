@@ -7,53 +7,53 @@
     the layouts flips automatically without a single layout change.
 -->
 <resources>
-    <color name="cid_g_900">#FFD1EEFF</color>
-    <color name="cid_g_800">#FFA4DDFF</color>
-    <color name="cid_g_700">#FF6FC6F8</color>
-    <color name="cid_g_600">#FF5AB8E9</color>
-    <color name="cid_g_500">#FF4697C5</color>
-    <color name="cid_g_200">#FF293B45</color>
-    <color name="cid_g_100">#FF1C292F</color>
-    <color name="cid_g_050">#FF071219</color>
+    <color name="cid_g_900">#FFE2E9FF</color>
+    <color name="cid_g_800">#FFC7D5FF</color>
+    <color name="cid_g_700">#FF69B6FF</color>
+    <color name="cid_g_600">#FF92ADF0</color>
+    <color name="cid_g_500">#FF748DD3</color>
+    <color name="cid_g_200">#FF2F3850</color>
+    <color name="cid_g_100">#FF202736</color>
+    <color name="cid_g_050">#FF0A1023</color>
 
     <color name="cid_clay">#FFEB9A7A</color>
     <color name="cid_clay_100">#FF432519</color>
     <color name="cid_clay_ink">#FFFFB699</color>
-    <color name="cid_teal">#FF39C9C9</color>
-    <color name="cid_teal_100">#FF103333</color>
-    <color name="cid_teal_ink">#FF6CDBDA</color>
+    <color name="cid_teal">#FF86BDDE</color>
+    <color name="cid_teal_100">#FF153141</color>
+    <color name="cid_teal_ink">#FFA4D0E9</color>
     <color name="cid_amber">#FFE9BC74</color>
     <color name="cid_amber_100">#FF3D2D15</color>
     <color name="cid_amber_ink">#FFF7D197</color>
-    <color name="cid_on_accent">#FF071219</color>
+    <color name="cid_on_accent">#FF0A1023</color>
 
-    <color name="cid_bg">#FF0F171B</color>
-    <color name="cid_text">#FFE3EAED</color>
-    <color name="cid_neutral_100">#FF192023</color>
-    <color name="cid_neutral_200">#FF282F32</color>
-    <color name="cid_neutral_300">#FF3A4144</color>
+    <color name="cid_bg">#FF121620</color>
+    <color name="cid_text">#FFE6E9EF</color>
+    <color name="cid_neutral_100">#FF1B1F26</color>
+    <color name="cid_neutral_200">#FF2B2E35</color>
+    <color name="cid_neutral_300">#FF3D4047</color>
     <color name="cid_neutral_400">#FF5D6660</color>
-    <color name="cid_neutral_600">#FFA1A9AD</color>
-    <color name="cid_neutral_700">#FFBBC3C7</color>
+    <color name="cid_neutral_600">#FFA4A8B0</color>
+    <color name="cid_neutral_700">#FFBEC2CA</color>
 
     <!-- Onboarding, dark. Page ink and CTA invert; the shield stays a green mark and
          the mock call screen keeps its light-on-dark call UI unchanged. -->
-    <color name="cid_onb_paper">#FF0F1417</color>
-    <color name="cid_onb_ink">#FFD1EEFF</color>
-    <color name="cid_onb_muted">#FF97A3A9</color>
+    <color name="cid_onb_paper">#FF11131A</color>
+    <color name="cid_onb_ink">#FFE2E9FF</color>
+    <color name="cid_onb_muted">#FF9CA1AD</color>
 
-    <color name="cid_onb_cta">#FF5AB8E9</color>
-    <color name="cid_onb_on_cta">#FF071219</color>
+    <color name="cid_onb_cta">#FF92ADF0</color>
+    <color name="cid_onb_on_cta">#FF0A1023</color>
 
-    <color name="cid_onb_accent">#FF5AB8E9</color>
+    <color name="cid_onb_accent">#FF92ADF0</color>
     <color name="cid_onb_on_accent">#FFFFFFFF</color>
-    <color name="cid_onb_badge_disc">#FFE5EDF2</color>
+    <color name="cid_onb_badge_disc">#FFE9ECF4</color>
 
-    <color name="cid_onb_mark">#FF0969A8</color>
+    <color name="cid_onb_mark">#FF2353F3</color>
     <color name="cid_onb_on_mark">#FFFFFFFF</color>
 
-    <color name="cid_onb_blob">#FF132129</color>
-    <color name="cid_onb_card">#FF121C21</color>
-    <color name="cid_onb_card_stroke">#FF22313A</color>
-    <color name="cid_onb_tile">#FF192830</color>
+    <color name="cid_onb_blob">#FF171F33</color>
+    <color name="cid_onb_card">#FF151A27</color>
+    <color name="cid_onb_card_stroke">#FF272E43</color>
+    <color name="cid_onb_tile">#FF1E2639</color>
 </resources>

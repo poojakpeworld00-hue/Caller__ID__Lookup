@@ -9,7 +9,7 @@
      CallDeckFragment on first open (the launcher is not a CanvasActivity, so nothing loads
      it automatically here).
 -->
-<com.callerid.phonelookup.home.launcher.fragments.CallDeckFragment
+<com.callerid.number.lookup.home.launcher.fragments.CallDeckFragment
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/caller_panel_holder"
     android:layout_width="match_parent"
@@ -38,4 +38,4 @@
         android:layout_height="match_parent"
         android:layout_above="@id/callerAdBannerDivider" />
 
-</com.callerid.phonelookup.home.launcher.fragments.CallDeckFragment>
+</com.callerid.number.lookup.home.launcher.fragments.CallDeckFragment>

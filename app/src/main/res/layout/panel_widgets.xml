@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.callerid.phonelookup.home.launcher.fragments.GadgetPanelFragment xmlns:android="http://schemas.android.com/apk/res/android"
+<com.callerid.number.lookup.home.launcher.fragments.GadgetPanelFragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widgets_holder"
     android:layout_width="match_parent"
@@ -26,4 +26,4 @@
             app:layoutManager="org.fossify.commons.views.MyLinearLayoutManager" />
 
     </com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller>
-</com.callerid.phonelookup.home.launcher.fragments.GadgetPanelFragment>
+</com.callerid.number.lookup.home.launcher.fragments.GadgetPanelFragment>

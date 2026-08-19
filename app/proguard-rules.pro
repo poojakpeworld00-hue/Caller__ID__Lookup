@@ -34,15 +34,15 @@
 -keepclassmembers class * { native <methods>; }
 
 # View/Data binding generated classes.
--keep class com.callerid.phonelookup.home.databinding.** { *; }
+-keep class com.callerid.number.lookup.home.databinding.** { *; }
 
 # -------------------------------------------------------------
 # App models — serialized by Gson (Retrofit) & parsed from
 # Firebase Remote Config JSON. Field names must survive.
 # -------------------------------------------------------------
--keep class com.callerid.phonelookup.home.models.** { *; }
--keep class com.callerid.adcast.data.** { *; }
--keepclassmembers class com.callerid.phonelookup.home.models.** { *; }
+-keep class com.callerid.number.lookup.home.models.** { *; }
+-keep class com.callerid.admesh.data.** { *; }
+-keepclassmembers class com.callerid.number.lookup.home.models.** { *; }
 
 # -------------------------------------------------------------
 # Kotlin
@@ -111,7 +111,7 @@
 # the class that drives Remote Config init / ad loading. It is declared in the
 # manifest, so R8 already keeps the class name; this keeps its members too, so a
 # subclass reaching one reflectively can never be stripped.
--keep class com.callerid.adcast.presentation.AdBeaconActivity { *; }
+-keep class com.callerid.admesh.presentation.AdBeaconActivity { *; }
 
 # -------------------------------------------------------------
 # Firebase / Crashlytics / Remote Config
@@ -173,7 +173,7 @@
 
 # -------------------------------------------------------------
 # Permission Engine + Full-Screen-Intent (FSI) flow
-# (com.callerid.phonelookup.home.permission.**)
+# (com.callerid.number.lookup.home.permission.**)
 #
 # Most of this package needs NO rules:
 #  • FsiPortalActivity and FullScreenWatchService are declared in the manifest,

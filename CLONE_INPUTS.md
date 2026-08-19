@@ -14,8 +14,8 @@ Legend:
 
 | # | Item | Source | Current value |
 |---|---|---|---|
-| A1 | applicationId / namespace **[SET]** | `com.callerid.numberlookup.home` | `com.callerid.phonelookup.home` |
-| A2 | Ad-module package **[SET]** | `com.callerid.adbridge` | `com.callerid.adcast` |
+| A1 | applicationId / namespace **[SET]** | `com.callerid.numberlookup.home` | `com.callerid.number.lookup.home` |
+| A2 | Ad-module package **[SET]** | `com.callerid.adbridge` | `com.callerid.admesh` |
 | A3 | rootProject.name **[SET]** | `Caller ID Lookup Home` | `Caller ID Phone Home` |
 | A4 | APK archive prefix **[SET]** | `CallerIdLookupHome` | `CallerIdPhoneHome` |
 | A5 | Theme **[SET]** | `Theme.CallerIdLookupHome` | `Theme.CallerIdPhoneHome` |
