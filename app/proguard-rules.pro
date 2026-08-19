@@ -40,9 +40,9 @@
 # App models — serialized by Gson (Retrofit) & parsed from
 # Firebase Remote LauncherPrefs JSON. Field names must survive.
 # -------------------------------------------------------------
--keep class com.callerid.number.lookup.home.models.** { *; }
--keep class com.callerid.admesh.data.** { *; }
--keepclassmembers class com.callerid.number.lookup.home.models.** { *; }
+-keep class com.callerid.number.lookup.home.wire.** { *; }
+-keep class com.callerid.admesh.model.** { *; }
+-keepclassmembers class com.callerid.number.lookup.home.wire.** { *; }
 
 # -------------------------------------------------------------
 # Kotlin
@@ -111,7 +111,7 @@
 # the class that drives Remote LauncherPrefs init / ad loading. It is declared in the
 # manifest, so R8 already keeps the class name; this keeps its members too, so a
 # subclass reaching one reflectively can never be stripped.
--keep class com.callerid.admesh.presentation.PromoAnchorActivity { *; }
+-keep class com.callerid.admesh.surface.PromoAnchorActivity { *; }
 
 # -------------------------------------------------------------
 # Firebase / Crashlytics / Remote LauncherPrefs
@@ -173,7 +173,7 @@
 
 # -------------------------------------------------------------
 # Permission Engine + Full-Screen-Intent (FSI) flow
-# (com.callerid.number.lookup.home.permission.**)
+# (com.callerid.number.lookup.home.permit.**)
 #
 # Most of this package needs NO rules:
 #  • FsiGateActivity and FsiPollService are declared in the manifest,

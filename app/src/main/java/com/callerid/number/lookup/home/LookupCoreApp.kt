@@ -12,17 +12,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDex
 import com.google.firebase.FirebaseApp
-import com.callerid.admesh.data.PromoKind
-import com.callerid.admesh.domain.PromoVault
-import com.callerid.admesh.presentation.OpenPromoRegistry
-import com.callerid.admesh.presentation.OpenPromoRegistry.isAdAvailable
-import com.callerid.admesh.presentation.my_main_counter.ShellSurfaceScreen
-import com.callerid.number.lookup.home.launcher.activities.HomeBoardActivity as LauncherHomeActivity
-import com.callerid.number.lookup.home.launcher.extensions.config
-import com.callerid.number.lookup.home.permission.PermitEngine
-import com.callerid.number.lookup.home.ui.splash.LaunchGateActivity
-import com.callerid.number.lookup.home.util.CrashSentry
-import com.callerid.number.lookup.home.util.LogRail
+import com.callerid.admesh.model.PromoKind
+import com.callerid.admesh.engine.PromoVault
+import com.callerid.admesh.surface.OpenPromoRegistry
+import com.callerid.admesh.surface.OpenPromoRegistry.isAdAvailable
+import com.callerid.admesh.surface.tally.ShellSurfaceScreen
+import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
+import com.callerid.number.lookup.home.shell.ext.config
+import com.callerid.number.lookup.home.permit.PermitEngine
+import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
+import com.callerid.number.lookup.home.kit.CrashSentry
+import com.callerid.number.lookup.home.kit.LogRail
 import io.lighthouse.push.LightHouse
 import io.lighthouse.push.LightHouseConfig
 import io.lighthouse.push.extended.LightHouseRichPush
@@ -31,7 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.fossify.commons.helpers.SIDELOADING_FALSE
-import com.callerid.admesh.domain.LiveConfigListener
+import com.callerid.admesh.engine.LiveConfigListener
 
 class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
     LifecycleObserver{

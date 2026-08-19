@@ -84,7 +84,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topBar">
 
-            <com.callerid.number.lookup.home.ui.common.GlowIconView
+            <com.callerid.number.lookup.home.screen.shared.GlowIconView
                 android:layout_width="@dimen/_76sdp"
                 android:layout_height="@dimen/_76sdp"
                 app:biv_disc="@drawable/form_empty_circle_tools"

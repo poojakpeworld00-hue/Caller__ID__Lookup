@@ -244,7 +244,7 @@
                             app:tint="@color/primary" />
                     </LinearLayout>
 
-                    <com.callerid.number.lookup.home.ui.tools.LevelBarView
+                    <com.callerid.number.lookup.home.screen.gadgetry.LevelBarView
                         android:id="@+id/spectrum"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_90sdp"

@@ -120,7 +120,7 @@
             app:layout_constraintBottom_toTopOf="@id/bannerAdFrame"
             app:layout_constraintTop_toBottomOf="@id/searchBar">
 
-            <com.callerid.number.lookup.home.ui.common.GlowIconView
+            <com.callerid.number.lookup.home.screen.shared.GlowIconView
                 android:id="@+id/emptyToolsIcon"
                 android:layout_width="@dimen/_78sdp"
                 android:layout_height="@dimen/_78sdp"

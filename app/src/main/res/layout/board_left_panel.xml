@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.callerid.number.lookup.home.launcher.fragments.LeftPanel xmlns:android="http://schemas.android.com/apk/res/android"
+<com.callerid.number.lookup.home.shell.panels.LeftPanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/left_panel_holder"
     android:layout_width="match_parent"
@@ -249,4 +249,4 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
 
-</com.callerid.number.lookup.home.launcher.fragments.LeftPanel>
+</com.callerid.number.lookup.home.shell.panels.LeftPanel>
