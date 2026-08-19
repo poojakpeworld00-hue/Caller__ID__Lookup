@@ -9,7 +9,7 @@ import android.view.Window
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.TextView
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.main.HomeShellOwner
@@ -59,7 +59,7 @@ object FsiPrimerDialog {
         var enableTapped = false
 
         view.findViewById<TextView>(R.id.fsDialogButtonVw).setOnClickListener {
-            activity.logKeyEvent("FSI_Dialog_Enable")
+            activity.trackEvent("FSI_Dialog_Enable")
             // Close the dialog first, then ask notification (targeted request), and
             // only after that launch FSI settings in-task via the shell controller's
             // launcher. The watcher + the host's onResume handle the return.
@@ -70,7 +70,7 @@ object FsiPrimerDialog {
             }
         }
         view.findViewById<TextView>(R.id.fsDialogLaterVw).setOnClickListener {
-            activity.logKeyEvent("FSI_Dialog_NotNow")
+            activity.trackEvent("FSI_Dialog_NotNow")
             dialog.dismiss()
         }
 
@@ -85,7 +85,7 @@ object FsiPrimerDialog {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         animateIn(view)
-        activity.logKeyEvent("FSI_Dialog_Show")
+        activity.trackEvent("FSI_Dialog_Show")
     }
 
     /**

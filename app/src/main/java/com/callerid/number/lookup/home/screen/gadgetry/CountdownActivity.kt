@@ -40,7 +40,7 @@ class CountdownActivity : FrameActivity<ScreenTimerBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.padStartPause.setOnClickListener { if (running) pause() else start() }
         binding.padReset.setOnClickListener { reset() }
         binding.padAddMin.setOnClickListener { add(60_000) }

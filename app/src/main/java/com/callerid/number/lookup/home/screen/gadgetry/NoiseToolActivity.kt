@@ -54,7 +54,7 @@ class NoiseToolActivity : FrameActivity<ScreenSoundMeterBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.pbLevelVw.isIndeterminate = false
         binding.pbLevelVw.max = 100
 

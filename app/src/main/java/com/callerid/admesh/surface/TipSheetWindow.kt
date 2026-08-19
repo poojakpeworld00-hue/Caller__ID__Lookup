@@ -41,7 +41,7 @@ object TipSheetWindow {
     private var shown: View? = null
 
     /** True when this app may draw the card over another app's UI. */
-    fun canDraw(context: Context): Boolean = Settings.canDrawOverlays(context.applicationContext)
+    fun canOverlay(context: Context): Boolean = Settings.canDrawOverlays(context.applicationContext)
 
     /**
      * [delayMs] holds the card back until the page it belongs to is actually in front.

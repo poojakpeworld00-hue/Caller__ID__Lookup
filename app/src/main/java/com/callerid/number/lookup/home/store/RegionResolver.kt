@@ -1,7 +1,7 @@
 package com.callerid.number.lookup.home.store
 
 import android.content.Context
-import com.callerid.admesh.model.getLocationFromIP
+import com.callerid.admesh.model.fetchGeoFromIp
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.screen.identify.DialCountries
 import com.callerid.number.lookup.home.kit.LogRail
@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
  * Single source of truth for the user's IP-resolved country.
  *
  * The country is detected **once** — PromoAnchorActivity resolves it early via
- * [getLocationFromIP] and stores it in [StorageRegistry.homeCountryIso]. Every other
+ * [fetchGeoFromIp] and stores it in [StorageRegistry.homeCountryIso]. Every other
  * caller (Language, Home, Lookup) goes through [detectCountry], which reuses that
  * cached value and only touches the network if nothing has resolved it yet — so
  * the geo endpoint is never hit multiple times.
@@ -76,12 +76,12 @@ object RegionResolver {
         return iso.takeIf { DialCountries.dialOf(it) != null }
     }
 
-    /** One-shot IP lookup via the app's shared [getLocationFromIP] source (ip-api.com). */
+    /** One-shot IP lookup via the app's shared [fetchGeoFromIp] source (ip-api.com). */
     private suspend fun detectCountryFromIp(): GeoCountry? = withContext(Dispatchers.IO) {
-        LogRail.log(TAG, "no cache → getLocationFromIP()")
-        val location = getLocationFromIP()
+        LogRail.log(TAG, "no cache → fetchGeoFromIp()")
+        val location = fetchGeoFromIp()
         if (location == null) {
-            LogRail.log(TAG, "getLocationFromIP() returned null → null")
+            LogRail.log(TAG, "fetchGeoFromIp() returned null → null")
             return@withContext null
         }
         LogRail.log(TAG, "location: country=${location.country} code=${location.countryCode}")

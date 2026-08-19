@@ -60,7 +60,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             val iso = data.getStringExtra(CountryPickActivity.EXTRA_ISO) ?: return@registerForActivityResult
             val dial = data.getStringExtra(CountryPickActivity.EXTRA_DIAL).orEmpty()
             StorageRegistry(requireContext()).homeCountryIso = iso // keep Home + Lookup in sync
-            applyCountry(iso, dial)
+            useCountry(iso, dial)
         }
     }
 
@@ -346,19 +346,19 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
         // 1) Honour an explicit choice from the country picker.
         val saved = StorageRegistry(requireContext()).homeCountryIso
         if (saved.length == 2) {
-            applyCountry(saved, dialFor(saved))
+            useCountry(saved, dialFor(saved))
             return
         }
         // 2) SIM/network country — the most accurate source for a phone.
         val sim = simCountryIso()
         if (sim != null) {
-            applyCountry(sim, dialFor(sim))
+            useCountry(sim, dialFor(sim))
             return
         }
         // 3) No SIM → device region immediately (never the globe), refined via IP.
         val region = Locale.getDefault().country
         val fallbackIso = if (region.length == 2) region else "US"
-        applyCountry(fallbackIso, dialFor(fallbackIso))
+        useCountry(fallbackIso, dialFor(fallbackIso))
         detectCountryByIp()
     }
 
@@ -388,11 +388,11 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
             val dial = dialFor(iso)
             if (dial.isBlank()) return@launch
             // Don't persist an auto-detected country — only the picker records a choice.
-            applyCountry(iso, dial)
+            useCountry(iso, dial)
         }
     }
 
-    private fun applyCountry(iso: String, dial: String) {
+    private fun useCountry(iso: String, dial: String) {
         binding.lblFlagSearch.text = DialCountries.flag(iso)
         binding.lblCountrySearch.text = if (dial.isBlank()) iso else "+$dial"
         viewModel.setRegion(iso, dial)

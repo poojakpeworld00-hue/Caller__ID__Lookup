@@ -120,7 +120,7 @@ object PerScreenPromo {
      * preloaded once with no screen context, so it resolves to the `default`
      * entry's native id (or the global `googleNative` when screen-wise is off).
      */
-    fun nativeAdUnitId(context: Context): String {
+    fun inlineAdUnitId(context: Context): String {
         val pref = PromoVault.getInstance(context)
         val globalNative = pref.getString("googleNative").orEmpty()
         val screenWise = pref.getBoolean("screen_wise_ad")
@@ -143,7 +143,7 @@ object PerScreenPromo {
                 source = "googleNative (default.native blank/missing)"
             }
         }
-        if (BuildConfig.DEBUG) Log.d(TAG, "nativeAdUnitId() = $result   <- $source")
+        if (BuildConfig.DEBUG) Log.d(TAG, "inlineAdUnitId() = $result   <- $source")
         return result
     }
 
@@ -152,7 +152,7 @@ object PerScreenPromo {
      * first; if it fails, a native banner is shown in the same container.
      * Hidden when ads are globally off or the screen's `show` flag is false.
      */
-    fun showAd(
+    fun renderAd(
         screenName: String,
         activity: Activity,
         container: FrameLayout,
@@ -168,7 +168,7 @@ object PerScreenPromo {
             shimmer?.stopShimmer()
             shimmer?.visibility = View.GONE
             if (BuildConfig.DEBUG) {
-                Log.d(TAG, "showAd($screenName) -> HIDDEN  IsAdsON=$adsOn  show=${resolved.show}")
+                Log.d(TAG, "renderAd($screenName) -> HIDDEN  IsAdsON=$adsOn  show=${resolved.show}")
             }
             return
         }
@@ -184,14 +184,14 @@ object PerScreenPromo {
         if (BuildConfig.DEBUG) {
             Log.d(
                 TAG,
-                "showAd($screenName) -> LOAD banner  id=${resolved.bannerId}  " +
+                "renderAd($screenName) -> LOAD banner  id=${resolved.bannerId}  " +
                         "bannerType=${resolved.bannerType}  size=$size  collapsible=$collapsible"
             )
         }
 
         // disableInternalFallback=true → StripPromo reports a single onAdFailed()
         // so the native-banner fallback owns the failure path (no double-load).
-        StripPromo().showBanner(
+        StripPromo().renderBanner(
             activity = activity,
             container = container,
             type = StripKind.AUTO,
@@ -203,9 +203,9 @@ object PerScreenPromo {
             observer = object : StripWatcher {
                 override fun onAdFailed() {
                     if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "showAd($screenName) -> banner failed, fallback to native banner")
+                        Log.d(TAG, "renderAd($screenName) -> banner failed, fallback to native banner")
                     }
-                    InlinePromoStrip().showNativeBannerNative(activity, container, shimmer)
+                    InlinePromoStrip().renderNativeBanner(activity, container, shimmer)
                 }
             }
         )

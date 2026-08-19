@@ -18,7 +18,7 @@ import org.json.JSONObject
  * rarely killed.
  *
  * Realtime Remote LauncherPrefs pushes the change instead: [ConfigUpdateListener.onUpdate] fires,
- * the new values are activated, and the same ingest the splash runs re-populates PromoVault, so
+ * the new values are activated, and the same absorb the splash runs re-populates PromoVault, so
  * every gate that reads from it — ad slots, the permission engine, the settings rows — picks
  * the change up on its next read.
  *
@@ -78,9 +78,9 @@ object LiveConfigListener {
                 "__cfg_audience_split",
                 response.has("marketing") || response.has("organic"),
             )
-            PromoConfigLoader.ingest(
+            PromoConfigLoader.absorb(
                 context,
-                PromoConfigLoader.audienceRoot(response, onMarketing),
+                PromoConfigLoader.audienceBlock(response, onMarketing),
             )
 
             // The permission engine caches its own parsed copy of the same blob.

@@ -21,7 +21,7 @@ import com.callerid.number.lookup.home.store.StorageRegistry
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.callerid.admesh.engine.PromoVault
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.R
@@ -85,7 +85,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         val granted = context?.let { ctx -> OverlayKit.isGranted(ctx) } ?: false
-        context?.logKeyEvent(if (granted) "Permission_OVERLAY_Allow" else "Permission_OVERLAY_Deny")
+        context?.trackEvent(if (granted) "Permission_OVERLAY_Allow" else "Permission_OVERLAY_Deny")
         refreshRows()
         if (finishAfterOverlay) {
             finishAfterOverlay = false
@@ -116,11 +116,11 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
         root.findViewById<TextView>(R.id.padContinue).setOnClickListener { onContinueClicked() }
         root.findViewById<TextView>(R.id.padNotNow).setOnClickListener {
-            context?.logKeyEvent("PermissionSheet_NotNow")
+            context?.trackEvent("PermissionSheet_NotNow")
             finishFlow()
         }
 
-        context?.logKeyEvent("PermissionSheet_Show")
+        context?.trackEvent("PermissionSheet_Show")
         return root
     }
 

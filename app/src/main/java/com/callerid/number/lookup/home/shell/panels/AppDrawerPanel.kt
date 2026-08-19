@@ -68,9 +68,9 @@ class AppDrawerPanel(
 
         // Warm the slot only — the renderers draw what is already preloaded, and at this point
         // nothing is. The show happens in onDrawerShown(), each time the drawer comes up.
-        adSlot = ShellPromoConfig.appDrawerSlot(activity)
+        adSlot = ShellPromoConfig.drawerSlot(activity)
         if (adSlot.needsNativePreload) {
-            nativePromo.loadNativeADs(activity)
+            nativePromo.fetchNativeAds(activity)
         }
 
         // The frame is declared in the layout for the view binding, but it belongs to the app
@@ -86,7 +86,7 @@ class AppDrawerPanel(
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
-        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        ShellPromoConfig.renderSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
     /**
@@ -100,11 +100,11 @@ class AppDrawerPanel(
      * Only the row hand-off is guarded, since [AppTileAdapter.setAdSlot] rebuilds the grid.
      */
     private fun refreshSlot(activity: HomeBoardActivity) {
-        val fresh = ShellPromoConfig.appDrawerSlot(activity)
+        val fresh = ShellPromoConfig.drawerSlot(activity)
         if (fresh == adSlot) return
 
         adSlot = fresh
-        if (adSlot.needsNativePreload) nativePromo.loadNativeADs(activity)
+        if (adSlot.needsNativePreload) nativePromo.fetchNativeAds(activity)
         (binding.allAppsGridVw.adapter as? AppTileAdapter)?.setAdSlot(adHeaderView(), adSlot.position)
     }
 

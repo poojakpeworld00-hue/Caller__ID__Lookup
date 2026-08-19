@@ -48,7 +48,7 @@ class HelloStepActivity : ShellBaseActivity() {
 
         // `onboarding.welcome.skip_enabled: false` makes the screen a required step —
         // Continue (and Back, which behaves like Skip) are then the only ways on.
-        val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.WELCOME)
+        val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.WELCOME)
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         // Back moves the flow on rather than out. Onboarding runs once and there is nothing
@@ -58,12 +58,12 @@ class HelloStepActivity : ShellBaseActivity() {
         })
 
         // Ad frame pinned above the CTA, `launcher_ads.onboarding.welcome.slot` — a mid native
-        // unless Remote LauncherPrefs says otherwise. showSlot hides the frame outright when the slot
+        // unless Remote LauncherPrefs says otherwise. renderSlot hides the frame outright when the slot
         // is off (as the renderers do when ads are off or the network is down), and
         // followAdContainer drops the hairline with it.
-        ShellPromoConfig.showSlot(
+        ShellPromoConfig.renderSlot(
             activity = this,
-            slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.WELCOME),
+            slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.WELCOME),
             container = binding.adNativeFrameVw,
             shimmer = binding.adShimmerVw,
         )
@@ -106,7 +106,7 @@ class HelloStepActivity : ShellBaseActivity() {
      * unless the order was changed — with this screen's exit interstitial in front of it.
      */
     private fun goToNextStep() {
-        ShellPromoConfig.runOnboardingInter(this, ShellPromoConfig.OnboardScreen.WELCOME) {
+        ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.WELCOME) {
             OnboardRouter.advance(this)
         }
     }

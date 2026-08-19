@@ -20,8 +20,8 @@ import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.interCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
-import com.callerid.admesh.engine.logKeyEvent
-import com.callerid.admesh.surface.isNetworkConnected
+import com.callerid.admesh.engine.trackEvent
+import com.callerid.admesh.surface.hasNetwork
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
 class FlowInterstitial {
@@ -190,7 +190,7 @@ class FlowInterstitial {
     // ----------------------------------------------------------------------
     // LOAD INTER AD (Google)
     // ----------------------------------------------------------------------
-    fun loadInterAds(activity: Activity) {
+    fun fetchInterstitial(activity: Activity) {
         val pref = PromoVault.getInstance(activity)
         if (!pref.getBoolean("IsAdsON")) return
         // Firebase "InterAds" master switch — disable interstitial loading entirely
@@ -227,7 +227,7 @@ class FlowInterstitial {
     // ----------------------------------------------------------------------
     // PUBLIC SHOW METHOD
     // ----------------------------------------------------------------------
-    fun showInterAds(activity: Activity?, adsClose: () -> Unit) {
+    fun renderInterstitial(activity: Activity?, adsClose: () -> Unit) {
         showAdInternal(activity, adsClose)
     }
 
@@ -249,7 +249,7 @@ class FlowInterstitial {
         }
 
         // Network check
-        if (!isNetworkConnected(act)) return safeClose("no_network")
+        if (!hasNetwork(act)) return safeClose("no_network")
         if (!pref.getBoolean("IsAdsON")) return safeClose("ads_off")
         // Firebase "InterAds" master switch — skip showing interstitials entirely
         if (!pref.getBoolean("InterAds")) return safeClose("inter_ads_disabled")
@@ -270,7 +270,7 @@ class FlowInterstitial {
             PromoKind.GOOGLE -> {
                 act.safeLog("inter_type_google")
                 if (isPreload) {
-                    showGoogleInterstitial(act, pref, ::safeClose)
+                    renderGoogleInterstitial(act, pref, ::safeClose)
                 } else {
                     loadAndShowGoogleOnDemand(act, pref, ::safeClose)
                 }
@@ -284,7 +284,7 @@ class FlowInterstitial {
                         onDismissed = { safeClose("fb_dismiss") },
                         onFail = {
                             act.safeLog("fb_preload_fail_fallback")
-                            loadAndShowFacebookInter(
+                            loadAndRenderFbInterstitial(
                                 act,
                                 onDismissed = { safeClose("fb_dismiss") },
                                 onFail = { showCustomAfterFacebookFail(act, pref) { safeClose("fb_fail_custom") } }
@@ -292,7 +292,7 @@ class FlowInterstitial {
                         }
                     )
                 } else {
-                    loadAndShowFacebookInter(
+                    loadAndRenderFbInterstitial(
                         act,
                         onDismissed = { safeClose("fb_dismiss") },
                         onFail = {
@@ -315,7 +315,7 @@ class FlowInterstitial {
     // ----------------------------------------------------------------------
     // GOOGLE INTERSTITIAL
     // ----------------------------------------------------------------------
-    private fun showGoogleInterstitial(
+    private fun renderGoogleInterstitial(
         activity: Activity,
         pref: PromoVault,
         safeClose: (String) -> Unit
@@ -328,12 +328,12 @@ class FlowInterstitial {
         }
 
         // Log load
-        activity.logKeyEvent("google_inter_show_attempt")
+        activity.trackEvent("google_inter_show_attempt")
 
-        if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
+        if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
         inter.setOnPaidEventListener {
-            PromoRevenueGauge.logPaidEvent(activity, it)
+            PromoRevenueGauge.reportPaidEvent(activity, it)
         }
 
         inter.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -348,14 +348,14 @@ class FlowInterstitial {
                 googleInterAd = null
                 activity.safeLog("google_inter_dismiss")
                 safeClose("google_dismiss")
-                if (pref.getBoolean("is_preload_ads")) loadInterAds(activity)
+                if (pref.getBoolean("is_preload_ads")) fetchInterstitial(activity)
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 googleInterAd = null
                 activity.safeLog("google_inter_failed_show_${error.code}")
                 handleGoogleFail(activity, pref, safeClose)
-                if (pref.getBoolean("is_preload_ads")) loadInterAds(activity)
+                if (pref.getBoolean("is_preload_ads")) fetchInterstitial(activity)
             }
         }
 
@@ -365,7 +365,7 @@ class FlowInterstitial {
             googleInterAd = null
             activity.safeLog("google_inter_exception")
             handleGoogleFail(activity, pref, safeClose)
-            loadInterAds(activity)
+            fetchInterstitial(activity)
         }
     }
 
@@ -390,7 +390,7 @@ class FlowInterstitial {
                     FullScreenWaiter.hide()
                     googleInterAd = ad
                     activity.safeLog("google_inter_ondemand_loaded")
-                    showGoogleInterstitial(activity, pref, safeClose)
+                    renderGoogleInterstitial(activity, pref, safeClose)
                 }
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     FullScreenWaiter.hide()
@@ -445,7 +445,7 @@ class FlowInterstitial {
 
             activity.safeLog("google_fail_try_facebook")
 
-            loadAndShowFacebookInter(
+            loadAndRenderFbInterstitial(
                 activity,
                 onDismissed = { safeClose("fb_dismiss") },
                 onFail = {
@@ -464,7 +464,7 @@ class FlowInterstitial {
     // ----------------------------------------------------------------------
     // FACEBOOK INTERSTITIAL
     // ----------------------------------------------------------------------
-    fun loadAndShowFacebookInter(
+    fun loadAndRenderFbInterstitial(
         context: Context,
         onDismissed: () -> Unit,
         onFail: () -> Unit
@@ -544,7 +544,7 @@ class FlowInterstitial {
     // ----------------------------------------------------------------------
     private fun Context.safeLog(event: String) {
         try {
-            logKeyEvent(event)
+            trackEvent(event)
             Log.d("InterADsLog", event)
         } catch (_: Exception) {
         }

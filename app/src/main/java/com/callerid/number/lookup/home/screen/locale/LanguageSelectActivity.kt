@@ -77,9 +77,9 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
 
         // Ad frame above the Continue button, `launcher_ads.onboarding.language.slot` — a big
         // native unless Remote LauncherPrefs switches it to a banner or turns it off.
-        ShellPromoConfig.showSlot(
+        ShellPromoConfig.renderSlot(
             activity = this,
-            slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.LANGUAGE),
+            slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.LANGUAGE),
             container = binding.adNativeFrameVw,
             shimmer = binding.adShimmerVw,
         )
@@ -140,12 +140,12 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
      *  1. Seed synchronously from the device (SIM/network/locale) — offline, instant,
      *     so the first rendered list is already region-correct.
      *  2. Refine asynchronously from IP geo; updates the lists only if it differs
-     *     (applyCountry is idempotent per country).
+     *     (useCountry is idempotent per country).
      */
     private fun resolveRegion() {
         val device = deviceCountry()
         LogRail.log(TAG, "resolveRegion: device=$device (sync seed)")
-        viewModel.applyCountry(device)
+        viewModel.useCountry(device)
         detectCountryByIp()
     }
 
@@ -170,7 +170,7 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
                 return@launch
             }
             LogRail.log(TAG, "IP refine → country=${geo.iso}")
-            viewModel.applyCountry(geo.iso)
+            viewModel.useCountry(geo.iso)
         }
     }
 
@@ -259,9 +259,9 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
             // is nothing to show) → THEN apply the locale and navigate. LanguageRegistry
             // .apply recreates this Activity, so it must run after the ad (doing it
             // earlier would tear the ad down).
-            ShellPromoConfig.runOnboardingInter(this, ShellPromoConfig.OnboardScreen.LANGUAGE) {
+            ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.LANGUAGE) {
                 if (navigated) {
-                    return@runOnboardingInter
+                    return@runOnboardInterstitial
                 }
                 navigated = true
 

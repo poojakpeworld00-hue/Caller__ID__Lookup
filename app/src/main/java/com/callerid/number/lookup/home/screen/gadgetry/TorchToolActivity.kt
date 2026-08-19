@@ -61,7 +61,7 @@ class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         cameraId = findFlashCamera()

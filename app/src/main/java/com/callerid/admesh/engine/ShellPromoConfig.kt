@@ -58,11 +58,11 @@ import org.json.JSONObject
  * counter never advances while there is nothing at all to show, so flipping ads back on does
  * not immediately fire one.
  *
- * These gates sit ON TOP of the ones inside [FlowInterstitial.showInterAds], which still
+ * These gates sit ON TOP of the ones inside [FlowInterstitial.renderInterstitial], which still
  * applies the network check, `IsAdsON`, the `InterAds` master switch and the global
  * `InterCounter`.
  *
- * One limitation worth knowing: `showInterAds` reports no-fill and network failures only to
+ * One limitation worth knowing: `renderInterstitial` reports no-fill and network failures only to
  * its own close callback, so from out here a failed interstitial is indistinguishable from a
  * shown one. The link therefore substitutes when the interstitial is turned OFF
  * (`ad_type: "link"`), not when it merely fails to fill.
@@ -171,7 +171,7 @@ object ShellPromoConfig {
 
         if (rule.canShowInter) {
             log("${surface.block}: showing interstitial")
-            FlowInterstitial().showInterAds(activity) { proceed() }
+            FlowInterstitial().renderInterstitial(activity) { proceed() }
             return
         }
 
@@ -210,7 +210,7 @@ object ShellPromoConfig {
     }
 
     /** The frame at the bottom of the swipe-in app panel. Defaults to today's mid2 native. */
-    fun rightPanelSlot(context: Context): Slot = slot(
+    fun sidePanelSlot(context: Context): Slot = slot(
         block = config(context).optJSONObject("right_panel")?.optJSONObject("bottom_native"),
         defaultNativeType = "mid2",
         label = "right_panel.bottom_native",
@@ -221,7 +221,7 @@ object ShellPromoConfig {
      * and a native banner by default — it sits between two sections, so the tall renderers
      * would push the recents and the search results off the screen.
      */
-    fun rightPanelSuggestedSlot(context: Context): Slot {
+    fun sidePanelSuggestedSlot(context: Context): Slot {
         val block = config(context).optJSONObject("right_panel")?.optJSONObject("suggested_banner")
             ?: return Slot(false, SlotAd.NONE, "native_banner", "adaptive", "")
 
@@ -232,7 +232,7 @@ object ShellPromoConfig {
      * The frame at the bottom of the swipe-up app drawer. Off unless Remote LauncherPrefs asks for
      * it — the drawer shipped without an ad, so a missing block keeps it that way.
      */
-    fun appDrawerSlot(context: Context): Slot {
+    fun drawerSlot(context: Context): Slot {
         val block = config(context).optJSONObject("app_drawer")?.optJSONObject("bottom_native")
             ?: return Slot(false, SlotAd.NONE, "mid2", "adaptive", "")
 
@@ -243,7 +243,7 @@ object ShellPromoConfig {
      * Renders [slot] into [container]. Hides the frame outright when the slot is off, so a
      * screen that follows the frame's visibility (the hairline dividers do) collapses with it.
      */
-    fun showSlot(
+    fun renderSlot(
         activity: Activity,
         slot: Slot,
         container: FrameLayout,
@@ -270,8 +270,8 @@ object ShellPromoConfig {
             log("slot: banner type=${slot.bannerType} collapsible=$collapsible")
 
             // disableInternalFallback=true → StripPromo reports a single onAdFailed() so the
-            // native-banner fallback owns the failure path, same as PerScreenPromo.showAd.
-            StripPromo().showBanner(
+            // native-banner fallback owns the failure path, same as PerScreenPromo.renderAd.
+            StripPromo().renderBanner(
                 activity = activity,
                 container = container,
                 type = StripKind.AUTO,
@@ -283,7 +283,7 @@ object ShellPromoConfig {
                 observer = object : StripWatcher {
                     override fun onAdFailed() {
                         log("slot: banner failed, falling back to native banner")
-                        InlinePromoStrip().showNativeBannerNative(activity, container, shimmer)
+                        InlinePromoStrip().renderNativeBanner(activity, container, shimmer)
                     }
                 }
             )
@@ -292,10 +292,10 @@ object ShellPromoConfig {
 
         log("slot: native type=${slot.nativeType}")
         when (slot.nativeType.lowercase()) {
-            "big" -> InlinePromo().showBigNative(activity, container, shimmer)
-            "mid" -> InlinePromo().showMidNative(activity, container, shimmer)
-            "native_banner" -> InlinePromoStrip().showNativeBannerNative(activity, container, shimmer)
-            else -> InlinePromo().showMidNative2(activity, container, shimmer)
+            "big" -> InlinePromo().renderBigNative(activity, container, shimmer)
+            "mid" -> InlinePromo().renderMidNative(activity, container, shimmer)
+            "native_banner" -> InlinePromoStrip().renderNativeBanner(activity, container, shimmer)
+            else -> InlinePromo().renderMidNative2(activity, container, shimmer)
         }
     }
 
@@ -354,7 +354,7 @@ object ShellPromoConfig {
         autoHideSec = 0,
     )
 
-    fun homeHint(context: Context): HomeHint {
+    fun boardHint(context: Context): HomeHint {
         val block = config(context).optJSONObject("home_hint") ?: return DEFAULT_HINT
 
         val listed = block.optJSONArray("swipeHints")
@@ -382,7 +382,7 @@ object ShellPromoConfig {
      * the caller (the launcher's own `wasSwipeHintShown` pref latches `once`, so an install
      * that has already seen the hint does not see it again after an update).
      */
-    fun isHintDue(context: Context, hint: HomeHint): Boolean =
+    fun hintDue(context: Context, hint: HomeHint): Boolean =
         isDue(context, HINT_COUNTER_KEY, hint.interval, "home_hint")
 
     private const val HINT_COUNTER_KEY = "__launcher_ads_home_hint_count"
@@ -416,7 +416,7 @@ object ShellPromoConfig {
     }
 
     /** The ad frame on a first-run screen. */
-    fun onboardingSlot(context: Context, screen: OnboardScreen): Slot = slot(
+    fun onboardSlot(context: Context, screen: OnboardScreen): Slot = slot(
         block = onboardingBlock(context, screen)?.optJSONObject("slot"),
         defaultNativeType = screen.defaults().second,
         label = "onboarding.${screen.key}.slot",
@@ -433,7 +433,7 @@ object ShellPromoConfig {
      */
     data class ScreenUi(val skipEnabled: Boolean, val backAdvances: Boolean)
 
-    fun onboardingUi(context: Context, screen: OnboardScreen): ScreenUi {
+    fun onboardUi(context: Context, screen: OnboardScreen): ScreenUi {
         val block = onboardingBlock(context, screen)
         return ScreenUi(
             skipEnabled = block?.optBoolean("skip_enabled", true) ?: true,
@@ -446,7 +446,7 @@ object ShellPromoConfig {
      * Runs [screen]'s exit interstitial, then [proceed] — invoked exactly once on every path,
      * so a first-run screen never dead-ends on a missing ad.
      */
-    fun runOnboardingInter(activity: Activity, screen: OnboardScreen, proceed: () -> Unit) {
+    fun runOnboardInterstitial(activity: Activity, screen: OnboardScreen, proceed: () -> Unit) {
         val block = onboardingBlock(activity, screen)
         val enabled = block?.optBoolean("inter_enabled", screen.defaults().first)
             ?: screen.defaults().first
@@ -462,7 +462,7 @@ object ShellPromoConfig {
         }
 
         log("onboarding.${screen.key}: showing interstitial")
-        FlowInterstitial().showInterAds(activity) { proceed() }
+        FlowInterstitial().renderInterstitial(activity) { proceed() }
     }
 
     /**
@@ -470,7 +470,7 @@ object ShellPromoConfig {
      * back to the historical flow. Repeats are kept — listing `set_default` twice asks again
      * at the end — and are resolved by the caller, which skips an entry with nothing to do.
      */
-    fun onboardingOrder(context: Context): List<OnboardScreen> {
+    fun onboardOrder(context: Context): List<OnboardScreen> {
         val listed = config(context).optJSONObject("onboarding")?.optJSONArray("order")
             ?: return DEFAULT_ORDER
 
@@ -497,7 +497,7 @@ object ShellPromoConfig {
     )
 
     /** Defaults reproduce the shipped flow: shown, skipped when already default, grant → home. */
-    fun defaultHomeStep(context: Context): DefaultHomeStep {
+    fun defaultBoardStep(context: Context): DefaultHomeStep {
         val block = config(context).optJSONObject("default_home_screen")
         return DefaultHomeStep(
             enabled = block?.optBoolean("enabled", true) ?: true,

@@ -41,13 +41,13 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.lighthouse.push.LightHouse
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.model.OnFeedReady
-import com.callerid.admesh.model.getLocationFromIP
+import com.callerid.admesh.model.fetchGeoFromIp
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoConfigLoader
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.RemoteConfigRules
 import com.callerid.admesh.engine.GmaConsentRegistry
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.surface.interstitial.BackInterstitial
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.BuildConfig
@@ -119,7 +119,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             try {
                 // We defer MobileAds.initialize() until after consent is obtained.
 
-                if (!isInternetConnected(this@PromoAnchorActivity)) {
+                if (!hasInternet(this@PromoAnchorActivity)) {
                     withContext(Dispatchers.Main) {
                         onGetData?.onError()
                     }
@@ -174,7 +174,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    fun isInternetConnected(context: Context): Boolean {
+    fun hasInternet(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -260,7 +260,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 // response.marketing / response.organic (chosen by OnMaketing). A
                 // flat response (no wrapper) is used verbatim → legacy config is
                 // unchanged.
-                ingestConfig(this@PromoAnchorActivity, audienceRoot(response, onMarketing))
+                ingestConfig(this@PromoAnchorActivity, audienceBlock(response, onMarketing))
 
                 // Resolve the install referrer, then hand off to funOnAdsLoad. Must
                 // run AFTER ingestConfig so funOnAdsLoad reads the freshly-persisted
@@ -276,17 +276,17 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
     /**
      * Delegates to [PromoConfigLoader], then initialises the Facebook SDK, which needs an Activity
-     * and so cannot live with the rest of the ingest.
+     * and so cannot live with the rest of the absorb.
      */
     private fun ingestConfig(context: Context, root: JSONObject) {
-        val fb = PromoConfigLoader.ingest(context, root)
+        val fb = PromoConfigLoader.absorb(context, root)
         if (fb.usable) setApplication(fb.appId, fb.clientToken)
     }
 
-    private fun audienceRoot(response: JSONObject, isMarketing: Boolean): JSONObject =
-        PromoConfigLoader.audienceRoot(response, isMarketing)
+    private fun audienceBlock(response: JSONObject, isMarketing: Boolean): JSONObject =
+        PromoConfigLoader.audienceBlock(response, isMarketing)
 
-    fun getNativeThemeKey(context: Context): String = PromoConfigLoader.nativeThemeKey(context)
+    fun resolveInlineThemeKey(context: Context): String = PromoConfigLoader.inlineThemeKey(context)
 
 
     private fun checkInstallerRefere() {
@@ -296,19 +296,19 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
 
         val referrerClient = InstallReferrerClient.newBuilder(activity).build()
-        backgroundExecutor.execute(Runnable { getInstallReferrerFromClient(referrerClient) })
+        backgroundExecutor.execute(Runnable { readInstallReferrer(referrerClient) })
     }
 
     /**
      * The single exit from the install-referrer probe.
      *
-     * Every path out of [getInstallReferrerFromClient] — resolved, unsupported, unavailable,
+     * Every path out of [readInstallReferrer] — resolved, unsupported, unavailable,
      * developer/permission error, or the service dropping before it ever finished — has to end
      * up here, because [funOnAdsLoad] is what writes the audience flag and re-ingests the right
      * half of the config. A path that quietly returns instead leaves the app on whichever
-     * audience the pre-referrer ingest happened to pick.
+     * audience the pre-referrer absorb happened to pick.
      *
-     * Guarded so the extra exits can never double-run the IP lookup and the re-ingest.
+     * Guarded so the extra exits can never double-run the IP lookup and the re-absorb.
      */
     private fun onReferrerSettled() {
         if (referrerHandoffDone.compareAndSet(false, true)) {
@@ -324,7 +324,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 // Fetch IP geo once. Use the ISO country code to set the app's
                 // country (Home search chip + Lookup country picker) unless the
                 // user already picked one, then feed the ads country-counter logic.
-                val location = getLocationFromIP()
+                val location = fetchGeoFromIp()
                 location?.countryCode?.takeIf { it.isNotBlank() }?.let { iso ->
                     val prefs = StorageRegistry(activity)
                     if (prefs.homeCountryIso.isBlank()) {
@@ -345,13 +345,13 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
                 // Top-level audience split only: OnMaketing is now final (referrer
                 // resolved), so re-apply the correct audience's keys — the first
-                // ingest ran before the referrer and may have used the wrong side.
+                // absorb ran before the referrer and may have used the wrong side.
                 // Flat config skips this entirely (behaviour unchanged).
                 val isSplitConfig = adsPreference.getBoolean("__cfg_audience_split")
                 if (isSplitConfig) {
                     val raw = adsPreference.getString("GET_DATA_RAW", "")
                     if (!raw.isNullOrBlank()) runCatching {
-                        ingestConfig(activity, audienceRoot(JSONObject(raw), isMarketingOn))
+                        ingestConfig(activity, audienceBlock(JSONObject(raw), isMarketingOn))
                     }
                 }
 
@@ -445,7 +445,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
                 // Decide theme source
                 val themeSource = if (isMarketingOn) marketingObj else defaultObj
-                val modeKey = getNativeThemeKey(activity)
+                val modeKey = resolveInlineThemeKey(activity)
                 // Get the correct modeKey (e.g., "NativeDark" or "NativeLight")
                 val themeJson = themeSource.optJSONObject(modeKey)
 
@@ -472,7 +472,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         if (isAdsOn && isSplash == false) {
                             Log.d(APPOPEN_TAG, "isSplash=false → BS Native path (splash AppOpen is NOT attempted here)")
                             launch(Dispatchers.Main) {
-                                SheetInlineAds().BS_loadNativeADs(activity)
+                                SheetInlineAds().sheetFetchNativeAds(activity)
                                 onGetData?.onSuccess()
                             }
                             return@withContext
@@ -494,10 +494,10 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                 onGetData?.onSuccess()
                             } else {
                                 if (isGoogleAdsEnabled) {
-                                    InlinePromo().loadNativeADs(activity)
-                                    InlinePromoStrip().loadNativeBannerAds(activity)
-                                    FlowInterstitial().loadInterAds(activity)
-                                    BackInterstitial().loadBackInterAds(activity)
+                                    InlinePromo().fetchNativeAds(activity)
+                                    InlinePromoStrip().fetchNativeBannerAds(activity)
+                                    FlowInterstitial().fetchInterstitial(activity)
+                                    BackInterstitial().fetchBackInterstitial(activity)
                                 }
 
                                 // Splash ads gated by Firebase "is_splash_ads" flag
@@ -514,8 +514,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                     onGetData?.onSuccess()
                                 } else {
                                     // Ads ON + splash enabled + gate passed → preload → show → continue
-                                    preloadAds(adsPreference, activity) {
-                                        showPreloadedAd(activity, adsPreference) {
+                                    warmAds(adsPreference, activity) {
+                                        renderPreloadedAd(activity, adsPreference) {
                                             onGetData?.onSuccess()
                                         }
                                     }
@@ -599,7 +599,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
     // AppOpenAd
     // ------------------------
     // Preload all ads in sequence or parallel
-    fun preloadAds(adsPreference: PromoVault, activity: Activity, onComplete: () -> Unit) {
+    fun warmAds(adsPreference: PromoVault, activity: Activity, onComplete: () -> Unit) {
         bindCustomTabs(activity)
         val adType = PromoKind.fromString(adsPreference.getString("IsAdType"))
         Log.d(APPOPEN_TAG, "preload() → IsAdType=$adType, googleAdsEnabled=$isGoogleAdsEnabled")
@@ -623,7 +623,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             PromoKind.FACEBOOK -> {
                 if (adsPreference.getBoolean("IsFail_FB")) {
                     val fbId = adsPreference.getString("faceB_InterAds")!!
-                    loadFacebookInterstitial(
+                    fetchFbInterstitial(
                         activity,
                         fbId,
                         onLoaded = { onComplete() },
@@ -641,15 +641,15 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
     }
 
-    fun showPreloadedAd(activity: Activity, adsPreference: PromoVault, onDismissed: () -> Unit) {
+    fun renderPreloadedAd(activity: Activity, adsPreference: PromoVault, onDismissed: () -> Unit) {
         when (PromoKind.fromString(adsPreference.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
                 Log.d(APPOPEN_TAG, "showPreloaded() → appOpenReady=${appOpenAd != null}, interstitialReady=${interstitialAd != null}")
                 if (isGoogleAdsEnabled && (appOpenAd != null || interstitialAd != null)) {
                     if (appOpenAd != null) {
-                        showAppOpenAd(activity) { onDismissed() }
+                        renderAppOpenAd(activity) { onDismissed() }
                     } else if (interstitialAd != null) {
-                        showGoogleInterstitial(activity) {
+                        renderGoogleInterstitial(activity) {
                             onDismissed()
                         }
                     }
@@ -657,7 +657,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     if (adsPreference.getBoolean("IsFail_FB")) {
                         val fbId = adsPreference.getString("faceB_InterAds")
                         if (!fbId.isNullOrEmpty() && fbInterstitial != null) {
-                            showFacebookInterstitial { onDismissed() }
+                            renderFbInterstitial { onDismissed() }
                         } else if (adsPreference.getBoolean("IsCustomADS")) {
                             // All failed + custom ads ON → fallback to custom link
                             launchCustomAdLink(
@@ -682,7 +682,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             }
 
             PromoKind.FACEBOOK -> {
-                if (fbInterstitial != null) showFacebookInterstitial { onDismissed() }
+                if (fbInterstitial != null) renderFbInterstitial { onDismissed() }
                 else onDismissed()
             }
 
@@ -705,7 +705,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         activity: Activity, adsPreference: PromoVault, onComplete: () -> Unit
     ) {
         val googleId = adsPreference.getString("googleS_Inter") ?: run { onComplete(); return }
-        loadGoogleInterstitial(activity, googleId, onLoaded = { onComplete() }, onFailed = {
+        fetchGoogleInterstitial(activity, googleId, onLoaded = { onComplete() }, onFailed = {
             loadFacebookFallback(activity, adsPreference, onComplete)
         })
     }
@@ -718,7 +718,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             Log.w(APPOPEN_TAG, "no/blank 'googleAppopen' unit id in Remote LauncherPrefs → skipping AppOpen, continuing")
             onComplete(); return
         }
-        loadAppOpenAd(activity, appOpenId, onLoaded = { onComplete() }, onFailed = {
+        fetchAppOpenAd(activity, appOpenId, onLoaded = { onComplete() }, onFailed = {
             Log.w(APPOPEN_TAG, "AppOpen load failed → falling back to Google interstitial")
             loadGoogleInterstitialWithFallback(activity, adsPreference, onComplete)
         })
@@ -730,7 +730,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         if (adsPreference.getBoolean("IsFail_FB")) {
             val fbId = adsPreference.getString("faceB_InterAds")
             if (!fbId.isNullOrEmpty()) {
-                loadFacebookInterstitial(
+                fetchFbInterstitial(
                     activity,
                     fbId,
                     onLoaded = { onComplete() },
@@ -740,7 +740,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         } else onComplete()
     }
 
-    fun loadAppOpenAd(
+    fun fetchAppOpenAd(
         activity: Activity,
         adUnitId: String,
         onLoaded: (() -> Unit)? = null,
@@ -772,7 +772,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             })
     }
 
-    fun showAppOpenAd(activity: Activity, onDismissed: (() -> Unit)? = null) {
+    fun renderAppOpenAd(activity: Activity, onDismissed: (() -> Unit)? = null) {
         appOpenAd?.let { ad ->
             Log.d(APPOPEN_TAG, "show() → displaying AppOpen ad")
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -790,12 +790,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 }
             }
             // Log load
-            activity.logKeyEvent("AppOpen_Loaded")
+            activity.trackEvent("AppOpen_Loaded")
 
-            if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
+            if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
             appOpenAd?.setOnPaidEventListener {
-                PromoRevenueGauge.logPaidEvent(activity, it)
+                PromoRevenueGauge.reportPaidEvent(activity, it)
             }
             ad.show(activity)
         } ?: run {
@@ -810,7 +810,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
 // ------------------------
     private var interstitialAd: InterstitialAd? = null
 
-    fun loadGoogleInterstitial(
+    fun fetchGoogleInterstitial(
         activity: Activity,
         adUnitId: String,
         onLoaded: (() -> Unit)? = null,
@@ -830,7 +830,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
             })
     }
 
-    fun showGoogleInterstitial(activity: Activity, onDismissed: (() -> Unit)? = null) {
+    fun renderGoogleInterstitial(activity: Activity, onDismissed: (() -> Unit)? = null) {
         interstitialAd?.let { ad ->
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
@@ -846,12 +846,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
             }
 
             // Log load
-            activity.logKeyEvent("Interstitial_Splash_Loaded")
+            activity.trackEvent("Interstitial_Splash_Loaded")
 
-            if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
+            if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
             interstitialAd?.setOnPaidEventListener {
-                PromoRevenueGauge.logPaidEvent(activity, it)
+                PromoRevenueGauge.reportPaidEvent(activity, it)
             }
             ad.show(activity)
         } ?: run { onDismissed?.invoke() }
@@ -862,7 +862,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
 // ------------------------
     private var fbInterstitial: com.facebook.ads.InterstitialAd? = null
 
-    fun loadFacebookInterstitial(
+    fun fetchFbInterstitial(
         activity: Activity,
         adUnitId: String,
         onLoaded: (() -> Unit)? = null,
@@ -891,7 +891,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         )
     }
 
-    fun showFacebookInterstitial(onDismissed: (() -> Unit)? = null) {
+    fun renderFbInterstitial(onDismissed: (() -> Unit)? = null) {
         val ad = fbInterstitial
 
         if (ad != null && ad.isAdLoaded) {
@@ -974,7 +974,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
         handleCustomTabClose()
     }
 
-    fun getInstallReferrerFromClient(referrerClient: InstallReferrerClient) {
+    fun readInstallReferrer(referrerClient: InstallReferrerClient) {
         referrerClient.startConnection(object : InstallReferrerStateListener {
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
                 when (responseCode) {

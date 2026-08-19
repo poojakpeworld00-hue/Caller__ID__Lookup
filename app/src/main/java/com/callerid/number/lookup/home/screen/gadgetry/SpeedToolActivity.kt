@@ -42,7 +42,7 @@ class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.pbGaugeVw.isIndeterminate = false
         binding.pbGaugeVw.max = 100
         binding.barUploadVw.max = 100

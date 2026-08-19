@@ -16,7 +16,7 @@ import com.callerid.admesh.engine.PromoTallyRegistry.nativeBannerCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.TAG_EVENT
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.databinding.FacebookNativeBannerBinding
 import com.callerid.number.lookup.home.databinding.GooglesmallnativeBinding
@@ -37,7 +37,7 @@ class InlinePromoStrip {
         private var nativeAdBanner: NativeAd? = null
     }
 
-    fun loadNativeBannerAds(activity: Activity) {
+    fun fetchNativeBannerAds(activity: Activity) {
         val adsPref = PromoVault.getInstance(activity)
         if (!adsPref.getBoolean("IsAdsON")) return
         // Firebase "NativeBanner" master switch — disable native banner loading
@@ -52,7 +52,7 @@ class InlinePromoStrip {
                     nativeAdBanner?.destroy()
                     nativeAdBanner = ad
                     try {
-                        activity.logKeyEvent("NativeBanner_Load")
+                        activity.trackEvent("NativeBanner_Load")
                     } catch (e: Exception) {
                     }
 
@@ -64,7 +64,7 @@ class InlinePromoStrip {
                         // No retry logic
 
                         try {
-                            activity.logKeyEvent("NativeBanner_fail")
+                            activity.trackEvent("NativeBanner_fail")
                         } catch (e: Exception) {
                         }
                     }
@@ -89,7 +89,7 @@ class InlinePromoStrip {
 
     }
 
-    fun showNativeBannerNative(
+    fun renderNativeBanner(
         context: Activity, layout: FrameLayout, shimmer: ShimmerFrameLayout? = null
     ) {
         Log.e("NativeAds", "Google Show: nativeAd")
@@ -99,7 +99,7 @@ class InlinePromoStrip {
         if (context.isFinishing || context.isDestroyed) return
 
 
-        if (!isNetworkConnected(context)
+        if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeBanner")
         ) {
@@ -141,7 +141,7 @@ class InlinePromoStrip {
 
                             layout.addView(binding.root)
                             nativeAdBanner = null
-                            loadNativeBannerAds(context)
+                            fetchNativeBannerAds(context)
                             return@post
                         } else {
                             // Google failed → FB fallback or Custom
@@ -151,7 +151,7 @@ class InlinePromoStrip {
                                 layout.removeAllViews()
                                 shimmer?.stopShimmer()
                                 shimmer?.isVisible = false
-                                InHouseRegistry().loadCustomAd(
+                                InHouseRegistry().fetchHouseAd(
                                     context, layout, InHouseRegistry.CustomAdType.BANNER
                                 )
                             }
@@ -170,7 +170,7 @@ class InlinePromoStrip {
                 layout.removeAllViews()
                 shimmer?.stopShimmer()
                 shimmer?.isVisible = false
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     context, layout, InHouseRegistry.CustomAdType.BANNER
                 )
             }
@@ -181,12 +181,12 @@ class InlinePromoStrip {
         nativeAd: NativeAd, binding: GooglesmallnativeBinding, context: Activity
     ) {
         // Log load
-        context.logKeyEvent("NativeBanner_Show_Google")
+        context.trackEvent("NativeBanner_Show_Google")
 
-        if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(context)
+        if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 
         nativeAd.setOnPaidEventListener {
-            PromoRevenueGauge.logPaidEvent(context, it)
+            PromoRevenueGauge.reportPaidEvent(context, it)
         }
 
         binding.apply {
@@ -220,10 +220,10 @@ class InlinePromoStrip {
             }
 
             mainNativeadView.backgroundTintList =
-                ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
+                ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
 
             adCallToAction.backgroundTintList =
-                ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+                ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
 
             if (nativeAd.body != null) {
@@ -252,7 +252,7 @@ class InlinePromoStrip {
         }
     }
 
-    fun safeParseColor(colorString: String?, defaultColor: String): Int {
+    fun parseColorOrNull(colorString: String?, defaultColor: String): Int {
         return try {
             if (!colorString.isNullOrBlank()) {
                 Color.parseColor(colorString)
@@ -274,7 +274,7 @@ class InlinePromoStrip {
         if (fbId.isNullOrEmpty()) {
             shimmer?.stopShimmer()
             shimmer?.isVisible = false
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 context, layout, InHouseRegistry.CustomAdType.BANNER
             )
             return
@@ -287,15 +287,15 @@ class InlinePromoStrip {
                     shimmer?.stopShimmer()
                     shimmer?.isVisible = false
                     layout.removeAllViews()
-                    inflateFbNativeBAnnerAd(fbNative, layout, context)
-                    context.logKeyEvent("NativeBAnner_FB")
+                    bindFbNativeBanner(fbNative, layout, context)
+                    context.trackEvent("NativeBAnner_FB")
                 }
 
                 override fun onError(ad: Ad?, adError: AdError?) {
                     shimmer?.stopShimmer()
                     shimmer?.isVisible = false
                     Log.e("NativeAds", "FB MidNative failed: ${adError?.errorMessage}")
-                    InHouseRegistry().loadCustomAd(
+                    InHouseRegistry().fetchHouseAd(
                         context, layout, InHouseRegistry.CustomAdType.BANNER
                     )
                 }
@@ -311,7 +311,7 @@ class InlinePromoStrip {
         )
     }
 
-    fun inflateFbNativeBAnnerAd(
+    fun bindFbNativeBanner(
         nativeAd: com.facebook.ads.NativeAd,
         viewGroup: ViewGroup,
         activity: Activity,
@@ -352,10 +352,10 @@ class InlinePromoStrip {
         binding.nativeAdSponsoredLabel.setTextColor(Color.parseColor(txtColor))
 
         binding.nativview.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
+            ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
 
         binding.nativeAdCallToAction.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }

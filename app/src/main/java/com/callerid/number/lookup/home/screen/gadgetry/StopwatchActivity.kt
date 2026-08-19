@@ -42,7 +42,7 @@ class StopwatchActivity : FrameActivity<ScreenStopwatchBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.padStartPause.setOnClickListener { if (running) pause() else start() }
         binding.padReset.setOnClickListener { reset() }
         binding.padLap.setOnClickListener { lap() }

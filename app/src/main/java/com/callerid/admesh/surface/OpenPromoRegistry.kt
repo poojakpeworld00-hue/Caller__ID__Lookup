@@ -13,7 +13,7 @@ import io.lighthouse.push.extended.LightHouseRichPush
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.surface.interstitial.BackInterstitial
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.BuildConfig
@@ -59,7 +59,7 @@ object OpenPromoRegistry {
                             override fun onAdLoaded(ad: AppOpenAd) {
 
                                 try {
-                                    context.logKeyEvent("appopen_ad_loaded")
+                                    context.trackEvent("appopen_ad_loaded")
                                 } catch (e: Exception) {
                                 }
 
@@ -74,7 +74,7 @@ object OpenPromoRegistry {
                                 )
 
                                 try {
-                                    context.logKeyEvent("appopen_ad_fail")
+                                    context.trackEvent("appopen_ad_fail")
                                 } catch (e: Exception) {
                                 }
                                 isLoadingAd = false
@@ -88,7 +88,7 @@ object OpenPromoRegistry {
         }
     }
 
-    fun showAdIfAvailable(
+    fun renderAdIfAvailable(
         activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener
     ) {
         if (!PromoVault.getInstance(activity).getBoolean("IsAdsON")) {
@@ -145,7 +145,7 @@ object OpenPromoRegistry {
                 )
 
                 try {
-                    activity.logKeyEvent("appopen_ad_dismissed")
+                    activity.trackEvent("appopen_ad_dismissed")
                 } catch (_: Exception) {
                 }
 
@@ -163,7 +163,7 @@ object OpenPromoRegistry {
                     LOG_TAG, adError.message
                 )
                 try {
-                    activity.logKeyEvent("appopen_ad_fail")
+                    activity.trackEvent("appopen_ad_fail")
                 } catch (_: Exception) {
                 }
                 appOpenAd = null
@@ -182,12 +182,12 @@ object OpenPromoRegistry {
         }
 
         // Log load
-        activity.logKeyEvent("appopen_ad_shown")
+        activity.trackEvent("appopen_ad_shown")
 
-        if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
+        if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
         appOpenAd!!.setOnPaidEventListener {
-            PromoRevenueGauge.logPaidEvent(activity, it)
+            PromoRevenueGauge.reportPaidEvent(activity, it)
         }
 
         isShowingAd = true

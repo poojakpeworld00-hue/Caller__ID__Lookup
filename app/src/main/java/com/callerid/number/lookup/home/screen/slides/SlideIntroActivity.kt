@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.callerid.admesh.engine.ShellPromoConfig
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
@@ -51,9 +51,9 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
 
         // Ad frame pinned at the bottom, `launcher_ads.onboarding.intro.slot` — a mid2 native
         // unless Remote LauncherPrefs switches it to a banner or turns it off.
-        ShellPromoConfig.showSlot(
+        ShellPromoConfig.renderSlot(
             activity = this,
-            slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.INTRO),
+            slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.INTRO),
             container = binding.adNativeFrameVw,
             shimmer = binding.adShimmerVw,
         )
@@ -78,7 +78,7 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
 
         // `onboarding.intro.skip_enabled: false` hides Skip, so the carousel has to be paged
         // through to its end (Back still moves forward, see below).
-        val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.INTRO)
+        val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.INTRO)
         binding.padSkip.beVisibleIf(ui.skipEnabled)
 
         binding.padSkip.setOnClickListener { finishOnboarding() }
@@ -179,12 +179,12 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
 
     private fun finishOnboarding() {
         prefs.isOnboardingDone = true
-        logKeyEvent("onboarding_completed")
+        trackEvent("onboarding_completed")
         PermitEngine.check(this) {
             // Permission done → show this screen's interstitial (`onboarding.intro.
             // inter_enabled`, on by default; the callback fires immediately when there is
             // nothing to show) → THEN navigate.
-            ShellPromoConfig.runOnboardingInter(this, ShellPromoConfig.OnboardScreen.INTRO) {
+            ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.INTRO) {
                 // In the launcher's first run, hand back to the order — usually the language
                 // picker, but the order decides. Outside it, this is the last screen.
                 if (OnboardRouter.isOnboardingActive(this)) {

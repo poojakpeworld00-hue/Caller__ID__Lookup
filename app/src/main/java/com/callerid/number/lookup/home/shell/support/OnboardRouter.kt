@@ -174,7 +174,7 @@ object OnboardRouter {
      * as it goes. [homeActivity] when there is none, having marked onboarding completed.
      */
     private fun resolveFrom(context: Context, from: Int): Class<*> {
-        val order = ShellPromoConfig.onboardingOrder(context)
+        val order = ShellPromoConfig.onboardOrder(context)
         var index = from
 
         while (index < order.size) {
@@ -208,7 +208,7 @@ object OnboardRouter {
      */
     private fun isApplicable(context: Context, screen: OnboardScreen): Boolean = when (screen) {
         OnboardScreen.SET_DEFAULT -> {
-            val step = ShellPromoConfig.defaultHomeStep(context)
+            val step = ShellPromoConfig.defaultBoardStep(context)
             step.enabled && !(step.skipIfDefault && context.isDefaultLauncher())
         }
 
@@ -218,7 +218,7 @@ object OnboardRouter {
     /** The default-home step is being skipped because the role is already ours, not because
      *  it is switched off — and the config says that ends onboarding. */
     private fun alreadyGranted(context: Context): Boolean {
-        val step = ShellPromoConfig.defaultHomeStep(context)
+        val step = ShellPromoConfig.defaultBoardStep(context)
         return step.enabled && step.skipIfDefault && step.skipRestOnGrant &&
                 context.isDefaultLauncher()
     }

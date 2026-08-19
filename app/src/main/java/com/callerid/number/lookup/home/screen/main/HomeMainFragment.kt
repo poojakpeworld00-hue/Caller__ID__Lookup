@@ -124,7 +124,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         binding.rollRecent.adapter = recentAdapter
 
         // Native banner above the recent calls.
-        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adRecentBannerVw, binding.adRecentShimmerVw)
+        InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adRecentBannerVw, binding.adRecentShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adRecentBannerVw)
         binding.adNativeDivider1Vw.followAdContainer(binding.adRecentBannerVw)
         binding.padSettings.setOnClickListener {

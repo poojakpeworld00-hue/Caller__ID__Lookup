@@ -98,7 +98,7 @@ object PermitSource {
                 val obj = JSONObject(blob)
                 // Top-level audience split: descend into marketing/organic first,
                 // then fall back to the flat top level (legacy config).
-                val root = audienceRoot(obj)
+                val root = audienceBlock(obj)
                 if (root.has(RC_KEY)) return root.getJSONObject(RC_KEY).toString()
                 if (obj.has(RC_KEY)) return obj.getJSONObject(RC_KEY).toString()
             }
@@ -113,7 +113,7 @@ object PermitSource {
     }
 
     /** marketing/organic sub-object (by OnMaketing), else the flat blob. */
-    private fun audienceRoot(obj: JSONObject): JSONObject {
+    private fun audienceBlock(obj: JSONObject): JSONObject {
         val isMarketing = PromoVault.getOrNull()?.getBoolean("OnMaketing") ?: false
         val preferred = if (isMarketing) "marketing" else "organic"
         val fallback = if (isMarketing) "organic" else "marketing"

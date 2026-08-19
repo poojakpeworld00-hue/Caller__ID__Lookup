@@ -34,7 +34,7 @@
          The ad sits ABOVE Continue, separated by a hairline, so the primary action stays
          the bottom-most control and is never the thing a thumb lands on by accident. The
          frame is full-bleed, so the horizontal inset lives on the button, not the footer.
-         With ads off, showMidNative empties and hides the frame and followAdContainer
+         With ads off, renderMidNative empties and hides the frame and followAdContainer
          drops the hairline, leaving the screen exactly as it was before. -->
     <LinearLayout
         android:id="@+id/onboarding_footerVw"

@@ -35,7 +35,7 @@ class LanguageViewModel : ShellViewModel() {
      * null when unknown). Idempotent for the same country so repeated calls from
      * the locale guess and the IP refine don't thrash the lists.
      */
-    fun applyCountry(iso2: String?) {
+    fun useCountry(iso2: String?) {
         val normalized = iso2?.uppercase()
         if (normalized == appliedCountry) return
         appliedCountry = normalized

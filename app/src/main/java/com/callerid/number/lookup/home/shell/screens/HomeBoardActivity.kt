@@ -303,12 +303,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
      * until the user actually makes that swipe, then the next one appears the next time they
      * are back on the bare home screen, and so on until the list is exhausted.
      *
-     * Whether a run starts at all is decided once per launch — `isHintDue` spends a counter
+     * Whether a run starts at all is decided once per launch — `hintDue` spends a counter
      * tick, so it must not be asked again on every resume. `once` latches on the launcher's own
      * pref, so an install that has already been through the list never sees it again.
      */
     private fun startSwipeHintRun() {
-        val hint = ShellPromoConfig.homeHint(this)
+        val hint = ShellPromoConfig.boardHint(this)
         mHomeHint = hint
         if (!hint.visible) {
             return
@@ -323,7 +323,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             resuming -> true
             hint.mode == ShellPromoConfig.HintMode.ALWAYS -> true
             hint.mode == ShellPromoConfig.HintMode.APP_LAUNCHES ->
-                ShellPromoConfig.isHintDue(this, hint)
+                ShellPromoConfig.hintDue(this, hint)
 
             else -> !config.wasSwipeHintShown
         }

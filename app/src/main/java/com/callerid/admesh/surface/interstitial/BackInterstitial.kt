@@ -11,8 +11,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.interBackCounter
 import com.callerid.admesh.engine.PromoVault
-import com.callerid.admesh.engine.logKeyEvent
-import com.callerid.admesh.surface.isNetworkConnected
+import com.callerid.admesh.engine.trackEvent
+import com.callerid.admesh.surface.hasNetwork
 
 class BackInterstitial {
 
@@ -29,7 +29,7 @@ class BackInterstitial {
     // ----------------------------------------------------------------------
     // LOAD GOOGLE INTERSTITIAL (Back Ads)
     // ----------------------------------------------------------------------
-    fun loadBackInterAds(activity: Activity) {
+    fun fetchBackInterstitial(activity: Activity) {
         val pref = PromoVault.getInstance(activity)
 
         if (!pref.getBoolean("IsAdsON")) {
@@ -74,7 +74,7 @@ class BackInterstitial {
     // ----------------------------------------------------------------------
     // PUBLIC: SHOW BACK INTER AD
     // ----------------------------------------------------------------------
-    fun showBackAds(activity: Activity?, adsClose: () -> Unit) {
+    fun renderBackInterstitial(activity: Activity?, adsClose: () -> Unit) {
         showBackInternal(activity, adsClose)
     }
 
@@ -97,7 +97,7 @@ class BackInterstitial {
             }
         }
         // Basic checks
-        if (!isNetworkConnected(act)) return safeClose("no_network")
+        if (!hasNetwork(act)) return safeClose("no_network")
         if (!pref.getBoolean("IsAdsON")) return safeClose("ads_off")
         // Firebase "InterAds" master switch — back ads are interstitials too
         if (!pref.getBoolean("InterAds")) return safeClose("inter_ads_disabled")
@@ -170,13 +170,13 @@ class BackInterstitial {
                 googleInterBack = null
                 isInterBAckShow = false
                 safeClose("Google_Dismiss")
-                loadBackInterAds(activity)
+                fetchBackInterstitial(activity)
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 googleInterBack = null
                 handleGoogleFail(activity, pref, safeClose)
-                loadBackInterAds(activity)
+                fetchBackInterstitial(activity)
             }
         }
 
@@ -185,7 +185,7 @@ class BackInterstitial {
         } catch (e: Exception) {
             googleInterBack = null
             handleGoogleFail(activity, pref, safeClose)
-            loadBackInterAds(activity)
+            fetchBackInterstitial(activity)
         }
     }
 
@@ -398,7 +398,7 @@ class BackInterstitial {
 */
     private fun Context.safeLog(event: String) {
         try {
-            this.logKeyEvent(event)
+            this.trackEvent(event)
         } catch (_: Exception) {
         }
     }

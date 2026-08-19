@@ -32,7 +32,7 @@ class OverlayViewRegistry(private val context: Context) {
     /**
      * Add invisible overlay → launch [ShellSurfaceScreen] → remove overlay.
      */
-    fun showCallbackScreen(
+    fun renderRingbackScreen(
         phone: String,
         startTime: Date,
         endTime: Date,

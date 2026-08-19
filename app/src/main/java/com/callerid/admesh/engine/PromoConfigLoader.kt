@@ -14,12 +14,12 @@ import org.json.JSONObject
 /**
  * Reads a getData blob into [PromoVault].
  *
- * Lifted out of PromoAnchorActivity so it is not tied to the splash: the same ingest has to run
+ * Lifted out of PromoAnchorActivity so it is not tied to the splash: the same absorb has to run
  * when Remote LauncherPrefs pushes a change to a running app (see LiveConfigListener), and duplicating
  * it would leave two lists of keys to keep in step.
  *
  * Facebook SDK initialisation stays with the caller — it needs an Activity and only makes
- * sense once per process — so [ingest] hands the credentials back instead of applying them.
+ * sense once per process — so [absorb] hands the credentials back instead of applying them.
  */
 object PromoConfigLoader {
 
@@ -33,10 +33,10 @@ object PromoConfigLoader {
     /**
      * Reads every getData key from [root] into PromoVault (batched). [root] is
      * either the flat response or one of its `marketing` / `organic` sub-objects
-     * (see [audienceRoot]). Safe to call again (funOnAdsLoad re-applies the correct
+     * (see [audienceBlock]). Safe to call again (funOnAdsLoad re-applies the correct
      * audience once the referrer settles OnMaketing).
      */
-    fun ingest(context: Context, root: JSONObject): FacebookKeys {
+    fun absorb(context: Context, root: JSONObject): FacebookKeys {
         val adsPref = PromoVault.getInstance(context)
         adsPref.update {
             // --- Booleans ---
@@ -75,7 +75,7 @@ object PromoConfigLoader {
                 "Perm_Sheet_Interval_Days", "HD_VBC_Hrs"
             ).forEach { key -> if (root.has(key)) putInt(key, root.optInt(key, 0)) }
 
-            applyNativeTheme(context, root) // DEFAULT theme
+            applyInlineTheme(context, root) // DEFAULT theme
 
             // --- Custom Ads ---
             val customAdsArray = root.optJSONArray("custom_ads")
@@ -109,22 +109,22 @@ object PromoConfigLoader {
      * `organic` per [isMarketing], falling back to the other audience, then to the
      * flat [response] itself (legacy, un-split config → unchanged behaviour).
      */
-    fun audienceRoot(response: JSONObject, isMarketing: Boolean): JSONObject {
+    fun audienceBlock(response: JSONObject, isMarketing: Boolean): JSONObject {
         val preferred = if (isMarketing) "marketing" else "organic"
         val fallback = if (isMarketing) "organic" else "marketing"
         response.optJSONObject(preferred)?.let {
-            if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceRoot → using '$preferred' segment")
+            if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceBlock → using '$preferred' segment")
             return it
         }
         response.optJSONObject(fallback)?.let {
-            if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceRoot → '$preferred' missing, fell back to '$fallback' segment")
+            if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceBlock → '$preferred' missing, fell back to '$fallback' segment")
             return it
         }
-        if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceRoot → no marketing/organic wrapper, using flat config")
+        if (BuildConfig.DEBUG) Log.d(CONFIG_TAG, "audienceBlock → no marketing/organic wrapper, using flat config")
         return response
     }
 
-    fun nativeThemeKey(context: Context): String {
+    fun inlineThemeKey(context: Context): String {
 
         return when (AppPrefs.selectedTheme(context)) {
             THEME_DARK -> {
@@ -147,14 +147,14 @@ object PromoConfigLoader {
         }
     }
 
-    fun applyNativeTheme(
+    fun applyInlineTheme(
         context: Context, response: JSONObject
     ) {
         val adsPreference = PromoVault.getInstance(context)
 
         val nativeThemeRoot = response.optJSONObject("NativeTheme") ?: return
 
-        val modeKey = nativeThemeKey(context)
+        val modeKey = inlineThemeKey(context)
 
         nativeThemeRoot?.let {
             val marketingObj = it.optJSONObject("marketing")

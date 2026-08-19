@@ -17,7 +17,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.facebook.ads.AdView as FbAdView
 
@@ -50,7 +50,7 @@ class StripPromo {
     // -----------------------------
     // SHOW BANNER ENTRY POINT
     // -----------------------------
-    fun showBanner(
+    fun renderBanner(
         activity: Activity,
         container: FrameLayout,
         type: StripKind = StripKind.AUTO,
@@ -64,7 +64,7 @@ class StripPromo {
         val pref = PromoVault.getInstance(activity)
 
         // Ads OFF
-        if (!isNetworkConnected(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds")) {
+        if (!hasNetwork(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds")) {
             hide(container)
             observer?.onAdFailed()
             return
@@ -101,7 +101,7 @@ class StripPromo {
                         if (disableInternalFallback) {
                             observer?.onAdFailed()
                         } else {
-                            InHouseRegistry().loadCustomAd(
+                            InHouseRegistry().fetchHouseAd(
                                 activity,
                                 container,
                                 InHouseRegistry.CustomAdType.BANNER
@@ -130,7 +130,7 @@ class StripPromo {
                 if (disableInternalFallback) {
                     observer?.onAdFailed()
                 } else {
-                    InHouseRegistry().loadCustomAd(
+                    InHouseRegistry().fetchHouseAd(
                         activity,
                         container,
                         InHouseRegistry.CustomAdType.BANNER
@@ -188,12 +188,12 @@ class StripPromo {
                     "Ad loaded. adView.isCollapsible() is ${googleBanner?.isCollapsible}.",
                 )
                 // Log load
-                activity.logKeyEvent("Banner_Load")
+                activity.trackEvent("Banner_Load")
 
-                if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(activity)
+                if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
                 googleBanner!!.setOnPaidEventListener {
-                    PromoRevenueGauge.logPaidEvent(activity, it)
+                    PromoRevenueGauge.reportPaidEvent(activity, it)
                 }
 
 
@@ -211,7 +211,7 @@ class StripPromo {
                 shimmer?.stopShimmer()
                 shimmer?.visibility = View.GONE
                 try {
-                    activity.logKeyEvent("Banner_fail_Load")
+                    activity.trackEvent("Banner_fail_Load")
                 } catch (_: Exception) {
                 }
                 Log.e("StripPromo", "Google Banner Failed: ${error.message}")
@@ -222,7 +222,7 @@ class StripPromo {
             }
 
             override fun onAdClicked() {
-                activity.logKeyEvent("google_banner")
+                activity.trackEvent("google_banner")
             }
         }
 
@@ -294,7 +294,7 @@ class StripPromo {
             if (disableInternalFallback) {
                 observer?.onAdFailed()
             } else {
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     activity,
                     container,
                     InHouseRegistry.CustomAdType.BANNER
@@ -325,7 +325,7 @@ class StripPromo {
                         container.addView(facebookBanner)
                         container.visibility = View.VISIBLE
                         observer?.onAdLoaded()
-                        activity.logKeyEvent("facebook_banner_load")
+                        activity.trackEvent("facebook_banner_load")
                     }
 
                     override fun onError(
@@ -337,7 +337,7 @@ class StripPromo {
                         observer?.onAdFailed()
                         Log.e("StripPromo", "FB Banner Failed: ${error?.errorMessage}")
                         if (!disableInternalFallback) {
-                            InHouseRegistry().loadCustomAd(
+                            InHouseRegistry().fetchHouseAd(
                                 activity,
                                 container,
                                 InHouseRegistry.CustomAdType.BANNER
@@ -371,7 +371,7 @@ class StripPromo {
             // Optionally, you can show shimmer for custom ads if InHouseRegistry supports it
             shimmer?.startShimmer()
             shimmer?.visibility = View.VISIBLE
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 activity,
                 container,
                 InHouseRegistry.CustomAdType.BANNER

@@ -85,11 +85,11 @@ class LeftPanel(
         // draw whatever InlinePromo has already preloaded, and at HomeBoardActivity.onCreate that
         // is still null — the frame would hide itself and, since the panel is never
         // re-created, never come back. The actual show happens in onPanelShown().
-        adSlot = ShellPromoConfig.rightPanelSlot(activity)
-        suggestedSlot = ShellPromoConfig.rightPanelSuggestedSlot(activity)
+        adSlot = ShellPromoConfig.sidePanelSlot(activity)
+        suggestedSlot = ShellPromoConfig.sidePanelSuggestedSlot(activity)
         // A banner slot loads on show, so only a native one is worth warming.
         if (adSlot.needsNativePreload || suggestedSlot.needsNativePreload) {
-            nativePromo.loadNativeADs(activity)
+            nativePromo.fetchNativeAds(activity)
         }
 
         suggestedAdapter = DrawerAppsAdapter(R.layout.cell_panel_grid_app, ::launchLauncher)
@@ -141,18 +141,18 @@ class LeftPanel(
 
         // Re-read both slots first: resolving them once in setupFragment left a running
         // launcher on whatever config was live when it started (see AppDrawerPanel.refreshSlot).
-        val freshAd = ShellPromoConfig.rightPanelSlot(activity)
-        val freshSuggested = ShellPromoConfig.rightPanelSuggestedSlot(activity)
+        val freshAd = ShellPromoConfig.sidePanelSlot(activity)
+        val freshSuggested = ShellPromoConfig.sidePanelSuggestedSlot(activity)
         if (freshAd != adSlot || freshSuggested != suggestedSlot) {
             adSlot = freshAd
             suggestedSlot = freshSuggested
             if (adSlot.needsNativePreload || suggestedSlot.needsNativePreload) {
-                nativePromo.loadNativeADs(activity)
+                nativePromo.fetchNativeAds(activity)
             }
         }
 
-        ShellPromoConfig.showSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
-        ShellPromoConfig.showSlot(
+        ShellPromoConfig.renderSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        ShellPromoConfig.renderSlot(
             activity = activity,
             slot = suggestedSlot,
             container = binding.adSuggestedFrameVw,

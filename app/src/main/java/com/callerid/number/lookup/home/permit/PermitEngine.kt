@@ -2,7 +2,7 @@ package com.callerid.number.lookup.home.permit
 
 import android.app.Activity
 import android.content.Context
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.number.lookup.home.kit.LogRail
 import java.lang.ref.WeakReference
@@ -175,7 +175,7 @@ object PermitEngine {
             if (rule?.showOnce == true) prefs.markShown(key)
 
             val shortName = spec.androidPermission.substringAfterLast('.')
-            activity.logKeyEvent("Permission_${shortName}_Show")
+            activity.trackEvent("Permission_${shortName}_Show")
             LogRail.log(TAG, "request(): asking '$key' on ${activity::class.java.simpleName}")
 
             PermitLauncher.launch(activity, spec.androidPermission) { granted ->
@@ -239,7 +239,7 @@ object PermitEngine {
             // Analytics — mirrors the app's existing permission events
             // (Permission_<NAME>_Show / _Allow / _Deny).
             val shortName = spec.androidPermission.substringAfterLast('.')
-            act.logKeyEvent("Permission_${shortName}_Show")
+            act.trackEvent("Permission_${shortName}_Show")
 
             LogRail.log(TAG, "Requesting '${rule.key}' on ${act::class.java.simpleName}")
             PermitLauncher.launch(act, spec.androidPermission) { granted ->

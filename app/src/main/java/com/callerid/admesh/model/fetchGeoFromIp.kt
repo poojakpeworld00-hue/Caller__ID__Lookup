@@ -17,7 +17,7 @@ private val locationClient: OkHttpClient by lazy {
         .build()
 }
 
-fun getLocationFromIP(): GeoSnapshot? {
+fun fetchGeoFromIp(): GeoSnapshot? {
     return try {
         val client = locationClient
         val request = Request.Builder()

@@ -67,10 +67,10 @@ class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
         if (getHD_VBC_Type() == "n") {
             Log.w("987654321", "Native called")
-            SheetInlineAds().BS_showBigNative(this, binding.adContainerVw)
+            SheetInlineAds().sheetRenderBigNative(this, binding.adContainerVw)
         } else {
             Log.w("987654321", "Banner called")
-            SheetInlineAds().showBannerAd(this, binding.adContainerVw)
+            SheetInlineAds().renderBannerAd(this, binding.adContainerVw)
         }
 
         val phone = intent.getStringExtra("phone") ?: "Private Number"

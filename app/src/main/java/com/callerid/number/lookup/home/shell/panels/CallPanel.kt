@@ -103,7 +103,7 @@ class CallPanel(
         lastBannerAt = now
 
         val container = binding.bannerSlotVw.bannerAdFrameVw
-        PerScreenPromo.showAd(
+        PerScreenPromo.renderAd(
             BANNER_SCREEN_KEY, host, container, binding.bannerSlotVw.bannerShimmerVw
         )
         // The hairline only exists to fence off an advert — drop it if the slot stays empty.

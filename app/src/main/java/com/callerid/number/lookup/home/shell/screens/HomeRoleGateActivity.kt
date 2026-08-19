@@ -78,7 +78,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
 
         // `onboarding.set_default.skip_enabled: false` takes the opt-out away: the CTA is the
         // only button left, and Back still falls through to the role dialog below.
-        val ui = ShellPromoConfig.onboardingUi(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
+        val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         // Back gets one last ask: the role dialog, the cheapest version of the request. It is
@@ -90,11 +90,11 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         })
 
         // Ad frame pinned above the CTA, `launcher_ads.onboarding.set_default.slot` — a mid
-        // native unless Remote LauncherPrefs says otherwise. showSlot hides the frame outright when
+        // native unless Remote LauncherPrefs says otherwise. renderSlot hides the frame outright when
         // the slot is off, and followAdContainer drops the hairline with it.
-        ShellPromoConfig.showSlot(
+        ShellPromoConfig.renderSlot(
             activity = this,
-            slot = ShellPromoConfig.onboardingSlot(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT),
+            slot = ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT),
             container = binding.adNativeFrameVw,
             shimmer = binding.adShimmerVw,
         )
@@ -198,10 +198,10 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun goHome() {
         if (leaving) return
         leaving = true
-        ShellPromoConfig.runOnboardingInter(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
+        ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
             OnboardRouter.advance(
                 activity = this,
-                skipRest = ShellPromoConfig.defaultHomeStep(this).skipRestOnGrant,
+                skipRest = ShellPromoConfig.defaultBoardStep(this).skipRestOnGrant,
             )
         }
     }
@@ -210,7 +210,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun goToNextStep() {
         if (leaving) return
         leaving = true
-        ShellPromoConfig.runOnboardingInter(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
+        ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
             OnboardRouter.advance(this)
         }
     }

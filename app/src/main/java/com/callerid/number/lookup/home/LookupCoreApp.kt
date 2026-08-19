@@ -173,7 +173,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
                 LogRail.log("AppOpen", "🚀 Showing App Open Ad")
 
-                OpenPromoRegistry.showAdIfAvailable(
+                OpenPromoRegistry.renderAdIfAvailable(
                     activity,
                     object : OpenPromoRegistry.OnShowAdCompleteListener {
                         override fun onShowAdComplete() {

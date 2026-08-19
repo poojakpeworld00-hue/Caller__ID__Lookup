@@ -58,7 +58,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
         binding.rollContacts.adapter = adapter
 
         // Native banner at the bottom of the contacts screen.
-        InlinePromoStrip().showNativeBannerNative(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
         binding.adNativeDivider1Vw.followAdContainer(binding.adNativeFrameVw)
 

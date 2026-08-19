@@ -19,7 +19,7 @@ object PromoRevenueGauge {
     private const val TAG = "PromoRevenueGauge"
 
     /** Real revenue handler */
-    fun logPaidEvent(context: Context, adValue: AdValue?) {
+    fun reportPaidEvent(context: Context, adValue: AdValue?) {
         if (adValue == null) {
             Log.e(TAG, "🔥 REAL PAID EVENT → $adValue ")
             return
@@ -33,7 +33,7 @@ object PromoRevenueGauge {
     }
 
     /** Debug/Test mode revenue simulation */
-    fun simulateDebugRevenue(context: Context) {
+    fun emitDebugRevenue(context: Context) {
         if (!BuildConfig.DEBUG) return   // 🚫 safety
 
         val revenue = 1.00
@@ -51,7 +51,7 @@ object PromoRevenueGauge {
 --------------------------------------------------------------*/
 
 /** Log general key events */
-fun Context.logKeyEvent(key: String) {
+fun Context.trackEvent(key: String) {
     val bundle = Bundle().apply { putString(key, key) }
 
     if (isDebuggable()) {
@@ -69,7 +69,7 @@ fun Context.logKeyEvent(key: String) {
  */
 fun Context.logPermissionResult(permission: String, granted: Boolean) {
     val shortName = permission.substringAfterLast('.')
-    logKeyEvent("Permission_${shortName}_${if (granted) "Allow" else "Deny"}")
+    trackEvent("Permission_${shortName}_${if (granted) "Allow" else "Deny"}")
 }
 
 /** Check debug mode */

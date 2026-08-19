@@ -70,7 +70,7 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         binding.padBack.setOnClickListener { goBack() }
 
         // Native ad at the top of the settings list (bottom adaptive banner auto-loads via FrameActivity).
-        InlinePromo().showMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative(this, binding.adNativeFrameVw, binding.adShimmerVw)
 
         // Preferences grid — Theme is an inline segmented toggle.
         setupThemeToggle()

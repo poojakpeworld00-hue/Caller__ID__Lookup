@@ -35,7 +35,7 @@ class InHouseRegistry {
         FULLSCREEN_NATIVE
     }
 
-    fun loadCustomAd(
+    fun fetchHouseAd(
         context: Context,
         container: FrameLayout,
         type: CustomAdType,
@@ -197,7 +197,7 @@ class InHouseRegistry {
     // --------------------------------------------------------
     private fun setClickListeners(view: View) {
         val click = View.OnClickListener {
-            Directlink(view.context)
+            launchPromoLink(view.context)
         }
 
         view.setOnClickListener(click)

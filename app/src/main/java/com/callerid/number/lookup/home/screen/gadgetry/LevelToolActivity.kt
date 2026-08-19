@@ -50,7 +50,7 @@ class LevelToolActivity : FrameActivity<ScreenLevelBinding>(), SensorEventListen
         binding.padBack.setOnClickListener { goBack() }
 
         // Mid native, scrolls with the tool content.
-        InlinePromo().showMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
+        InlinePromo().renderMidNative2(this, binding.adNativeFrameVw, binding.adShimmerVw)
         binding.padCalibrate.setOnClickListener {
             // Treat the current orientation as perfectly level.
             calRoll = rawRoll

@@ -20,7 +20,7 @@ import com.callerid.admesh.engine.PromoTallyRegistry.nativeCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.PerScreenPromo
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.databinding.FbMidNativeBinding
 import com.callerid.number.lookup.home.databinding.FbNativeBinding
@@ -57,7 +57,7 @@ class InlinePromo() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed
     }
 
-    fun loadNativeADs(context: Activity, observer: NativeAdObserver? = null) {
+    fun fetchNativeAds(context: Activity, observer: NativeAdObserver? = null) {
         val adsPreference = PromoVault.getInstance(context)
         // Ads toggle and type check
         if (!adsPreference.getBoolean("IsAdsON") || PromoKind.fromString(adsPreference.getString("IsAdType")) != PromoKind.GOOGLE) {
@@ -71,7 +71,7 @@ class InlinePromo() {
         }
         // Screen-wise aware: resolves to ScreenAds.default native id, or the
         // global googleNative when screen_wise_ad is off.
-        val adUnit = PerScreenPromo.nativeAdUnitId(context)
+        val adUnit = PerScreenPromo.inlineAdUnitId(context)
         if (adUnit.isEmpty()) {
             return
         }
@@ -97,7 +97,7 @@ class InlinePromo() {
 
                     observer?.onNativeAdLoaded()
                     try {
-                        context.logKeyEvent("NativeAds_load")
+                        context.trackEvent("NativeAds_load")
                     } catch (e: Exception) {
                     }
 
@@ -114,7 +114,7 @@ class InlinePromo() {
                             "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                         )
                         try {
-                            context.logKeyEvent("NativeAds_Fail")
+                            context.trackEvent("NativeAds_Fail")
                         } catch (e: Exception) {
                         }
                         nativeAd = null
@@ -127,7 +127,7 @@ class InlinePromo() {
     }
 
     //================================================================================BigNAtive
-    fun showBigNative(
+    fun renderBigNative(
         context: Activity,
         layout: FrameLayout,
         shimmer: ShimmerFrameLayout? = null,
@@ -142,7 +142,7 @@ class InlinePromo() {
         if (context.isFinishing || context.isDestroyed) return
 
         // 🔥 2. Network + Ads ON + InlinePromoStrip master switch
-        if (!isNetworkConnected(context)
+        if (!hasNetwork(context)
             || !adsPreference.getBoolean("IsAdsON")
             || !adsPreference.getBoolean("NativeAd")
         ) {
@@ -203,31 +203,31 @@ class InlinePromo() {
                             shimmer?.isVisible = false
                             layout.addView(rootView)
 
-                            context.logKeyEvent("NativeAds_showBigNative_Google")
+                            context.trackEvent("NativeAds_showBigNative_Google")
 
                             if (BuildConfig.DEBUG) {
-                                PromoRevenueGauge.simulateDebugRevenue(context)
+                                PromoRevenueGauge.emitDebugRevenue(context)
                             }
 
                             nativeAd?.setOnPaidEventListener {
-                                PromoRevenueGauge.logPaidEvent(context, it)
+                                PromoRevenueGauge.reportPaidEvent(context, it)
                             }
 
                             nativeAd = null
-                            loadNativeADs(context)
+                            fetchNativeAds(context)
 
                             return@post
                         }
 
                         // 🔥 GOOGLE FAIL → fallback
                         if (adsPreference.getBoolean("IsFail_FB")) {
-                            showFBNativeFallback(context, layout, imageView, shimmer)
+                            renderFbFallback(context, layout, imageView, shimmer)
                         } else {
                             layout.removeAllViews()
                             shimmer?.stopShimmer()
                             shimmer?.isVisible = false
 
-                            InHouseRegistry().loadCustomAd(
+                            InHouseRegistry().fetchHouseAd(
                                 context,
                                 layout,
                                 InHouseRegistry.CustomAdType.BIG_NATIVE,
@@ -242,14 +242,14 @@ class InlinePromo() {
             }
 
             PromoKind.FACEBOOK -> {
-                showFBNativeFallback(context, layout, imageView)
+                renderFbFallback(context, layout, imageView)
             }
 
             PromoKind.UNKNOWN, PromoKind.CUSTOM -> {
                 layout.removeAllViews()
                 shimmer?.stopShimmer()
                 shimmer?.isVisible = false
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     context,
                     layout,
                     InHouseRegistry.CustomAdType.BIG_NATIVE,
@@ -280,12 +280,12 @@ class InlinePromo() {
             val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
             val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
 
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
+            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(safeParseColor(btntxtColor, "#FFFFFF"))
+            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
 
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
@@ -328,12 +328,12 @@ class InlinePromo() {
             val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
             val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
 
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
+            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(safeParseColor(btntxtColor, "#FFFFFF"))
+            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
 
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
@@ -357,7 +357,7 @@ class InlinePromo() {
 
 
     // Helper function for FB fallback
-    private fun showFBNativeFallback(
+    private fun renderFbFallback(
         context: Activity,
         layout: FrameLayout,
         imageView: ImageView? = null,
@@ -369,7 +369,7 @@ class InlinePromo() {
         if (fbId.isNullOrEmpty()) {
             shimmer?.stopShimmer()
             shimmer?.isVisible = false
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 context,
                 layout,
                 InHouseRegistry.CustomAdType.BIG_NATIVE,
@@ -390,7 +390,7 @@ class InlinePromo() {
                         shimmer?.isVisible = false
                         layout.findFocus()?.clearFocus()
                         layout.removeAllViews()
-                        inflateFbNativeAd(fbNative, layout, context)
+                        bindFbNative(fbNative, layout, context)
                     }
                 }
 
@@ -401,7 +401,7 @@ class InlinePromo() {
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
                         layout.findFocus()?.clearFocus()
-                        InHouseRegistry().loadCustomAd(
+                        InHouseRegistry().fetchHouseAd(
                             context,
                             layout,
                             InHouseRegistry.CustomAdType.BIG_NATIVE,
@@ -412,7 +412,7 @@ class InlinePromo() {
 
                 override fun onAdLoaded(ad: Ad?) {
                     if (fbNative !== ad) return
-                    context.logKeyEvent("NativeAds_showBigNative_FB_Load")
+                    context.trackEvent("NativeAds_showBigNative_FB_Load")
                     fbNative.downloadMedia()
                 }
 
@@ -422,7 +422,7 @@ class InlinePromo() {
         )
     }
 
-    fun inflateFbNativeAd(
+    fun bindFbNative(
         nativeAd: com.facebook.ads.NativeAd,
         viewGroup: ViewGroup,
         activity: Activity,
@@ -458,10 +458,10 @@ class InlinePromo() {
         binding.nativeAdBody.setTextColor(Color.parseColor(txtColor))
 
         binding.nativview.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
+            ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
 
         binding.nativeAdCallToAction.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }
@@ -488,7 +488,7 @@ class InlinePromo() {
 
     //================================================================================BigNAtive
 //================================================================================MidNAtive
-    fun showMidNative(
+    fun renderMidNative(
         context: Activity,
         layout: FrameLayout,
         shimmer: ShimmerFrameLayout? = null,
@@ -500,7 +500,7 @@ class InlinePromo() {
         if (context.isFinishing || context.isDestroyed) return
 
         // Check network & ad toggle + InlinePromoStrip master switch
-        if (!isNetworkConnected(context)
+        if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeAd")
         ) {
@@ -553,16 +553,16 @@ class InlinePromo() {
                             layout.addView(binding.root)
 
                             // Log load
-                            context.logKeyEvent("NativeAds_showMidNative_Google")
+                            context.trackEvent("NativeAds_showMidNative_Google")
 
-                            if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(context)
+                            if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 
                             nativeAd!!.setOnPaidEventListener {
-                                PromoRevenueGauge.logPaidEvent(context, it)
+                                PromoRevenueGauge.reportPaidEvent(context, it)
                             }
 
                             nativeAd = null
-                            loadNativeADs(context) // preload next Google ad
+                            fetchNativeAds(context) // preload next Google ad
                             return@post
                         }
                         // Google failed → fallback
@@ -572,7 +572,7 @@ class InlinePromo() {
                             layout.removeAllViews()
                             shimmer?.stopShimmer()
                             shimmer?.isVisible = false
-                            InHouseRegistry().loadCustomAd(
+                            InHouseRegistry().fetchHouseAd(
                                 context,
                                 layout,
                                 InHouseRegistry.CustomAdType.MID_NATIVE
@@ -595,7 +595,7 @@ class InlinePromo() {
                 layout.removeAllViews()
                 shimmer?.stopShimmer()
                 shimmer?.isVisible = false
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     context,
                     layout,
                     InHouseRegistry.CustomAdType.MID_NATIVE
@@ -617,7 +617,7 @@ class InlinePromo() {
             layout.removeAllViews()
             shimmer?.stopShimmer()
             shimmer?.isVisible = false
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 context,
                 layout,
                 InHouseRegistry.CustomAdType.MID_NATIVE
@@ -636,8 +636,8 @@ class InlinePromo() {
                         layout.removeAllViews()
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
-                        inflateFbMidNativeAd(fbNative, layout, context)
-                        context.logKeyEvent("NativeAds_showMid_FB")
+                        bindFbMidNative(fbNative, layout, context)
+                        context.trackEvent("NativeAds_showMid_FB")
                     }
                 }
 
@@ -650,7 +650,7 @@ class InlinePromo() {
                         layout.removeAllViews()
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
-                        InHouseRegistry().loadCustomAd(
+                        InHouseRegistry().fetchHouseAd(
                             context,
                             layout,
                             InHouseRegistry.CustomAdType.MID_NATIVE
@@ -669,7 +669,7 @@ class InlinePromo() {
         )
     }
 
-    fun inflateFbMidNativeAd(
+    fun bindFbMidNative(
         nativeAd: com.facebook.ads.NativeAd,
         viewGroup: ViewGroup,
         activity: Activity,
@@ -706,10 +706,10 @@ class InlinePromo() {
         binding.nativeAdBody.setTextColor(Color.parseColor(txtColor))
 
         binding.nativview.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
+            ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
 
         binding.nativeAdCallToAction.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }
@@ -753,12 +753,12 @@ class InlinePromo() {
             val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
             val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
 
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
+            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(safeParseColor(btntxtColor, "#FFFFFF"))
+            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
 
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
@@ -788,7 +788,7 @@ class InlinePromo() {
         this.visibility = View.GONE
     }
 
-    fun safeParseColor(colorString: String?, defaultColor: String): Int {
+    fun parseColorOrNull(colorString: String?, defaultColor: String): Int {
         return try {
             if (!colorString.isNullOrBlank()) {
                 Color.parseColor(colorString)
@@ -801,7 +801,7 @@ class InlinePromo() {
     }
 
 
-    fun showMidNative2(
+    fun renderMidNative2(
         context: Activity,
         layout: FrameLayout,
         shimmer: ShimmerFrameLayout? = null,
@@ -813,7 +813,7 @@ class InlinePromo() {
         if (context.isFinishing || context.isDestroyed) return
 
         // Check network & ad toggle
-        if (!isNetworkConnected(context) || !adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("NativeAd")) {
+        if (!hasNetwork(context) || !adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("NativeAd")) {
             layout.removeAllViews()
             layout.invisible()
             shimmer?.stopShimmer()
@@ -861,23 +861,23 @@ class InlinePromo() {
                             layout.addView(binding.root)
 
                             // Log load
-                            context.logKeyEvent("NativeAds_showMidNative2_Google")
+                            context.trackEvent("NativeAds_showMidNative2_Google")
 
-                            if (BuildConfig.DEBUG) PromoRevenueGauge.simulateDebugRevenue(context)
+                            if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(context)
 
                             nativeAd!!.setOnPaidEventListener {
-                                PromoRevenueGauge.logPaidEvent(context, it)
+                                PromoRevenueGauge.reportPaidEvent(context, it)
                             }
 
                             nativeAd = null
-                            loadNativeADs(context) // preload next Google ad
+                            fetchNativeAds(context) // preload next Google ad
                             return@post
                         }
                         // Google failed → fallback
                         layout.removeAllViews()
                         shimmer?.stopShimmer()
                         shimmer?.isVisible = false
-                        InHouseRegistry().loadCustomAd(
+                        InHouseRegistry().fetchHouseAd(
                             context,
                             layout,
                             InHouseRegistry.CustomAdType.MID_NATIVE
@@ -894,7 +894,7 @@ class InlinePromo() {
                 layout.removeAllViews()
                 shimmer?.stopShimmer()
                 shimmer?.isVisible = false
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     context,
                     layout,
                     InHouseRegistry.CustomAdType.MID_NATIVE
@@ -928,12 +928,12 @@ class InlinePromo() {
             val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
             val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
 
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
+            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(safeParseColor(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(safeParseColor(btntxtColor, "#FFFFFF"))
+            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
+            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
 
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE

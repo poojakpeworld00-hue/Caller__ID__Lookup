@@ -22,7 +22,7 @@ import androidx.databinding.ViewDataBinding
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.callerid.admesh.engine.PerScreenPromo
 import com.callerid.number.lookup.home.R
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.admesh.surface.PromoAnchorActivity
 import com.callerid.admesh.surface.interstitial.BackInterstitial
@@ -67,7 +67,7 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutId)
 
-        logKeyEvent("screen_${this::class.java.simpleName.lowercase(Locale.ROOT)}")
+        trackEvent("screen_${this::class.java.simpleName.lowercase(Locale.ROOT)}")
         binding.lifecycleOwner = this
 
         // Keep native-ad colors in sync with the active light/dark mode. Shared with the
@@ -100,7 +100,7 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
      * `finish()` to also surface a back ad.
      */
     protected fun goBack() {
-        BackInterstitial().showBackAds(this) { performBack() }
+        BackInterstitial().renderBackInterstitial(this) { performBack() }
     }
 
     /** What "back" does after the ad — defaults to finishing. Override for custom nav. */
@@ -123,7 +123,7 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
     protected open fun showBottomBanner() {
         val container = binding.root.findViewById<FrameLayout>(R.id.bannerAdFrameVw) ?: return
         val shimmer = binding.root.findViewById<ShimmerFrameLayout>(R.id.bannerShimmerVw)
-        PerScreenPromo.showAd(this::class.java.simpleName, this, container, shimmer)
+        PerScreenPromo.renderAd(this::class.java.simpleName, this, container, shimmer)
         // The hairline above the slot only exists to fence off an advert — drop it
         // whenever the slot ends up empty (ads off, show:false, load failure).
         binding.root.findViewById<View>(R.id.adBannerDividerVw)?.followAdContainer(container)

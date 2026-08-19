@@ -26,7 +26,7 @@ import kotlin.apply
 import kotlin.let
 import kotlin.text.isNullOrEmpty
 
-fun isNetworkConnected(context: Context): Boolean {
+fun hasNetwork(context: Context): Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val network = cm.activeNetworkInfo
     return network != null && network.isConnected
@@ -44,7 +44,7 @@ fun View.invisible() {
     this.visibility = View.GONE
 }
 
-fun Directlink(context: Context?) {
+fun launchPromoLink(context: Context?) {
 
     Log.e("===>","bhbjhb")
     val activity = context as? Activity ?: return
@@ -212,7 +212,7 @@ inline fun <reified T : Activity> Context.openActivity(
     }
 
     // Show interstitial first, open activity in the close callback
-    FlowInterstitial().showInterAds(activity) {
+    FlowInterstitial().renderInterstitial(activity) {
         activity.startActivity(intent)
     }
 }

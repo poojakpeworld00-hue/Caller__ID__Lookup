@@ -187,7 +187,7 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     hasOverlay && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE ->
                         runCatching {
                             OverlayViewRegistry(context)
-                                .showCallbackScreen(phoneNumber, startTime, endTime, type)
+                                .renderRingbackScreen(phoneNumber, startTime, endTime, type)
                         }.isSuccess
 
                     hasOverlay || holdsSystemDefaultRole(context) ->

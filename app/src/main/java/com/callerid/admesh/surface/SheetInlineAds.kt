@@ -31,7 +31,7 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.logAdRevenue
-import com.callerid.admesh.engine.logKeyEvent
+import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.databinding.FbNativeBinding
 import com.callerid.number.lookup.home.databinding.GooglebignativeBinding
 
@@ -46,7 +46,7 @@ class SheetInlineAds {
     // ------------------------------------------------------------------------------------------
     // SHOW BANNER
     // ------------------------------------------------------------------------------------------
-    fun showBannerAd(
+    fun renderBannerAd(
         activity: Activity,
         adContainer: FrameLayout,
         isCollapsible: Boolean = false
@@ -65,7 +65,7 @@ class SheetInlineAds {
                 val BanneradUnitId = adsPref.getString("HD_VBC_Banner_ID").orEmpty()
                 if (BanneradUnitId.isEmpty()) {
                     if (isFbFallback) showFbBanner(activity, adContainer)
-                    else InHouseRegistry().loadCustomAd(
+                    else InHouseRegistry().fetchHouseAd(
                         activity,
                         adContainer,
                         InHouseRegistry.CustomAdType.BIG_NATIVE
@@ -76,7 +76,7 @@ class SheetInlineAds {
                 loadGoogleBanner(activity, adContainer, BanneradUnitId, isCollapsible) { success ->
                     if (!success) {
                         if (isFbFallback) showFbBanner(activity, adContainer)
-                        else InHouseRegistry().loadCustomAd(
+                        else InHouseRegistry().fetchHouseAd(
                             activity,
                             adContainer,
                             InHouseRegistry.CustomAdType.BIG_NATIVE
@@ -87,7 +87,7 @@ class SheetInlineAds {
 
             PromoKind.FACEBOOK -> showFbBanner(activity, adContainer)
 
-            PromoKind.CUSTOM, PromoKind.UNKNOWN -> InHouseRegistry().loadCustomAd(
+            PromoKind.CUSTOM, PromoKind.UNKNOWN -> InHouseRegistry().fetchHouseAd(
                 activity,
                 adContainer,
                 InHouseRegistry.CustomAdType.BIG_NATIVE
@@ -145,7 +145,7 @@ class SheetInlineAds {
                         }
 
                         try {
-                            context.logKeyEvent("BS_ads_load")
+                            context.trackEvent("BS_ads_load")
                         } catch (_: Exception) {
                         }
 
@@ -170,14 +170,14 @@ class SheetInlineAds {
 
                 override fun onAdClicked() {
                     try {
-                        activity.logKeyEvent("BS_banner_clicked")
+                        activity.trackEvent("BS_banner_clicked")
                     } catch (_: Exception) {
                     }
                 }
 
                 override fun onAdOpened() {
                     try {
-                        activity.logKeyEvent("BS_banner_opened")
+                        activity.trackEvent("BS_banner_opened")
                     } catch (_: Exception) {
                     }
                 }
@@ -204,7 +204,7 @@ class SheetInlineAds {
         val fbId = PromoVault.getInstance(activity)
             .getString("faceB_BannerAds") ?: run {
 
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 activity,
                 layout,
                 InHouseRegistry.CustomAdType.BIG_NATIVE
@@ -221,7 +221,7 @@ class SheetInlineAds {
 
                     override fun onError(ad: Ad?, err: AdError?) {
                         Log.e("FBBanner", "Fail:${err?.errorMessage}")
-                        InHouseRegistry().loadCustomAd(
+                        InHouseRegistry().fetchHouseAd(
                             activity,
                             layout,
                             InHouseRegistry.CustomAdType.BIG_NATIVE
@@ -256,7 +256,7 @@ class SheetInlineAds {
         private var BCnativeAd: NativeAd? = null
     }
 
-    fun BS_loadNativeADs(context: Activity) {
+    fun sheetFetchNativeAds(context: Activity) {
         val adsPreference = PromoVault.getInstance(context)
         if (!adsPreference.getBoolean("IsAdsON")) {
             return
@@ -280,7 +280,7 @@ class SheetInlineAds {
                     BCnativeAd?.destroy()
                     BCnativeAd = nativeAds
                     try {
-                        context.logKeyEvent("NativeAds_BS_load")
+                        context.trackEvent("NativeAds_BS_load")
                     } catch (e: Exception) {
                     }
                     Log.e("NativeAds", "Google Load: nativeAd")
@@ -293,7 +293,7 @@ class SheetInlineAds {
                             "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                         )
                         try {
-                            context.logKeyEvent("NativeAds_BS_Fail")
+                            context.trackEvent("NativeAds_BS_Fail")
                         } catch (e: Exception) {
                         }
                         BCnativeAd = null
@@ -306,7 +306,7 @@ class SheetInlineAds {
         adLoader?.loadAd(AdRequest.Builder().build())
     }
 
-    fun BS_showBigNative(
+    fun sheetRenderBigNative(
         context: Activity,
         layout: FrameLayout,
         imageView: ImageView? = null,
@@ -317,7 +317,7 @@ class SheetInlineAds {
         val adsPreference = PromoVault.getInstance(context)
 
         // --- No Internet ---
-        if (!isNetworkConnected(context)) {
+        if (!hasNetwork(context)) {
             Log.w("987654321", "Native No Internet")
             layout.removeAllViews()
             layout.invisible()
@@ -379,7 +379,7 @@ class SheetInlineAds {
                                 } catch (_: Exception) {
                                 }
 
-                                context.logKeyEvent("NativeAds_BS_showBigNative_Google")
+                                context.trackEvent("NativeAds_BS_showBigNative_Google")
 
                             } catch (e: Exception) {
                                 Log.e("987654321", "Google ad failed: ${e.message}")
@@ -388,12 +388,12 @@ class SheetInlineAds {
                                     Log.w("987654321", "Native Ads Null")
                                     layout.post {
                                         if (context.isActivityDestroyedCompat()) return@post
-                                        showFBNativeFallback(context, layout, imageView)
+                                        renderFbFallback(context, layout, imageView)
                                     }
                                 } else {
                                     layout.post {
                                         if (context.isActivityDestroyedCompat()) return@post
-                                        InHouseRegistry().loadCustomAd(
+                                        InHouseRegistry().fetchHouseAd(
                                             context, layout,
                                             InHouseRegistry.CustomAdType.BIG_NATIVE,
                                             imageView
@@ -402,7 +402,7 @@ class SheetInlineAds {
                                 }
                             }
                             try {
-                                context.logKeyEvent("NativeAds_BS_load")
+                                context.trackEvent("NativeAds_BS_load")
                             } catch (e: Exception) {
                             }
                             Log.e("987654321", "Google Load: nativeAd")
@@ -418,18 +418,18 @@ class SheetInlineAds {
                                     "Google onAdFailedToLoad:nativeAd ${loadAdError.message}"
                                 )
                                 try {
-                                    context.logKeyEvent("NativeAds_BS_Fail")
+                                    context.trackEvent("NativeAds_BS_Fail")
                                     // Google failed → fallback
                                     if (adsPreference.getBoolean("IsFail_FB")) {
                                         Log.w("987654321", "Native Ads Null")
                                         layout.post {
                                             if (context.isActivityDestroyedCompat()) return@post
-                                            showFBNativeFallback(context, layout, imageView)
+                                            renderFbFallback(context, layout, imageView)
                                         }
                                     } else {
                                         layout.post {
                                             if (context.isActivityDestroyedCompat()) return@post
-                                            InHouseRegistry().loadCustomAd(
+                                            InHouseRegistry().fetchHouseAd(
                                                 context, layout,
                                                 InHouseRegistry.CustomAdType.BIG_NATIVE,
                                                 imageView
@@ -448,12 +448,12 @@ class SheetInlineAds {
             }
 
             PromoKind.FACEBOOK -> {
-                showFBNativeFallback(context, layout, imageView)
+                renderFbFallback(context, layout, imageView)
             }
 
             PromoKind.UNKNOWN,
             PromoKind.CUSTOM -> {
-                InHouseRegistry().loadCustomAd(
+                InHouseRegistry().fetchHouseAd(
                     context, layout,
                     InHouseRegistry.CustomAdType.BIG_NATIVE,
                     imageView
@@ -525,7 +525,7 @@ class SheetInlineAds {
 
 
     // Helper function for FB fallback
-    fun showFBNativeFallback(
+    fun renderFbFallback(
         context: Activity,
         layout: FrameLayout,
         imageView: ImageView? = null
@@ -535,7 +535,7 @@ class SheetInlineAds {
 
         if (fbId.isNullOrEmpty()) {
             // FB not configured → show custom
-            InHouseRegistry().loadCustomAd(
+            InHouseRegistry().fetchHouseAd(
                 context, layout,
                 InHouseRegistry.CustomAdType.BIG_NATIVE,
                 imageView
@@ -552,7 +552,7 @@ class SheetInlineAds {
                         if (context.isActivityDestroyedCompat()) return@post
                         layout.findFocus()?.clearFocus()
                         layout.removeAllViews()
-                        inflateFbNativeAd(fbNative, layout, context)
+                        bindFbNative(fbNative, layout, context)
                     }
                 }
 
@@ -562,7 +562,7 @@ class SheetInlineAds {
                     // fallback to Custom
                     layout.post {
                         if (context.isActivityDestroyedCompat()) return@post
-                        InHouseRegistry().loadCustomAd(
+                        InHouseRegistry().fetchHouseAd(
                             context, layout,
                             InHouseRegistry.CustomAdType.BIG_NATIVE,
                             imageView
@@ -572,7 +572,7 @@ class SheetInlineAds {
 
                 override fun onAdLoaded(ad: Ad?) {
                     if (fbNative !== ad) return
-                    context.logKeyEvent("NativeAds_showBigNative_FB_Load")
+                    context.trackEvent("NativeAds_showBigNative_FB_Load")
                     fbNative.downloadMedia()
                 }
 
@@ -582,7 +582,7 @@ class SheetInlineAds {
         )
     }
 
-    fun inflateFbNativeAd(
+    fun bindFbNative(
         nativeAd: com.facebook.ads.NativeAd,
         viewGroup: ViewGroup,
         activity: Activity,
@@ -618,10 +618,10 @@ class SheetInlineAds {
         binding.nativeAdBody.setTextColor(Color.parseColor(txtColor))
 
         binding.nativview.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(bgColor, "#FFFFFF"))
+            ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
 
         binding.nativeAdCallToAction.backgroundTintList =
-            ColorStateList.valueOf(safeParseColor(btnColor, "#000000"))
+            ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
         (binding.nativeAdCallToAction as TextView).apply {
             setTextColor(Color.parseColor(btntxtColor))
         }
@@ -646,7 +646,7 @@ class SheetInlineAds {
         )
     }
 
-    fun safeParseColor(colorString: String?, defaultColor: String): Int {
+    fun parseColorOrNull(colorString: String?, defaultColor: String): Int {
         return try {
             if (!colorString.isNullOrBlank()) {
                 Color.parseColor(colorString)
