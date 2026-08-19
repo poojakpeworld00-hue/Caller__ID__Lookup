@@ -14,7 +14,7 @@ import org.fossify.commons.helpers.NavigationIcon
 import org.fossify.commons.helpers.isTiramisuPlus
 import org.fossify.commons.models.RadioItem
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.databinding.ViewLauncherSettingsBinding
+import com.callerid.number.lookup.home.databinding.ScreenLauncherSettingsBinding
 import com.callerid.number.lookup.home.launcher.extensions.config
 import com.callerid.number.lookup.home.launcher.helpers.MAX_COLUMN_COUNT
 import com.callerid.number.lookup.home.launcher.helpers.MAX_ROW_COUNT
@@ -26,7 +26,7 @@ import kotlin.system.exitProcess
 
 class BoardSettingsActivity : ShellBaseActivity() {
 
-    private val binding by viewBinding(ViewLauncherSettingsBinding::inflate)
+    private val binding by viewBinding(ScreenLauncherSettingsBinding::inflate)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

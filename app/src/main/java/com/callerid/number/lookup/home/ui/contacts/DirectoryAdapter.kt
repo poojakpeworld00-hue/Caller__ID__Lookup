@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.data.ContactItem
-import com.callerid.number.lookup.home.databinding.TileContactBinding
-import com.callerid.number.lookup.home.databinding.TileSectionHeaderBinding
+import com.callerid.number.lookup.home.databinding.CellContactBinding
+import com.callerid.number.lookup.home.databinding.CellSectionHeaderBinding
 import com.callerid.number.lookup.home.ui.common.HomeAnim
 
 class DirectoryAdapter(
@@ -37,9 +37,9 @@ class DirectoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == TYPE_HEADER) {
-            HeaderVH(TileSectionHeaderBinding.inflate(inflater, parent, false))
+            HeaderVH(CellSectionHeaderBinding.inflate(inflater, parent, false))
         } else {
-            ContactVH(TileContactBinding.inflate(inflater, parent, false))
+            ContactVH(CellContactBinding.inflate(inflater, parent, false))
         }
     }
 
@@ -63,7 +63,7 @@ class DirectoryAdapter(
 
     override fun getItemCount(): Int = rows.size
 
-    class HeaderVH(private val binding: TileSectionHeaderBinding) :
+    class HeaderVH(private val binding: CellSectionHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(letter: String) {
             binding.tvHeader.text = letter
@@ -73,7 +73,7 @@ class DirectoryAdapter(
         }
     }
 
-    inner class ContactVH(val binding: TileContactBinding) :
+    inner class ContactVH(val binding: CellContactBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(row: ContactRow.Item) {
             val c = row.contact

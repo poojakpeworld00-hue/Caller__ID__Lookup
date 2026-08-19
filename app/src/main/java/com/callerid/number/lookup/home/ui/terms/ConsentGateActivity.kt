@@ -18,7 +18,7 @@ import com.callerid.number.lookup.home.ui.intro.RevealPolicy
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.StorageRegistry
-import com.callerid.number.lookup.home.databinding.ViewTermsBinding
+import com.callerid.number.lookup.home.databinding.ScreenTermsBinding
 import com.callerid.number.lookup.home.ui.onboarding.SlideIntroActivity
 
 /**
@@ -32,9 +32,9 @@ import com.callerid.number.lookup.home.ui.onboarding.SlideIntroActivity
  *     fires (toggle detected ON), the launcher returns (Settings dismissed), or
  *     [onResume] runs after a real return from Settings (gated by settingsShown).
  */
-class ConsentGateActivity : FrameActivity<ViewTermsBinding>() {
+class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
-    override val layoutId: Int = R.layout.view_terms
+    override val layoutId: Int = R.layout.screen_terms
 
     private val prefs by lazy { StorageRegistry(this) }
 

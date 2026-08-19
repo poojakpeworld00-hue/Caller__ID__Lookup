@@ -27,7 +27,7 @@ class PingCardAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.tile_reminder1, parent, false)
+            .inflate(R.layout.cell_reminder1, parent, false)
         return ReminderViewHolder(view)
     }
 

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.callerid.number.lookup.home.data.FrequentDigit
-import com.callerid.number.lookup.home.databinding.TileFrequentBinding
+import com.callerid.number.lookup.home.databinding.CellFrequentBinding
 import com.callerid.number.lookup.home.ui.common.CallFormatter
 
 /** Favorite/most-used contacts shown as horizontal cards. Tapping a card fills the
@@ -24,10 +24,10 @@ class FrequentAdapter(
         notifyDataSetChanged()
     }
 
-    inner class VH(val binding: TileFrequentBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class VH(val binding: CellFrequentBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
-        VH(TileFrequentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        VH(CellFrequentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]

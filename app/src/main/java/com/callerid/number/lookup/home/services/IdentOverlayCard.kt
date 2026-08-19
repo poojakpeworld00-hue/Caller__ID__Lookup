@@ -13,7 +13,7 @@ import com.callerid.number.lookup.home.data.ContactSource
 import com.callerid.number.lookup.home.ui.common.CallFormatter
 
 /**
- * Resolves caller details and renders them into [R.layout.piece_caller_id].
+ * Resolves caller details and renders them into [R.layout.part_caller_id].
  *
  * Shared by [com.callerid.number.lookup.home.services.onincomming.IdentOverlayService] (floating window, device unlocked) and
  * RingScreenActivity (full screen, device locked) so the card looks and reads

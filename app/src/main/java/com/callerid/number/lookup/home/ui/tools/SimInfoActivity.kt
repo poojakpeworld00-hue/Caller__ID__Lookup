@@ -13,13 +13,13 @@ import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.admesh.presentation.InlinePromo
-import com.callerid.number.lookup.home.databinding.ViewSimInfoBinding
+import com.callerid.number.lookup.home.databinding.ScreenSimInfoBinding
 import java.util.Locale
 
 /** Carrier / SIM / network details from [TelephonyManager]. */
-class SimInfoActivity : FrameActivity<ViewSimInfoBinding>() {
+class SimInfoActivity : FrameActivity<ScreenSimInfoBinding>() {
 
-    override val layoutId: Int = R.layout.view_sim_info
+    override val layoutId: Int = R.layout.screen_sim_info
 
     private val tm by lazy { getSystemService(TELEPHONY_SERVICE) as TelephonyManager }
 

@@ -46,7 +46,7 @@ class RoleCoachActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.view_overlay_guide)
+        setContentView(R.layout.screen_overlay_guide)
         LogRail.log(TAG, "hint shown over the home-app list")
 
         // NOT_FOCUSABLE keeps key input with the settings screen and implies NOT_TOUCH_MODAL.

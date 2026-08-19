@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.callerid.number.lookup.home.data.CallEntry
-import com.callerid.number.lookup.home.databinding.TileBlockPickBinding
+import com.callerid.number.lookup.home.databinding.CellBlockPickBinding
 
 /** Lists recent call-log numbers so the user can tap one to block it. */
 class PrefixPickAdapter(
@@ -21,13 +21,13 @@ class PrefixPickAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
-        VH(TileBlockPickBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        VH(CellBlockPickBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(items[position])
 
     override fun getItemCount(): Int = items.size
 
-    inner class VH(private val binding: TileBlockPickBinding) :
+    inner class VH(private val binding: CellBlockPickBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(entry: CallEntry) {

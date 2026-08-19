@@ -32,7 +32,7 @@ import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.StorageRegistry
-import com.callerid.number.lookup.home.databinding.ViewSplashBinding
+import com.callerid.number.lookup.home.databinding.ScreenSplashBinding
 import com.callerid.number.lookup.home.launcher.activities.HelloStepActivity
 import com.callerid.number.lookup.home.launcher.helpers.OnboardRouter
 import com.callerid.number.lookup.home.ui.intro.RevealPolicy
@@ -46,9 +46,9 @@ import java.security.MessageDigest
  * Entry point. Shows branding briefly, then routes to the correct screen
  * based on first-run / onboarding state.
  */
-class LaunchGateActivity : FrameActivity<ViewSplashBinding>() {
+class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
 
-    override val layoutId: Int = R.layout.view_splash
+    override val layoutId: Int = R.layout.screen_splash
     private val handler = Handler(Looper.getMainLooper())
 
     /** Running splash animators, cancelled in onDestroy so nothing leaks. */

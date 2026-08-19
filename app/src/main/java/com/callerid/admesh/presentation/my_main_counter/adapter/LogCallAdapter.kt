@@ -32,7 +32,7 @@ class LogCallAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.tile_recent_call, parent, false)
+            .inflate(R.layout.cell_recent_call, parent, false)
         return VH(view)
     }
 

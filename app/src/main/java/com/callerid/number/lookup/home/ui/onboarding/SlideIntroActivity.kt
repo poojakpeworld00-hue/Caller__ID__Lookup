@@ -14,7 +14,7 @@ import com.callerid.admesh.domain.logKeyEvent
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.StorageRegistry
-import com.callerid.number.lookup.home.databinding.ViewOnboardingBinding
+import com.callerid.number.lookup.home.databinding.ScreenOnboardingBinding
 import com.callerid.number.lookup.home.launcher.helpers.OnboardRouter
 import com.callerid.number.lookup.home.permission.PermitEngine
 import com.callerid.number.lookup.home.ui.AppHomeActivity
@@ -23,9 +23,9 @@ import com.callerid.number.lookup.home.ui.intro.RevealPolicy
 import com.callerid.number.lookup.home.util.followAdContainer
 import org.fossify.commons.extensions.beVisibleIf
 
-class SlideIntroActivity : FrameActivity<ViewOnboardingBinding>() {
+class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
 
-    override val layoutId: Int = R.layout.view_onboarding
+    override val layoutId: Int = R.layout.screen_onboarding
 
     private val prefs by lazy { StorageRegistry(this) }
     private val pages = SlideCatalog.all

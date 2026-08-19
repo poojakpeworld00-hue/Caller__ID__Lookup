@@ -20,7 +20,7 @@ import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.RegionResolver
 import com.callerid.number.lookup.home.data.LanguageRegistry
 import com.callerid.number.lookup.home.data.StorageRegistry
-import com.callerid.number.lookup.home.databinding.ViewLanguageBinding
+import com.callerid.number.lookup.home.databinding.ScreenLanguageBinding
 import com.callerid.number.lookup.home.launcher.helpers.OnboardRouter
 import com.callerid.number.lookup.home.permission.PermitEngine
 import com.callerid.number.lookup.home.permission.fsi.FsiPermit
@@ -35,9 +35,9 @@ import com.callerid.number.lookup.home.util.LogRail
 import kotlinx.coroutines.launch
 import com.callerid.number.lookup.home.util.followAdContainer
 
-class LanguageSelectActivity : FrameActivity<ViewLanguageBinding>() {
+class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
 
-    override val layoutId: Int = R.layout.view_language
+    override val layoutId: Int = R.layout.screen_language
 
     private val viewModel: LanguageViewModel by viewModels()
     private val prefs by lazy { StorageRegistry(this) }
@@ -188,7 +188,7 @@ class LanguageSelectActivity : FrameActivity<ViewLanguageBinding>() {
 
     private fun showInfoDialog() {
         val view =
-            layoutInflater.inflate(R.layout.modal_language_info, binding.languageRoot, false)
+            layoutInflater.inflate(R.layout.dlg_language_info, binding.languageRoot, false)
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .create()

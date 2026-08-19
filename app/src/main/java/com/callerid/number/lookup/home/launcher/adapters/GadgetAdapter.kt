@@ -9,9 +9,9 @@ import com.bumptech.glide.Glide
 import org.fossify.commons.extensions.getProperTextColor
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.launcher.activities.ShellBaseActivity
-import com.callerid.number.lookup.home.databinding.TileWidgetListItemsHolderBinding
-import com.callerid.number.lookup.home.databinding.TileWidgetListSectionBinding
-import com.callerid.number.lookup.home.databinding.TileWidgetPreviewBinding
+import com.callerid.number.lookup.home.databinding.CellWidgetListItemsHolderBinding
+import com.callerid.number.lookup.home.databinding.CellWidgetListSectionBinding
+import com.callerid.number.lookup.home.databinding.CellWidgetPreviewBinding
 import com.callerid.number.lookup.home.launcher.helpers.WIDGET_LIST_ITEMS_HOLDER
 import com.callerid.number.lookup.home.launcher.helpers.WIDGET_LIST_SECTION
 import com.callerid.number.lookup.home.launcher.interfaces.WidgetPanelListener
@@ -31,8 +31,8 @@ class GadgetAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = when (viewType) {
-            WIDGET_LIST_SECTION -> TileWidgetListSectionBinding.inflate(inflater, parent, false)
-            else -> TileWidgetListItemsHolderBinding.inflate(inflater, parent, false)
+            WIDGET_LIST_SECTION -> CellWidgetListSectionBinding.inflate(inflater, parent, false)
+            else -> CellWidgetListItemsHolderBinding.inflate(inflater, parent, false)
         }
 
         return ViewHolder(binding.root)
@@ -56,7 +56,7 @@ class GadgetAdapter(
     }
 
     private fun setupListSection(view: View, section: GadgetSection) {
-        TileWidgetListSectionBinding.bind(view).apply {
+        CellWidgetListSectionBinding.bind(view).apply {
             widgetAppTitle.text = section.appTitle
             widgetAppTitle.setTextColor(textColor)
             widgetAppIcon.setImageDrawable(section.appIcon)
@@ -64,12 +64,12 @@ class GadgetAdapter(
     }
 
     private fun setupListItemsHolder(view: View, listItem: GadgetRowHolder) {
-        val binding = TileWidgetListItemsHolderBinding.bind(view)
+        val binding = CellWidgetListItemsHolderBinding.bind(view)
         binding.widgetListItemsHolder.removeAllViews()
         binding.widgetListItemsScrollView.scrollX = 0
         listItem.widgets.forEachIndexed { index, widget ->
             val imageSize = activity.resources.getDimension(R.dimen.widget_preview_size).toInt()
-            val widgetPreview = TileWidgetPreviewBinding.inflate(LayoutInflater.from(activity))
+            val widgetPreview = CellWidgetPreviewBinding.inflate(LayoutInflater.from(activity))
             binding.widgetListItemsHolder.addView(widgetPreview.root)
 
             val endMargin = if (index == listItem.widgets.size - 1) {

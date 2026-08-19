@@ -19,7 +19,7 @@ import com.callerid.admesh.presentation.InlinePromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.launcher.activities.HomeBoardActivity
 import com.callerid.number.lookup.home.launcher.adapters.DrawerAppsAdapter
-import com.callerid.number.lookup.home.databinding.PanelLeftPanelBinding
+import com.callerid.number.lookup.home.databinding.BoardLeftPanelBinding
 import com.callerid.number.lookup.home.launcher.extensions.launchApp
 import com.callerid.number.lookup.home.launcher.models.AppTile
 import com.callerid.number.lookup.home.launcher.models.appLauncherComparator
@@ -31,7 +31,7 @@ import kotlin.math.abs
 class LeftPanel(
     context: Context,
     attributeSet: AttributeSet,
-) : BasePanel<PanelLeftPanelBinding>(context, attributeSet) {
+) : BasePanel<BoardLeftPanelBinding>(context, attributeSet) {
 
     private var launchers = emptyList<AppTile>()
     private var resultsCap = COLLAPSED_RESULTS
@@ -79,7 +79,7 @@ class LeftPanel(
 
     override fun setupFragment(activity: HomeBoardActivity) {
         this.activity = activity
-        this.binding = PanelLeftPanelBinding.bind(this)
+        this.binding = BoardLeftPanelBinding.bind(this)
 
         // Only warm the slot here. Showing it now would be too early: the native renderers
         // draw whatever InlinePromo has already preloaded, and at HomeBoardActivity.onCreate that
@@ -92,10 +92,10 @@ class LeftPanel(
             nativePromo.loadNativeADs(activity)
         }
 
-        suggestedAdapter = DrawerAppsAdapter(R.layout.tile_panel_grid_app, ::launchLauncher)
-        recentAdapter = DrawerAppsAdapter(R.layout.tile_panel_grid_app, ::launchLauncher)
-        resultsAdapter = DrawerAppsAdapter(R.layout.tile_panel_result, ::launchLauncher)
-        searchInAdapter = DrawerAppsAdapter(R.layout.tile_panel_search_in, ::searchInApp)
+        suggestedAdapter = DrawerAppsAdapter(R.layout.cell_panel_grid_app, ::launchLauncher)
+        recentAdapter = DrawerAppsAdapter(R.layout.cell_panel_grid_app, ::launchLauncher)
+        resultsAdapter = DrawerAppsAdapter(R.layout.cell_panel_result, ::launchLauncher)
+        searchInAdapter = DrawerAppsAdapter(R.layout.cell_panel_search_in, ::searchInApp)
 
         binding.panelSuggestedGrid.adapter = suggestedAdapter
         binding.panelRecentGrid.adapter = recentAdapter

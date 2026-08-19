@@ -32,8 +32,8 @@ import com.callerid.admesh.domain.logPermissionResult
 import com.callerid.number.lookup.home.data.RegionResolver
 import com.callerid.number.lookup.home.data.StorageRegistry
 import kotlinx.coroutines.launch
-import com.callerid.number.lookup.home.databinding.PanelHomeBinding
-import com.callerid.number.lookup.home.databinding.TileQuickActionBinding
+import com.callerid.number.lookup.home.databinding.BoardHomeBinding
+import com.callerid.number.lookup.home.databinding.CellQuickActionBinding
 import com.callerid.number.lookup.home.ui.blocklist.BlockCenterActivity
 import com.callerid.number.lookup.home.ui.common.CallLineAdapter
 import com.callerid.admesh.presentation.InlinePromoStrip
@@ -47,7 +47,7 @@ import com.callerid.number.lookup.home.ui.settings.SettingsHubActivity
 import com.callerid.number.lookup.home.ui.tools.ToolboxActivity
 import com.callerid.number.lookup.home.util.followAdContainer
 
-class HomeMainFragment : HolderFragment<PanelHomeBinding>() {
+class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
     private val viewModel: OverviewViewModel by viewModels()
     private val recentAdapter = CallLineAdapter(
@@ -101,7 +101,7 @@ class HomeMainFragment : HolderFragment<PanelHomeBinding>() {
     }
 
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) =
-        PanelHomeBinding.inflate(inflater, container, false)
+        BoardHomeBinding.inflate(inflater, container, false)
 
     override fun initView() {
         // Hero bleeds under the status bar; pad its content down by the inset.
@@ -312,10 +312,10 @@ class HomeMainFragment : HolderFragment<PanelHomeBinding>() {
             val host = homeShell?.view as? ViewGroup
             prefs.isSearchHintShown = true
             searchHint = if (host != null) {
-                CoachBubble.show(host, anchor, R.layout.piece_search_hint) { searchHint = null }
+                CoachBubble.show(host, anchor, R.layout.part_search_hint) { searchHint = null }
             } else {
                 val act = activity ?: return@post
-                CoachBubble.show(act, anchor, R.layout.piece_search_hint) { searchHint = null }
+                CoachBubble.show(act, anchor, R.layout.part_search_hint) { searchHint = null }
             }
         }
     }
@@ -390,7 +390,7 @@ class HomeMainFragment : HolderFragment<PanelHomeBinding>() {
     }
 
     private fun bindQuick(
-        item: TileQuickActionBinding,
+        item: CellQuickActionBinding,
         @DrawableRes icon: Int,
         @StringRes label: Int,
         @ColorRes fgColor: Int,

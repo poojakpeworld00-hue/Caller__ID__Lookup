@@ -21,7 +21,7 @@ import androidx.viewbinding.ViewBinding
 import com.callerid.admesh.domain.PromoVault
 import com.callerid.admesh.presentation.oninterAds.FlowInterstitial
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.databinding.ModalAppRedirectBinding
+import com.callerid.number.lookup.home.databinding.DlgAppRedirectBinding
 import kotlin.apply
 import kotlin.let
 import kotlin.text.isNullOrEmpty
@@ -97,7 +97,7 @@ fun Activity.showAppRedirectPopup(onDismiss: (() -> Unit)? = null) {
     val appUrl = PromoVault(this).getString("In_App_Update_Link")
     if (appUrl.isNullOrEmpty()) return
 
-    val dialogBinding = ModalAppRedirectBinding.inflate(layoutInflater)
+    val dialogBinding = DlgAppRedirectBinding.inflate(layoutInflater)
 
     val dialog = showDialog(
         activity = this,

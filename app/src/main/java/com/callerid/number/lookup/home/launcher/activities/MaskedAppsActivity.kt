@@ -11,14 +11,14 @@ import org.fossify.commons.helpers.ensureBackgroundThread
 import org.fossify.commons.interfaces.RefreshRecyclerViewListener
 import org.fossify.commons.views.MyGridLayoutManager
 import com.callerid.number.lookup.home.launcher.adapters.MaskedIconsAdapter
-import com.callerid.number.lookup.home.databinding.ViewHiddenIconsBinding
+import com.callerid.number.lookup.home.databinding.ScreenHiddenIconsBinding
 import com.callerid.number.lookup.home.launcher.extensions.config
 import com.callerid.number.lookup.home.launcher.extensions.getDrawableForPackageName
 import com.callerid.number.lookup.home.launcher.extensions.hiddenIconsDB
 import com.callerid.number.lookup.home.launcher.models.MaskedIcon
 
 class MaskedAppsActivity : ShellBaseActivity(), RefreshRecyclerViewListener {
-    private val binding by viewBinding(ViewHiddenIconsBinding::inflate)
+    private val binding by viewBinding(ScreenHiddenIconsBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

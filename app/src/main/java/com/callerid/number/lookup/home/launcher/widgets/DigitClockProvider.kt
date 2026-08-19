@@ -36,7 +36,7 @@ class DigitClockProvider : AppWidgetProvider() {
         val textColor = context.getWidgetTextColor(appWidgetId)
         val is24Hours = DateFormat.is24HourFormat(context)
 
-        val views = RemoteViews(context.packageName, R.layout.applet_digital_clock).apply {
+        val views = RemoteViews(context.packageName, R.layout.gizmo_digital_clock).apply {
             setInt(
                 R.id.widget_holder,
                 "setBackgroundColor",

@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.OnBackPressedCallback
 import com.callerid.admesh.domain.ShellPromoConfig
-import com.callerid.number.lookup.home.databinding.ViewOnboardingDefaultLauncherBinding
+import com.callerid.number.lookup.home.databinding.ScreenOnboardingDefaultLauncherBinding
 import com.callerid.number.lookup.home.launcher.extensions.excludeAppFromRecents
 import com.callerid.number.lookup.home.launcher.extensions.isDefaultLauncher
 import com.callerid.number.lookup.home.launcher.extensions.roleManager
@@ -55,7 +55,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         const val REQ_ROLE_HOME = 7012
     }
 
-    private val binding by viewBinding(ViewOnboardingDefaultLauncherBinding::inflate)
+    private val binding by viewBinding(ScreenOnboardingDefaultLauncherBinding::inflate)
     private var shieldPulse: ValueAnimator? = null
     private var sparklePulses: List<ValueAnimator> = emptyList()
 

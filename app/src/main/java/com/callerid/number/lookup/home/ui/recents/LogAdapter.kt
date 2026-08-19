@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.data.CallEntry
 import com.callerid.number.lookup.home.data.CallFlavor
-import com.callerid.number.lookup.home.databinding.TileCallBinding
-import com.callerid.number.lookup.home.databinding.TileSectionHeaderBinding
+import com.callerid.number.lookup.home.databinding.CellCallBinding
+import com.callerid.number.lookup.home.databinding.CellSectionHeaderBinding
 import com.callerid.number.lookup.home.ui.common.CallFormatter
 import com.callerid.number.lookup.home.ui.common.HomeAnim
 
@@ -39,9 +39,9 @@ class LogAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == TYPE_HEADER) {
-            HeaderVH(TileSectionHeaderBinding.inflate(inflater, parent, false))
+            HeaderVH(CellSectionHeaderBinding.inflate(inflater, parent, false))
         } else {
-            CallVH(TileCallBinding.inflate(inflater, parent, false))
+            CallVH(CellCallBinding.inflate(inflater, parent, false))
         }
     }
 
@@ -65,9 +65,9 @@ class LogAdapter(
 
     override fun getItemCount(): Int = rows.size
 
-    class HeaderVH(val binding: TileSectionHeaderBinding) : RecyclerView.ViewHolder(binding.root)
+    class HeaderVH(val binding: CellSectionHeaderBinding) : RecyclerView.ViewHolder(binding.root)
 
-    inner class CallVH(val binding: TileCallBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CallVH(val binding: CellCallBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(row: LogRow.Call) {
             val e = row.entry
             val ctx = binding.root.context

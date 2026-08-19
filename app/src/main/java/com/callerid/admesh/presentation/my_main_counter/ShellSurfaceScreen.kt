@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import io.lighthouse.push.extended.HandleOptions
 import io.lighthouse.push.extended.LightHouseRichPush
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.databinding.ViewCallBackScreenBinding
+import com.callerid.number.lookup.home.databinding.ScreenCallBackScreenBinding
 import com.callerid.number.lookup.home.util.triggerClick
 import com.callerid.admesh.presentation.OpenPromoRegistry
 import com.callerid.admesh.presentation.SheetInlineAds
@@ -40,9 +40,9 @@ import java.util.Locale
  * once during app startup. This screen only triggers ad rendering, not SDK
  * initialization.
  */
-class ShellSurfaceScreen : FrameActivity<ViewCallBackScreenBinding>() {
+class ShellSurfaceScreen : FrameActivity<ScreenCallBackScreenBinding>() {
 
-    override val layoutId: Int = R.layout.view_call_back_screen
+    override val layoutId: Int = R.layout.screen_call_back_screen
     private val systemDialogHelper by lazy {
         OsDialogKit(this) {
             if (!isFinishing && !isDestroyed) finish()

@@ -41,7 +41,7 @@ class ConvoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.panel_message, container, false)
+        val view = inflater.inflate(R.layout.board_message, container, false)
 
         radioContainer = view.findViewById(R.id.radioContainer)
         etCustomMessage = view.findViewById(R.id.etCustomMessage)
@@ -57,7 +57,7 @@ class ConvoFragment : Fragment() {
         radioContainer.removeAllViews()
 
         options.forEachIndexed { index, text ->
-            val itemView = inflater.inflate(R.layout.tile_radio_option, radioContainer, false)
+            val itemView = inflater.inflate(R.layout.cell_radio_option, radioContainer, false)
             val tvOption = itemView.findViewById<TextView>(R.id.tvOption)
             val imgCheck = itemView.findViewById<ImageView>(R.id.imgCheck)
 

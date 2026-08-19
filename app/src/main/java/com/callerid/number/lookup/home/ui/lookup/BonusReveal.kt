@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import com.callerid.admesh.domain.PromoVault
 import com.callerid.admesh.presentation.BonusPromo
-import com.callerid.number.lookup.home.databinding.ModalWatchAdBinding
+import com.callerid.number.lookup.home.databinding.DlgWatchAdBinding
 
 /**
  * Gates revealing a caller name behind a rewarded ad — the shared flow used by the
@@ -33,7 +33,7 @@ object BonusReveal {
             return
         }
 
-        val db = ModalWatchAdBinding.inflate(activity.layoutInflater)
+        val db = DlgWatchAdBinding.inflate(activity.layoutInflater)
         val dialog = Dialog(activity).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(db.root)

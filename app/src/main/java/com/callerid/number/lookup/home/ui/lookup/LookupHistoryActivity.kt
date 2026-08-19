@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.callerid.admesh.presentation.BonusPromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
-import com.callerid.number.lookup.home.databinding.ViewLookupHistoryBinding
+import com.callerid.number.lookup.home.databinding.ScreenLookupHistoryBinding
 
 /**
  * Standalone list of recent number lookups. Tapping a row returns its number to the
  * caller (Lookup tab) to re-run the search; the phone icon dials directly.
  */
-class LookupHistoryActivity : FrameActivity<ViewLookupHistoryBinding>() {
+class LookupHistoryActivity : FrameActivity<ScreenLookupHistoryBinding>() {
 
-    override val layoutId: Int = R.layout.view_lookup_history
+    override val layoutId: Int = R.layout.screen_lookup_history
 
     private val viewModel: TraceViewModel by viewModels()
     private val adapter = TraceAdapter(

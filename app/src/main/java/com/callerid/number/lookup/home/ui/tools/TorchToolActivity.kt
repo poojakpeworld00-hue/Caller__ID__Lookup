@@ -18,14 +18,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.admesh.presentation.InlinePromo
-import com.callerid.number.lookup.home.databinding.ViewFlashlightBinding
+import com.callerid.number.lookup.home.databinding.ScreenFlashlightBinding
 import kotlin.math.max
 import kotlin.math.roundToInt
 
 /** Torch with Steady / Strobe / SOS modes and (where supported) brightness control. */
-class TorchToolActivity : FrameActivity<ViewFlashlightBinding>() {
+class TorchToolActivity : FrameActivity<ScreenFlashlightBinding>() {
 
-    override val layoutId: Int = R.layout.view_flashlight
+    override val layoutId: Int = R.layout.screen_flashlight
 
     private enum class Mode { STEADY, STROBE, SOS }
 

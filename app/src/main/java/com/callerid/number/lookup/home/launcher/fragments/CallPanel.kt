@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.callerid.admesh.domain.PerScreenPromo
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.databinding.PanelCallerPanelBinding
+import com.callerid.number.lookup.home.databinding.BoardCallerPanelBinding
 import com.callerid.number.lookup.home.launcher.activities.HomeBoardActivity
 import com.callerid.number.lookup.home.ui.home.HomeShellFragment
 import com.callerid.number.lookup.home.util.followAdContainer
@@ -27,7 +27,7 @@ import kotlin.math.abs
 class CallPanel(
     context: Context,
     attributeSet: AttributeSet,
-) : BasePanel<PanelCallerPanelBinding>(context, attributeSet) {
+) : BasePanel<BoardCallerPanelBinding>(context, attributeSet) {
 
     private var bannerRequested = false
     private var lastBannerAt = 0L
@@ -59,7 +59,7 @@ class CallPanel(
 
     override fun setupFragment(activity: HomeBoardActivity) {
         this.activity = activity
-        this.binding = PanelCallerPanelBinding.bind(this)
+        this.binding = BoardCallerPanelBinding.bind(this)
 
         // Keeps the banner clear of the navigation bar. Insets are returned unchanged so the
         // shell inside still receives them for its own per-tab status-bar padding.

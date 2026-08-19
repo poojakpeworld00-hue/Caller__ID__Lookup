@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.admesh.presentation.InlinePromo
-import com.callerid.number.lookup.home.databinding.ViewSpeedometerBinding
+import com.callerid.number.lookup.home.databinding.ScreenSpeedometerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
@@ -22,9 +22,9 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /** Internet speed test: download / upload throughput, latency and jitter over HTTP. */
-class SpeedToolActivity : FrameActivity<ViewSpeedometerBinding>() {
+class SpeedToolActivity : FrameActivity<ScreenSpeedometerBinding>() {
 
-    override val layoutId: Int = R.layout.view_speedometer
+    override val layoutId: Int = R.layout.screen_speedometer
 
     private var job: Job? = null
 

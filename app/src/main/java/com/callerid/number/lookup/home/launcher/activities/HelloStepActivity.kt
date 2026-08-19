@@ -4,7 +4,7 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import com.callerid.admesh.domain.ShellPromoConfig
-import com.callerid.number.lookup.home.databinding.ViewOnboardingWelcomeBinding
+import com.callerid.number.lookup.home.databinding.ScreenOnboardingWelcomeBinding
 import com.callerid.number.lookup.home.launcher.extensions.excludeAppFromRecents
 import com.callerid.number.lookup.home.launcher.helpers.OnboardRouter
 import com.callerid.number.lookup.home.launcher.helpers.breathe
@@ -35,7 +35,7 @@ import org.fossify.commons.extensions.viewBinding
  */
 class HelloStepActivity : ShellBaseActivity() {
 
-    private val binding by viewBinding(ViewOnboardingWelcomeBinding::inflate)
+    private val binding by viewBinding(ScreenOnboardingWelcomeBinding::inflate)
     private var shieldPulse: ValueAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

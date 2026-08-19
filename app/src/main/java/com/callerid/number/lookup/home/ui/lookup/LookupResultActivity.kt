@@ -17,14 +17,14 @@ import com.callerid.admesh.domain.PromoVault
 import com.callerid.admesh.presentation.BonusPromo
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.BlockListRegistry
-import com.callerid.number.lookup.home.databinding.ViewLookupDetailBinding
-import com.callerid.number.lookup.home.databinding.TileNicknameBinding
+import com.callerid.number.lookup.home.databinding.ScreenLookupDetailBinding
+import com.callerid.number.lookup.home.databinding.CellNicknameBinding
 import com.callerid.number.lookup.home.ui.common.CallFormatter
 
 /** Full detail of a looked-up number, opened from the Lookup result card. */
-class LookupResultActivity : FrameActivity<ViewLookupDetailBinding>() {
+class LookupResultActivity : FrameActivity<ScreenLookupDetailBinding>() {
 
-    override val layoutId: Int = R.layout.view_lookup_detail
+    override val layoutId: Int = R.layout.screen_lookup_detail
 
     private val number by lazy { intent.getStringExtra(EXTRA_NUMBER).orEmpty() }
     private val rawNumber by lazy { intent.getStringExtra(EXTRA_RAW).orEmpty().ifBlank { number } }
@@ -173,7 +173,7 @@ class LookupResultActivity : FrameActivity<ViewLookupDetailBinding>() {
         val revealed = revealedSet()
         binding.llNicknames.removeAllViews()
         for (nick in nicknameList) {
-            val row = TileNicknameBinding.inflate(layoutInflater, binding.llNicknames, false)
+            val row = CellNicknameBinding.inflate(layoutInflater, binding.llNicknames, false)
             if (revealed.contains(nick)) {
                 row.ivNickIcon.setImageResource(R.drawable.glyph_verified)
                 row.ivNickIcon.imageTintList = ColorStateList.valueOf(color(R.color.success))

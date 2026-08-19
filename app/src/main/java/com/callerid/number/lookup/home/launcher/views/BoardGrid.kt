@@ -56,7 +56,7 @@ import org.fossify.commons.helpers.ensureBackgroundThread
 import org.fossify.commons.helpers.isSPlus
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.launcher.activities.HomeBoardActivity
-import com.callerid.number.lookup.home.databinding.PieceHomeScreenGridBinding
+import com.callerid.number.lookup.home.databinding.PartHomeScreenGridBinding
 import com.callerid.number.lookup.home.launcher.extensions.config
 import com.callerid.number.lookup.home.launcher.extensions.getDrawableForPackageName
 import com.callerid.number.lookup.home.launcher.extensions.homeScreenGridItemsDB
@@ -81,7 +81,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     RelativeLayout(context, attrs, defStyle) {
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
 
-    private lateinit var binding: PieceHomeScreenGridBinding
+    private lateinit var binding: PartHomeScreenGridBinding
     private var columnCount = context.config.homeColumnCount
     private var rowCount = context.config.homeRowCount
     private var pageIndicatorsYPos = 0
@@ -233,7 +233,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        binding = PieceHomeScreenGridBinding.bind(this)
+        binding = PartHomeScreenGridBinding.bind(this)
     }
 
     fun fetchGridItems() {
@@ -1086,8 +1086,8 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
 
     // pseudo widgets are inflated by us, there is no provider to look up or bind to
     private fun BoardItem.pseudoWidgetLayout() = when (className) {
-        PSEUDO_WIDGET_CLOCK -> R.layout.stub_widget_digital_clock
-        PSEUDO_WIDGET_SEARCH -> R.layout.stub_widget_search_bar
+        PSEUDO_WIDGET_CLOCK -> R.layout.shell_widget_digital_clock
+        PSEUDO_WIDGET_SEARCH -> R.layout.shell_widget_search_bar
         else -> null
     }
 

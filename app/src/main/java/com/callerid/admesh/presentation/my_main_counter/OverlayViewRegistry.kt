@@ -39,7 +39,7 @@ class OverlayViewRegistry(private val context: Context) {
         callType: String
     ) {
         val inflater = LayoutInflater.from(context)
-        floatView = inflater.inflate(R.layout.piece_call_screen, null)
+        floatView = inflater.inflate(R.layout.part_call_screen, null)
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,

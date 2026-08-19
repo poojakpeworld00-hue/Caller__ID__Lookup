@@ -73,9 +73,9 @@ import org.fossify.commons.helpers.ensureBackgroundThread
 import org.fossify.commons.helpers.isOreoMr1Plus
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.databinding.ViewLauncherHomeBinding
-import com.callerid.number.lookup.home.databinding.PanelAllAppsBinding
-import com.callerid.number.lookup.home.databinding.PanelWidgetsBinding
+import com.callerid.number.lookup.home.databinding.ScreenLauncherHomeBinding
+import com.callerid.number.lookup.home.databinding.BoardAllAppsBinding
+import com.callerid.number.lookup.home.databinding.BoardWidgetsBinding
 import com.callerid.number.lookup.home.launcher.dialogs.RelabelItemDialog
 import com.callerid.number.lookup.home.launcher.extensions.config
 import com.callerid.number.lookup.home.launcher.extensions.getDrawableForPackageName
@@ -177,7 +177,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     private var wallpaperSupportsDarkText: Boolean? = null
 
     private lateinit var mDetector: GestureDetectorCompat
-    private val binding by viewBinding(ViewLauncherHomeBinding::inflate)
+    private val binding by viewBinding(ScreenLauncherHomeBinding::inflate)
 
     companion object {
         private var mLastUpEvent = 0L
@@ -412,7 +412,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         binding.swipeHint.removeCallbacks(mSwipeHintHider)
         binding.swipeHint.removeAllViews()
 
-        val row = layoutInflater.inflate(R.layout.tile_swipe_hint, binding.swipeHint, false)
+        val row = layoutInflater.inflate(R.layout.cell_swipe_hint, binding.swipeHint, false)
         val chevrons = row.findViewById<View>(R.id.hint_chevrons)
         row.findViewById<TextView>(R.id.hint_label).setText(captionFor(direction))
 
@@ -1141,7 +1141,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             null
         )
 
-        if (fragment is PanelAllAppsBinding) {
+        if (fragment is BoardAllAppsBinding) {
             // asked on every open so the slot renders whatever has been preloaded since the
             // last one, the same way the side panel refreshes itself
             fragment.root.onDrawerShown()
@@ -1174,14 +1174,14 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         window.navigationBarColor = Color.TRANSPARENT
         binding.homeScreenGrid.root.fragmentCollapsed()
         updateStatusBarIcons()
-        if (fragment is PanelWidgetsBinding) {
+        if (fragment is BoardWidgetsBinding) {
             clearWidgetsSearch()
         }
         Handler(Looper.getMainLooper()).postDelayed({
-            if (fragment is PanelAllAppsBinding) {
+            if (fragment is BoardAllAppsBinding) {
                 fragment.allAppsGrid.scrollToPosition(0)
                 fragment.root.touchDownY = -1
-            } else if (fragment is PanelWidgetsBinding) {
+            } else if (fragment is BoardWidgetsBinding) {
                 fragment.widgetsList.scrollToPosition(0)
                 fragment.root.touchDownY = -1
             }

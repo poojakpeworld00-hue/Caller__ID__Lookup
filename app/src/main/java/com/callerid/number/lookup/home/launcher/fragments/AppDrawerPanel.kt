@@ -21,7 +21,7 @@ import com.callerid.admesh.presentation.InlinePromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.launcher.activities.HomeBoardActivity
 import com.callerid.number.lookup.home.launcher.adapters.AppTileAdapter
-import com.callerid.number.lookup.home.databinding.PanelAllAppsBinding
+import com.callerid.number.lookup.home.databinding.BoardAllAppsBinding
 import com.callerid.number.lookup.home.launcher.extensions.applyDrawerSkin
 import com.callerid.number.lookup.home.launcher.extensions.config
 import com.callerid.number.lookup.home.launcher.extensions.launchApp
@@ -35,7 +35,7 @@ import com.callerid.number.lookup.home.launcher.models.appLauncherComparator
 class AppDrawerPanel(
     context: Context,
     attributeSet: AttributeSet
-) : BasePanel<PanelAllAppsBinding>(context, attributeSet), DrawerListener {
+) : BasePanel<BoardAllAppsBinding>(context, attributeSet), DrawerListener {
 
     private var lastTouchCoords = Pair(0f, 0f)
     var touchDownY = -1
@@ -56,7 +56,7 @@ class AppDrawerPanel(
     @SuppressLint("ClickableViewAccessibility")
     override fun setupFragment(activity: HomeBoardActivity) {
         this.activity = activity
-        this.binding = PanelAllAppsBinding.bind(this)
+        this.binding = BoardAllAppsBinding.bind(this)
 
         binding.allAppsGrid.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {

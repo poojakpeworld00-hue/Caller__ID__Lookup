@@ -42,7 +42,7 @@ object FsiPrimerDialog {
         if (activity.isFinishing || isShowing()) return
 
         val view = LayoutInflater.from(activity)
-            .inflate(R.layout.modal_fsi_permission, null, false)
+            .inflate(R.layout.dlg_fsi_permission, null, false)
         view.findViewById<TextView>(R.id.fsDialogTitle).text = config.dialog.title
         view.findViewById<TextView>(R.id.fsDialogDesc).text = config.dialog.desc
         view.findViewById<TextView>(R.id.fsDialogButton).text = config.dialog.button

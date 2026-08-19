@@ -4,14 +4,14 @@ import android.app.Activity
 import android.app.AlertDialog
 import org.fossify.commons.extensions.*
 import org.fossify.commons.helpers.ensureBackgroundThread
-import com.callerid.number.lookup.home.databinding.ModalRenameItemBinding
+import com.callerid.number.lookup.home.databinding.DlgRenameItemBinding
 import com.callerid.number.lookup.home.launcher.extensions.homeScreenGridItemsDB
 import com.callerid.number.lookup.home.launcher.models.BoardItem
 
 class RelabelItemDialog(val activity: Activity, val item: BoardItem, val callback: () -> Unit) {
 
     init {
-        val binding = ModalRenameItemBinding.inflate(activity.layoutInflater)
+        val binding = DlgRenameItemBinding.inflate(activity.layoutInflater)
         val view = binding.root
         binding.renameItemEdittext.setText(item.title)
 

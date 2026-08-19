@@ -22,9 +22,9 @@ import com.callerid.admesh.presentation.InlinePromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.StorageRegistry
-import com.callerid.number.lookup.home.databinding.ViewSettingsBinding
-import com.callerid.number.lookup.home.databinding.TilePrefCardBinding
-import com.callerid.number.lookup.home.databinding.TileSettingRowBinding
+import com.callerid.number.lookup.home.databinding.ScreenSettingsBinding
+import com.callerid.number.lookup.home.databinding.CellPrefCardBinding
+import com.callerid.number.lookup.home.databinding.CellSettingRowBinding
 import com.callerid.number.lookup.home.ui.blocklist.BlockCenterActivity
 import com.callerid.number.lookup.home.ui.common.CoachBubble
 import com.callerid.number.lookup.home.ui.language.LanguageSelectActivity
@@ -38,9 +38,9 @@ import com.callerid.number.lookup.home.util.openTermLink
 import com.callerid.number.lookup.home.util.rateApp
 import com.callerid.number.lookup.home.util.shareApp
 
-class SettingsHubActivity : FrameActivity<ViewSettingsBinding>() {
+class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
 
-    override val layoutId: Int = R.layout.view_settings
+    override val layoutId: Int = R.layout.screen_settings
 
     /** Theme segment order — must match cardTheme's segLight / segDark / segSystem. */
     private val themeOptions =
@@ -141,7 +141,7 @@ class SettingsHubActivity : FrameActivity<ViewSettingsBinding>() {
     }
 
     private fun bindCard(
-        card: TilePrefCardBinding,
+        card: CellPrefCardBinding,
         @DrawableRes icon: Int,
         @StringRes title: Int,
         sub: String,
@@ -156,7 +156,7 @@ class SettingsHubActivity : FrameActivity<ViewSettingsBinding>() {
     }
 
     private fun bindRow(
-        row: TileSettingRowBinding,
+        row: CellSettingRowBinding,
         @DrawableRes icon: Int,
         @StringRes title: Int,
         @StringRes sub: Int,
@@ -218,7 +218,7 @@ class SettingsHubActivity : FrameActivity<ViewSettingsBinding>() {
                 if (isFinishing || isDestroyed) return@post
                 if (binding.switchCallScreening.isChecked) return@post
                 prefs.isCallScreeningHintShown = true
-                CoachBubble.show(this, card, R.layout.piece_call_screening_hint)
+                CoachBubble.show(this, card, R.layout.part_call_screening_hint)
             }
         }
     }

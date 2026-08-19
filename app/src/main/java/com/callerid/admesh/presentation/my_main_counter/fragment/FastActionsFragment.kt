@@ -21,7 +21,7 @@ class FastActionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.panel_third, container, false)
+        val view = inflater.inflate(R.layout.board_third, container, false)
         view.findViewById<LinearLayout>(R.id.btnmessage).triggerClick {
             messga()
         }

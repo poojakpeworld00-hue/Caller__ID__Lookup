@@ -42,7 +42,7 @@ class NudgePromptFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.panel_reminder, container, false)
+        val view = inflater.inflate(R.layout.board_reminder, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerReminders)
         fab = view.findViewById(R.id.fabAddReminder)
@@ -78,7 +78,7 @@ class NudgePromptFragment : Fragment() {
     private val defaultColor: Int = Color.parseColor("#FFA500")
 
     private fun showAddReminderDialog() {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.modal_add_reminder, null)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dlg_add_reminder, null)
 
         val etTitle = dialogView.findViewById<EditText>(R.id.edit_reminder).apply {
             hint = "e.g. Birthday, Meeting, Call back..."

@@ -18,8 +18,8 @@ data class SlidePage(
 
 object SlideCatalog {
     val all: List<SlidePage> = listOf(
-        SlidePage(R.string.onboarding_title, R.string.onboarding_desc, customArtRes = R.layout.scene_onboarding_caller_view),
-        SlidePage(R.string.onboarding_title_2, R.string.onboarding_desc_2, customArtRes = R.layout.scene_onboarding_spam_view),
-        SlidePage(R.string.onboarding_title_3, R.string.onboarding_desc_3, customArtRes = R.layout.scene_onboarding_spam_view1)
+        SlidePage(R.string.onboarding_title, R.string.onboarding_desc, customArtRes = R.layout.canvas_onboarding_caller_view),
+        SlidePage(R.string.onboarding_title_2, R.string.onboarding_desc_2, customArtRes = R.layout.canvas_onboarding_spam_view),
+        SlidePage(R.string.onboarding_title_3, R.string.onboarding_desc_3, customArtRes = R.layout.canvas_onboarding_spam_view1)
     )
 }

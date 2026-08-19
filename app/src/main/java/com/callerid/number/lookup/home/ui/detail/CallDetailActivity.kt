@@ -19,8 +19,8 @@ import com.callerid.number.lookup.home.base.FrameActivity
 import com.callerid.number.lookup.home.data.BlockListRegistry
 import com.callerid.number.lookup.home.data.CallEntry
 import com.callerid.number.lookup.home.data.CallFlavor
-import com.callerid.number.lookup.home.databinding.ViewCallDetailBinding
-import com.callerid.number.lookup.home.databinding.TileCallHistoryBinding
+import com.callerid.number.lookup.home.databinding.ScreenCallDetailBinding
+import com.callerid.number.lookup.home.databinding.CellCallHistoryBinding
 import com.callerid.number.lookup.home.ui.AppHomeActivity
 import com.callerid.number.lookup.home.ui.common.CallFormatter
 import java.text.SimpleDateFormat
@@ -29,9 +29,9 @@ import java.util.Date
 import java.util.Locale
 
 /** Per-number call detail screen opened from a recents row. */
-class CallDetailActivity : FrameActivity<ViewCallDetailBinding>() {
+class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
 
-    override val layoutId: Int = R.layout.view_call_detail
+    override val layoutId: Int = R.layout.screen_call_detail
 
     private val viewModel: CallDetailViewModel by viewModels()
 
@@ -135,13 +135,13 @@ class CallDetailActivity : FrameActivity<ViewCallDetailBinding>() {
 
     private fun addHistoryHeader(text: String) {
         val header = layoutInflater
-            .inflate(R.layout.tile_call_history_header, binding.llHistory, false) as TextView
+            .inflate(R.layout.cell_call_history_header, binding.llHistory, false) as TextView
         header.text = text
         binding.llHistory.addView(header)
     }
 
     private fun addHistoryRow(e: CallEntry) {
-        val row = TileCallHistoryBinding.inflate(layoutInflater, binding.llHistory, false)
+        val row = CellCallHistoryBinding.inflate(layoutInflater, binding.llHistory, false)
         val missed = e.type == CallFlavor.MISSED || e.type == CallFlavor.SPAM
 
         row.ivDir.setImageResource(CallFormatter.typeIconRes(e.type))
