@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162802957651",
+    "project_id": "caller-id-lookup-26014",
+    "storage_bucket": "caller-id-lookup-26014.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162802957651:android:6c094695421e77a02835a6",
+        "android_client_info": {
+          "package_name": "com.callerid.number.lookup.home"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwBXxzq_mX_nfaYu3GRuA_wELo-K9dGc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
