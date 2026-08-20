@@ -164,12 +164,12 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
 
     private fun setupCallScreening() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            binding.panelCallScreening.visibility = View.GONE
+            showCallScreeningSection(false)
             return
         }
         val rm = getSystemService(RoleManager::class.java)
         if (rm == null || !rm.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
-            binding.panelCallScreening.visibility = View.GONE
+            showCallScreeningSection(false)
             return
         }
         refreshCallScreeningCard()
@@ -201,14 +201,21 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
 
     private fun refreshCallScreeningCard() {
         if (!InstallIdRegistry.isRoleAvailable(this)) {
-            binding.panelCallScreening.visibility = View.GONE
+            showCallScreeningSection(false)
             return
         }
         val enabled = InstallIdRegistry.isCallerIdEnabled(this)
-        binding.panelCallScreening.visibility = if (enabled) View.GONE else View.VISIBLE
+        showCallScreeningSection(!enabled)
         isProgrammatic = true
         binding.swcCallScreening.isChecked = enabled
         isProgrammatic = false
+    }
+
+    /** The section header has to follow the card, or an empty "Caller protection" title is left behind. */
+    private fun showCallScreeningSection(visible: Boolean) {
+        val state = if (visible) View.VISIBLE else View.GONE
+        binding.sectionCallVw.visibility = state
+        binding.panelCallScreening.visibility = state
     }
 
     private fun requestCallScreening() {

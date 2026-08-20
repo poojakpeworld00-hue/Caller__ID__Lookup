@@ -51,10 +51,10 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     return
                 }
 
-                if (!number.isNullOrBlank() && Settings.canDrawOverlays(context)) {
-                    IdentOverlayService.start(context, number)
-                } else if (number.isNullOrBlank()) {
+                if (number.isNullOrBlank()) {
                     Log.w(TAG, "ringing without a number — skipping caller-ID card")
+                } else {
+                    showIncomingCard(context, number)
                 }
             }
 
@@ -94,6 +94,26 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 resetState()
             }
         }
+    }
+
+    /**
+     * Overlay permission is the happy path. Without it the app can still put the caller card on
+     * screen when it holds a default-app role (home / dialer / call-screening), because those roles
+     * are exempt from the Android 10+ background-activity-start block.
+     */
+    private fun showIncomingCard(context: Context, number: String) {
+        if (canShowOverlay(context)) {
+            IdentOverlayService.start(context, number)
+            return
+        }
+
+        if (!holdsSystemDefaultRole(context)) {
+            Log.w(TAG, "no overlay permission and no default-app role — cannot show caller card")
+            return
+        }
+
+        runCatching { context.startActivity(RingScreenActivity.newIntent(context, number)) }
+            .onFailure { Log.w(TAG, "role-backed ring screen start failed", it) }
     }
 
     private fun dismissCard(context: Context) {

@@ -20,7 +20,6 @@ import androidx.fragment.app.FragmentActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.admesh.surface.OpenPromoRegistry
@@ -134,7 +133,6 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun buildRows(): List<Row> {
-        val ctx = requireContext()
         val list = mutableListOf<Row>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -145,13 +143,10 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             )
         }
 
-        if (PromoVault.getInstance(ctx).getBoolean("HD_VBC_Show")) {
-            list += Row(
-                "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
-                R.drawable.sym_phone_solid, androidPermission = Manifest.permission.READ_PHONE_STATE,
-                engineManaged = true,
-            )
-        }
+        list += Row(
+            "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
+            R.drawable.sym_phone_solid, androidPermission = Manifest.permission.READ_PHONE_STATE
+        )
         list += Row(
             "call_log", R.string.permsheet_calllog_title, R.string.perm_calllog_desc,
             R.drawable.sym_history, androidPermission = Manifest.permission.READ_CALL_LOG,
@@ -192,11 +187,24 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun shouldHideRow(row: Row): Boolean {
+        if (isClosedByEngine(row)) return true
         if (isGranted(row)) return true
         if (!row.engineManaged) return false
         val act = activity ?: return false
         val perm = row.androidPermission ?: return false
         return isPermanentlyDenied(act, row.key, perm)
+    }
+
+    /**
+     * The engine's own gates, re-read on every refresh. `HD_VBC_Show` in particular flips to false
+     * only after the IP/country check in `funOnAdsLoad` lands, which is well after the sheet is
+     * built — a row filtered at build time alone would stay on screen doing nothing when tapped,
+     * because [PermitEngine] skips gated keys.
+     */
+    private fun isClosedByEngine(row: Row): Boolean {
+        val ctx = context ?: return false
+        val spec = PermitKit.spec(row.key) ?: return false
+        return !PermitKit.isApplicableOnThisSdk(spec) || !PermitKit.isPrefGateOpen(ctx, spec)
     }
 
     private fun requestSingle(row: Row) {
@@ -287,7 +295,9 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
                 !granted(Manifest.permission.POST_NOTIFICATIONS) &&
                 !isPermanentlyDenied(activity, "notification", Manifest.permission.POST_NOTIFICATIONS)
             ) return true
-            if (PromoVault.getInstance(activity).getBoolean("HD_VBC_Show") &&
+            val phoneState = PermitKit.spec("phone_state")
+            if (phoneState != null &&
+                PermitKit.isPrefGateOpen(activity, phoneState) &&
                 !granted(Manifest.permission.READ_PHONE_STATE) &&
                 !isPermanentlyDenied(activity, "phone_state", Manifest.permission.READ_PHONE_STATE)
             ) return true

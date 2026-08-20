@@ -28,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.HolderFragment
+import com.callerid.number.lookup.home.permit.PermitKit
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.number.lookup.home.store.RegionResolver
 import com.callerid.number.lookup.home.store.StorageRegistry
@@ -193,7 +194,11 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             add(Manifest.permission.POST_NOTIFICATIONS)
         }
-        add(Manifest.permission.READ_PHONE_STATE)
+        
+        val phoneState = PermitKit.spec("phone_state")
+        if (phoneState != null && PermitKit.isPrefGateOpen(requireContext(), phoneState)) {
+            add(Manifest.permission.READ_PHONE_STATE)
+        }
     }
 
     private fun withCorePermissions(action: () -> Unit) {

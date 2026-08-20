@@ -76,6 +76,20 @@ parameter.
 | `custom_ads[].icon` / `.bannerImage` | `appdata.blr1.digitaloceanspaces.com/pja/caller_id/…` | confirm those assets belong to this listing. Inert while `IsCustomADS` is false. |
 
 Kept on purpose: `api_base_url` (`callerid.kpeworld.com`, your own backend — D1) and
-`CountryList_Counter_NShow` / `CountryList_Marketing_Counter_NShow` = `Indore`, which
-is matched against country, region **or** city, so a home city here is intentional —
-it turns the HD_VBC house banner off on your own devices.
+`CountryList_Counter_NShow` = `Indore`, which is matched against country, region **or**
+city, so a home city here is intentional — it turns the HD_VBC house banner off on your
+own devices.
+
+## Country gate (`Iscountry_Counter` / `CountryList_Counter_NShow`)
+
+One pair only, read from whichever audience block is live — the `marketing` / `organic`
+split already separates the two audiences, so the old `Iscountry_Marketing_Counter` /
+`CountryList_Marketing_Counter_NShow` duplicates are gone.
+
+| `CountryList_Counter_NShow` | Effect |
+|---|---|
+| `Indore` (or any comma list) | Matched case-insensitively against the IP country, region **or** city. A hit sets `HD_VBC_Show=false`. |
+| `all` | Every location is a hit — `HD_VBC_Show=false` for everyone, and no IP lookup is needed for the decision. `all` may appear anywhere in the list. |
+| empty | Nothing matches; `HD_VBC_Show` keeps its config value. |
+
+`Iscountry_Counter=false` skips the gate entirely, `all` included.

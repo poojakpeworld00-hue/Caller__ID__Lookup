@@ -130,6 +130,7 @@
                 </LinearLayout>
                 
                 <TextView
+                    android:id="@+id/sectionCallVw"
                     style="@style/SettingsSection"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="@string/settings_section_call" />

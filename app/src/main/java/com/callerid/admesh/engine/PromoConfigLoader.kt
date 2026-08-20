@@ -26,7 +26,7 @@ object PromoConfigLoader {
             listOf(
                 "IsAdsON", "IsFail_FB", "isLoaderForFB", "IsCustomADS", "IsBack",
                 "NativeBanner", "BannerAds", "In_App_Update_Show", "In_App_Update_Force_Show",
-                "Iscountry_Counter", "Iscountry_Marketing_Counter", "HD_VBC_Show",
+                "Iscountry_Counter", "HD_VBC_Show",
                 "HD_VBC_Native", "is_preload_ads",
                 "is_splash_inter_show", "is_splash_ads", "InterAds", "AppopenAds",
                 "NativeAd", "is_rateus", "is_share", "Perm_Sheet_Show",
@@ -35,7 +35,7 @@ object PromoConfigLoader {
 
             listOf(
                 "IsAdType", "In_App_Update_Link", "CountryList_Counter_NShow",
-                "CountryList_Marketing_Counter_NShow", "PrivacyPolicy", "TermLink",
+                "PrivacyPolicy", "TermLink",
                 "DirectLink", "MarketLink", "HD_VBC_Native_ID", "HD_VBC_Banner_ID",
                 "googleS_Inter", "googleBackInter", "googleInter", "googleAppopen",
                 "googleNative", "googleBanner", "googleRewarded", "faceB_InterAds",

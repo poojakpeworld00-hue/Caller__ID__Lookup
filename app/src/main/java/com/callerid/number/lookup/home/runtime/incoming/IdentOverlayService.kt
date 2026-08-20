@@ -31,7 +31,6 @@ import kotlinx.coroutines.withContext
 
 class IdentOverlayService : Service() {
 
-    private val TAG = "CallerOverlay"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private var windowManager: WindowManager? = null
@@ -42,6 +41,9 @@ class IdentOverlayService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        
+        startAsForeground()
+
         val number = intent?.getStringExtra(EXTRA_NUMBER)?.takeIf { it.isNotBlank() } ?: run {
             stopSelf(); return START_NOT_STICKY
         }
@@ -59,7 +61,6 @@ class IdentOverlayService : Service() {
             return START_NOT_STICKY
         }
 
-        startAsForeground()
         showOverlay(number)
         callEndWatcher.start()
         return START_STICKY
@@ -142,12 +143,21 @@ class IdentOverlayService : Service() {
     }
 
     companion object {
+        private const val TAG = "CallerOverlay"
+
         const val EXTRA_NUMBER = "extra_number"
 
         fun start(context: Context, number: String) {
             val intent = Intent(context, IdentOverlayService::class.java)
                 .putExtra(EXTRA_NUMBER, number)
-            runCatching { context.startService(intent) }
+            runCatching {
+                
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            }.onFailure { Log.w(TAG, "overlay service start refused", it) }
         }
 
         fun stop(context: Context) {
