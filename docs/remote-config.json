@@ -95,7 +95,10 @@
         "enabled": true,
         "activities": [
           "LaunchGateActivity",
-          "HelloStepActivity"
+          "HelloStepActivity",
+          "AppHomeActivity",
+          "HomeBoardActivity",
+          "FsiGateActivity"
         ],
         "delay": 0,
         "priority": 1
@@ -104,7 +107,6 @@
         "enabled": true,
         "activities": [
           "HelloStepActivity",
-          "LaunchGateActivity",
           "AppHomeActivity",
           "HomeBoardActivity"
         ],
@@ -396,7 +398,11 @@
       "notification": {
         "enabled": true,
         "activities": [
-          "HelloStepActivity"
+          "LaunchGateActivity",
+          "HelloStepActivity",
+          "AppHomeActivity",
+          "HomeBoardActivity",
+          "FsiGateActivity"
         ],
         "delay": 0,
         "priority": 1
@@ -405,7 +411,6 @@
         "enabled": true,
         "activities": [
           "HelloStepActivity",
-          "LaunchGateActivity",
           "AppHomeActivity",
           "HomeBoardActivity"
         ],

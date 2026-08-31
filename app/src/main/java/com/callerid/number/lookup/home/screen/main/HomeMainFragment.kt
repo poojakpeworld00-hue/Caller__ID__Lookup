@@ -191,12 +191,12 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
     }
 
     private fun corePermissions(): List<String> = buildList {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        
+        val ctx = context ?: return@buildList
+        if (PermitKit.isOfferable(ctx, "notification")) {
             add(Manifest.permission.POST_NOTIFICATIONS)
         }
-        
-        val phoneState = PermitKit.spec("phone_state")
-        if (phoneState != null && PermitKit.isPrefGateOpen(requireContext(), phoneState)) {
+        if (PermitKit.isOfferable(ctx, "phone_state")) {
             add(Manifest.permission.READ_PHONE_STATE)
         }
     }

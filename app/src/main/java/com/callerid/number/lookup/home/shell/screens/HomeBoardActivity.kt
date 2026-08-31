@@ -117,6 +117,8 @@ import kotlin.math.min
 import androidx.appcompat.app.AppCompatActivity
 import com.callerid.number.lookup.home.store.LanguageRegistry
 import com.callerid.number.lookup.home.screen.main.HomeShellDriver
+import com.google.android.material.snackbar.Snackbar
+import com.callerid.admesh.surface.StoreUpdateRegistry
 import com.callerid.number.lookup.home.screen.main.HomeShellOwner
 import com.callerid.number.lookup.home.kit.applyNativeAdTheme
 
@@ -130,11 +132,36 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         hideCallerPanel()
     }
 
+    /** The shell rides in the swipe-right panel, so it is on screen only while that is open. */
+    override val isShellOnScreen: Boolean get() = isCallerPanelExpanded()
+
+    /** The restart Snackbar, so a re-offer on the next resume does not stack a second one. */
+    private var updateReadySnackbar: Snackbar? = null
+
+    /**
+     * With the panel open the shell's own Snackbar is right; with it shut the shell is parked
+     * off screen, so the home grid has to carry the prompt itself or a downloaded update has
+     * nowhere to be installed from — the launcher home is where these users live.
+     */
+    override fun showUpdateReadyPrompt() {
+        if (isCallerPanelExpanded()) {
+            binding.callerPanelVw.root.shell()?.showUpdateReadyPrompt()
+            return
+        }
+        if (updateReadySnackbar?.isShown == true) return
+        updateReadySnackbar = Snackbar
+            .make(binding.mainHolderVw, R.string.update_ready_msg, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.update_restart) { StoreUpdateRegistry.completeUpdate() }
+            .also { it.show() }
+    }
+
     override fun bringHostToFront() {
         runCatching {
             startActivity(
                 Intent(this, HomeBoardActivity::class.java)
                     .addFlags(HomeShellDriver.REORDER_FLAGS)
+                    
+                    .putExtra(HomeShellDriver.EXTRA_SELF_REORDER, true)
             )
         }
     }
@@ -178,6 +205,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         private const val SWIPE_HINT_ANIMATION_DURATION = 900L
 
         private const val SHADE_HINT_RESUME_DELAY = 2500L
+
+        private const val TAG = "HomeBoardActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -446,6 +475,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+
+        
+        if (intent.getBooleanExtra(HomeShellDriver.EXTRA_SELF_REORDER, false)) {
+            return
+        }
 
         if (OnboardRouter.resumeIfUnfinished(this)) {
             return
@@ -920,7 +954,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             Intent(AlarmClock.ACTION_SET_ALARM)
         )
 
-        startFirstResolvable(intents)
+        if (!startFirstResolvable(intents)) launchClockPackage(intents)
     }
 
     fun openCalendarApp() {
@@ -937,14 +971,37 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         startFirstResolvable(intents)
     }
 
-    private fun startFirstResolvable(intents: List<Intent>) {
+    /**
+     * True once an intent actually started. A target can exist and still refuse the start — OnePlus'
+     * deskclock guards ACTION_SHOW_ALARMS with com.android.alarm.permission.SET_ALARM — so every
+     * failure falls through to the next candidate instead of taking the launcher down.
+     */
+    private fun startFirstResolvable(intents: List<Intent>): Boolean {
         for (intent in intents) {
             try {
                 startActivity(intent)
-                return
+                return true
             } catch (_: ActivityNotFoundException) {
+            } catch (e: Exception) {
+                Log.w(TAG, "start refused for ${intent.action}", e)
             }
         }
+        return false
+    }
+
+    /** Last resort: open the clock app by its launcher entry, which needs no action permission. */
+    private fun launchClockPackage(intents: List<Intent>) {
+        val clockPackage = intents.firstNotNullOfOrNull { intent ->
+            packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                ?.activityInfo?.packageName
+        }
+        val launch = clockPackage?.let { packageManager.getLaunchIntentForPackage(it) }
+        if (launch == null) {
+            toast(org.fossify.commons.R.string.no_app_found)
+            return
+        }
+        runCatching { startActivity(launch) }
+            .onFailure { Log.w(TAG, "clock launcher entry refused", it) }
     }
 
     fun hideLeftPanel() {
@@ -1496,6 +1553,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun hideCallerPanel() {
+        
+        homeShellController.onShellHidden()
 
         binding.callerPanelVw.root.shell()?.setPanelVisible(false)
 
@@ -1629,7 +1688,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 )
             }
         } catch (e: Exception) {
-            Log.e("HomeBoardActivity", "Failed to seed default home widgets", e)
+            Log.e(TAG, "Failed to seed default home widgets", e)
         }
     }
 

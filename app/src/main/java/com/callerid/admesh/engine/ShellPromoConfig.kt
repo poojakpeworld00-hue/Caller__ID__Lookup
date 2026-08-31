@@ -201,6 +201,37 @@ object ShellPromoConfig {
         }
     }
 
+    /**
+     * [renderSlot] with a refresh policy, for the surfaces that are opened over and over — the
+     * app drawer and the left panel.
+     *
+     * Re-showing unconditionally is what made those two look broken. The native pool is a
+     * SINGLE static ad: rendering it consumes the ad and starts a refill, so a second open
+     * before that refill lands finds nothing, drops through to the fallback branch, and
+     * replaces a perfectly good ad with a custom one. The left panel hit it every single
+     * time — it asks for two native frames back to back, and the second could never win.
+     *
+     * So: fill an empty frame exactly as before, replace a filled one only when a fresh
+     * native is actually in hand, and otherwise leave what is on screen and warm the next.
+     * Banner slots are untouched — they own their own refresh.
+     */
+    fun refreshSlot(
+        activity: Activity,
+        slot: Slot,
+        container: FrameLayout,
+        shimmer: ShimmerFrameLayout? = null,
+    ) {
+        
+        val holdsAnAd = (0 until container.childCount).any { container.getChildAt(it) !== shimmer }
+        if (!slot.needsNativePreload || !holdsAnAd || InlinePromo.hasPreloadedNative()) {
+            renderSlot(activity, slot, container, shimmer)
+            return
+        }
+
+        log("slot: no fresh native — keeping the one on screen, warming the next")
+        InlinePromo().fetchNativeAds(activity)
+    }
+
     private fun slot(block: JSONObject?, defaultNativeType: String, label: String): Slot {
         if (block == null) {
 

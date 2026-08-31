@@ -78,7 +78,8 @@ class AppDrawerPanel(
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
-        ShellPromoConfig.renderSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        
+        ShellPromoConfig.refreshSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
     private fun refreshSlot(activity: HomeBoardActivity) {

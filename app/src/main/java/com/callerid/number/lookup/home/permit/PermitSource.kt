@@ -15,8 +15,8 @@ object PermitSource {
     private const val DEFAULT_CONFIG = """
         {
           "permission_engine": {
-            "notification": { "enabled": true, "activities": ["SplashActivity", "HomeBoardActivity"], "delay": 0, "priority": 1 },
-            "phone_state":  { "enabled": true, "activities": ["SplashActivity", "HomeBoardActivity"], "delay": 0, "priority": 2 }
+            "notification": { "enabled": true, "activities": ["LaunchGateActivity", "HelloStepActivity", "AppHomeActivity", "HomeBoardActivity", "FsiGateActivity"], "delay": 0, "priority": 1 },
+            "phone_state":  { "enabled": true, "activities": ["HelloStepActivity", "AppHomeActivity", "HomeBoardActivity"], "delay": 0, "priority": 2 }
           }
         }
     """
@@ -36,11 +36,13 @@ object PermitSource {
     fun refreshFromRemote(onReady: (() -> Unit)? = null) {
         try {
             val rc = FirebaseRemoteConfig.getInstance()
-            RemoteConfigRules.applyTo(rc)
-            rc.fetchAndActivate().addOnCompleteListener { task ->
-                LogRail.log(TAG, "Remote Config fetch success=${task.isSuccessful}")
-                reload()
-                onReady?.invoke()
+            
+            RemoteConfigRules.withSettings(rc) {
+                rc.fetchAndActivate().addOnCompleteListener { task ->
+                    LogRail.log(TAG, "Remote Config fetch success=${task.isSuccessful}")
+                    reload()
+                    onReady?.invoke()
+                }
             }
         } catch (e: Exception) {
             LogRail.error(TAG, "refreshFromRemote failed; using cached config", e)

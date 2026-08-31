@@ -135,7 +135,10 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     private fun buildRows(): List<Row> {
         val list = mutableListOf<Row>()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val ctx = requireContext()
+
+        
+        if (PermitKit.isOfferable(ctx, "notification")) {
             list += Row(
                 "notification", R.string.perm_notification_title, R.string.perm_notification_desc,
                 R.drawable.sym_notifications, androidPermission = Manifest.permission.POST_NOTIFICATIONS,
@@ -143,10 +146,15 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             )
         }
 
-        list += Row(
-            "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
-            R.drawable.sym_phone_solid, androidPermission = Manifest.permission.READ_PHONE_STATE
-        )
+        
+        if (PermitKit.isOfferable(ctx, "phone_state")) {
+            list += Row(
+                "phone_state", R.string.perm_phone_title, R.string.perm_phone_desc,
+                R.drawable.sym_phone_solid,
+                androidPermission = Manifest.permission.READ_PHONE_STATE,
+                engineManaged = true,
+            )
+        }
         list += Row(
             "call_log", R.string.permsheet_calllog_title, R.string.perm_calllog_desc,
             R.drawable.sym_history, androidPermission = Manifest.permission.READ_CALL_LOG,
@@ -155,10 +163,13 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             "contacts", R.string.permsheet_contacts_title, R.string.perm_contacts_desc,
             R.drawable.sym_group, androidPermission = Manifest.permission.READ_CONTACTS,
         )
-        list += Row(
-            "overlay", R.string.perm_overlay_title, R.string.perm_overlay_desc,
-            R.drawable.sym_apps, isOverlay = true,
-        )
+        
+        if (OverlayKit.isOfferable(ctx)) {
+            list += Row(
+                "overlay", R.string.perm_overlay_title, R.string.perm_overlay_desc,
+                R.drawable.sym_apps, isOverlay = true,
+            )
+        }
         return list
     }
 
@@ -203,15 +214,18 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
      */
     private fun isClosedByEngine(row: Row): Boolean {
         val ctx = context ?: return false
-        val spec = PermitKit.spec(row.key) ?: return false
-        return !PermitKit.isApplicableOnThisSdk(spec) || !PermitKit.isPrefGateOpen(ctx, spec)
+        
+        if (row.isOverlay) return !OverlayKit.isOfferable(ctx)
+        if (PermitKit.spec(row.key) == null) return false
+        return !PermitKit.isOfferable(ctx, row.key)
     }
 
     private fun requestSingle(row: Row) {
         if (isGranted(row)) return
         when {
 
-            row.engineManaged -> PermitEngine.check(requireActivity()) {
+            
+            row.engineManaged -> PermitEngine.request(requireActivity(), row.key) {
                 if (isAdded) refreshRows()
             }
             row.isOverlay -> launchOverlay(finishAfter = false)
@@ -220,9 +234,20 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun onContinueClicked() {
-
-        PermitEngine.check(requireActivity()) {
+        
+        requestEngineRows(rows.filter { it.engineManaged && !isGranted(it) }) {
             if (isAdded) requestSheetOwnedThenOverlay()
+        }
+    }
+
+    /** Walks [queue] through [PermitEngine.request] sequentially, then runs [onDone]. */
+    private fun requestEngineRows(queue: List<Row>, onDone: () -> Unit) {
+        val head = queue.firstOrNull() ?: run { onDone(); return }
+        val act = activity ?: run { onDone(); return }
+        PermitEngine.request(act, head.key) {
+            if (!isAdded) return@request
+            refreshRows()
+            requestEngineRows(queue.drop(1), onDone)
         }
     }
 
@@ -239,7 +264,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     }
 
     private fun proceedToOverlayOrFinish() {
-        val overlayRow = rows.firstOrNull { it.isOverlay }
+        val overlayRow = rows.firstOrNull { it.isOverlay && !isClosedByEngine(it) }
         if (overlayRow != null && !isGranted(overlayRow)) {
             launchOverlay(finishAfter = true)
         } else {
@@ -286,24 +311,44 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "permission_sheet"
 
+        /** True while the sheet is on screen. */
+        @JvmStatic
+        fun isShowing(activity: FragmentActivity): Boolean =
+            activity.supportFragmentManager.findFragmentByTag(TAG) != null
+
+        /**
+         * Takes the sheet down. A no-op when it is not showing.
+         *
+         * The sheet is committed to the **Activity's** fragment manager, not to whatever view
+         * it was raised over, so on the launcher it outlives the caller panel that triggered
+         * it: close the panel and the sheet stays, asking about the caller-ID app's
+         * permissions in front of the launcher's app grid. Callers pair this with re-arming
+         * the sheet so the user is still asked next time the panel opens.
+         */
+        @JvmStatic
+        fun dismissIfShowing(activity: FragmentActivity) {
+            val fm = activity.supportFragmentManager
+            (fm.findFragmentByTag(TAG) as? PermitSheetDialog)
+                ?.let { runCatching { it.dismissAllowingStateLoss() } }
+        }
+
         @JvmStatic
         fun hasPending(activity: FragmentActivity): Boolean {
             fun granted(perm: String) =
                 ContextCompat.checkSelfPermission(activity, perm) == PackageManager.PERMISSION_GRANTED
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            
+            if (PermitKit.isOfferable(activity, "notification") &&
                 !granted(Manifest.permission.POST_NOTIFICATIONS) &&
                 !isPermanentlyDenied(activity, "notification", Manifest.permission.POST_NOTIFICATIONS)
             ) return true
-            val phoneState = PermitKit.spec("phone_state")
-            if (phoneState != null &&
-                PermitKit.isPrefGateOpen(activity, phoneState) &&
+            if (PermitKit.isOfferable(activity, "phone_state") &&
                 !granted(Manifest.permission.READ_PHONE_STATE) &&
                 !isPermanentlyDenied(activity, "phone_state", Manifest.permission.READ_PHONE_STATE)
             ) return true
             if (!granted(Manifest.permission.READ_CALL_LOG)) return true
             if (!granted(Manifest.permission.READ_CONTACTS)) return true
-            if (!OverlayKit.isGranted(activity)) return true
+            if (OverlayKit.isOfferable(activity) && !OverlayKit.isGranted(activity)) return true
             return false
         }
 

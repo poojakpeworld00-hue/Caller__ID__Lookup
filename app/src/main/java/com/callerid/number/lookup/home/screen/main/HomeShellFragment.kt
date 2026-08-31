@@ -244,7 +244,8 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         if (view == null) return
         val coreGranted = isPermissionGranted(Manifest.permission.READ_CALL_LOG) &&
             isPermissionGranted(Manifest.permission.READ_CONTACTS)
-        val show = coreGranted && !OverlayKit.isGranted(ctx)
+        
+        val show = coreGranted && OverlayKit.isOfferable(ctx) && !OverlayKit.isGranted(ctx)
         binding.overlayBannerVw.visibility = if (show) View.VISIBLE else View.GONE
     }
 

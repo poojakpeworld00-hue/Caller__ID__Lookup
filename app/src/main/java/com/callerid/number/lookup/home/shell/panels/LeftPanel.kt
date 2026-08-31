@@ -134,8 +134,9 @@ class LeftPanel(
             }
         }
 
-        ShellPromoConfig.renderSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
-        ShellPromoConfig.renderSlot(
+        
+        ShellPromoConfig.refreshSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        ShellPromoConfig.refreshSlot(
             activity = activity,
             slot = suggestedSlot,
             container = binding.adSuggestedFrameVw,

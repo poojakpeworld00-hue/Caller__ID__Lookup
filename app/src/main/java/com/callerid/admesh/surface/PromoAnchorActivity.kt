@@ -83,7 +83,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
     private var isGoogleAdsEnabled = true
     private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
-    private companion object {
+    
+    companion object {
 
         const val APPOPEN_TAG = "AppOpenAd"
 
@@ -190,15 +191,17 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
-        RemoteConfigRules.applyTo(remoteConfig)
-        activity?.let {
-            remoteConfig.fetchAndActivate().addOnCompleteListener(it) { task ->
-                if (task.isSuccessful) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        setResponceInPref(remoteConfig)
+        activity?.let { host ->
+            
+            RemoteConfigRules.withSettings(remoteConfig) {
+                remoteConfig.fetchAndActivate().addOnCompleteListener(host) { task ->
+                    if (task.isSuccessful) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            setResponceInPref(remoteConfig)
+                        }
+                    } else {
+                        onGetData?.onError()
                     }
-                } else {
-                    onGetData?.onError()
                 }
             }
         }
@@ -335,6 +338,9 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         }
                     } ?: false
 
+                    
+                    adsPreference.isNShowLocation = blocksEveryone || isAllowed
+
                     when {
                         blocksEveryone -> {
                             if (BuildConfig.DEBUG) Log.d(
@@ -359,6 +365,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
                         )
                     }
                 } else {
+                    
+                    adsPreference.isNShowLocation = false
                     if (BuildConfig.DEBUG) Log.d("LocationCheck", "Country check is disabled in preferences")
                 }
 

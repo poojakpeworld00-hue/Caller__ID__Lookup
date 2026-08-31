@@ -106,7 +106,8 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
     }
 
     private fun openOverlayPermission() {
-        if (OverlayKit.isGranted(this)) {
+        
+        if (OverlayKit.isGranted(this) || !OverlayKit.isOfferable(this)) {
             proceedToNextScreen()
             return
         }

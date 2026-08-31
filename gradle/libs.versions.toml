@@ -31,8 +31,7 @@ firebasecrashlytic = "3.0.6"
 dexter = "6.2.3"
 appUpdate = "2.1.0"
 workManager = "2.10.0"
-lighthouse = "0.7.2"
-multidex = "2.0.1"
+lighthouse = "0.7.7"
 libphonenumber = "8.13.50"
 libphonenumberGeocoder = "2.234"
 libphonenumberCarrier = "1.224"
@@ -81,7 +80,6 @@ app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", v
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 lighthouse = { module = "io.lighthouse:light-house", version.ref = "lighthouse" }
 lighthouse-extended = { module = "io.lighthouse:light-house-extended", version.ref = "lighthouse" }
-androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 libphonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "libphonenumber" }
 libphonenumber-geocoder = { group = "com.googlecode.libphonenumber", name = "geocoder", version.ref = "libphonenumberGeocoder" }
 libphonenumber-carrier = { group = "com.googlecode.libphonenumber", name = "carrier", version.ref = "libphonenumberCarrier" }

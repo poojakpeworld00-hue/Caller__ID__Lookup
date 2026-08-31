@@ -52,7 +52,9 @@ object PromoConfigLoader {
                 "InterCounter", "InterBackCounter", "MarketInterCounter", "MarketBackCounter",
                 "NativeCounter", "MarketNativeCounter", "MidNativeCounter", "BannerCounter",
                 "MarketBannerCounter", "MarketAppopenCounter", "AppopenCounter",
-                "Perm_Sheet_Interval_Days", "HD_VBC_Hrs"
+                "Perm_Sheet_Interval_Days", "HD_VBC_Hrs",
+                
+                "Config_Sync_Hrs"
             ).forEach { key -> if (root.has(key)) putInt(key, root.optInt(key, 0)) }
 
             applyInlineTheme(context, root)

@@ -3,7 +3,6 @@ package com.callerid.number.lookup.home.runtime.incoming
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.role.RoleManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,7 +19,7 @@ import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 import com.callerid.admesh.surface.tally.jobs.ShellJobRunner.Companion.NOTIFICATION_ID
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.BlockListRegistry
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import com.callerid.number.lookup.home.kit.InstallIdRegistry
 import com.callerid.number.lookup.home.screen.ringing.RingScreenActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -97,23 +96,17 @@ class PhoneStateReceiver : BroadcastReceiver() {
     }
 
     /**
-     * Overlay permission is the happy path. Without it the app can still put the caller card on
-     * screen when it holds a default-app role (home / dialer / call-screening), because those roles
-     * are exempt from the Android 10+ background-activity-start block.
+     * The card needs a number; the overlay permission is no longer required to reach it —
+     * [IdentOverlayService] falls back to the full-screen activity on the default-role
+     * exemption. When we hold the CallScreening role [CallScreenService] has already raised
+     * the card before this broadcast arrived, and `start` drops this one as a duplicate.
      */
     private fun showIncomingCard(context: Context, number: String) {
-        if (canShowOverlay(context)) {
-            IdentOverlayService.start(context, number)
-            return
-        }
-
-        if (!holdsSystemDefaultRole(context)) {
+        if (!canShowOverlay(context) && !holdsSystemDefaultRole(context)) {
             Log.w(TAG, "no overlay permission and no default-app role — cannot show caller card")
             return
         }
-
-        runCatching { context.startActivity(RingScreenActivity.newIntent(context, number)) }
-            .onFailure { Log.w(TAG, "role-backed ring screen start failed", it) }
+        IdentOverlayService.start(context, number)
     }
 
     private fun dismissCard(context: Context) {
@@ -192,16 +185,9 @@ class PhoneStateReceiver : BroadcastReceiver() {
     private fun canShowOverlay(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
 
-    private fun holdsSystemDefaultRole(context: Context): Boolean {
-        if (runCatching { context.isDefaultLauncher() }.getOrDefault(false)) return true
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
-        val rm = context.getSystemService(RoleManager::class.java) ?: return false
-        return runCatching {
-            listOf(RoleManager.ROLE_DIALER, RoleManager.ROLE_CALL_SCREENING).any {
-                rm.isRoleAvailable(it) && rm.isRoleHeld(it)
-            }
-        }.getOrDefault(false)
-    }
+    /** Shared with the ringing-time card — see [InstallIdRegistry.holdsSystemDefaultRole]. */
+    private fun holdsSystemDefaultRole(context: Context): Boolean =
+        InstallIdRegistry.holdsSystemDefaultRole(context)
 
     private fun launchCallbackScreen(
         context: Context, phone: String, start: Date, end: Date, type: String

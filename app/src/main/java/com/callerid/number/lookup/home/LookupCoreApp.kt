@@ -10,11 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.multidex.MultiDex
 import com.google.firebase.FirebaseApp
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.surface.OpenPromoRegistry
+import com.callerid.admesh.surface.PromoAnchorActivity
 import com.callerid.admesh.surface.OpenPromoRegistry.isAdAvailable
 import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
@@ -47,8 +47,6 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-
-        MultiDex.install(this)
         PromoVault.getInstance(this)
 
         config.appSideloadingStatus = SIDELOADING_FALSE
@@ -62,16 +60,22 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             config = LightHouseConfig(
                 apiKey = Veiled.s(BuildConfig.LH_API_KEY),
                 baseUrl = Veiled.s(BuildConfig.LH_BASE_URL),
+                
+                attributionWaitMs = 5_000L,
                 richPushActivity = ShellSurfaceScreen::class.java,
             ),
         )
+        
+        if (BuildConfig.DEBUG) {
+            LightHouse.debugForceInstallSource(
+                if (PromoAnchorActivity.DEBUG_AUDIENCE_MARKETING) "paid" else "organic"
+            )
+        }
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 FirebaseApp.initializeApp(this@LookupCoreApp)
 
                 PermitEngine.init(this@LookupCoreApp)
-
-                LiveConfigListener.start(this@LookupCoreApp)
             } catch (e: Exception) {
                 LogRail.log("CallerPhoneLookApp", "LightHouse init failed: ${e.message}")
             }
@@ -82,6 +86,15 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             object : DefaultLifecycleObserver {
                 override fun onStart(owner: LifecycleOwner) {
                     handleAppForeground()
+                    
+                    LiveConfigListener.start(this@LookupCoreApp)
+                    
+                    LiveConfigListener.refreshIfStale(this@LookupCoreApp)
+                }
+
+                override fun onStop(owner: LifecycleOwner) {
+                    
+                    LiveConfigListener.stop()
                 }
             }
         )

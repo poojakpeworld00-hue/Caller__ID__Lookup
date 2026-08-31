@@ -5,11 +5,13 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
+import android.view.View
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.callerid.admesh.engine.PerScreenPromo
+import com.callerid.admesh.engine.PromoVault
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.databinding.BoardCallerPanelBinding
 import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity
@@ -67,12 +69,27 @@ class CallPanel(
 
     fun onPanelOpened() {
         val host = activity ?: return
+        val container = binding.bannerSlotVw.bannerAdFrameVw
+
+        
+        if (!PerScreenPromo.resolve(host, BANNER_SCREEN_KEY).show ||
+            !PromoVault.getInstance(host).getBoolean("IsAdsON")
+        ) {
+            container.removeAllViews()
+            container.visibility = View.GONE
+            binding.bannerSlotVw.bannerShimmerVw.stopShimmer()
+            binding.bannerSlotVw.bannerShimmerVw.visibility = View.GONE
+            binding.callerAdBannerDividerVw.followAdContainer(container)
+            
+            bannerRequested = false
+            return
+        }
+
         val now = SystemClock.elapsedRealtime()
         if (bannerRequested && now - lastBannerAt < MIN_REFRESH_MS) return
         bannerRequested = true
         lastBannerAt = now
 
-        val container = binding.bannerSlotVw.bannerAdFrameVw
         PerScreenPromo.renderAd(
             BANNER_SCREEN_KEY, host, container, binding.bannerSlotVw.bannerShimmerVw
         )

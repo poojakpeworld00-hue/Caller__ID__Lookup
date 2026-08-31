@@ -19,6 +19,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.kit.InstallIdRegistry
 import com.callerid.number.lookup.home.runtime.CallEndGuard
 import com.callerid.number.lookup.home.runtime.IdentOverlayCard
 import com.callerid.number.lookup.home.screen.ringing.RingScreenActivity
@@ -48,15 +49,19 @@ class IdentOverlayService : Service() {
             stopSelf(); return START_NOT_STICKY
         }
 
-        if (!Settings.canDrawOverlays(this)) {
-            Log.w(TAG, "SYSTEM_ALERT_WINDOW not granted — cannot show overlay")
-            stopSelf(); return START_NOT_STICKY
-        }
-
+        val canOverlay = Settings.canDrawOverlays(this)
         val keyguard = getSystemService(KEYGUARD_SERVICE) as? KeyguardManager
-        if (keyguard?.isKeyguardLocked == true) {
+        val locked = keyguard?.isKeyguardLocked == true
 
-            startActivity(RingScreenActivity.newIntent(this, number))
+        
+        if (locked || !canOverlay) {
+            if (!canOverlay && !InstallIdRegistry.holdsSystemDefaultRole(this)) {
+                
+                Log.w(TAG, "no overlay permission and no default role — no caller-ID card")
+                stopSelf(); return START_NOT_STICKY
+            }
+            runCatching { startActivity(RingScreenActivity.newIntent(this, number)) }
+                .onFailure { Log.w(TAG, "caller-ID activity start refused", it) }
             stopSelf()
             return START_NOT_STICKY
         }
@@ -147,7 +152,32 @@ class IdentOverlayService : Service() {
 
         const val EXTRA_NUMBER = "extra_number"
 
+        /**
+         * How long a start for one number suppresses a second start for the same number.
+         *
+         * The card has two triggers: [CallScreenService.onScreenCall], which fires before the
+         * phone rings whenever we hold the CallScreening role, and [PhoneStateReceiver]'s
+         * RINGING broadcast, which is the only trigger without the role. When we do hold it
+         * both fire for the same call, milliseconds apart — this window swallows the second.
+         *
+         * It has to be a plain timestamp rather than an "is the service running" flag: on a
+         * locked device the service hands off to [RingScreenActivity] and immediately stops
+         * itself, so by the time the broadcast lands there is no service left to check and
+         * the hand-off would happen twice.
+         */
+        private const val DEDUPE_WINDOW_MS = 5_000L
+
+        private var lastStartedNumber: String? = null
+        private var lastStartedAt = 0L
+
         fun start(context: Context, number: String) {
+            if (isDuplicateStart(number)) {
+                Log.d(TAG, "card already raised for $number — duplicate start ignored")
+                return
+            }
+            lastStartedNumber = number
+            lastStartedAt = System.currentTimeMillis()
+
             val intent = Intent(context, IdentOverlayService::class.java)
                 .putExtra(EXTRA_NUMBER, number)
             runCatching {
@@ -161,7 +191,26 @@ class IdentOverlayService : Service() {
         }
 
         fun stop(context: Context) {
+            
+            lastStartedNumber = null
+            lastStartedAt = 0L
             runCatching { context.stopService(Intent(context, IdentOverlayService::class.java)) }
+        }
+
+        private fun isDuplicateStart(number: String): Boolean {
+            val previous = lastStartedNumber ?: return false
+            if (System.currentTimeMillis() - lastStartedAt > DEDUPE_WINDOW_MS) return false
+            return sameNumber(previous, number)
+        }
+
+        /**
+         * Compares on the last 10 digits: the screening service reports the raw SIP/tel
+         * handle while the broadcast can carry a locally formatted one, and a strict
+         * equals would let the duplicate through.
+         */
+        private fun sameNumber(a: String, b: String): Boolean {
+            val x = a.filter(Char::isDigit).takeLast(10)
+            return x.isNotEmpty() && x == b.filter(Char::isDigit).takeLast(10)
         }
     }
 }

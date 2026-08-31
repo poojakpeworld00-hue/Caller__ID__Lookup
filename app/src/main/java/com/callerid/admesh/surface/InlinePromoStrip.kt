@@ -141,7 +141,8 @@ class InlinePromoStrip {
                         } else {
 
                             if (adsPref.getBoolean("IsFail_FB")) {
-                                showFBNativeBannerFallback(context, layout)
+                                
+                                showFBNativeBannerFallback(context, layout, shimmer)
                             } else {
                                 layout.removeAllViews()
                                 shimmer?.stopShimmer()
@@ -153,12 +154,18 @@ class InlinePromoStrip {
                         }
                     } catch (e: Exception) {
                         Log.e("InlinePromoStrip", "Google NativeBanner failed: ${e.message}")
+                        
+                        runCatching {
+                            shimmer?.stopShimmer()
+                            shimmer?.isVisible = false
+                            layout.removeAllViews()
+                        }
                     }
                 }
             }
 
             PromoKind.FACEBOOK -> {
-                showFBNativeBannerFallback(context, layout)
+                showFBNativeBannerFallback(context, layout, shimmer)
             }
 
             PromoKind.UNKNOWN, PromoKind.CUSTOM -> {

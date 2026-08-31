@@ -91,6 +91,14 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         finishAffinity()
     }
 
+    /** The shell is the whole screen here — there is nothing else it could cover. */
+    override val isShellOnScreen: Boolean get() = true
+
+    /** The shell is always the visible surface here, so its own Snackbar is the right place. */
+    override fun showUpdateReadyPrompt() {
+        homeShellController.shell?.showUpdateReadyPrompt()
+    }
+
     override fun bringHostToFront() {
         runCatching {
             startActivity(

@@ -80,6 +80,23 @@ class PromoVault constructor(context: Context) {
         get() = preferences.getString("user_City", "") ?: ""
         set(value) = preferences.edit { putString("user_City", value) }
 
+    /**
+     * True when this device's IP location fell inside the `CountryList_Counter_NShow`
+     * "do not show" list — the same match that forces `HD_VBC_Show` off at splash
+     * (see PromoAnchorActivity.funOnAdsLoad). The literal `all` in that list matches
+     * every location, so it turns this on worldwide.
+     *
+     * Surfaces that must stay quiet in those regions read this instead of re-resolving
+     * the location: the Display-Overlay permission gate ([OverlayKit.isOfferable]) is
+     * the first of them.
+     *
+     * Persisted, so it is already correct from the second launch onward; on a cold first
+     * run it stays false until the IP lookup lands.
+     */
+    var isNShowLocation: Boolean
+        get() = preferences.getBoolean("country_nshow_match", false)
+        set(value) = preferences.edit { putBoolean("country_nshow_match", value) }
+
     var termssPermissions: Boolean
         get() = preferences.getBoolean(VD_TERMS_PERMISSIONS_GRANTED, false)
         set(value) = preferences.edit { putBoolean(VD_TERMS_PERMISSIONS_GRANTED, value) }
