@@ -32,16 +32,16 @@
     <string name="onboarding_skip">跳过</string>
     <string name="onboarding_next">下一步</string>
     <string name="onboarding_title">知道是谁来电</string>
-    <string name="onboarding_desc">陌生号码即刻有名字，看清谁在打、从哪打来，骚扰来电在第一声铃响前就被挡下。</string>
-    <string name="onboarding_title_2">拦截垃圾与诈骗</string>
-    <string name="onboarding_desc_2">骚扰、诈骗与录音来电会被识别并挡下，不再打扰到你。</string>
+    <string name="onboarding_desc">一眼认出陌生号码的名字，看清谁在打来、来自哪里，并在第一声铃响前拒接你拉黑的号码。</string>
+    <string name="onboarding_title_2">拦截不想接的来电</string>
+    <string name="onboarding_desc_2">黑名单中的号码在响铃前就被拒接，被举报为骚扰的来电会在接入时标出。</string>
     <string name="onboarding_title_3">查询任意号码</string>
     <string name="onboarding_desc_3">查询任意陌生号码，看清背后是谁 —— 名字、所在地、从事什么。</string>
     <string name="onboarding_get_started">开始使用</string>
 
     
     <string name="home_title">您已受到保护</string>
-    <string name="home_subtitle">来电识别和垃圾拦截已启用</string>
+    <string name="home_subtitle">来电识别已开启，黑名单正在生效</string>
     <string name="home_greeting">早上好</string>
     <string name="home_search_hint">搜索姓名或号码…</string>
     <string name="home_protection_active">保护已启用</string>

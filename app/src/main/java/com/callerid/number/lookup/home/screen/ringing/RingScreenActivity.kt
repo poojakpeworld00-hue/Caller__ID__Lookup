@@ -52,13 +52,8 @@ class RingScreenActivity : AppCompatActivity() {
         card.findViewById<View>(R.id.padIncallClose).setOnClickListener { finish() }
 
         lifecycleScope.launch {
-            val info = withContext(Dispatchers.IO) {
-                IdentOverlayCard.resolve(
-                    this@RingScreenActivity,
-                    number
-                )
-            }
-            IdentOverlayCard.bind(this@RingScreenActivity, card, number, info)
+            
+            IdentOverlayCard.bindResolving(this@RingScreenActivity, card, number)
         }
 
         val filter = IntentFilter(PhoneStateReceiver.ACTION_CALL_ENDED)

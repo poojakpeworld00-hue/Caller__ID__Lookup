@@ -32,16 +32,16 @@
     <string name="onboarding_skip">Пропустить</string>
     <string name="onboarding_next">Далее</string>
     <string name="onboarding_title">Узнайте, кто звонит</string>
-    <string name="onboarding_desc">Называйте незнакомые номера сразу, смотрите, кто звонит и откуда, и отсекайте назойливые вызовы до первого гудка.</string>
-    <string name="onboarding_title_2">Блокируйте спам и мошенников</string>
-    <string name="onboarding_desc_2">Назойливые, мошеннические и записанные звонки распознаются и отсекаются, чтобы перестать до вас доходить.</string>
+    <string name="onboarding_desc">Сразу узнавайте имя за незнакомым номером, кто звонит и откуда, и отклоняйте заблокированные номера до первого гудка.</string>
+    <string name="onboarding_title_2">Блокируйте нежелательных абонентов</string>
+    <string name="onboarding_desc_2">Номера из вашего списка блокировки отклоняются ещё до звонка, а номера с жалобами на спам отмечаются сразу при входящем.</string>
     <string name="onboarding_title_3">Ищите любой номер</string>
     <string name="onboarding_desc_3">Найдите любой незнакомый номер и узнайте, кто за ним: имя, где находится, чем занимается.</string>
     <string name="onboarding_get_started">Начать</string>
 
     
     <string name="home_title">Вы под защитой</string>
-    <string name="home_subtitle">Определитель номера и блокировка спама активны</string>
+    <string name="home_subtitle">Определитель номера включён, список блокировки работает</string>
     <string name="home_greeting">Доброе утро</string>
     <string name="home_search_hint">Поиск по имени или номеру…</string>
     <string name="home_protection_active">Защита активна</string>

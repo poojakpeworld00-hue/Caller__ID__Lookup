@@ -32,16 +32,16 @@
     <string name="onboarding_skip">Atla</string>
     <string name="onboarding_next">İleri</string>
     <string name="onboarding_title">Kimin aradığını bilin</string>
-    <string name="onboarding_desc">Tanınmayan numaraları anında adlandırın, kimin nereden aradığını görün ve rahatsız edici aramaları ilk çalıştan önce savın.</string>
-    <string name="onboarding_title_2">Spam ve dolandırıcılığı engelleyin</string>
-    <string name="onboarding_desc_2">Rahatsız edici, dolandırıcı ve kayıtlı aramalar yakalanır ve savulur, size ulaşmayı bırakır.</string>
+    <string name="onboarding_desc">Tanımadığınız numaralara anında isim verin, kimin nereden aradığını görün ve engellediğiniz numaraları ilk çalıştan önce reddedin.</string>
+    <string name="onboarding_title_2">İstenmeyen arayanları engelleyin</string>
+    <string name="onboarding_desc_2">Engelleme listenizdeki numaralar telefon çalmadan reddedilir, spam olarak bildirilen aramalar geldiği anda işaretlenir.</string>
     <string name="onboarding_title_3">Herhangi bir numarayı sorgulayın</string>
     <string name="onboarding_desc_3">Tanınmayan herhangi bir numarayı arayın ve arkasındakini görün: ad, yer, iş.</string>
     <string name="onboarding_get_started">Başla</string>
 
     
     <string name="home_title">Korunuyorsunuz</string>
-    <string name="home_subtitle">Arayan kimliği ve spam engelleme etkin</string>
+    <string name="home_subtitle">Arayan kimliği açık ve engelleme listeniz etkin</string>
     <string name="home_greeting">Günaydın</string>
     <string name="home_search_hint">Ad veya numara ara…</string>
     <string name="home_protection_active">Koruma etkin</string>

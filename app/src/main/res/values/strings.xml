@@ -56,9 +56,9 @@
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_title">Know who\'s calling</string>
-    <string name="onboarding_desc">Put a name to unfamiliar numbers on sight, see who is calling and where from, and stop nuisance calls before the first ring.</string>
-    <string name="onboarding_title_2">Block spam &amp; fraud</string>
-    <string name="onboarding_desc_2">Nuisance, scam and recorded calls get spotted and shut out, so they stop reaching you.</string>
+    <string name="onboarding_desc">Put a name to unfamiliar numbers on sight, see who is calling and where from, and reject the numbers you block before the first ring.</string>
+    <string name="onboarding_title_2">Block unwanted callers</string>
+    <string name="onboarding_desc_2">Numbers on your block list are rejected before your phone rings, and calls reported as spam are flagged the moment they come in.</string>
     <string name="onboarding_title_3">Search any number</string>
     <string name="onboarding_desc_3">Search any unfamiliar number and see the caller behind it — name, where they are, what they do.</string>
     <string name="onboarding_get_started">Get Started</string>
@@ -67,7 +67,7 @@
 
     
     <string name="home_title">You\'re protected</string>
-    <string name="home_subtitle">Caller ID and spam blocking are active</string>
+    <string name="home_subtitle">Caller ID is on and your block list is active</string>
     <string name="home_greeting">Good morning 👋</string>
     <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Phone Lookup</string>
@@ -399,6 +399,7 @@
     <string name="incall_incoming">Incoming Call</string>
     <string name="incall_known">Known Contact</string>
     <string name="incall_unknown">Unknown</string>
+    <string name="incall_spam">Spam</string>
     <string name="incall_now">Now</string>
     <string name="incall_calls">%1$d calls</string>
     <string name="incall_service_active">Caller ID active</string>

@@ -32,16 +32,16 @@
     <string name="onboarding_skip">ข้าม</string>
     <string name="onboarding_next">ถัดไป</string>
     <string name="onboarding_title">รู้ว่าใครโทรมา</string>
-    <string name="onboarding_desc">ระบุชื่อเบอร์แปลกหน้าได้ทันที เห็นว่าใครโทรมาจากที่ไหน และกันสายกวนใจก่อนเสียงเรียกเข้าแรก</string>
-    <string name="onboarding_title_2">บล็อกสแปมและการฉ้อโกง</string>
-    <string name="onboarding_desc_2">สายกวนใจ สายหลอกลวง และสายอัดเสียงจะถูกจับได้และกันออก จนเลิกมาถึงคุณ</string>
+    <string name="onboarding_desc">รู้ชื่อเบอร์แปลกได้ทันที ดูว่าใครโทรมาจากที่ไหน และปฏิเสธเบอร์ที่คุณบล็อกก่อนเสียงเรียกเข้าแรก</string>
+    <string name="onboarding_title_2">บล็อกสายที่ไม่ต้องการ</string>
+    <string name="onboarding_desc_2">เบอร์ในรายการบล็อกจะถูกปฏิเสธก่อนเครื่องดัง และสายที่ถูกรายงานว่าเป็นสแปมจะถูกทำเครื่องหมายทันทีที่โทรเข้า</string>
     <string name="onboarding_title_3">ค้นหาหมายเลขใดก็ได้</string>
     <string name="onboarding_desc_3">ค้นเบอร์แปลกหน้าใดก็ได้แล้วเห็นว่าใครอยู่เบื้องหลัง — ชื่อ ที่อยู่ กิจการ</string>
     <string name="onboarding_get_started">เริ่มต้นใช้งาน</string>
 
     
     <string name="home_title">คุณได้รับการปกป้อง</string>
-    <string name="home_subtitle">การระบุผู้โทรและการบล็อกสแปมกำลังทำงาน</string>
+    <string name="home_subtitle">การระบุผู้โทรเปิดอยู่ และรายการบล็อกกำลังทำงาน</string>
     <string name="home_greeting">อรุณสวัสดิ์</string>
     <string name="home_search_hint">ค้นหาชื่อหรือหมายเลข…</string>
     <string name="home_protection_active">การป้องกันกำลังทำงาน</string>

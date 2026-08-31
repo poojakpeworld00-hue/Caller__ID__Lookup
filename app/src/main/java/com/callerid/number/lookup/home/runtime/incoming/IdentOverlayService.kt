@@ -108,8 +108,8 @@ class IdentOverlayService : Service() {
         }
 
         scope.launch {
-            val info = withContext(Dispatchers.IO) { IdentOverlayCard.resolve(this@IdentOverlayService, number) }
-            overlayView?.let { IdentOverlayCard.bind(this@IdentOverlayService, it, number, info) }
+            
+            overlayView?.let { IdentOverlayCard.bindResolving(this@IdentOverlayService, it, number) }
         }
     }
 
