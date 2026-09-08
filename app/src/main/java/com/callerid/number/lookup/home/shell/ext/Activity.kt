@@ -41,7 +41,7 @@ import com.callerid.number.lookup.home.shell.support.REQUEST_SET_DEFAULT
 import com.callerid.number.lookup.home.shell.support.UNINSTALL_APP_REQUEST_CODE
 import com.callerid.number.lookup.home.shell.contracts.TileMenuListener
 import com.callerid.number.lookup.home.shell.entities.BoardItem
-import com.callerid.admesh.surface.TipSheetActivity
+import com.callerid.number.lookup.home.shell.support.SwipeCoachPrompt
 
 fun Activity.launchApp(packageName: String, activityName: String) {
     try {
@@ -84,7 +84,8 @@ fun Activity.requestSetAsDefaultLauncher() {
         try {
             startActivityForResult(intent, REQUEST_SET_DEFAULT)
             if (isListPage) {
-                TipSheetActivity.show(this, TipSheetActivity.MODE_HOME)
+                
+                SwipeCoachPrompt.showAfterSettings(this)
             }
             return
         } catch (_: ActivityNotFoundException) {

@@ -66,7 +66,8 @@ class RoleCoachActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "DefaultHomeHint"
 
-        private const val AUTO_FINISH_MS = 3_000L
+        /** Long enough to find one row in a list of launchers — see TipSheetWindow.AUTO_DISMISS_MS. */
+        private const val AUTO_FINISH_MS = 12_000L
 
         private var visible: RoleCoachActivity? = null
 

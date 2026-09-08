@@ -96,6 +96,7 @@ import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_FOLDER
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_ICON
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_SHORTCUT
 import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.shell.support.SwipeCoachPrompt
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_WIDGET
 import com.callerid.number.lookup.home.shell.support.IconStore
 import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_CLOCK
@@ -524,6 +525,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     override fun onResume() {
         super.onResume()
         wasJustPaused = false
+
+        
+        SwipeCoachPrompt.dismiss()
 
         LanguageRegistry.applySaved(this)
 
@@ -1631,82 +1635,115 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         return allApps
     }
 
+    /**
+     * Puts the clock and the search pill on page 0 the first time the home screen is built.
+     *
+     * Per widget, and only marked done once the widget is actually there. The first version
+     * set both flags before placing anything and gave up on the clock entirely whenever the
+     * top rows were not free — so one crowded first run, or one failure to allocate a widget
+     * id, left the home screen with a search pill and no clock, permanently: the flags said
+     * the job was finished. Anything that does not get placed here is retried on the next
+     * launch instead.
+     */
     private fun seedHomeWidgetsIfNeeded() {
-        val needsSearchBar = !config.wasSearchBarSeeded
-        val needsClock = !config.wasClockSeeded
-        if (!needsSearchBar && !needsClock) {
+        if (config.wasSearchBarSeeded && config.wasClockSeeded) {
             return
         }
 
-        config.wasSearchBarSeeded = true
-        config.wasClockSeeded = true
-
         try {
             val lastColumn = config.homeColumnCount - 1
-
-            val headerFits = config.homeRowCount - 1 > SEARCH_BAR_ROW
+            
+            val dockRow = config.homeRowCount - 1
 
             val pageItems = homeScreenGridItemsDB.getAllItems()
                 .filter { it.page == 0 && !it.docked && it.parentId == null }
-            val searchBar = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_SEARCH }
-            val clock = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_CLOCK }
+                .toMutableList()
 
-            val headerRowsFree = pageItems
-                .filter { it.id != searchBar?.id && it.id != clock?.id }
-                .none { item -> (0..SEARCH_BAR_ROW).any { it in item.top..item.bottom } }
+            
+            val occupiedRows = pageItems
+                .filter { it.className != PSEUDO_WIDGET_CLOCK && it.className != PSEUDO_WIDGET_SEARCH }
+                .flatMap { it.top..it.bottom }
+                .toMutableSet()
 
-            if (!headerFits || !headerRowsFree) {
-
-                if (searchBar == null) {
-                    insertPseudoWidget(
-                        className = PSEUDO_WIDGET_SEARCH,
-                        titleRes = R.string.pseudo_widget_search_bar,
-                        left = 0,
-                        top = 0,
-                        right = min(3, lastColumn),
-                        bottom = 0
-                    )
+            if (!config.wasClockSeeded) {
+                val existing = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_CLOCK }
+                if (existing != null) {
+                    
+                    config.wasClockSeeded = true
+                    occupiedRows += existing.top..existing.bottom
+                } else {
+                    val top = firstFreeRowBand(occupiedRows, CLOCK_ROW_SPAN, dockRow)
+                    if (top != null) {
+                        val bottom = top + CLOCK_ROW_SPAN - 1
+                        runCatching {
+                            insertPseudoWidget(
+                                className = PSEUDO_WIDGET_CLOCK,
+                                titleRes = R.string.pseudo_widget_clock,
+                                left = 0,
+                                top = top,
+                                right = lastColumn,
+                                bottom = bottom,
+                            )
+                        }.onSuccess {
+                            config.wasClockSeeded = true
+                            occupiedRows += top..bottom
+                        }.onFailure {
+                            Log.e(TAG, "clock could not be seeded — retrying next launch", it)
+                        }
+                    } else {
+                        Log.w(TAG, "no free rows for the clock — retrying next launch")
+                    }
                 }
-
-                return
             }
 
-            if (clock == null) {
-                insertPseudoWidget(
-                    className = PSEUDO_WIDGET_CLOCK,
-                    titleRes = R.string.pseudo_widget_clock,
-                    left = 0,
-                    top = 0,
-                    right = lastColumn,
-                    bottom = CLOCK_ROW_SPAN - 1
-                )
-            }
-
-            if (searchBar == null) {
-                insertPseudoWidget(
-                    className = PSEUDO_WIDGET_SEARCH,
-                    titleRes = R.string.pseudo_widget_search_bar,
-                    left = 0,
-                    top = SEARCH_BAR_ROW,
-                    right = lastColumn,
-                    bottom = SEARCH_BAR_ROW
-                )
-            } else {
-
-                homeScreenGridItemsDB.updateItemPosition(
-                    left = 0,
-                    top = SEARCH_BAR_ROW,
-                    right = lastColumn,
-                    bottom = SEARCH_BAR_ROW,
-                    page = 0,
-                    docked = false,
-                    parentId = null,
-                    id = searchBar.id!!
-                )
+            if (!config.wasSearchBarSeeded) {
+                val existing = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_SEARCH }
+                if (existing != null) {
+                    config.wasSearchBarSeeded = true
+                } else {
+                    
+                    val row = SEARCH_BAR_ROW.takeIf { it < dockRow && it !in occupiedRows }
+                        ?: firstFreeRowBand(occupiedRows, rows = 1, dockRow = dockRow)
+                    if (row != null) {
+                        runCatching {
+                            insertPseudoWidget(
+                                className = PSEUDO_WIDGET_SEARCH,
+                                titleRes = R.string.pseudo_widget_search_bar,
+                                left = 0,
+                                top = row,
+                                right = lastColumn,
+                                bottom = row,
+                            )
+                        }.onSuccess {
+                            config.wasSearchBarSeeded = true
+                            occupiedRows += row
+                        }.onFailure {
+                            Log.e(TAG, "search bar could not be seeded — retrying next launch", it)
+                        }
+                    } else {
+                        Log.w(TAG, "no free row for the search bar — retrying next launch")
+                    }
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to seed default home widgets", e)
         }
+    }
+
+    /**
+     * The top row of the first run of [rows] consecutive free rows above the dock, or null when
+     * the page has no room for it. Both pseudo-widgets are full width, so a row is either free
+     * or it is not — there is no column to search.
+     */
+    private fun firstFreeRowBand(occupiedRows: Set<Int>, rows: Int, dockRow: Int): Int? {
+        var top = 0
+        while (top + rows - 1 < dockRow) {
+            if ((top until top + rows).none { it in occupiedRows }) {
+                return top
+            }
+            top++
+        }
+        return null
     }
 
     private fun insertPseudoWidget(

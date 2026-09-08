@@ -18,11 +18,23 @@ import com.callerid.number.lookup.home.kit.LogRail
 
 object TipSheetWindow {
 
-    private const val AUTO_DISMISS_MS = 3_000L
+    /**
+     * How long the card stays up on its own.
+     *
+     * It has to outlast the walk to the setting it describes — opening the Settings page,
+     * scrolling a list of launchers, reading the row. Three seconds covered none of that: the
+     * card went up, sat over our own screen while Settings was still opening, and was gone
+     * before the list appeared. The poll below takes it down the moment the user actually
+     * does the thing, so a long window costs nothing.
+     */
+    private const val AUTO_DISMISS_MS = 12_000L
     private const val POLL_MS = 500L
 
     private val main = Handler(Looper.getMainLooper())
     private var shown: View? = null
+
+    /** A delayed [show] that has not fired yet, so [dismiss] can call it off. */
+    private var pendingShow: Runnable? = null
 
     fun canOverlay(context: Context): Boolean = Settings.canDrawOverlays(context.applicationContext)
 
@@ -30,7 +42,13 @@ object TipSheetWindow {
         if (delayMs > 0L) {
             val app = context.applicationContext
             if (!Settings.canDrawOverlays(app)) return false
-            main.postDelayed({ show(app, mode) }, delayMs)
+            cancelPendingShow()
+            val task = Runnable {
+                pendingShow = null
+                showNow(app, mode)
+            }
+            pendingShow = task
+            main.postDelayed(task, delayMs)
             return true
         }
         return showNow(context, mode)
@@ -96,6 +114,11 @@ object TipSheetWindow {
         }
     }
 
+    private fun cancelPendingShow() {
+        pendingShow?.let { main.removeCallbacks(it) }
+        pendingShow = null
+    }
+
     private fun poll(context: Context, mode: String) {
         main.postDelayed(object : Runnable {
             override fun run() {
@@ -106,6 +129,8 @@ object TipSheetWindow {
     }
 
     fun dismiss() {
+        
+        cancelPendingShow()
         val card = shown ?: return
         shown = null
         main.removeCallbacksAndMessages(null)
