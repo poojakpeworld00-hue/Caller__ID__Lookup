@@ -37,21 +37,22 @@ object OverlayKit {
     /**
      * True when the overlay permission may still be *offered* to this user.
      *
-     * [ASK_FOR_OVERLAY] switches the whole thing off. While it is on, two further gates apply,
-     * either one closing it:
+     * [ASK_FOR_OVERLAY] switches the whole thing off. While it is on, one gate decides:
+     * **are we the default launcher?**
      *
-     *  1. **We are the default launcher.** Holding `ROLE_HOME` is itself a
-     *     background-activity-start exemption, so the caller-ID screens already start through
-     *     it (see [InstallIdRegistry.holdsSystemDefaultRole]) and asking for "display over
-     *     other apps" on top buys nothing. Checked live, because the role can be granted
-     *     mid-session by the set-as-default onboarding step. The trade-off is deliberate: the
-     *     ringing-time card genuinely needs a WindowManager overlay, so on an unlocked phone a
-     *     launcher user gets the full-screen card instead.
-     *  2. **The IP-location "do not show" gate** — `Iscountry_Counter` +
-     *     `CountryList_Counter_NShow`, resolved once at splash into
-     *     [PromoVault.isNShowLocation]. Put a country / region / city in that list and the
-     *     permission disappears there; put the literal `all` in it and it disappears
-     *     worldwide.
+     * Holding `ROLE_HOME` is itself a background-activity-start exemption, so the caller-ID
+     * screens already start through it (see [InstallIdRegistry.holdsSystemDefaultRole]) and
+     * asking for "display over other apps" on top buys nothing. Checked live, because the role
+     * can be granted mid-session by the set-as-default onboarding step. The trade-off is
+     * deliberate: the ringing-time card genuinely needs a WindowManager overlay, so on an
+     * unlocked phone a launcher user gets the full-screen card instead.
+     *
+     * Everyone else is asked — a user who sets no default has neither route, so without the
+     * overlay there is no caller-ID card at all. The IP-location `CountryList_Counter_NShow`
+     * list deliberately does NOT gate this: it exists to keep the HD_VBC house surfaces quiet
+     * in a region, and taking the caller-ID card away from every non-launcher user there was a
+     * side effect, not the intent. It still gates those surfaces through
+     * [PromoVault.isNShowLocation]; it just no longer decides who may be asked for the overlay.
      *
      * Every surface that *asks* for the overlay honours this — the permission sheet row,
      * Home's Enable banner, the Terms step. It says nothing about a permission the user has
@@ -60,8 +61,7 @@ object OverlayKit {
      */
     fun isOfferable(context: Context): Boolean {
         if (!ASK_FOR_OVERLAY) return false
-        if (runCatching { context.isDefaultLauncher() }.getOrDefault(false)) return false
-        return !PromoVault.getInstance(context).isNShowLocation
+        return !runCatching { context.isDefaultLauncher() }.getOrDefault(false)
     }
 
     fun buildOverlayIntent(packageName: String): Intent =
