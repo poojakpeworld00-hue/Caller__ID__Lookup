@@ -8,6 +8,7 @@ import android.provider.Settings
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.surface.TipSheetActivity
 import com.callerid.number.lookup.home.kit.InstallIdRegistry
+import com.callerid.number.lookup.home.runtime.incoming.IdentOverlayService
 import com.callerid.number.lookup.home.runtime.incoming.PhoneStateReceiver
 import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
 
@@ -19,21 +20,24 @@ object OverlayKit {
     /**
      * Master switch for asking the user for "display over other apps".
      *
-     * **Off.** The app does not request the overlay permission any more: the post-call screen
-     * reaches the user through the default-role background-start exemption (see
-     * [PhoneStateReceiver.handlePostCall]) or its full-screen-intent notification, and the
-     * ringing-time card still comes up as an activity — so the prompt was buying too little
-     * to be worth asking for.
+     * **On**, so the prompt reaches the users who actually need it. It was off while the app
+     * assumed it would hold a default role — the post-call screen reaches those users through
+     * the role's background-start exemption (see [PhoneStateReceiver.handlePostCall]) or a
+     * full-screen-intent notification, which made the prompt look like it was buying nothing.
+     * It buys everything for a user who sets no default: without the role *and* without the
+     * overlay there is no background-activity start at all, and [IdentOverlayService] gives up
+     * on the caller-ID card entirely.
      *
-     * Flip this to `true` to bring every overlay prompt back; the per-user gates in
-     * [isOfferable] below are still wired and take over from there.
+     * Which user gets asked is [isOfferable]'s job, and its default-launcher gate is what
+     * keeps this from asking role holders for something they do not need. Set this back to
+     * `false` to switch every overlay prompt off again.
      */
-    private const val ASK_FOR_OVERLAY = false
+    private const val ASK_FOR_OVERLAY = true
 
     /**
      * True when the overlay permission may still be *offered* to this user.
      *
-     * [ASK_FOR_OVERLAY] switches the whole thing off. When it is on, two further gates apply,
+     * [ASK_FOR_OVERLAY] switches the whole thing off. While it is on, two further gates apply,
      * either one closing it:
      *
      *  1. **We are the default launcher.** Holding `ROLE_HOME` is itself a

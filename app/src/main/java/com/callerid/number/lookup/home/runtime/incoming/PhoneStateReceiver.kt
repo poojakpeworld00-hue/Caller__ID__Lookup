@@ -214,6 +214,10 @@ class PhoneStateReceiver : BroadcastReceiver() {
         context: Context, phone: String, start: Date, end: Date, type: String
     ) {
         Log.e(TAG, "showFullScreenNotification: ")
+        if (!SHOW_POST_CALL_NOTIFICATION) {
+            Log.d(TAG, "post-call notification disabled — nothing to show")
+            return
+        }
         if (ShellSurfaceScreen.isActive || RingScreenActivity.isActive) {
             Log.d(TAG, "post-call screen in foreground — suppressing notification")
             return
@@ -265,6 +269,21 @@ class PhoneStateReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "PhoneStateReceiver"
+
+        /**
+         * Whether the post-call summary may fall back to a notification when it cannot open
+         * its screen.
+         *
+         * **Off.** It is the "Call ended: <number> / Tap to see the call summary" heads-up,
+         * and it fires on exactly the installs that grant the app the least — no overlay
+         * permission and no default role — which is where it reads as an app notifying about
+         * a call the user just had rather than as part of hanging up.
+         *
+         * The cost of leaving it off is the case it was added for: such a user now sees
+         * nothing at all after a call, because every other route to [ShellSurfaceScreen] is a
+         * background-activity start the system blocks. Set back to `true` to restore it.
+         */
+        private const val SHOW_POST_CALL_NOTIFICATION = false
 
         private const val CALLBACK_CONFIRM_MS = 1_500L
         const val ACTION_CALL_ENDED = "com.callerid.number.lookup.home.CALL_ENDED"
