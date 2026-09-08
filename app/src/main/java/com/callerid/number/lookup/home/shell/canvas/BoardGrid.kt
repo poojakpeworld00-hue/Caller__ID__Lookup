@@ -714,6 +714,15 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                             }
                         }
                     }
+
+                
+                if (!isDroppingPositionValid && potentialParent == null) {
+                    nearestFreeCell(wantedCell)?.let { freeCell ->
+                        xIndex = freeCell.first
+                        yIndex = freeCell.second
+                        isDroppingPositionValid = true
+                    }
+                }
             }
         }
 
@@ -1158,12 +1167,14 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                     }
 
                     PSEUDO_WIDGET_CLOCK -> {
-
+                        
                         findViewById<View>(R.id.widget_text_clockVw)?.setOnClickListener {
                             activity.openClockApp()
                         }
-                        findViewById<View>(R.id.widget_dateVw)?.setOnClickListener {
-                            activity.openCalendarApp()
+                        listOf(R.id.widget_weekdayVw, R.id.widget_dateVw).forEach { id ->
+                            findViewById<View>(id)?.setOnClickListener {
+                                activity.openCalendarApp()
+                            }
                         }
                     }
                 }
@@ -1243,6 +1254,49 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
             cell.left + sideMargins.left,
             cell.top + sideMargins.top
         )
+    }
+
+    /**
+     * The free cell closest to [fromCell] on the current page, or null when the page is full.
+     *
+     * Distance is Manhattan in grid cells, scanned top-left first, so a blocked drop lands on the
+     * nearest empty slot and ties resolve to the upper-left one — predictable for the user
+     * repeating the gesture.
+     *
+     * The dock row is deliberately out of scope: a drop that missed the body of the page should
+     * not silently become a docked icon.
+     */
+    private fun nearestFreeCell(fromCell: Pair<Int, Int>): Pair<Int, Int>? {
+        val occupied = HashSet<Pair<Int, Int>>()
+        gridItems.filterVisibleOnCurrentPageOnly()
+            .filter { it.id != draggedItem?.id }
+            .forEach { item ->
+                for (x in item.left..item.right) {
+                    for (
+                    y in item.getDockAdjustedTop(rowCount)
+                        .rangeTo(item.getDockAdjustedBottom(rowCount))
+                    ) {
+                        occupied += Pair(x, y)
+                    }
+                }
+            }
+
+        var best: Pair<Int, Int>? = null
+        var bestDistance = Int.MAX_VALUE
+        for (y in 0..rowCount - 2) {
+            for (x in 0 until columnCount) {
+                val cell = Pair(x, y)
+                if (cell in occupied) {
+                    continue
+                }
+                val distance = abs(x - fromCell.first) + abs(y - fromCell.second)
+                if (distance < bestDistance) {
+                    bestDistance = distance
+                    best = cell
+                }
+            }
+        }
+        return best
     }
 
     private fun getClosestGridCells(center: Point): Point? {
@@ -1869,6 +1923,17 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
         pager.finalizeSwipe()
     }
 
+    /**
+     * True while a horizontal drag is sitting partway between two pages.
+     *
+     * The gesture belongs to paging from that point on, and [HomeBoardActivity] checks this
+     * before letting a fling claim the same gesture for a side panel. A fling that claims it
+     * suppresses the ACTION_UP that would call [finalizeSwipe], which leaves the grid frozen
+     * between two pages and the stale swipe offset waiting to be applied to whatever gesture
+     * comes next.
+     */
+    fun isPageSwipeInProgress() = pager.isSwiped()
+
     fun openFolder(folder: BoardItem) {
         if (currentlyOpenFolder == null) {
             currentlyOpenFolder = folder.toFolder(animateOpening = true)
@@ -2331,20 +2396,15 @@ private class GridPagerAnim(
             return
         }
 
-        if (abs(pageChangeSwipedPercentage) > 0.5f) {
+        val target = if (pageChangeSwipedPercentage > 0f) currentPage - 1 else currentPage + 1
+
+        
+        if (abs(pageChangeSwipedPercentage) > 0.5f && target in 0..getMaxPage()) {
             lastPage = currentPage
-            currentPage = if (pageChangeSwipedPercentage > 0f) {
-                currentPage - 1
-            } else {
-                currentPage + 1
-            }
+            currentPage = target
             handlePageChange(true)
         } else {
-            lastPage = if (pageChangeSwipedPercentage > 0f) {
-                currentPage - 1
-            } else {
-                currentPage + 1
-            }
+            lastPage = target
             pageChangeSwipedPercentage =
                 sign(pageChangeSwipedPercentage) * (1 - abs(pageChangeSwipedPercentage))
             handlePageChange(true)

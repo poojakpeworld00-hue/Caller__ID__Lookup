@@ -19,6 +19,7 @@ class FauxClockWidget @JvmOverloads constructor(
     attrs: AttributeSet? = null,
 ) : LinearLayout(context, attrs) {
 
+    private var weekday: TextView? = null
     private var time: TextView? = null
     private var day: TextView? = null
     private var isReceiverRegistered = false
@@ -29,6 +30,7 @@ class FauxClockWidget @JvmOverloads constructor(
 
     override fun onFinishInflate() {
         super.onFinishInflate()
+        weekday = findViewById(R.id.widget_weekdayVw)
         time = findViewById(R.id.widget_text_clockVw)
         day = findViewById(R.id.widget_dateVw)
         refresh()
@@ -74,13 +76,18 @@ class FauxClockWidget @JvmOverloads constructor(
         val locale = Locale.getDefault()
         val timePattern = if (DateFormat.is24HourFormat(context)) HOUR_24 else HOUR_12
 
+        weekday?.text = SimpleDateFormat(WEEKDAY, locale).format(now)
         time?.text = SimpleDateFormat(timePattern, locale).format(now)
-        day?.text = SimpleDateFormat(WEEKDAY, locale).format(now)
+        
+        day?.text = SimpleDateFormat(
+            DateFormat.getBestDateTimePattern(locale, DAY_MONTH), locale
+        ).format(now)
     }
 
     companion object {
         private const val HOUR_24 = "HH:mm"
         private const val HOUR_12 = "h:mm"
         private const val WEEKDAY = "EEEE"
+        private const val DAY_MONTH = "dMMMM"
     }
 }

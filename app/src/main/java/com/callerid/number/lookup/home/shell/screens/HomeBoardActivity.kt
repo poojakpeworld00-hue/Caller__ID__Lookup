@@ -780,9 +780,11 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                         }
                     }
 
-                    if (!mIgnoreXMoveEvents) {
-                        binding.homeScreenGridVw.root.finalizeSwipe()
-                    }
+                }
+
+                
+                if (!mIgnoreXMoveEvents) {
+                    binding.homeScreenGridVw.root.finalizeSwipe()
                 }
 
                 mIgnoreXMoveEvents = false
@@ -1499,8 +1501,22 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
     }
 
+    /**
+     * True when the horizontal gesture in flight is already dragging the home grid between pages.
+     *
+     * A page drag ends with velocity, so the same gesture also arrives as a fling. Letting the
+     * fling claim it set `mIgnoreUpEvent`, which suppressed the [MotionEvent.ACTION_UP] branch
+     * that calls `finalizeSwipe()` — the grid stayed frozen part-way between two pages and the
+     * abandoned swipe offset was applied to whatever gesture came next. Paging owns the gesture
+     * once it has started; the panels still get every fling the grid cannot page on, which is
+     * any fling on a single-page home screen, a right fling on the first page and a left fling
+     * on the last.
+     */
+    private fun isPagingTheHomeScreen() = binding.homeScreenGridVw.root.isPageSwipeInProgress()
+
     override fun onFlingRight() {
-        if (mIgnoreXMoveEvents) {
+        
+        if (mIgnoreXMoveEvents || isPagingTheHomeScreen()) {
             return
         }
 
@@ -1518,7 +1534,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     override fun onFlingLeft() {
-        if (mIgnoreXMoveEvents) {
+        
+        if (mIgnoreXMoveEvents || isPagingTheHomeScreen()) {
             return
         }
 

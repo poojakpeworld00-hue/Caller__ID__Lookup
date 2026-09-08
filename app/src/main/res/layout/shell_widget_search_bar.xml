@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Search pill sitting on the home screen. Tapping anywhere on it opens the app search
+    panel with the field already focused, so the whole pill is one target — which is also
+    why there are no separate controls inside it to compete for the tap.
 
+    Light fill with dark-grey content, so it reads against a wallpaper rather than relying
+    on the wallpaper being dark.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="44dp"
+    android:layout_height="52dp"
     android:layout_gravity="center"
     android:layout_margin="4dp"
     android:background="@drawable/form_faux_search_bar"
     android:elevation="2dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp">
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp">
 
     <ImageView
         android:id="@+id/search_bar_iconVw"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:contentDescription="@string/pseudo_widget_search_bar"
-        android:src="@drawable/sym_pseudo_search_vector" />
+        android:src="@drawable/sym_pseudo_search_vector"
+        android:tint="#5F6368" />
 
     <TextView
         android:id="@+id/search_bar_hintVw"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:fontFamily="@font/nunito_semibold"
         android:maxLines="1"
         android:text="@string/pseudo_widget_search_bar_hint"
-        android:textColor="#e6ffffff"
-        android:textSize="14sp" />
+        android:textColor="#5F6368"
+        android:textSize="16sp" />
 
 </LinearLayout>
