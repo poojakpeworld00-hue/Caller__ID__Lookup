@@ -141,7 +141,17 @@ object PromoConfigLoader {
             adsPreference.putString("NativeTheme_marketing", marketingStr)
             adsPreference.putString("NativeTheme_default", defaultStr)
 
-            val themeJson = defaultObj?.optJSONObject(modeKey)
+            
+            val onMarketing = adsPreference.getBoolean("OnMaketing")
+            val audienceObj = if (onMarketing) marketingObj ?: defaultObj else defaultObj
+            val themeJson = audienceObj?.optJSONObject(modeKey)
+
+            if (BuildConfig.DEBUG) Log.d(
+                CONFIG_TAG,
+                "native theme ← ${if (onMarketing) "marketing" else "default"}" +
+                    (if (onMarketing && marketingObj == null) " (absent, fell back to default)" else "") +
+                    " / $modeKey"
+            )
 
             if (themeJson != null) {
                 adsPreference.putString("NativebtnColor", themeJson.optString("btnColor"))

@@ -922,7 +922,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                 seedHomeWidgetsIfNeeded()
                 binding.homeScreenGridVw.root.fetchGridItems()
             }
-        } else if (!config.wasSearchBarSeeded || !config.wasClockSeeded) {
+        } else if (!config.wasSearchBarSeeded || !config.wasClockSeeded ||
+            !config.wasHomeWidgetsRepaired
+        ) {
             ensureBackgroundThread {
                 seedHomeWidgetsIfNeeded()
                 binding.homeScreenGridVw.root.fetchGridItems()
@@ -1646,10 +1648,6 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
      * launch instead.
      */
     private fun seedHomeWidgetsIfNeeded() {
-        if (config.wasSearchBarSeeded && config.wasClockSeeded) {
-            return
-        }
-
         try {
             val lastColumn = config.homeColumnCount - 1
             
@@ -1658,6 +1656,12 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             val pageItems = homeScreenGridItemsDB.getAllItems()
                 .filter { it.page == 0 && !it.docked && it.parentId == null }
                 .toMutableList()
+
+            repairSeedFlagsOnce(pageItems)
+
+            if (config.wasSearchBarSeeded && config.wasClockSeeded) {
+                return
+            }
 
             
             val occupiedRows = pageItems
@@ -1727,6 +1731,35 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to seed default home widgets", e)
+        }
+    }
+
+    /**
+     * Undoes the old seeding bug's verdict, once per install.
+     *
+     * That version set both flags before placing anything, so a first run that failed — the
+     * top rows occupied, or one widget-id allocation throwing — recorded "seeded" for a home
+     * screen that never got a clock, and no later launch would try again. This clears the flag
+     * for a pseudo-widget that is genuinely not on page 0, which lets the seeding below place
+     * it, and then marks the repair done so it never second-guesses the user again.
+     *
+     * The cost is one case: someone who deliberately deleted the clock or the search pill
+     * before this build gets it back a single time. Worth it against a home screen that is
+     * permanently missing the thing every other launcher has.
+     */
+    private fun repairSeedFlagsOnce(pageItems: List<BoardItem>) {
+        if (config.wasHomeWidgetsRepaired) {
+            return
+        }
+        config.wasHomeWidgetsRepaired = true
+
+        if (config.wasClockSeeded && pageItems.none { it.className == PSEUDO_WIDGET_CLOCK }) {
+            Log.i(TAG, "clock marked seeded but missing — seeding it again")
+            config.wasClockSeeded = false
+        }
+        if (config.wasSearchBarSeeded && pageItems.none { it.className == PSEUDO_WIDGET_SEARCH }) {
+            Log.i(TAG, "search bar marked seeded but missing — seeding it again")
+            config.wasSearchBarSeeded = false
         }
     }
 

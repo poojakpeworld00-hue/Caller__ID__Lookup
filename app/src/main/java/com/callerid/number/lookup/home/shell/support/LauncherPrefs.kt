@@ -26,6 +26,17 @@ class LauncherPrefs(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(WAS_CLOCK_SEEDED, false)
         set(wasClockSeeded) = prefs.edit().putBoolean(WAS_CLOCK_SEEDED, wasClockSeeded).apply()
 
+    /**
+     * Whether the one-time repair for the old seeding bug has run.
+     *
+     * That bug marked both widgets seeded before placing either, so an install that failed
+     * once said "done" forever. The repair clears the flag for a widget that is genuinely
+     * absent, exactly once per install, so those home screens get their clock back.
+     */
+    var wasHomeWidgetsRepaired: Boolean
+        get() = prefs.getBoolean(WAS_HOME_WIDGETS_REPAIRED, false)
+        set(value) = prefs.edit().putBoolean(WAS_HOME_WIDGETS_REPAIRED, value).apply()
+
     var wasSwipeHintShown: Boolean
         get() = prefs.getBoolean(WAS_SWIPE_HINT_SHOWN, false)
         set(wasSwipeHintShown) = prefs.edit()

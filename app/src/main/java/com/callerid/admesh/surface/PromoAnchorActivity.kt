@@ -92,6 +92,31 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
         const val DEBUG_AUDIENCE_MARKETING = true
 
+        /**
+         * Applies [DEBUG_AUDIENCE_MARKETING] to **release** builds too, instead of letting real
+         * attribution decide.
+         *
+         * A signed APK is the only way to exercise the release config — R8, the real ad units,
+         * the shrunk resources — but a release APK installed by adb or a direct download has no
+         * Play install referrer, so LightHouse settles it organic and the `marketing` half of
+         * the config can never be reached on a test device. This forces both halves of the
+         * decision (the audience read below and the SDK's own install source in `LookupCoreApp`)
+         * onto the chosen side so they agree.
+         *
+         * **Must be `false` in anything that reaches Play.** Left `true`, every real install is
+         * pinned to one audience and genuine attribution is never consulted. The splash logs a
+         * warning on every launch while it is on, so a build that ships by accident says so in
+         * logcat.
+         */
+        const val FORCE_AUDIENCE_IN_RELEASE = false
+
+        /**
+         * True when the audience is being forced rather than resolved — either because this is a
+         * debug build, or because [FORCE_AUDIENCE_IN_RELEASE] is still on.
+         */
+        val isAudienceForced: Boolean
+            get() = BuildConfig.DEBUG || FORCE_AUDIENCE_IN_RELEASE
+
         const val ATTRIBUTION_WAIT_MS = 5_000L
 
         
@@ -283,7 +308,16 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     }
                 }
 
-                val isMarketingOn =if (BuildConfig.DEBUG) {
+                val isMarketingOn = if (isAudienceForced) {
+                    
+                    if (!BuildConfig.DEBUG) {
+                        Log.w(
+                            CONFIG_TAG,
+                            "FORCE_AUDIENCE_IN_RELEASE is ON — audience pinned to " +
+                                "${if (DEBUG_AUDIENCE_MARKETING) "MARKETING" else "ORGANIC"}, " +
+                                "real attribution ignored. Turn it off before shipping."
+                        )
+                    }
                     DEBUG_AUDIENCE_MARKETING
                 } else {
                     !LightHouse.isOrganicUser(awaitReferrerMs = ATTRIBUTION_WAIT_MS)
@@ -390,7 +424,15 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 val marketingObj = JSONObject(savedMarketingStr)
                 val defaultObj = JSONObject(savedDefaultStr)
 
-                val themeSource = if (isMarketingOn) marketingObj else defaultObj
+                
+                val themeSource = when {
+                    !isMarketingOn -> defaultObj
+                    marketingObj.length() > 0 -> marketingObj
+                    else -> {
+                        Log.w(CONFIG_TAG, "no NativeTheme.marketing block — paid ads fall back to default")
+                        defaultObj
+                    }
+                }
                 val modeKey = resolveInlineThemeKey(activity)
 
                 val themeJson = themeSource.optJSONObject(modeKey)

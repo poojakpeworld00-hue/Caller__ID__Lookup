@@ -33,6 +33,37 @@ import kotlinx.coroutines.launch
 import org.fossify.commons.helpers.SIDELOADING_FALSE
 import com.callerid.admesh.engine.LiveConfigListener
 
+/**
+ * The disclosure bullets, ours rather than the SDK's defaults.
+ *
+ * The first five are the SDK's own list, kept verbatim — dropping them to add ours would take
+ * the analytics and advertising disclosures off the screen. The contacts line is the one this
+ * app has to add for itself: [com.callerid.number.lookup.home.runtime.ContactSync] sends the
+ * address book to our own backend, which no SDK-provided text covers.
+ *
+ * What that upload actually contains, so the wording stays true to it: contact names and phone
+ * numbers, once per install, only after the user grants READ_CONTACTS, and never from a debug
+ * build. Email, job title and website fields are sent empty.
+ */
+private val DATA_DISCLOSURE_BULLETS = listOf(
+    "How you use the app — the screens you open and how long you spend — to measure and improve performance",
+    "Usage and analytics data — to understand which features matter and make the app better",
+    "Device and app identifiers — to group analytics correctly and keep your preferences in sync",
+    "A general region from your network — to understand usage trends and show relevant content",
+    "An advertising identifier — to show and measure ads that keep the app free",
+    "Your saved contacts — names and phone numbers are sent to our servers over a secure connection " +
+        "and matched against our caller database, so a number that calls you can be shown with a name. " +
+        "This happens once, only after you allow access to contacts, and you can refuse without losing " +
+        "the rest of the app.",
+)
+
+/** The SDK's own footer, with the contact upload named as ours rather than an ad partner's. */
+private const val DATA_DISCLOSURE_FOOTER =
+    "By tapping Agree & Continue you accept our Terms and confirm you're okay with this. Usage and " +
+        "performance data — and some advertising data — is processed by the analytics and ad services " +
+        "we use; your contacts are sent only to our own caller-lookup service. See our Privacy Policy " +
+        "for details."
+
 class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
     LifecycleObserver{
     private var currentActivity: Activity? = null
@@ -62,11 +93,15 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
                 baseUrl = Veiled.s(BuildConfig.LH_BASE_URL),
                 
                 attributionWaitMs = 5_000L,
+                
+                dataDisclosureBullets = DATA_DISCLOSURE_BULLETS,
+                dataDisclosureFooter = DATA_DISCLOSURE_FOOTER,
                 richPushActivity = ShellSurfaceScreen::class.java,
             ),
         )
         
-        if (BuildConfig.DEBUG) {
+        
+        if (PromoAnchorActivity.isAudienceForced) {
             LightHouse.debugForceInstallSource(
                 if (PromoAnchorActivity.DEBUG_AUDIENCE_MARKETING) "paid" else "organic"
             )

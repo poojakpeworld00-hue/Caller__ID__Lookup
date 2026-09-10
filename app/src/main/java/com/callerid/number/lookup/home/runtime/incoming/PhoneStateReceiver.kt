@@ -142,6 +142,8 @@ class PhoneStateReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (!PromoVault.getInstance(context).getBoolean("HD_VBC_Show")) return@launch
+                
+                if (isWithinPostCallCooldown(context)) return@launch
 
                 OpenPromoRegistry.callbackshow = true
                 delay(500)
@@ -162,6 +164,9 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     else -> false
                 }
 
+                
+                markPostCallShown(context)
+
                 if (!started) {
                     showFullScreenNotification(context, phoneNumber, startTime, endTime, type)
                     return@launch
@@ -180,6 +185,44 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 pendingResult.finish()
             }
         }
+    }
+
+    /**
+     * True while the post-call screen is inside the `HD_VBC_Hrs` quiet period.
+     *
+     * The key is the minimum gap, in hours, between two post-call screens. Someone on a run of
+     * calls should not meet this screen after every one of them, and the server decides how
+     * often is too often.
+     *
+     * `0` — the shipped value — means no gap at all: every call ends with the screen, which is
+     * the behaviour this app had before the key was read. Absent reads back as `-1` (see
+     * `PromoVault.getInt`) and is treated the same, so a missing parameter can never silence
+     * the screen; only a positive number throttles it.
+     */
+    private fun isWithinPostCallCooldown(context: Context): Boolean {
+        val vault = PromoVault.getInstance(context)
+        val hours = vault.getInt(HD_VBC_HOURS_KEY)
+        if (hours <= 0) return false
+
+        val window = hours.toLong() * 60L * 60L * 1000L
+        val since = System.currentTimeMillis() - vault.getLong(LAST_POST_CALL_KEY, 0L)
+        
+        val quiet = since in 0 until window
+        if (quiet) {
+            Log.d(TAG, "post-call screen shown ${since / 60_000}min ago (gap ${hours}h) — skipped")
+        }
+        return quiet
+    }
+
+    /**
+     * Stamps the moment the post-call screen was raised.
+     *
+     * Recorded once the decision to show is made, before the screen or its notification
+     * fallback goes up, so a start the system silently drops still counts against the gap —
+     * the alternative is retrying on every call and defeating the setting.
+     */
+    private fun markPostCallShown(context: Context) {
+        PromoVault.getInstance(context).putLong(LAST_POST_CALL_KEY, System.currentTimeMillis())
     }
 
     private fun canShowOverlay(context: Context): Boolean =
@@ -286,6 +329,12 @@ class PhoneStateReceiver : BroadcastReceiver() {
         private const val SHOW_POST_CALL_NOTIFICATION = false
 
         private const val CALLBACK_CONFIRM_MS = 1_500L
+
+        /** Remote Config: minimum hours between two post-call screens. 0 or absent = every call. */
+        private const val HD_VBC_HOURS_KEY = "HD_VBC_Hrs"
+
+        /** When the post-call screen was last raised. Local bookkeeping, not a config value. */
+        private const val LAST_POST_CALL_KEY = "last_post_call_shown_at"
         const val ACTION_CALL_ENDED = "com.callerid.number.lookup.home.CALL_ENDED"
 
         private var lastTime = 0L
