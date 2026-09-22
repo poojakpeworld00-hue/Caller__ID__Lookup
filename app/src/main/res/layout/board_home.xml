@@ -369,10 +369,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
                 tools:listitem="@layout/cell_call" />
 
-            
+
+            <TextView
+                android:id="@+id/lblRecentEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:gravity="center"
+                android:padding="@dimen/_18sdp"
+                android:text="@string/home_recent_empty"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="@dimen/_11ssp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+
             <LinearLayout
                 android:id="@+id/rowRecentPermission"
                 android:layout_width="match_parent"

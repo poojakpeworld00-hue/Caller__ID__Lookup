@@ -62,6 +62,10 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
     private var searchHint: CoachBubble? = null
 
+    /** Whether a recent-calls load has completed at least once, so the empty state is only shown
+     *  after a real (empty) result rather than during the initial load. */
+    private var recentLoaded = false
+
     @SuppressLint("ClickableViewAccessibility")
     private val pressScale = View.OnTouchListener { v, event ->
         when (event.actionMasked) {
@@ -242,8 +246,13 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
     }
 
     fun onShellShown() {
+        // Refresh recents when the caller panel opens so a call placed while it was closed shows.
+        loadRecentIfAllowed()
         maybeShowSearchHint()
     }
+
+    /** True while the lookup search coach bubble is on screen (used to freeze the panel swipe). */
+    fun isSearchHintShowing(): Boolean = searchHint != null
 
     fun onShellHidden() {
         searchHint?.dismiss()
@@ -349,7 +358,11 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
     }
 
     override fun initObservers() {
-        viewModel.recent.observe(viewLifecycleOwner) { recentAdapter.submit(it) }
+        viewModel.recent.observe(viewLifecycleOwner) { list ->
+            recentLoaded = true
+            recentAdapter.submit(list)
+            updateRecentVisibility(list.isEmpty())
+        }
 
         viewModel.blockedCount.observe(viewLifecycleOwner) {
             binding.lblProtectionSub.text = getString(R.string.home_protection_subtitle, it)
@@ -379,13 +392,39 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
     }
 
     private fun loadRecentIfAllowed() {
-        val granted = ContextCompat.checkSelfPermission(
+        if (view == null) return
+        val granted = hasCallLogPermission()
+
+        binding.rowRecentPermission.visibility = if (granted) View.GONE else View.VISIBLE
+
+        if (granted) {
+            // Keep the current rows on screen while the (fast) reload runs — the observer flips
+            // to the list or the empty placeholder once the result arrives, so there's no blank flash.
+            binding.rollRecent.visibility = View.VISIBLE
+            viewModel.loadRecent()
+        } else {
+            recentLoaded = false
+            binding.rollRecent.visibility = View.GONE
+            binding.lblRecentEmpty.visibility = View.GONE
+        }
+    }
+
+    private fun hasCallLogPermission(): Boolean =
+        ContextCompat.checkSelfPermission(
             requireContext(), Manifest.permission.READ_CALL_LOG
         ) == PackageManager.PERMISSION_GRANTED
 
-        binding.rowRecentPermission.visibility = if (granted) View.GONE else View.VISIBLE
-        binding.rollRecent.visibility = if (granted) View.VISIBLE else View.GONE
-
-        if (granted) viewModel.loadRecent()
+    /** Shows the "no recent calls" placeholder only when the log is readable and a completed load
+     *  came back empty; otherwise the list holds the space. */
+    private fun updateRecentVisibility(empty: Boolean) {
+        if (view == null) return
+        if (!hasCallLogPermission()) {
+            binding.rollRecent.visibility = View.GONE
+            binding.lblRecentEmpty.visibility = View.GONE
+            return
+        }
+        val showEmpty = recentLoaded && empty
+        binding.lblRecentEmpty.visibility = if (showEmpty) View.VISIBLE else View.GONE
+        binding.rollRecent.visibility = if (showEmpty) View.GONE else View.VISIBLE
     }
 }

@@ -40,6 +40,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
@@ -96,8 +97,8 @@ import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_QUICK_ACTIONS
 import com.callerid.number.lookup.home.shell.support.QUICK_ACTIONS_ROW_SPAN
 import com.callerid.number.lookup.home.screen.dialpad.DialPadActivity
 import com.callerid.number.lookup.home.screen.blocking.BlockCenterActivity
-import com.callerid.number.lookup.home.screen.identify.CountryPickActivity
 import com.callerid.number.lookup.home.screen.gadgetry.ToolboxActivity
+import com.callerid.number.lookup.home.screen.cleaner.CleanerActivity
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_FOLDER
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_ICON
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_SHORTCUT
@@ -270,6 +271,8 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             x = -mScreenWidth.toFloat()
             beVisible()
         }
+
+        setupEdgePills()
 
         if (OnboardRouter.wasOnboardingCompleted(this)) {
             homeShellController.onHostCreated()
@@ -978,11 +981,25 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     fun openBlockCenter() = runCatching { startActivity(Intent(this, BlockCenterActivity::class.java)) }
         .onFailure { Log.e(TAG, "could not open block center", it) }
 
-    fun openLookup() = runCatching { startActivity(Intent(this, CountryPickActivity::class.java)) }
-        .onFailure { Log.e(TAG, "could not open lookup", it) }
+    /**
+     * The quick-actions "Lookup" tile. It opens the caller panel straight onto its Lookup tab
+     * (the [NumberLookupFragment] inside the shell) rather than launching the separate
+     * Select-Country page — the lookup lives inside the existing Home/Launcher flow.
+     */
+    fun openLookup() {
+        if (isCallerPanelExpanded()) {
+            binding.callerPanelVw.root.shell()?.showLookup()
+            return
+        }
+        showCallerPanel { binding.callerPanelVw.root.shell()?.showLookup() }
+    }
 
     fun openTools() = runCatching { startActivity(Intent(this, ToolboxActivity::class.java)) }
         .onFailure { Log.e(TAG, "could not open tools", it) }
+
+    /** The right edge pill's destination: the "Free up space" cleaner page. */
+    fun openCleaner() = runCatching { startActivity(Intent(this, CleanerActivity::class.java)) }
+        .onFailure { Log.e(TAG, "could not open cleaner", it) }
 
     fun openCalendarApp() {
         val todayUri = CalendarContract.CONTENT_URI.buildUpon()
@@ -1041,6 +1058,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     private fun showSidePanel(panel: View) {
 
+        setEdgePillsVisible(false)
         applyNativeAdTheme()
         hideSwipeHint()
         animateSidePanelTo(panel, 0f)
@@ -1064,6 +1082,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun hideSidePanel(panel: View, parkedX: Float, onParked: (() -> Unit)? = null) {
+        setEdgePillsVisible(true)
         animateSidePanelTo(panel, parkedX) {
 
             panel.x = parkedX
@@ -1098,6 +1117,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     private fun showFragment(fragment: ViewBinding, animationDuration: Long = ANIMATION_DURATION) {
 
+        setEdgePillsVisible(false)
         applyNativeAdTheme()
         ObjectAnimator.ofFloat(fragment.root, "y", 0f).apply {
             duration = animationDuration
@@ -1137,6 +1157,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     private fun hideFragment(fragment: ViewBinding, animationDuration: Long = ANIMATION_DURATION) {
+        setEdgePillsVisible(true)
         ObjectAnimator.ofFloat(fragment.root, "y", mScreenHeight.toFloat()).apply {
             duration = animationDuration
             interpolator = DecelerateInterpolator()
@@ -1581,7 +1602,7 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
     fun showCallerPanelExternally() = showCallerPanel()
 
-    private fun showCallerPanel() {
+    private fun showCallerPanel(onOpened: (() -> Unit)? = null) {
         showSidePanel(binding.callerPanelVw.root)
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -1591,7 +1612,50 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
             if (OnboardRouter.wasOnboardingCompleted(this)) {
                 homeShellController.startFirstRunPriming()
             }
+            onOpened?.invoke()
         }, ANIMATION_DURATION)
+    }
+
+    /**
+     * The bottom edge pills: a standing cue that the side panels exist, tappable so the panels
+     * are reachable without knowing the swipe. Left opens the app-content (caller) panel, right
+     * opens the free-up-space panel — the same destinations as fling-right and fling-left.
+     */
+    private fun setupEdgePills() = with(binding) {
+        runCatching {
+            edgePillStartIconVw.setImageDrawable(packageManager.getApplicationIcon(applicationInfo))
+        }
+        edgePillStartVw.setOnClickListener { showCallerPanel() }
+        edgePillEndVw.setOnClickListener { openCleaner() }
+        startEdgePillNudge()
+    }
+
+    /** The 4dp chevron breathe on each pill. Infinite, so it is cleared whenever the pills hide. */
+    private fun startEdgePillNudge() {
+        binding.edgePillStartChevronsVw.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.edge_nudge_right)
+        )
+        binding.edgePillEndChevronsVw.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.edge_nudge_left)
+        )
+    }
+
+    private fun stopEdgePillNudge() {
+        binding.edgePillStartChevronsVw.clearAnimation()
+        binding.edgePillEndChevronsVw.clearAnimation()
+    }
+
+    /**
+     * The pills belong to the home grid, so they follow it: gone whenever a panel or the drawer
+     * covers it. Told what to do rather than reading the expanded flags, which are mid-flight
+     * exactly when this is called.
+     */
+    private fun setEdgePillsVisible(visible: Boolean) {
+        if (visible) startEdgePillNudge() else stopEdgePillNudge()
+        listOf(binding.edgePillStartVw, binding.edgePillEndVw).forEach { pill ->
+            pill.isClickable = visible
+            pill.animate().alpha(if (visible) 1f else 0f).setDuration(ANIMATION_DURATION).start()
+        }
     }
 
     fun hideCallerPanel() {

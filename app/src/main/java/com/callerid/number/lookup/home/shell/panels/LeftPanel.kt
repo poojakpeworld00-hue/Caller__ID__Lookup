@@ -101,6 +101,14 @@ class LeftPanel(
             binding.panelSearchVw.setText("")
         }
 
+        binding.panelFreeUpSpaceVw.setOnClickListener {
+            val host = activity ?: return@setOnClickListener
+            host.hideLeftPanel()
+            // Opens the same "Free up space" page as the edge pill, which carries the button-lock
+            // and rewarded-ad flow (see CleanerActivity).
+            host.openCleaner()
+        }
+
         binding.panelSeeMoreVw.setOnClickListener {
             resultsCap = if (resultsCap == COLLAPSED_RESULTS) {
                 EXPANDED_RESULTS
@@ -192,6 +200,7 @@ class LeftPanel(
         val hasQuery = query.isNotEmpty()
 
         binding.panelSearchClearVw.beVisibleIf(hasQuery)
+        binding.panelFreeUpSpaceVw.beVisibleIf(!hasQuery)
         binding.panelSuggestedHeaderVw.beVisibleIf(!hasQuery)
         binding.panelSuggestedGridVw.beVisibleIf(!hasQuery)
 

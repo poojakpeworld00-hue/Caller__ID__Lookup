@@ -99,6 +99,14 @@ class CallPanel(
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
 
+        // While the lookup coach hint is up, the panel must stay put: skip the swipe detector so a
+        // horizontal drag/fling can neither page nor close the panel. Touches still pass through to
+        // the hint overlay, which dismisses itself on tap — and the swipe is restored the moment the
+        // hint is gone (isCoachHintActive() goes false).
+        if (shell()?.isCoachHintActive() == true) {
+            return super.dispatchTouchEvent(event)
+        }
+
         if (gestureDetector.onTouchEvent(event)) {
 
             val cancel = MotionEvent.obtain(event)

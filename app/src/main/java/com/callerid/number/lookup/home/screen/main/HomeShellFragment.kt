@@ -98,7 +98,11 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
             controller?.startOverlayPermissionFlow()
         }
 
-        arguments?.getString(ARG_LOOKUP_NUMBER)?.takeIf { it.isNotBlank() }?.let { number ->
+        // A pending lookup request (with or without a pre-filled number) selects the Lookup tab
+        // once the tabs exist. Keyed on presence, not a non-blank value, so opening the tab with
+        // no number still lands here.
+        if (arguments?.containsKey(ARG_LOOKUP_NUMBER) == true) {
+            val number = arguments?.getString(ARG_LOOKUP_NUMBER)
             arguments?.remove(ARG_LOOKUP_NUMBER)
             showLookup(number)
         }
@@ -139,6 +143,10 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
     }
 
     fun showLookup(number: String? = null) {
+        if (!::tabs.isInitialized) {
+            requestLookup(number)
+            return
+        }
         val index = tabs.indexOfFirst { it.fragment is NumberLookupFragment }
         if (index < 0) return
         select(index)
@@ -151,6 +159,13 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         val index = tabs.indexOfFirst { it.fragment is RecentsFragment }
         if (index >= 0) select(index)
     }
+
+    /**
+     * True while a blocking coach hint (the lookup search bubble) is on screen. The launcher's
+     * caller panel reads this to freeze its swipe gesture so the panel cannot move under the hint.
+     */
+    fun isCoachHintActive(): Boolean =
+        ::tabs.isInitialized && dashboardTab()?.isSearchHintShowing() == true
 
     fun pageForward(): Boolean {
         if (currentIndex < 0 || currentIndex >= tabs.lastIndex) return false

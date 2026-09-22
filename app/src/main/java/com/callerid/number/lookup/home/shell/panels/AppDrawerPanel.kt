@@ -70,15 +70,36 @@ class AppDrawerPanel(
             nativePromo.fetchNativeAds(activity)
         }
 
-        (binding.adNativeFrameVw.parent as? ViewGroup)?.removeView(binding.adNativeFrameVw)
+        // The ad is docked at the bottom of the drawer (see board_all_apps.xml), drawn over the
+        // grid rather than injected as a list row. A native loads its media asynchronously and
+        // grows the card after the first layout, so this fires on every height change: once the
+        // frame has a height, show it and pad the grid by that amount so the last row of icons
+        // clears the docked ad instead of sitting behind it.
+        binding.adNativeFrameVw.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            val height = bottom - top
+            if (height > 0 && adSlot.visible) {
+                binding.adNativeFrameVw.visibility = View.VISIBLE
+                if (binding.allAppsGridVw.paddingBottom != height) {
+                    binding.allAppsGridVw.setPadding(
+                        binding.allAppsGridVw.paddingLeft,
+                        binding.allAppsGridVw.paddingTop,
+                        binding.allAppsGridVw.paddingRight,
+                        height,
+                    )
+                }
+            }
+        }
     }
-
-    private fun adHeaderView(): View? = binding.adNativeFrameVw.takeIf { adSlot.visible }
 
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
-        
+        if (!adSlot.visible) return
+        // Invisible, not gone, so the frame lays out and the native inside can measure; the
+        // layout listener flips it visible and pads the grid once it has a height.
+        if (binding.adNativeFrameVw.visibility == View.GONE) {
+            binding.adNativeFrameVw.visibility = View.INVISIBLE
+        }
         ShellPromoConfig.refreshSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
     }
 
@@ -88,7 +109,6 @@ class AppDrawerPanel(
 
         adSlot = fresh
         if (adSlot.needsNativePreload) nativePromo.fetchNativeAds(activity)
-        (binding.allAppsGridVw.adapter as? AppTileAdapter)?.setAdSlot(adHeaderView(), adSlot.position)
     }
 
     override fun onAttachedToWindow() {
@@ -191,7 +211,6 @@ class AppDrawerPanel(
                     if (host == null) openApp()
                     else ShellPromoConfig.run(host, ShellPromoConfig.Surface.APP_CLICK) { openApp() }
                 }.apply {
-                    setAdSlot(adHeaderView(), adSlot.position)
                     binding.allAppsGridVw.itemAnimator = null
                     binding.allAppsGridVw.adapter = this
                 }

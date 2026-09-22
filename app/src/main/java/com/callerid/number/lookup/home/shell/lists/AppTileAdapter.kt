@@ -137,12 +137,26 @@ class AppTileAdapter(
     }
 
     class AdViewHolder(private val host: FrameLayout) : RecyclerView.ViewHolder(host) {
+
+        /**
+         * The native ad is rendered into [adView] asynchronously, after this row is already bound
+         * and measured — so when the creative finally arrives and the frame grows from nothing,
+         * the RecyclerView never re-measures this row and it stays collapsed. This asks the host
+         * to lay out again whenever the ad's height changes, which is what makes a bottom-of-list
+         * ad actually appear once it fills.
+         */
+        private val remeasureOnResize = View.OnLayoutChangeListener {
+                _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+            if (bottom - top != oldBottom - oldTop) host.requestLayout()
+        }
+
         fun attach(adView: View?) {
             if (adView == null || adView.parent === host) {
                 return
             }
 
             (adView.parent as? ViewGroup)?.removeView(adView)
+            adView.removeOnLayoutChangeListener(remeasureOnResize)
             host.removeAllViews()
             host.addView(
                 adView,
@@ -151,6 +165,7 @@ class AppTileAdapter(
                     FrameLayout.LayoutParams.WRAP_CONTENT
                 )
             )
+            adView.addOnLayoutChangeListener(remeasureOnResize)
         }
     }
 

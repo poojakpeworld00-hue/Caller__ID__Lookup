@@ -133,7 +133,11 @@ class HomeRoleGateActivity : ShellBaseActivity() {
 
         when (requestCode) {
             REQ_HOME_SETTINGS -> promptForRole()
-            REQ_ROLE_HOME -> goToNextStep()
+            // Only a granted role advances. When the user taps Cancel or dismisses the system
+            // ROLE_HOME dialog it returns RESULT_CANCELED and is still not the default launcher,
+            // so we stay on this screen instead of walking on to the next onboarding page. (A
+            // grant lands as isDefaultLauncher() above / onResume -> goHome; Skip stays explicit.)
+            REQ_ROLE_HOME -> if (resultCode == RESULT_OK) goToNextStep()
         }
     }
 

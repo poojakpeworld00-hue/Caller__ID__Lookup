@@ -11,24 +11,6 @@
         android:layout_height="wrap_content"
         app:applyWindowInsets="false" />
     
-    <FrameLayout
-        android:id="@+id/ad_native_frameVw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search_barVw"
-        android:visibility="gone">
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/ad_shimmerVw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ccc">
-
-            <include layout="@layout/googlemidnative2" />
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-    </FrameLayout>
-
     <com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
         android:id="@+id/all_apps_fastscrollerVw"
         android:layout_width="match_parent"
@@ -48,6 +30,29 @@
             app:spanCount="@integer/portrait_column_count" />
 
     </com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller>
+
+    <!--
+        The drawer's native ad, docked at the bottom of the drawer and drawn over the grid. The
+        grid is given a matching bottom padding at runtime so the last row of icons clears it
+        rather than sitting behind it. See AppDrawerPanel.onDrawerShown.
+    -->
+    <FrameLayout
+        android:id="@+id/ad_native_frameVw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/ad_shimmerVw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ccc">
+
+            <include layout="@layout/googlemidnative2" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </FrameLayout>
 
     <org.fossify.commons.views.MyTextView
         android:id="@+id/no_results_placeholderVw"
