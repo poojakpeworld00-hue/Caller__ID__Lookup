@@ -957,10 +957,13 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
     }
 
     fun openAppSearch() {
-        showLeftPanel()
+        // The swipe-left panel is the Free up space page now, so app search lives in the app drawer
+        // (which carries the search field and the full app list). The home search pill opens it and
+        // focuses the drawer's search box.
+        showFragment(binding.allAppsFragmentVw)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isLeftPanelExpanded()) {
-                binding.leftPanelVw.root.focusSearch()
+            if (isAllAppsFragmentExpanded()) {
+                binding.allAppsFragmentVw.root.focusSearch()
             }
         }, ANIMATION_DURATION)
     }

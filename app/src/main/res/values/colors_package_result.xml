@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Palette for the install / uninstall result screen. Literal values rather than theme attributes:
+    the screen carries its own light surface and its own green/red accent per outcome, so it reads
+    the same whatever the app's light/dark setting is.
+-->
+<resources>
+
+    <color name="pkgres_page">#FFF4F7FB</color>
+    <color name="pkgres_surface">#FFFFFFFF</color>
+    <color name="pkgres_border">#FFE3E8F2</color>
+
+    <color name="pkgres_text_primary">#FF0C2356</color>
+    <color name="pkgres_text_secondary">#FF6B7280</color>
+    <color name="pkgres_detail_icon">#FF6B7280</color>
+    <color name="pkgres_on_accent">#FFFFFFFF</color>
+
+    <!-- Installed: green. Removed: red. -->
+    <color name="pkgres_installed">#FF1E8E5A</color>
+    <color name="pkgres_installed_soft">#1F1E8E5A</color>
+    <color name="pkgres_removed">#FFD93A3A</color>
+    <color name="pkgres_removed_soft">#1FD93A3A</color>
+
+    <color name="pkgres_scrim">#14000000</color>
+
+</resources>

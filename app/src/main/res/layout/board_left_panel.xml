@@ -1,287 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    The swipe-left side panel: this app's FREE UP SPACE page (ported from the reference launcher's
+    left_panel_fragment). It used to be app search + Suggested/Recent app grids; those were dropped
+    because the app drawer already carries a search field and the full app list, and clearing the
+    cache is something the drawer cannot do.
+
+    It is an opaque page (a solid @color/background), unlike the translucent drawer/caller panels:
+    the cleaner copy is dark-on-surface and cannot sit on an arbitrary wallpaper.
+
+    Unlike CleanerActivity (which sweeps on open and only ever shows a result), this panel opens on
+    every swipe, so it opens on "here is what can be freed" with the action still to take, and
+    switches to the freed verdict once the button is pressed. The sweep is gated behind a rewarded
+    ad and the button locks while it runs (see LeftPanel.kt).
+
+    Ids kept for the host: panel_scrollVw and ad_native_frameVw are padded by HomeBoardActivity's
+    edge-to-edge setup; ad_native_frameVw + ad_shimmerVw hold the existing side-panel native slot.
+-->
 <com.callerid.number.lookup.home.shell.panels.LeftPanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/left_panel_holderVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/all_app_bg"
+    android:background="@color/background"
     android:clickable="true"
     android:focusable="true">
 
-    <RelativeLayout
-        android:id="@+id/panel_search_holderVw"
+    <LinearLayout
+        android:id="@+id/panel_headerVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/form_search_board">
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingTop="@dimen/_12sdp"
+        android:paddingBottom="@dimen/_6sdp">
 
-        <ImageView
-            android:id="@+id/panel_search_iconVw"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:contentDescription="@string/search"
-            android:padding="4dp"
-            android:src="@drawable/sym_pseudo_search_vector" />
-
-        <ImageView
-            android:id="@+id/panel_search_clearVw"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="5dp"
-            android:contentDescription="@string/clear"
-            android:padding="9dp"
-            android:src="@drawable/ic_cross_vector"
-            android:tint="@android:color/white"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/panel_searchVw"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_toStartOf="@+id/panel_search_clearVw"
-            android:layout_toEndOf="@+id/panel_search_iconVw"
-            android:background="@null"
-            android:ellipsize="end"
-            android:gravity="start|center_vertical"
-            android:hint="@string/search"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:maxLines="1"
-            android:importantForAutofill="no"
-            android:paddingStart="5dp"
-            android:paddingEnd="0dp"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="#99ffffff"
-            android:textSize="14sp" />
-
-    </RelativeLayout>
-
-    <ScrollView
-        android:id="@+id/panel_scrollVw"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/ad_native_frameVw"
-        android:layout_below="@+id/panel_search_holderVw"
-        android:clipToPadding="false"
-        android:paddingBottom="50dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito_extrabold"
+            android:letterSpacing="-0.02"
+            android:text="@string/cleaner_title"
+            android:textColor="@color/on_surface"
+            android:textSize="@dimen/_16ssp" />
+    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/panel_free_up_spaceVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/form_search_board"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="12dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:background="@drawable/form_pill_mark_ink"
-                    android:contentDescription="@null"
-                    android:padding="7dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/sym_cid_sparkle"
-                    android:tint="@android:color/white" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/panel_free_up_space"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.7"
-                        android:text="@string/panel_free_up_space_sub"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:alpha="0.8"
-                    android:contentDescription="@null"
-                    android:src="@drawable/slot_caret_right"
-                    android:tint="@android:color/white" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/panel_results_headerVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:padding="5dp"
-                    android:text="@string/apps"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/smaller_text_size" />
-
-                <TextView
-                    android:id="@+id/panel_see_moreVw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="5dp"
-                    android:text="@string/see_more"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/smaller_text_size" />
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_results_listVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            
-            <TextView
-                android:id="@+id/panel_no_resultsVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:alpha="0.8"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/no_items_found"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/bigger_text_size"
-                android:textStyle="italic"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/panel_suggested_headerVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/suggested_for_now"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_suggested_gridVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/form_search_board"
-                android:nestedScrollingEnabled="false"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="4" />
-
-            
-            <FrameLayout
-                android:id="@+id/ad_suggested_frameVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="gone">
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/ad_suggested_shimmerVw"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#ccc">
-
-                    <include layout="@layout/googlenativebanner" />
-
-                </com.facebook.shimmer.ShimmerFrameLayout>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/panel_recent_headerVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/recent_apps"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_recent_gridVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/form_search_board"
-                android:nestedScrollingEnabled="false"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="4" />
-
-            <TextView
-                android:id="@+id/panel_search_in_headerVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:text="@string/search_in_apps"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/smaller_text_size"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/panel_search_in_listVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:nestedScrollingEnabled="false"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    
     <FrameLayout
         android:id="@+id/ad_native_frameVw"
         android:layout_width="match_parent"
@@ -295,8 +61,232 @@
             android:background="#ccc">
 
             <include layout="@layout/googlemidnative2" />
-
         </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/panel_scrollVw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ad_native_frameVw"
+        android:layout_below="@id/panel_headerVw"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingBottom="@dimen/_16sdp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Verdict -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_14sdp">
+
+                <FrameLayout
+                    android:layout_width="@dimen/_74sdp"
+                    android:layout_height="@dimen/_74sdp"
+                    android:background="@drawable/form_cleaner_ring">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_8sdp"
+                        android:background="@drawable/form_cleaner_ring_fill" />
+
+                    <ImageView
+                        android:id="@+id/panel_cleaner_markVw"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/sym_cid_sparkle"
+                        app:tint="@color/success" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/panel_cleaner_labelVw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_13sdp"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:letterSpacing="0.04"
+                    android:text="@string/cleaner_ready"
+                    android:textColor="@color/success"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/panel_cleaner_amountVw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:letterSpacing="-0.03"
+                    android:textColor="@color/on_surface"
+                    android:textSize="@dimen/_26ssp"
+                    tools:text="7.2 MB" />
+
+                <TextView
+                    android:id="@+id/panel_cleaner_amount_bodyVw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/cleaner_found_body"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="@dimen/_12ssp" />
+            </LinearLayout>
+
+            <!-- Figures -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/form_cleaner_card"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_16sdp">
+
+                        <TextView
+                            android:id="@+id/panel_cleaner_recovered_labelVw"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cleaner_space_found"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="@dimen/_11ssp" />
+
+                        <TextView
+                            android:id="@+id/panel_cleaner_recoveredVw"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:textColor="@color/on_surface"
+                            android:textSize="@dimen/_18ssp"
+                            tools:text="7.2 MB" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/outline" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_16sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cleaner_temp_files"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="@dimen/_11ssp" />
+
+                        <TextView
+                            android:id="@+id/panel_cleaner_itemsVw"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:textColor="@color/on_surface"
+                            android:textSize="@dimen/_18ssp"
+                            tools:text="3 items" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/outline" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_16sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/nunito_bold"
+                            android:text="@string/cleaner_storage_title"
+                            android:textColor="@color/on_surface"
+                            android:textSize="@dimen/_13ssp" />
+
+                        <TextView
+                            android:id="@+id/panel_cleaner_percentVw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:textColor="@color/cid_onb_accent"
+                            android:textSize="@dimen/_18ssp"
+                            tools:text="53%" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/panel_cleaner_storage_barVw"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="7dp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/form_cleaner_storage_progress"
+                        tools:progress="53" />
+
+                    <TextView
+                        android:id="@+id/panel_cleaner_storage_textVw"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="@dimen/_11ssp"
+                        tools:text="27 GB of 51 GB used" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/panel_cleaner_actionVw"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_44sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/form_cleaner_cta"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/nunito_extrabold"
+                android:gravity="center"
+                android:text="@string/cleaner_action"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/_13ssp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </com.callerid.number.lookup.home.shell.panels.LeftPanel>

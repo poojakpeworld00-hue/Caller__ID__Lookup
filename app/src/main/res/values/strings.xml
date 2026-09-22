@@ -631,6 +631,23 @@
     <string name="double_tap_to_lock">Double tap to lock screen</string>
     <string name="lock_device_admin_hint">Double-tap-to-lock needs administrator rights before it will work. While those rights are held, the app cannot be removed until you withdraw them.</string>
     <string name="lock_device_admin_warning">Withdrawing administrator rights switches double-tap-to-lock back off.</string>
+    <string name="drawer_promo_badge">Ad</string>
+
+    <string name="pkgres_close">Close</string>
+    <string name="pkgres_installed_status">Installed</string>
+    <string name="pkgres_removed_status">Removed</string>
+    <string name="pkgres_installed_title">%1$s installed</string>
+    <string name="pkgres_removed_title">%1$s removed</string>
+    <string name="pkgres_installed_subtitle">The app is ready to use.</string>
+    <string name="pkgres_removed_subtitle">The app and its data are gone.</string>
+    <string name="pkgres_version_label">Version</string>
+    <string name="pkgres_installed_time_label">Installed</string>
+    <string name="pkgres_removed_time_label">Removed</string>
+    <string name="pkgres_just_now">Just now</string>
+    <string name="pkgres_done">Done</string>
+    <string name="pkgres_open_app">Open app</string>
+    <string name="pkgres_unable_to_open">Can\'t open this app</string>
+    <string name="pkgres_app_icon">App icon</string>
     <string name="pseudo_widget_clock">Clock</string>
     <string name="pseudo_widget_search_bar">Search bar</string>
     <string name="pseudo_widget_search_bar_hint">Search apps…</string>

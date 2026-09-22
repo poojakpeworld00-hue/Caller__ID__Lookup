@@ -1,8 +1,10 @@
 package com.callerid.number.lookup.home.shell.lists
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -37,15 +39,17 @@ class AppTileAdapter(
     private var textColor = Color.WHITE
     private var iconPadding = 0
 
-    private var adHeader: View? = null
+    private var adGapEnabled = false
 
-    private var adRow = 0
+    private var adRow = 1
 
-    private val headerCount: Int get() = if (adHeader != null) 1 else 0
+    private var adGapHeightPx = 0
+
+    private val headerCount: Int get() = if (adGapEnabled) 1 else 0
 
     private val adPosition: Int
         get() {
-            if (adHeader == null) return -1
+            if (!adGapEnabled) return -1
             val columns = activity.config.drawerColumnCount.coerceAtLeast(1)
             return (adRow * columns).coerceAtMost(currentList.size)
         }
@@ -55,19 +59,29 @@ class AppTileAdapter(
         calculateIconWidth()
     }
 
+    /**
+     * Opens (or closes) an empty full-width gap in the list at [row], [heightPx] tall — the slot
+     * the sticky native ad overlay aligns itself to. The ad itself is drawn in the overlay, not
+     * here; this row only reserves the space. See AppDrawerPanel.syncStickyAd.
+     */
     @SuppressLint("NotifyDataSetChanged")
-    fun setAdSlot(view: View?, row: Int) {
+    fun setAdGap(enabled: Boolean, row: Int, heightPx: Int) {
         val newRow = row.coerceAtLeast(0)
-        if (adHeader === view && adRow == newRow) {
+        val newHeight = heightPx.coerceAtLeast(0)
+        if (adGapEnabled == enabled && adRow == newRow && adGapHeightPx == newHeight) {
             return
         }
 
-        adHeader = view
+        adGapEnabled = enabled
         adRow = newRow
+        adGapHeightPx = newHeight
         notifyDataSetChanged()
     }
 
-    fun isAdRow(position: Int): Boolean = position == adPosition
+    /** The item index of the ad gap, or -1 when there is none. Used to place the sticky overlay. */
+    fun adGapPosition(): Int = adPosition
+
+    fun isAdRow(position: Int): Boolean = adGapEnabled && position == adPosition
 
     private fun launcherIndex(position: Int): Int {
         val ad = adPosition
@@ -84,7 +98,11 @@ class AppTileAdapter(
             return AD_HEADER_ID
         }
 
-        return getItem(launcherIndex(position)).getLauncherIdentifier().hashCode().toLong()
+        val item = getItem(launcherIndex(position))
+        val base = item.getLauncherIdentifier().hashCode().toLong()
+        // Keep promo ids in their own high band so they never collide with an app id (Int-range
+        // hashCode) or the ad row (Long.MIN_VALUE).
+        return if (item.isPromo) PROMO_ID_BASE + base else base
     }
 
     fun launchFirstApp(): Boolean {
@@ -98,10 +116,10 @@ class AppTileAdapter(
             val host = FrameLayout(parent.context).apply {
                 layoutParams = RecyclerView.LayoutParams(
                     RecyclerView.LayoutParams.MATCH_PARENT,
-                    RecyclerView.LayoutParams.WRAP_CONTENT
+                    adGapHeightPx.coerceAtLeast(1)
                 )
             }
-            return AdViewHolder(host)
+            return AdGapViewHolder(host)
         }
 
         val binding = CellLauncherLabelBinding.inflate(
@@ -112,7 +130,7 @@ class AppTileAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is AdViewHolder -> holder.attach(adHeader)
+            is AdGapViewHolder -> holder.sizeTo(adGapHeightPx)
             is ViewHolder -> holder.bindView(getItem(launcherIndex(position)))
         }
     }
@@ -136,36 +154,21 @@ class AppTileAdapter(
         }
     }
 
-    class AdViewHolder(private val host: FrameLayout) : RecyclerView.ViewHolder(host) {
-
-        /**
-         * The native ad is rendered into [adView] asynchronously, after this row is already bound
-         * and measured — so when the creative finally arrives and the frame grows from nothing,
-         * the RecyclerView never re-measures this row and it stays collapsed. This asks the host
-         * to lay out again whenever the ad's height changes, which is what makes a bottom-of-list
-         * ad actually appear once it fills.
-         */
-        private val remeasureOnResize = View.OnLayoutChangeListener {
-                _, _, top, _, bottom, _, oldTop, _, oldBottom ->
-            if (bottom - top != oldBottom - oldTop) host.requestLayout()
-        }
-
-        fun attach(adView: View?) {
-            if (adView == null || adView.parent === host) {
-                return
-            }
-
-            (adView.parent as? ViewGroup)?.removeView(adView)
-            adView.removeOnLayoutChangeListener(remeasureOnResize)
-            host.removeAllViews()
-            host.addView(
-                adView,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-                )
+    /**
+     * The empty gap the sticky native ad aligns to. It holds no ad — it only reserves [heightPx]
+     * of full-width space in the list so the icons part where the overlaid ad sits. The ad itself
+     * is drawn in AppDrawerPanel's overlay, which tracks this row and docks to the bottom when it
+     * scrolls off.
+     */
+    class AdGapViewHolder(private val host: FrameLayout) : RecyclerView.ViewHolder(host) {
+        fun sizeTo(heightPx: Int) {
+            val lp = host.layoutParams ?: RecyclerView.LayoutParams(
+                RecyclerView.LayoutParams.MATCH_PARENT, heightPx
             )
-            adView.addOnLayoutChangeListener(remeasureOnResize)
+            if (lp.height != heightPx) {
+                lp.height = heightPx.coerceAtLeast(1)
+                host.layoutParams = lp
+            }
         }
     }
 
@@ -178,8 +181,20 @@ class AppTileAdapter(
                 binding.launcherLabelVw.setTextColor(textColor)
                 binding.launcherLabelVw.beVisibleIf(activity.config.showDrawerAppLabels)
                 binding.launcherIconVw.setPadding(iconPadding, iconPadding, iconPadding, 0)
+                binding.promoBadgeVw.beVisibleIf(launcher.isPromo)
 
-                if (launcher.drawable != null && binding.launcherIconVw.tag == true) {
+                if (launcher.isPromo) {
+                    Glide.with(activity)
+                        .load(launcher.iconUrl)
+                        .placeholder(
+                            activity.resources.getColoredDrawableWithColor(
+                                drawableId = R.drawable.stub_drawable,
+                                color = launcher.thumbnailColor
+                            )
+                        )
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.launcherIconVw)
+                } else if (launcher.drawable != null && binding.launcherIconVw.tag == true) {
                     binding.launcherIconVw.setImageDrawable(launcher.drawable)
                 } else {
                     val placeholderDrawable = activity.resources.getColoredDrawableWithColor(
@@ -201,22 +216,28 @@ class AppTileAdapter(
                         })
                 }
 
-                setOnClickListener { itemClick(launcher) }
-                setOnLongClickListener {
-                    val location = IntArray(2)
-                    getLocationOnScreen(location)
-                    allAppsListener.onAppLauncherLongPressed(
-                        x = (location[0] + width / 2).toFloat(),
-                        y = location[1].toFloat(),
-                        appLauncher = launcher
-                    )
-                    true
+                if (launcher.isPromo) {
+                    // A promo tile opens its link and offers no home-screen menu.
+                    setOnClickListener { openPromo(launcher.link) }
+                    setOnLongClickListener { true }
+                } else {
+                    setOnClickListener { itemClick(launcher) }
+                    setOnLongClickListener {
+                        val location = IntArray(2)
+                        getLocationOnScreen(location)
+                        allAppsListener.onAppLauncherLongPressed(
+                            x = (location[0] + width / 2).toFloat(),
+                            y = location[1].toFloat(),
+                            appLauncher = launcher
+                        )
+                        true
+                    }
                 }
 
                 setOnTouchListener { _, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            binding.launcherIconVw.drawable.alpha = LAUNCHER_ALPHA_PRESSED
+                            binding.launcherIconVw.drawable?.alpha = LAUNCHER_ALPHA_PRESSED
                             animateScale(
                                 from = LAUNCHER_SCALE_NORMAL,
                                 to = LAUNCHER_SCALE_PRESSED,
@@ -226,7 +247,7 @@ class AppTileAdapter(
 
                         MotionEvent.ACTION_UP,
                         MotionEvent.ACTION_CANCEL -> {
-                            binding.launcherIconVw.drawable.alpha = LAUNCHER_ALPHA_NORMAL
+                            binding.launcherIconVw.drawable?.alpha = LAUNCHER_ALPHA_NORMAL
                             animateScale(
                                 from = LAUNCHER_SCALE_PRESSED,
                                 to = LAUNCHER_SCALE_NORMAL,
@@ -242,6 +263,17 @@ class AppTileAdapter(
         }
     }
 
+    /** Opens a promo tile's configured link in the browser; a null-scheme/blank link is ignored. */
+    private fun openPromo(link: String) {
+        val uri = runCatching { Uri.parse(link).takeIf { !it.scheme.isNullOrBlank() } }.getOrNull()
+            ?: return
+        runCatching {
+            activity.startActivity(
+                Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+        }
+    }
+
     override fun onChange(position: Int) =
         currentList.getOrNull(launcherIndex(position))?.getBubbleText() ?: ""
 
@@ -250,6 +282,9 @@ class AppTileAdapter(
         const val VIEW_TYPE_AD = 1
 
         private const val AD_HEADER_ID = Long.MIN_VALUE
+
+        /** High band for promo-tile stable ids so they never collide with app ids. */
+        private const val PROMO_ID_BASE = 1L shl 40
 
         private const val LAUNCHER_SCALE_NORMAL = 1f
         private const val LAUNCHER_SCALE_PRESSED = 1.15f

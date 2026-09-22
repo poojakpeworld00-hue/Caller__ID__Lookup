@@ -18,7 +18,12 @@ data class AppTile(
     var order: Int,
     var thumbnailColor: Int,
 
-    var drawable: Drawable?
+    var drawable: Drawable?,
+
+    /** A configurable promo tile: not a real app — its icon loads from [iconUrl] and a tap opens [link]. */
+    var isPromo: Boolean = false,
+    var iconUrl: String = "",
+    var link: String = "",
 ) : Comparable<AppTile> {
 
     constructor() : this(null, "", "", "", 0, 0, null)

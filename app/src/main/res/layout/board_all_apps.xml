@@ -32,15 +32,16 @@
     </com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller>
 
     <!--
-        The drawer's native ad, docked at the bottom of the drawer and drawn over the grid. The
-        grid is given a matching bottom padding at runtime so the last row of icons clears it
-        rather than sitting behind it. See AppDrawerPanel.onDrawerShown.
+        The drawer's native ad. Drawn over the grid as a sticky overlay, positioned in code by
+        AppDrawerPanel.syncStickyAd: it tracks an empty gap row in the list while that gap is on
+        screen, and docks to the bottom of the drawer once the gap scrolls off the top. Top-aligned
+        with the grid (below the search bar) so its translationY matches the gap row's top.
     -->
     <FrameLayout
         android:id="@+id/ad_native_frameVw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/search_barVw"
         android:visibility="gone">
 
         <com.facebook.shimmer.ShimmerFrameLayout

@@ -33,4 +33,22 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal|top" />
 
+    <!-- Shown only on a promo tile; GONE for real apps. -->
+    <org.fossify.commons.views.MyTextView
+        android:id="@+id/promo_badgeVw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/launcher_iconVw"
+        android:layout_alignEnd="@+id/launcher_iconVw"
+        android:background="@drawable/form_promo_badge"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:text="@string/drawer_promo_badge"
+        android:textColor="#FFFFFFFF"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
 </RelativeLayout>

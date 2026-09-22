@@ -13,6 +13,7 @@ import com.callerid.admesh.surface.StripWatcher
 import com.callerid.admesh.surface.StripKind
 import com.callerid.admesh.surface.StripPromo
 import com.callerid.admesh.surface.StripScale
+import com.callerid.admesh.surface.DrawerAdRunner
 import com.callerid.admesh.surface.InlinePromo
 import com.callerid.admesh.surface.InlinePromoStrip
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
@@ -145,6 +146,179 @@ object ShellPromoConfig {
             ?: return Slot(false, SlotAd.NONE, "mid2", "adaptive", "")
 
         return slot(block, defaultNativeType = "mid2", label = "app_drawer.bottom_native")
+    }
+
+    /** What the install / uninstall result screen may do, from `package_result` in Remote Config. */
+    data class PackageResultSettings(
+        val enabled: Boolean,
+        val minGapMs: Long,
+        val bodyNative: Boolean,
+    )
+
+    /**
+     * `package_result: { "enabled": true, "min_gap_ms": 0, "body_native": true }`.
+     *
+     * `enabled` turns the whole screen off without a release; `min_gap_ms` throttles it so a burst
+     * of package events cannot show it repeatedly; `body_native` carries its in-card native ad.
+     */
+    fun packageResultSettings(context: Context): PackageResultSettings {
+        val block = config(context).optJSONObject("package_result")
+        return PackageResultSettings(
+            enabled = block?.optBoolean("enabled", true) ?: true,
+            minGapMs = block?.optLong("min_gap_ms", 0L) ?: 0L,
+            bodyNative = block?.optBoolean("body_native", true) ?: true,
+        ).also { log("package_result → $it") }
+    }
+
+    /** One configurable promo tile in the app drawer: an icon + title that opens [link] when tapped. */
+    data class DrawerPromo(
+        val position: Int,
+        val title: String,
+        val icon: String,
+        val link: String,
+    )
+
+    /**
+     * The drawer's promo tiles, from `app_drawer.promo` in Remote Config:
+     * `{ "enabled": true, "items": [ { position, title, icon, link, enabled } ] }`. Only enabled
+     * items with both an icon and a link survive; each is placed at its own `position` in the list.
+     * `landing_url` is accepted as an alias for `link`. An absent or disabled block yields nothing.
+     */
+    fun drawerPromoItems(context: Context): List<DrawerPromo> {
+        val block = config(context).optJSONObject("app_drawer")?.optJSONObject("promo")
+            ?: return emptyList()
+        if (!block.optBoolean("enabled", true)) return emptyList()
+        val items = block.optJSONArray("items") ?: return emptyList()
+
+        val out = ArrayList<DrawerPromo>(items.length())
+        for (i in 0 until items.length()) {
+            val item = items.optJSONObject(i) ?: continue
+            if (!item.optBoolean("enabled", true)) continue
+            // Accept the reference field names as aliases: logo→icon, label→title, landing_url→link.
+            val icon = item.optString("icon").ifBlank { item.optString("logo") }.trim()
+            val link = item.optString("link").ifBlank { item.optString("landing_url") }.trim()
+            val title = item.optString("title").ifBlank { item.optString("label") }.trim()
+            if (icon.isBlank() || link.isBlank()) continue
+            out += DrawerPromo(
+                position = item.optInt("position", 0).coerceAtLeast(0),
+                title = title,
+                icon = icon,
+                link = link,
+            )
+        }
+        log("app_drawer.promo → ${out.size} item(s)")
+        return out
+    }
+
+    // ---------- App-drawer ad sequence (Remote-Config-driven fallback chain) ----------
+
+    /**
+     * The ad formats the app-drawer sequence can play. `idFallbackKey` is the legacy PromoVault key
+     * an ad-unit-id (or URL, for [DIRECTLINK]) falls back to when the config leaves `ad_unit_id`
+     * blank, so existing global ids keep working without being duplicated into the new block.
+     */
+    enum class DrawerAdType(val key: String, val idFallbackKey: String) {
+        INTER("inter", "googleInter"),
+        APPOPEN("appopen", "googleAppopen"),
+        DIRECTLINK("directlink", "DirectLink"),
+        REWARDED("rewarded", "googleRewarded"),
+        FULLSCREEN_NATIVE("fullscreen_native", "googleNative");
+
+        companion object {
+            fun from(raw: String?): DrawerAdType? =
+                entries.firstOrNull { it.key == raw?.trim()?.lowercase() }
+        }
+    }
+
+    /** One resolved ad in the sequence: its format and the ad-unit-id (or URL, for directlink). */
+    data class DrawerAdSpec(val type: DrawerAdType, val adUnitId: String)
+
+    /** The whole app-drawer ad flow: whether it runs, how often, and the resolved fallback chain. */
+    data class DrawerAdFlow(
+        val enabled: Boolean,
+        val counter: Int,
+        val sequence: List<DrawerAdSpec>,
+    )
+
+    private val DEFAULT_DRAWER_SEQUENCE = listOf(
+        DrawerAdType.INTER,
+        DrawerAdType.APPOPEN,
+        DrawerAdType.DIRECTLINK,
+        DrawerAdType.REWARDED,
+        DrawerAdType.FULLSCREEN_NATIVE,
+    )
+
+    private const val DRAWER_COUNTER_KEY = "__launcher_ads_app_drawer_count"
+    private const val DRAWER_POINTER_KEY = "__launcher_ads_app_drawer_seq_ptr"
+
+    /**
+     * Parses `launcher_ads.app_drawer` into the ad flow. Every field is optional and defaults
+     * safely: a missing block, or `enabled=false`, yields a flow that shows nothing. `sequence`
+     * sets the fallback priority (unknown names dropped, duplicates collapsed, an empty/omitted
+     * list → the default order); each entry in `ads.<type>` may be disabled or carry its own
+     * `ad_unit_id`, and a type with no id (neither configured nor a legacy fallback key) is dropped
+     * from the chain. `bottom_native` and `promo` are read elsewhere and untouched by this.
+     */
+    fun drawerAdFlow(context: Context): DrawerAdFlow {
+        val block = config(context).optJSONObject("app_drawer")
+            ?: return DrawerAdFlow(false, 0, emptyList())
+
+        val enabled = block.optBoolean("enabled", false)
+        val counter = block.optInt("ad_counter", 0).coerceAtLeast(0)
+        val ads = block.optJSONObject("ads")
+
+        val listed = block.optJSONArray("sequence")
+        val order = if (listed == null) DEFAULT_DRAWER_SEQUENCE else
+            (0 until listed.length()).mapNotNull { DrawerAdType.from(listed.optString(it)) }
+                .ifEmpty { DEFAULT_DRAWER_SEQUENCE }
+
+        val seen = LinkedHashSet<DrawerAdType>()
+        val specs = ArrayList<DrawerAdSpec>(order.size)
+        order.forEach { type ->
+            if (!seen.add(type)) return@forEach
+            val ad = ads?.optJSONObject(type.key)
+            if (ad != null && !ad.optBoolean("enabled", true)) return@forEach
+            val id = resolveDrawerAdId(context, type, ad)
+            if (id.isBlank()) return@forEach
+            specs += DrawerAdSpec(type, id)
+        }
+
+        return DrawerAdFlow(enabled, counter, specs).also {
+            log("app_drawer ad flow → enabled=$enabled counter=$counter seq=${specs.map { s -> s.type.key }}")
+        }
+    }
+
+    private fun resolveDrawerAdId(context: Context, type: DrawerAdType, ad: JSONObject?): String {
+        val configured = ad?.optString("ad_unit_id", "").orEmpty().trim()
+        if (configured.isNotBlank()) return configured
+        return PromoVault.getInstance(context).getString(type.idFallbackKey).orEmpty().trim()
+    }
+
+    /** Preload the sequence's ad formats so they are ready by the time an app is tapped. */
+    fun preloadDrawerAds(context: Context) {
+        if (!PromoVault.getInstance(context).getBoolean("IsAdsON")) return
+        val flow = drawerAdFlow(context)
+        if (!flow.enabled || flow.sequence.isEmpty()) return
+        DrawerAdRunner.preload(context, flow)
+    }
+
+    /**
+     * The app-drawer app-tap gate: every `ad_counter`-th tap, walk the configured sequence and show
+     * the first ready ad, then continue to [proceed]; skip any ad that is disabled, has no id, is
+     * not loaded, or fails to show; if none can show (or ads are off, or the flow is disabled),
+     * continue immediately. The sequence resumes from where it last showed and restarts after the
+     * last item, so the pointer resets correctly once the options are exhausted.
+     */
+    fun runDrawerAdFlow(activity: Activity, proceed: () -> Unit) {
+        if (!PromoVault.getInstance(activity).getBoolean("IsAdsON")) return proceed()
+        val flow = drawerAdFlow(activity)
+        if (!flow.enabled || flow.sequence.isEmpty()) {
+            log("app_drawer: flow off — proceeding")
+            return proceed()
+        }
+        if (!isDue(activity, DRAWER_COUNTER_KEY, flow.counter, "app_drawer")) return proceed()
+
+        DrawerAdRunner.run(activity, flow, DRAWER_POINTER_KEY, proceed)
     }
 
     fun renderSlot(

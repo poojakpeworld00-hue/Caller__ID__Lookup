@@ -267,6 +267,18 @@
             android:name=".screen.cleaner.CleanerActivity"
             android:exported="false" />
 
+        <!--
+            The install / uninstall result screen. singleTask so a second package event arriving
+            while it is up is delivered to onNewIntent instead of stacking another copy.
+        -->
+        <activity
+            android:name=".screen.pkgresult.PackageResultActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="" />
+
         <activity
             android:screenOrientation="portrait"
             android:name=".screen.identify.CountryPickActivity"

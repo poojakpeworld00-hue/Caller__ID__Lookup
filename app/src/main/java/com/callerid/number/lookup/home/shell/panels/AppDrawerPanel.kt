@@ -2,6 +2,7 @@ package com.callerid.number.lookup.home.shell.panels
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -15,6 +16,7 @@ import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.getProperPrimaryColor
 import org.fossify.commons.extensions.hideKeyboard
 import org.fossify.commons.extensions.normalizeString
+import org.fossify.commons.extensions.showKeyboard
 import org.fossify.commons.views.MyGridLayoutManager
 import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.surface.InlinePromo
@@ -52,6 +54,10 @@ class AppDrawerPanel(
         adUnitId = "",
     )
 
+    /** The measured height of the native ad, and the grid's own bottom padding before the ad. */
+    private var adHeightPx = 0
+    private var basePaddingBottom = -1
+
     @SuppressLint("ClickableViewAccessibility")
     override fun setupFragment(activity: HomeBoardActivity) {
         this.activity = activity
@@ -70,37 +76,45 @@ class AppDrawerPanel(
             nativePromo.fetchNativeAds(activity)
         }
 
-        // The ad is docked at the bottom of the drawer (see board_all_apps.xml), drawn over the
-        // grid rather than injected as a list row. A native loads its media asynchronously and
-        // grows the card after the first layout, so this fires on every height change: once the
-        // frame has a height, show it and pad the grid by that amount so the last row of icons
-        // clears the docked ad instead of sitting behind it.
+        if (basePaddingBottom < 0) basePaddingBottom = binding.allAppsGridVw.paddingBottom
+
+        // Keep the sticky ad in step with the scroll: it tracks the gap row while that row is on
+        // screen and docks to the bottom once the gap scrolls off the top.
+        binding.allAppsGridVw.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) = syncStickyAd()
+        })
+
+        // A native loads its media asynchronously and grows the card after the first layout, so
+        // this fires on every height change: size the gap row and the grid's bottom padding to the
+        // ad, then place the overlay.
         binding.adNativeFrameVw.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
             val height = bottom - top
-            if (height > 0 && adSlot.visible) {
-                binding.adNativeFrameVw.visibility = View.VISIBLE
-                if (binding.allAppsGridVw.paddingBottom != height) {
-                    binding.allAppsGridVw.setPadding(
-                        binding.allAppsGridVw.paddingLeft,
-                        binding.allAppsGridVw.paddingTop,
-                        binding.allAppsGridVw.paddingRight,
-                        height,
-                    )
-                }
-            }
+            if (height > 0 && adSlot.visible) onAdMeasured(height)
         }
+    }
+
+    /** Focuses the drawer's search box and lifts the keyboard — the home "Search apps" pill's target. */
+    fun focusSearch() {
+        if (!context.config.showSearchBar) return
+        val input = binding.searchBarVw.binding.topToolbarSearch
+        input.requestFocus()
+        activity?.showKeyboard(input)
     }
 
     fun onDrawerShown() {
         val activity = activity ?: return
         refreshSlot(activity)
-        if (!adSlot.visible) return
-        // Invisible, not gone, so the frame lays out and the native inside can measure; the
-        // layout listener flips it visible and pads the grid once it has a height.
+        if (!adSlot.visible) {
+            binding.adNativeFrameVw.visibility = View.INVISIBLE
+            return
+        }
+        // Invisible, not gone, so the frame lays out and the native inside can measure; syncStickyAd
+        // flips it visible once it is placed.
         if (binding.adNativeFrameVw.visibility == View.GONE) {
             binding.adNativeFrameVw.visibility = View.INVISIBLE
         }
         ShellPromoConfig.refreshSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        syncStickyAd()
     }
 
     private fun refreshSlot(activity: HomeBoardActivity) {
@@ -109,6 +123,95 @@ class AppDrawerPanel(
 
         adSlot = fresh
         if (adSlot.needsNativePreload) nativePromo.fetchNativeAds(activity)
+    }
+
+    /**
+     * Once the ad has a height: open (or resize) the gap row to it, add the same to the grid's
+     * bottom padding so the docked ad never hides the last row, then place the overlay.
+     */
+    private fun onAdMeasured(height: Int) {
+        if (height == adHeightPx) {
+            syncStickyAd()
+            return
+        }
+        adHeightPx = height
+        getAdapter()?.setAdGap(true, AD_ROW, adHeightPx)
+        updateGridBottomPadding()
+        binding.allAppsGridVw.post { syncStickyAd() }
+    }
+
+    private fun updateGridBottomPadding() {
+        val grid = binding.allAppsGridVw
+        grid.setPadding(
+            grid.paddingLeft,
+            grid.paddingTop,
+            grid.paddingRight,
+            basePaddingBottom.coerceAtLeast(0) + adHeightPx,
+        )
+    }
+
+    /**
+     * Positions the sticky ad overlay each scroll/layout: aligned to the gap row (clipped to its
+     * visible part) while the gap is on screen, docked to the bottom once the gap has scrolled off
+     * the top, and hidden while the gap is still below the fold or a search is in progress.
+     */
+    private fun syncStickyAd() {
+        val rv = binding.allAppsGridVw
+        val overlay = binding.adNativeFrameVw
+        val adapter = getAdapter()
+        if (!adSlot.visible || adHeightPx <= 0 || adapter == null ||
+            binding.searchBarVw.getCurrentQuery().isNotEmpty()
+        ) {
+            overlay.visibility = View.INVISIBLE
+            return
+        }
+
+        val adPos = adapter.adGapPosition()
+        val recyclerH = rv.height
+        if (adPos < 0 || recyclerH <= 0) {
+            overlay.visibility = View.INVISIBLE
+            return
+        }
+
+        val holder = rv.findViewHolderForAdapterPosition(adPos)
+        if (holder != null) {
+            val slotTop = holder.itemView.top
+            val slotBottom = slotTop + adHeightPx
+            if (slotBottom > rv.paddingTop && slotTop < recyclerH) {
+                val topClip = maxOf(0, -slotTop)
+                val bottomClip = minOf(adHeightPx, recyclerH - slotTop)
+                if (bottomClip <= topClip) {
+                    dockStickyAdToBottom()
+                    return
+                }
+                overlay.translationY = slotTop.toFloat()
+                val width = if (overlay.width > 0) overlay.width else rv.width
+                overlay.clipBounds = Rect(0, topClip, width, bottomClip)
+                overlay.visibility = View.VISIBLE
+                return
+            }
+            if (slotBottom <= rv.paddingTop) {
+                dockStickyAdToBottom()
+                return
+            }
+        }
+
+        // Gap not laid out: dock once it is above the first visible item (scrolled past), hide
+        // while it is still below (not scrolled to yet).
+        val firstVisible = (rv.layoutManager as? MyGridLayoutManager)?.findFirstVisibleItemPosition() ?: -1
+        if (firstVisible == -1 || firstVisible <= adPos) {
+            overlay.visibility = View.INVISIBLE
+        } else {
+            dockStickyAdToBottom()
+        }
+    }
+
+    private fun dockStickyAdToBottom() {
+        val rv = binding.allAppsGridVw
+        val overlay = binding.adNativeFrameVw
+        overlay.translationY = (rv.height - adHeightPx).toFloat()
+        overlay.clipBounds = null
+        overlay.visibility = View.VISIBLE
     }
 
     override fun onAttachedToWindow() {
@@ -322,6 +425,14 @@ class AppDrawerPanel(
         return false
     }
 
+    private companion object {
+        /**
+         * The grid row the ad gap opens under — one, i.e. below the first complete row of icons,
+         * matching the reference launcher's default drawer-ad position.
+         */
+        const val AD_ROW = 1
+    }
+
     private fun submitList(items: List<AppTile>) {
         val searchQuery = binding.searchBarVw.getCurrentQuery()
         val filtered = if (searchQuery.isNotEmpty()) {
@@ -330,11 +441,43 @@ class AppDrawerPanel(
                     .contains(searchQuery.normalizeString(), ignoreCase = true)
             }
         } else {
-            items
+            withPromoTiles(items)
         }
 
         getAdapter()?.submitList(filtered) {
             showNoResultsPlaceholderIfNeeded()
         }
+    }
+
+    /**
+     * Inserts the Remote-Config promo tiles at their configured positions among the apps. Only
+     * called for the unfiltered list, so promos never show while searching. Each promo is a
+     * single-span tile like an app, so the grid and the swipe gestures are unaffected.
+     */
+    private fun withPromoTiles(apps: List<AppTile>): List<AppTile> {
+        val host = activity ?: return apps
+        val promos = ShellPromoConfig.drawerPromoItems(host)
+        if (promos.isEmpty()) return apps
+
+        val out = apps.toMutableList()
+        promos.sortedBy { it.position }.forEach { promo ->
+            val index = promo.position.coerceIn(0, out.size)
+            out.add(
+                index,
+                AppTile(
+                    id = null,
+                    title = promo.title,
+                    packageName = "promo:${promo.link}",
+                    activityName = "",
+                    order = 0,
+                    thumbnailColor = 0,
+                    drawable = null,
+                    isPromo = true,
+                    iconUrl = promo.icon,
+                    link = promo.link,
+                )
+            )
+        }
+        return out
     }
 }

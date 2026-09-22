@@ -20,6 +20,7 @@ import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
 import com.callerid.number.lookup.home.shell.ext.config
 import com.callerid.number.lookup.home.permit.PermitEngine
+import com.callerid.number.lookup.home.screen.pkgresult.PackageEventWatcher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
 import com.callerid.number.lookup.home.kit.CrashSentry
 import com.callerid.number.lookup.home.kit.LogRail
@@ -79,6 +80,10 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         super.onCreate()
         appContext = applicationContext
         PromoVault.getInstance(this)
+
+        // Hears app install / removal and shows the result screen from whichever of our screens is
+        // foreground (queuing it otherwise). Also seeds the package metadata cache.
+        PackageEventWatcher.register(this)
 
         config.appSideloadingStatus = SIDELOADING_FALSE
 
