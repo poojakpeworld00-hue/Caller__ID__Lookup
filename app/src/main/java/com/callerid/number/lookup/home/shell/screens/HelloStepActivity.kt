@@ -4,6 +4,8 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import com.callerid.admesh.engine.ShellPromoConfig
+import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.databinding.CellGestureTileBinding
 import com.callerid.number.lookup.home.databinding.ScreenOnboardingWelcomeBinding
 import com.callerid.number.lookup.home.shell.ext.excludeAppFromRecents
 import com.callerid.number.lookup.home.shell.support.OnboardRouter
@@ -47,7 +49,25 @@ class HelloStepActivity : ShellBaseActivity() {
             this, ShellPromoConfig.OnboardScreen.WELCOME, binding.root
         )
 
+        bindGestureTiles()
         playEntrance()
+    }
+
+    /**
+     * The four launcher gestures, ported from the reference Ready screen: one chevron glyph
+     * rotated per direction (up -90, right 0, down 90, left 180), each with its own label pair.
+     */
+    private fun bindGestureTiles() = with(binding) {
+        bindTile(tileSwipeUp, -90f, R.string.gesture_swipe_up, R.string.gesture_swipe_up_body)
+        bindTile(tileSwipeRight, 0f, R.string.gesture_swipe_right, R.string.gesture_swipe_right_body)
+        bindTile(tileSwipeDown, 90f, R.string.gesture_swipe_down, R.string.gesture_swipe_down_body)
+        bindTile(tileSwipeLeft, 180f, R.string.gesture_swipe_left, R.string.gesture_swipe_left_body)
+    }
+
+    private fun bindTile(tile: CellGestureTileBinding, rotation: Float, title: Int, body: Int) {
+        tile.tileIcon.rotation = rotation
+        tile.tileTitle.setText(title)
+        tile.tileBody.setText(body)
     }
 
     private fun playEntrance() = with(binding) {
@@ -56,7 +76,7 @@ class HelloStepActivity : ShellBaseActivity() {
                 onboardingHeroVw,
                 onboardingTitleVw,
                 onboardingLeadVw,
-                onboardingFeaturesVw,
+                onboardingGesturesVw,
                 onboardingFooterVw,
             )
         )

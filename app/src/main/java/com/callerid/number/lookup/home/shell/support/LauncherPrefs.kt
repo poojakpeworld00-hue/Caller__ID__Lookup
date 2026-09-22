@@ -26,6 +26,11 @@ class LauncherPrefs(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(WAS_CLOCK_SEEDED, false)
         set(wasClockSeeded) = prefs.edit().putBoolean(WAS_CLOCK_SEEDED, wasClockSeeded).apply()
 
+    /** Whether the quick-actions card (clock + Dialer/Block/Lookup/Tools) has been placed. */
+    var wasQuickActionsSeeded: Boolean
+        get() = prefs.getBoolean(WAS_QUICK_ACTIONS_SEEDED, false)
+        set(value) = prefs.edit().putBoolean(WAS_QUICK_ACTIONS_SEEDED, value).apply()
+
     /**
      * Whether the one-time repair for the old seeding bug has run.
      *

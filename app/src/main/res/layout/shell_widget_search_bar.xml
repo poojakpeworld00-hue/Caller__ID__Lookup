@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Search pill sitting on the home screen. Tapping anywhere on it opens the app search
-    panel with the field already focused, so the whole pill is one target — which is also
-    why there are no separate controls inside it to compete for the tap.
 
-    Light fill with dark-grey content, so it reads against a wallpaper rather than relying
-    on the wallpaper being dark.
+<!--
+    The home screen's search pill, styled like the reference launcher's: a near-white rounded
+    pill over the wallpaper with a leading search glyph, the hint, and a trailing accent action
+    (the dialpad, this app's analogue of the reference's scan button).
+
+    Colours are literals, not theme attributes: this sits on the user's wallpaper, not an app
+    surface, so it must carry its own contrast whatever the device light/dark setting is.
+
+    Tapping the pill opens app search; the trailing button opens the dialer. Both taps are wired
+    in BoardGrid.placeAppWidget.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
+    android:layout_height="48dp"
     android:layout_gravity="center"
-    android:layout_margin="4dp"
-    android:background="@drawable/form_faux_search_bar"
-    android:elevation="2dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingStart="18dp"
-    android:paddingEnd="18dp">
+    android:layout_margin="3dp"
+    android:background="@drawable/form_home_search_pill"
+    android:elevation="2dp">
 
     <ImageView
         android:id="@+id/search_bar_iconVw"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:contentDescription="@string/pseudo_widget_search_bar"
+        android:paddingStart="14dp"
+        android:paddingEnd="6dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/sym_pseudo_search_vector"
-        android:tint="#5F6368" />
+        android:tint="#6B7280" />
+
+    <ImageView
+        android:id="@+id/search_bar_actionVw"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/pseudo_widget_search_bar_dial"
+        android:padding="13dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sym_dialpad"
+        android:tint="#2353F3" />
 
     <TextView
         android:id="@+id/search_bar_hintVw"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_weight="1"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/search_bar_actionVw"
+        android:layout_toEndOf="@id/search_bar_iconVw"
         android:ellipsize="end"
-        android:fontFamily="@font/nunito_semibold"
         android:maxLines="1"
         android:text="@string/pseudo_widget_search_bar_hint"
-        android:textColor="#5F6368"
-        android:textSize="16sp" />
+        android:textColor="#6B7280"
+        android:textSize="14sp" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -92,6 +92,12 @@ import com.callerid.number.lookup.home.shell.ext.supportsDarkText
 import com.callerid.number.lookup.home.shell.ext.uninstallApp
 import com.callerid.number.lookup.home.shell.panels.BasePanel
 import com.callerid.number.lookup.home.shell.support.CLOCK_ROW_SPAN
+import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_QUICK_ACTIONS
+import com.callerid.number.lookup.home.shell.support.QUICK_ACTIONS_ROW_SPAN
+import com.callerid.number.lookup.home.screen.dialpad.DialPadActivity
+import com.callerid.number.lookup.home.screen.blocking.BlockCenterActivity
+import com.callerid.number.lookup.home.screen.identify.CountryPickActivity
+import com.callerid.number.lookup.home.screen.gadgetry.ToolboxActivity
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_FOLDER
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_ICON
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_SHORTCUT
@@ -965,6 +971,19 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         if (!startFirstResolvable(intents)) launchClockPackage(intents)
     }
 
+    /** The quick-actions card's four tiles, each opening one of this app's own screens. */
+    fun openDialer() = runCatching { startActivity(Intent(this, DialPadActivity::class.java)) }
+        .onFailure { Log.e(TAG, "could not open dialer", it) }
+
+    fun openBlockCenter() = runCatching { startActivity(Intent(this, BlockCenterActivity::class.java)) }
+        .onFailure { Log.e(TAG, "could not open block center", it) }
+
+    fun openLookup() = runCatching { startActivity(Intent(this, CountryPickActivity::class.java)) }
+        .onFailure { Log.e(TAG, "could not open lookup", it) }
+
+    fun openTools() = runCatching { startActivity(Intent(this, ToolboxActivity::class.java)) }
+        .onFailure { Log.e(TAG, "could not open tools", it) }
+
     fun openCalendarApp() {
         val todayUri = CalendarContract.CONTENT_URI.buildUpon()
             .appendPath("time")
@@ -1659,53 +1678,25 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
 
             repairSeedFlagsOnce(pageItems)
 
-            if (config.wasSearchBarSeeded && config.wasClockSeeded) {
+            if (config.wasSearchBarSeeded && config.wasQuickActionsSeeded) {
                 return
             }
 
-            
             val occupiedRows = pageItems
-                .filter { it.className != PSEUDO_WIDGET_CLOCK && it.className != PSEUDO_WIDGET_SEARCH }
+                .filter {
+                    it.className != PSEUDO_WIDGET_SEARCH &&
+                        it.className != PSEUDO_WIDGET_QUICK_ACTIONS
+                }
                 .flatMap { it.top..it.bottom }
                 .toMutableSet()
 
-            if (!config.wasClockSeeded) {
-                val existing = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_CLOCK }
-                if (existing != null) {
-                    
-                    config.wasClockSeeded = true
-                    occupiedRows += existing.top..existing.bottom
-                } else {
-                    val top = firstFreeRowBand(occupiedRows, CLOCK_ROW_SPAN, dockRow)
-                    if (top != null) {
-                        val bottom = top + CLOCK_ROW_SPAN - 1
-                        runCatching {
-                            insertPseudoWidget(
-                                className = PSEUDO_WIDGET_CLOCK,
-                                titleRes = R.string.pseudo_widget_clock,
-                                left = 0,
-                                top = top,
-                                right = lastColumn,
-                                bottom = bottom,
-                            )
-                        }.onSuccess {
-                            config.wasClockSeeded = true
-                            occupiedRows += top..bottom
-                        }.onFailure {
-                            Log.e(TAG, "clock could not be seeded — retrying next launch", it)
-                        }
-                    } else {
-                        Log.w(TAG, "no free rows for the clock — retrying next launch")
-                    }
-                }
-            }
-
+            // The search pill is the top row.
             if (!config.wasSearchBarSeeded) {
                 val existing = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_SEARCH }
                 if (existing != null) {
                     config.wasSearchBarSeeded = true
+                    occupiedRows += existing.top..existing.bottom
                 } else {
-                    
                     val row = SEARCH_BAR_ROW.takeIf { it < dockRow && it !in occupiedRows }
                         ?: firstFreeRowBand(occupiedRows, rows = 1, dockRow = dockRow)
                     if (row != null) {
@@ -1726,6 +1717,37 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
                         }
                     } else {
                         Log.w(TAG, "no free row for the search bar — retrying next launch")
+                    }
+                }
+            }
+
+            // The quick-actions card (clock + Dialer/Block/Lookup/Tools) sits under the pill.
+            if (!config.wasQuickActionsSeeded) {
+                val existing = pageItems.firstOrNull { it.className == PSEUDO_WIDGET_QUICK_ACTIONS }
+                if (existing != null) {
+                    config.wasQuickActionsSeeded = true
+                    occupiedRows += existing.top..existing.bottom
+                } else {
+                    val top = firstFreeRowBand(occupiedRows, QUICK_ACTIONS_ROW_SPAN, dockRow)
+                    if (top != null) {
+                        val bottom = top + QUICK_ACTIONS_ROW_SPAN - 1
+                        runCatching {
+                            insertPseudoWidget(
+                                className = PSEUDO_WIDGET_QUICK_ACTIONS,
+                                titleRes = R.string.pseudo_widget_quick_actions,
+                                left = 0,
+                                top = top,
+                                right = lastColumn,
+                                bottom = bottom,
+                            )
+                        }.onSuccess {
+                            config.wasQuickActionsSeeded = true
+                            occupiedRows += top..bottom
+                        }.onFailure {
+                            Log.e(TAG, "quick-actions card could not be seeded — retrying next launch", it)
+                        }
+                    } else {
+                        Log.w(TAG, "no free rows for the quick-actions card — retrying next launch")
                     }
                 }
             }
@@ -1753,9 +1775,9 @@ class HomeBoardActivity : ShellBaseActivity(), SwipeListener, HomeShellOwner {
         }
         config.wasHomeWidgetsRepaired = true
 
-        if (config.wasClockSeeded && pageItems.none { it.className == PSEUDO_WIDGET_CLOCK }) {
-            Log.i(TAG, "clock marked seeded but missing — seeding it again")
-            config.wasClockSeeded = false
+        if (config.wasQuickActionsSeeded && pageItems.none { it.className == PSEUDO_WIDGET_QUICK_ACTIONS }) {
+            Log.i(TAG, "quick-actions card marked seeded but missing — seeding it again")
+            config.wasQuickActionsSeeded = false
         }
         if (config.wasSearchBarSeeded && pageItems.none { it.className == PSEUDO_WIDGET_SEARCH }) {
             Log.i(TAG, "search bar marked seeded but missing — seeding it again")

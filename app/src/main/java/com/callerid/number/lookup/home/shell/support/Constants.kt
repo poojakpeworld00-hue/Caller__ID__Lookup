@@ -9,6 +9,7 @@ const val WAS_HOME_SCREEN_INIT = "was_home_screen_init"
 const val WAS_ONBOARDING_COMPLETED = "was_onboarding_completed"
 const val WAS_SEARCH_BAR_SEEDED = "was_search_bar_seeded"
 const val WAS_CLOCK_SEEDED = "was_clock_seeded"
+const val WAS_QUICK_ACTIONS_SEEDED = "was_quick_actions_seeded"
 const val WAS_HOME_WIDGETS_REPAIRED = "was_home_widgets_repaired"
 const val WAS_SWIPE_HINT_SHOWN = "was_swipe_hint_shown"
 const val SWIPE_HINT_INDEX = "swipe_hint_index"
@@ -43,9 +44,13 @@ const val ITEM_TYPE_FOLDER = 3
 const val PSEUDO_WIDGET_PREFIX = "com.callerid.number.lookup.home.shell.pseudo."
 const val PSEUDO_WIDGET_CLOCK = "${PSEUDO_WIDGET_PREFIX}DigitalClock"
 const val PSEUDO_WIDGET_SEARCH = "${PSEUDO_WIDGET_PREFIX}SearchBar"
+const val PSEUDO_WIDGET_QUICK_ACTIONS = "${PSEUDO_WIDGET_PREFIX}QuickActions"
 
 const val CLOCK_ROW_SPAN = 2
-const val SEARCH_BAR_ROW = CLOCK_ROW_SPAN
+
+/** The search pill is the top row; the quick-actions card (with the clock) sits under it. */
+const val SEARCH_BAR_ROW = 0
+const val QUICK_ACTIONS_ROW_SPAN = 2
 
 const val WIDGET_HOST_ID = 12345
 const val MAX_CLICK_DURATION = 150

@@ -633,6 +633,12 @@
     <string name="pseudo_widget_clock">Clock</string>
     <string name="pseudo_widget_search_bar">Search bar</string>
     <string name="pseudo_widget_search_bar_hint">Search apps…</string>
+    <string name="pseudo_widget_search_bar_dial">Dialpad</string>
+    <string name="pseudo_widget_quick_actions">Quick actions</string>
+    <string name="qa_dialer">Dialer</string>
+    <string name="qa_block">Block</string>
+    <string name="qa_lookup">Lookup</string>
+    <string name="qa_tools">Tools</string>
     
     <string name="digital_clock_widget">Digital clock</string>
     <string name="analog_clock_widget">Analog clock</string>

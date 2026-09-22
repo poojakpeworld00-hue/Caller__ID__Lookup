@@ -65,6 +65,7 @@ import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_ICON
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_SHORTCUT
 import com.callerid.number.lookup.home.shell.support.ITEM_TYPE_WIDGET
 import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_CLOCK
+import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_QUICK_ACTIONS
 import com.callerid.number.lookup.home.shell.support.PSEUDO_WIDGET_SEARCH
 import com.callerid.number.lookup.home.shell.support.WIDGET_HOST_ID
 import com.callerid.number.lookup.home.shell.entities.BoardItem
@@ -1090,6 +1091,7 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
     private fun BoardItem.pseudoWidgetLayout() = when (className) {
         PSEUDO_WIDGET_CLOCK -> R.layout.shell_widget_digital_clock
         PSEUDO_WIDGET_SEARCH -> R.layout.shell_widget_search_bar
+        PSEUDO_WIDGET_QUICK_ACTIONS -> R.layout.shell_widget_quick_actions
         else -> null
     }
 
@@ -1162,12 +1164,24 @@ class BoardGrid(context: Context, attrs: AttributeSet, defStyle: Int) :
                 val activity = this@BoardGrid.context as HomeBoardActivity
                 when (item.className) {
                     PSEUDO_WIDGET_SEARCH -> {
-
+                        // The pill opens app search; the trailing button opens the dialer.
                         setOnClickListener { activity.openAppSearch() }
+                        findViewById<View>(R.id.search_bar_actionVw)?.setOnClickListener {
+                            activity.openDialer()
+                        }
+                    }
+
+                    PSEUDO_WIDGET_QUICK_ACTIONS -> {
+                        findViewById<View>(R.id.qa_dialer)?.setOnClickListener { activity.openDialer() }
+                        findViewById<View>(R.id.qa_block)?.setOnClickListener { activity.openBlockCenter() }
+                        findViewById<View>(R.id.qa_lookup)?.setOnClickListener { activity.openLookup() }
+                        findViewById<View>(R.id.qa_tools)?.setOnClickListener { activity.openTools() }
+                        findViewById<View>(R.id.qa_clock)?.setOnClickListener { activity.openClockApp() }
+                        findViewById<View>(R.id.qa_date)?.setOnClickListener { activity.openCalendarApp() }
                     }
 
                     PSEUDO_WIDGET_CLOCK -> {
-                        
+
                         findViewById<View>(R.id.widget_text_clockVw)?.setOnClickListener {
                             activity.openClockApp()
                         }

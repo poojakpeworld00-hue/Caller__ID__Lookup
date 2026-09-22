@@ -32,8 +32,6 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     }
 
     private val binding by viewBinding(ScreenOnboardingDefaultLauncherBinding::inflate)
-    private var shieldPulse: ValueAnimator? = null
-    private var sparklePulses: List<ValueAnimator> = emptyList()
 
     private var leaving = false
 
@@ -181,25 +179,11 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun playEntrance() = with(binding) {
         riseIn(
             listOf(
-                onboardingHeroVw,
+                imageHero,
                 onboardingTitleVw,
                 onboardingLeadVw,
-                onboardingFooterVw,
+                onboardingSetDefaultVw,
             )
         )
-        stampIn(onboardingBadgeVw)
-        shieldPulse = breathe(onboardingShieldVw)
-        sparklePulses = twinkle(
-            listOf(onboardingSparkle1Vw, onboardingSparkle2Vw, onboardingSparkle3Vw)
-        )
-    }
-
-    override fun onDestroy() {
-
-        shieldPulse?.cancel()
-        shieldPulse = null
-        sparklePulses.forEach { it.cancel() }
-        sparklePulses = emptyList()
-        super.onDestroy()
     }
 }

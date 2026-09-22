@@ -24,12 +24,12 @@
     <include
         android:id="@+id/onboarding_step_headerVw"
         layout="@layout/view_onboarding_step_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="14dp" />
+        android:layout_below="@id/onboarding_skipVw"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -135,58 +135,55 @@
                 android:textSize="15sp" />
 
 
+            <!-- The four launcher gestures, ported from the reference Ready screen: one chevron
+                 rotated per direction, bound in HelloStepActivity.bindGestureTiles. -->
             <LinearLayout
-                android:id="@+id/onboarding_featuresVw"
+                android:id="@+id/onboarding_gesturesVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    style="@style/OnbFeatureTile"
-                    android:layout_marginEnd="6dp">
+                <include
+                    android:id="@+id/tileSwipeUp"
+                    layout="@layout/cell_gesture_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-                    <ImageView
-                        style="@style/OnbFeatureIcon"
-                        android:src="@drawable/sym_cid_id_card" />
+                <Space
+                    android:layout_width="6dp"
+                    android:layout_height="1dp" />
 
-                    <org.fossify.commons.views.MyTextView
-                        style="@style/OnbFeatureLabel"
-                        android:text="@string/onb_feature_caller_id" />
+                <include
+                    android:id="@+id/tileSwipeRight"
+                    layout="@layout/cell_gesture_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-                    <View style="@style/OnbFeatureRule" />
-                </LinearLayout>
+                <Space
+                    android:layout_width="6dp"
+                    android:layout_height="1dp" />
 
-                <LinearLayout
-                    style="@style/OnbFeatureTile"
-                    android:layout_marginHorizontal="6dp">
+                <include
+                    android:id="@+id/tileSwipeDown"
+                    layout="@layout/cell_gesture_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-                    <ImageView
-                        style="@style/OnbFeatureIcon"
-                        android:src="@drawable/slot_shield_warning" />
+                <Space
+                    android:layout_width="6dp"
+                    android:layout_height="1dp" />
 
-                    <org.fossify.commons.views.MyTextView
-                        style="@style/OnbFeatureLabel"
-                        android:text="@string/onb_feature_spam" />
-
-                    <View style="@style/OnbFeatureRule" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/OnbFeatureTile"
-                    android:layout_marginStart="6dp">
-
-                    <ImageView
-                        style="@style/OnbFeatureIcon"
-                        android:src="@drawable/slot_shield_check" />
-
-                    <org.fossify.commons.views.MyTextView
-                        style="@style/OnbFeatureLabel"
-                        android:text="@string/onb_feature_secure" />
-
-                    <View style="@style/OnbFeatureRule" />
-                </LinearLayout>
+                <include
+                    android:id="@+id/tileSwipeLeft"
+                    layout="@layout/cell_gesture_tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 

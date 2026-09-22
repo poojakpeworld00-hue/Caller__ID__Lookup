@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    The home-screen quick-actions card, ported from the reference launcher: a clock on the left
+    third and a 2x2 grid of this app's four actions (Dialer / Block / Lookup / Tools) on the
+    right, split by a vertical rule.
+
+    A pseudo widget (placed by the launcher on the home surface itself), drawn over the user's
+    wallpaper — so colours are literals and carry their own contrast, not theme attributes.
+
+    wrap_content height with top gravity so the card is exactly as tall as its content and the
+    wallpaper shows through the rest of its two grid cells.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:background="@drawable/form_qa_card"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.9"
+        android:orientation="vertical">
+
+        <TextClock
+            android:id="@+id/qa_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_bold"
+            android:fontFeatureSettings="tnum"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:includeFontPadding="false"
+            android:letterSpacing="-0.04"
+            android:textColor="#FF0E1524"
+            android:textSize="36sp"
+            tools:text="09:58" />
+
+        <TextClock
+            android:id="@+id/qa_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/nunito_semibold"
+            android:format12Hour="EEEE, d MMM"
+            android:format24Hour="EEEE, d MMM"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="#FF8A94A6"
+            android:textSize="12sp"
+            tools:text="Thursday, 17 Sep" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="12dp"
+        android:background="#FFEEF1F6" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.6"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/qa_dialer"
+                style="@style/QuickActionTile">
+
+                <ImageView
+                    style="@style/QuickActionTileIcon"
+                    android:src="@drawable/sym_dialpad" />
+
+                <TextView
+                    style="@style/QuickActionTileLabel"
+                    android:text="@string/qa_dialer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/qa_block"
+                style="@style/QuickActionTile">
+
+                <ImageView
+                    style="@style/QuickActionTileIcon"
+                    android:src="@drawable/sym_block" />
+
+                <TextView
+                    style="@style/QuickActionTileLabel"
+                    android:text="@string/qa_block" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/qa_lookup"
+                style="@style/QuickActionTile">
+
+                <ImageView
+                    style="@style/QuickActionTileIcon"
+                    android:src="@drawable/sym_search_plus" />
+
+                <TextView
+                    style="@style/QuickActionTileLabel"
+                    android:text="@string/qa_lookup" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/qa_tools"
+                style="@style/QuickActionTile">
+
+                <ImageView
+                    style="@style/QuickActionTileIcon"
+                    android:src="@drawable/sym_tool_wrench" />
+
+                <TextView
+                    style="@style/QuickActionTileLabel"
+                    android:text="@string/qa_tools" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
