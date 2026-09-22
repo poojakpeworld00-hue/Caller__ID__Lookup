@@ -22,7 +22,9 @@ class RoleCoachActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.screen_overlay_guide)
+        // A dedicated centred + dimmed layout, not the shared bottom-sheet guide: this hint sits
+        // in the middle of the system "Default home app" page with that page dimmed behind it.
+        setContentView(R.layout.screen_home_hint)
         LogRail.log(TAG, "hint shown over the home-app list")
 
         window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
@@ -44,9 +46,21 @@ class RoleCoachActivity : AppCompatActivity() {
         }
 
         bindDismissOnTouch(root)
+        startTapAnimation()
 
         visible = this
         root.postDelayed(autoFinish, AUTO_FINISH_MS)
+    }
+
+    /**
+     * The pointing-hand tap and the radio's pulse, in phase, so the row reads as "tap this one".
+     * Both views are the layout's — null-safe so a restyle that drops either one cannot crash it.
+     */
+    private fun startTapAnimation() {
+        findViewById<View>(R.id.hintHand)
+            ?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.hand_tap_loop))
+        findViewById<View>(R.id.hintRadio)
+            ?.startAnimation(AnimationUtils.loadAnimation(this, R.anim.tap_ring_pulse))
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -22,7 +22,17 @@
         android:textColor="@color/cid_onb_muted"
         android:textSize="15sp" />
 
-    
+    <include
+        android:id="@+id/onboarding_step_headerVw"
+        layout="@layout/view_onboarding_step_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/onboarding_skipVw"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp" />
+
+
     <LinearLayout
         android:id="@+id/onboarding_footerVw"
         android:layout_width="match_parent"
@@ -78,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/onboarding_footerVw"
-        android:layout_below="@id/onboarding_skipVw"
+        android:layout_below="@id/onboarding_step_headerVw"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true">

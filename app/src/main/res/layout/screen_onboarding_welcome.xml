@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,8 +8,8 @@
         android:id="@+id/onboarding_skipVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -22,52 +21,21 @@
         android:textColor="@color/cid_onb_muted"
         android:textSize="15sp" />
 
-    
-    <LinearLayout
-        android:id="@+id/onboarding_footerVw"
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/onboarding_step_headerVw"
+        layout="@layout/view_onboarding_step_header"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp" />
 
-        <View
-            android:id="@+id/ad_native_dividerVw"
-            style="@style/AdDivider" />
-
-        <FrameLayout
-            android:id="@+id/ad_native_frameVw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/ad_shimmerVw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ccc">
-
-                <include layout="@layout/googlemidnative" />
-
-            </com.facebook.shimmer.ShimmerFrameLayout>
-        </FrameLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/onboarding_continueVw"
-            style="@style/OnboardingButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="18dp"
-            android:text="@string/onboarding_continue" />
-
-    </LinearLayout>
-
-    
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/onboarding_footerVw"
-        android:layout_below="@id/onboarding_skipVw"
+        android:layout_below="@id/onboarding_step_headerVw"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:fillViewport="true">
@@ -79,28 +47,28 @@
             android:clipToPadding="false"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+            android:paddingHorizontal="15dp">
 
-            
+
             <RelativeLayout
                 android:id="@+id/onboarding_heroVw"
                 android:layout_width="match_parent"
-                android:layout_height="206dp"
+                android:layout_height="@dimen/_100sdp"
                 android:clipChildren="false"
                 android:clipToPadding="false">
 
                 <View
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="-26dp"
                     android:background="@drawable/form_onb_blob_square" />
 
                 <View
                     android:id="@+id/onboarding_haloVw"
-                    android:layout_width="186dp"
-                    android:layout_height="186dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/form_onb_blob" />
@@ -110,7 +78,7 @@
                     android:layout_height="52dp"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="86dp"
+                    android:layout_marginTop="46dp"
                     android:alpha="0.45"
                     android:contentDescription="@null"
                     android:rotation="-18"
@@ -120,23 +88,23 @@
                 <ImageView
                     android:id="@+id/onboarding_shieldVw"
                     android:layout_width="92dp"
-                    android:layout_height="104dp"
+                    android:layout_height="60dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="54dp"
+                    android:layout_marginTop="34dp"
                     android:contentDescription="@null"
                     android:src="@drawable/sym_cid_shield_phone" />
 
                 <ImageView
                     android:id="@+id/onboarding_badgeVw"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignEnd="@id/onboarding_shieldVw"
                     android:layout_alignBottom="@id/onboarding_shieldVw"
                     android:layout_marginEnd="-12dp"
                     android:layout_marginBottom="-4dp"
                     android:background="@drawable/form_onb_check_badge"
                     android:contentDescription="@null"
-                    android:padding="11dp"
+                    android:padding="18dp"
                     android:src="@drawable/sym_cid_tick"
                     android:tint="@color/cid_onb_on_accent" />
 
@@ -146,7 +114,7 @@
                 android:id="@+id/onboarding_titleVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:letterSpacing="-0.02"
                 android:text="@string/onb_welcome_title"
@@ -166,12 +134,12 @@
                 android:textColor="@color/cid_onb_muted"
                 android:textSize="15sp" />
 
-            
+
             <LinearLayout
                 android:id="@+id/onboarding_featuresVw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
@@ -222,10 +190,43 @@
 
             </LinearLayout>
 
-            <View
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/onboarding_continueVw"
+                style="@style/OnboardingButton"
                 android:layout_width="match_parent"
-                android:layout_height="24dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/onboarding_continue" />
 
+            <LinearLayout
+                android:id="@+id/onboarding_footerVw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/ad_native_dividerVw"
+                    style="@style/AdDivider" />
+
+                <FrameLayout
+                    android:id="@+id/ad_native_frameVw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/ad_shimmerVw"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ccc">
+
+                        <include layout="@layout/googlemidnative2" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+                </FrameLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

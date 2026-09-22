@@ -377,10 +377,10 @@ object ShellPromoConfig {
     }
 
     private val DEFAULT_ORDER = listOf(
-        OnboardScreen.WELCOME,
         OnboardScreen.SET_DEFAULT,
-        OnboardScreen.INTRO,
         OnboardScreen.LANGUAGE,
+        OnboardScreen.WELCOME,
+        OnboardScreen.INTRO,
     )
 
     private fun onboardingBlock(context: Context, screen: OnboardScreen): JSONObject? =

@@ -72,6 +72,12 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         )
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
+        if (!standalone) {
+            OnboardRouter.bindStepHeader(
+                this, ShellPromoConfig.OnboardScreen.LANGUAGE, binding.root
+            )
+        }
+
         resolveRegion()
 
         val onPick: (LanguageItem) -> Unit = { viewModel.select(it.tag) }

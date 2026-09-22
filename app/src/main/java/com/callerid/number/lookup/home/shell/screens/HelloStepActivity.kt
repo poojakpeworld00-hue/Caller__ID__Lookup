@@ -43,6 +43,10 @@ class HelloStepActivity : ShellBaseActivity() {
         )
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
+        OnboardRouter.bindStepHeader(
+            this, ShellPromoConfig.OnboardScreen.WELCOME, binding.root
+        )
+
         playEntrance()
     }
 

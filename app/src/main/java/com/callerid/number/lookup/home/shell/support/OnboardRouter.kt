@@ -4,9 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.engine.ShellPromoConfig.OnboardScreen
 import com.callerid.number.lookup.home.BuildConfig
+import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity
 import com.callerid.number.lookup.home.shell.screens.HomeRoleGateActivity
 import com.callerid.number.lookup.home.shell.screens.HelloStepActivity
@@ -47,6 +51,50 @@ object OnboardRouter {
     }
 
     fun homeActivity(): Class<*> = HomeBoardActivity::class.java
+
+    /**
+     * The screens that carry a "Step n of m" indicator, in numbering order. The intro slides are
+     * deliberately absent — they show their own page dots — so the count the user sees never
+     * includes a step they will not be numbered through.
+     */
+    private val NUMBERED_STEPS = setOf(
+        OnboardScreen.SET_DEFAULT,
+        OnboardScreen.LANGUAGE,
+        OnboardScreen.WELCOME,
+    )
+
+    /** 1-based position of [screen] and the numbered total, computed from the live order. */
+    data class StepPosition(val index: Int, val total: Int)
+
+    /**
+     * Where [screen] sits among the numbered steps of the current onboarding order, or null when
+     * it is not a numbered step (e.g. the intro slides, or a screen dropped from `onboarding.order`).
+     * The total follows the order so removing a step from Remote Config re-counts the rest.
+     */
+    fun stepPosition(context: Context, screen: OnboardScreen): StepPosition? {
+        val numbered = ShellPromoConfig.onboardOrder(context).filter { it in NUMBERED_STEPS }
+        val pos = numbered.indexOf(screen)
+        return if (pos < 0) null else StepPosition(pos + 1, numbered.size)
+    }
+
+    /**
+     * Fills the shared "Step n of m" header (see `view_onboarding_step_header.xml`) found under
+     * [root], and hides it when [screen] is not a numbered step. The pill text and the progress
+     * fill are set here rather than in each screen so the three steps cannot disagree on the count.
+     */
+    fun bindStepHeader(context: Context, screen: OnboardScreen, root: View) {
+        val header = root.findViewById<View>(R.id.onboarding_step_headerVw) ?: return
+        val position = stepPosition(context, screen)
+        if (position == null) {
+            header.visibility = View.GONE
+            return
+        }
+        header.visibility = View.VISIBLE
+        root.findViewById<TextView>(R.id.onboarding_step_pillVw).text =
+            context.getString(R.string.onboarding_step_counter, position.index, position.total)
+        root.findViewById<ProgressBar>(R.id.onboarding_step_progressVw).progress =
+            position.index * 100 / position.total
+    }
 
     fun firstScreen(context: Context): Class<*> = resolveFrom(context, 0)
 

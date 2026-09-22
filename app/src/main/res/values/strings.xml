@@ -646,6 +646,15 @@
 
     <string name="onboarding_continue">Continue</string>
     <string name="onboarding_set_default">Set as Default</string>
+    <string name="onboarding_step_counter">Step %1$d of %2$d</string>
+    <string name="gesture_swipe_up">Swipe up</string>
+    <string name="gesture_swipe_up_body">All apps</string>
+    <string name="gesture_swipe_right">Swipe right</string>
+    <string name="gesture_swipe_right_body">Caller ID</string>
+    <string name="gesture_swipe_down">Swipe down</string>
+    <string name="gesture_swipe_down_body">Notifications</string>
+    <string name="gesture_swipe_left">Swipe left</string>
+    <string name="gesture_swipe_left_body">Search apps</string>
     <string name="default_launcher_banner_title">Setup Required</string>
     <string name="default_launcher_banner_body">Make this your home screen and name or shut out calls without leaving the launcher.</string>
     <string name="swipe_right_hint">Swipe right to open Caller ID</string>
