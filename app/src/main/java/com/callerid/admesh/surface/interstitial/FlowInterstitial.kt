@@ -270,6 +270,11 @@ class FlowInterstitial {
             act.safeLog("inter_link_first")
             return
         }
+        // A global `ad_flow` ("reward,inter", "app_open,inter", …) replaces the plain interstitial.
+        if (LauncherPlacementAds.showAdFlow(act, APP_PLACEMENT) { safeClose("ad_flow") }) {
+            act.safeLog("inter_ad_flow")
+            return
+        }
 
         val isPreload = pref.getBoolean("is_preload_ads")
 

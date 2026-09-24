@@ -208,6 +208,11 @@ class AppsPanelSurface(
     }
 
     private fun launchLauncher(launcher: AppLauncher) {
+        if (launcher.packageName == context.applicationContext.packageName) {
+            // Our own app: openHostApp closes this panel itself.
+            activity?.openHostApp()
+            return
+        }
         activity?.launchApp(launcher.packageName, launcher.activityName)
         activity?.hideLeftPanel()
     }

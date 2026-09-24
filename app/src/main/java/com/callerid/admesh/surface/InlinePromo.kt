@@ -188,6 +188,8 @@ class InlinePromo() {
         if (!hasNetwork(context)
             || !adsPreference.getBoolean("IsAdsON")
             || !adsPreference.getBoolean("NativeAd")
+            // The screen's own switch: `ScreenAds.<Activity>.show` (else `ScreenAds.default.show`).
+            || !PerScreenPromo.resolve(context, context.javaClass.simpleName).show
         ) {
             layout.removeAllViews()
             layout.invisible()
@@ -531,6 +533,8 @@ class InlinePromo() {
         if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeAd")
+            // The screen's own switch: `ScreenAds.<Activity>.show` (else `ScreenAds.default.show`).
+            || !PerScreenPromo.resolve(context, context.javaClass.simpleName).show
         ) {
             layout.removeAllViews()
             layout.invisible()
@@ -829,7 +833,10 @@ class InlinePromo() {
 
         if (context.isFinishing || context.isDestroyed) return
 
-        if (!hasNetwork(context) || !adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("NativeAd")) {
+        if (!hasNetwork(context) || !adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("NativeAd")
+            // The screen's own switch: `ScreenAds.<Activity>.show` (else `ScreenAds.default.show`).
+            || !PerScreenPromo.resolve(context, context.javaClass.simpleName).show
+        ) {
             layout.removeAllViews()
             layout.invisible()
             shimmer?.stopShimmer()

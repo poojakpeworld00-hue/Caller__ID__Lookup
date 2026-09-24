@@ -39,6 +39,20 @@ object OnboardRouter {
     fun isOnboardingActive(activity: Activity): Boolean =
         isOnboarding(activity) || !wasOnboardingCompleted(activity)
 
+    /**
+     * Whether Back moves the user forward through onboarding. Paid (marketing) users: yes, as it
+     * always has. Organic users: no — Back is Back, handled by the screen's default (its own back
+     * ad, then leaving the screen).
+     */
+    fun backMovesForward(context: Context): Boolean =
+        PromoVault.getInstance(context).getBoolean("OnMaketing")
+
+    /** Hands a Back press on to the next handler (the screen's default), from inside [callback]. */
+    fun passBackThrough(activity: androidx.activity.ComponentActivity, callback: androidx.activity.OnBackPressedCallback) {
+        callback.isEnabled = false
+        activity.onBackPressedDispatcher.onBackPressed()
+    }
+
     fun wasOnboardingCompleted(context: Context): Boolean = context.getSharedPrefs().getBoolean(WAS_ONBOARDING_COMPLETED, false)
 
     fun onboardingIntent(context: Context, target: Class<*>): Intent =

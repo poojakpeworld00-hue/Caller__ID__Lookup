@@ -85,6 +85,12 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val current = binding.vuPager.currentItem
+                // Organic: Back is Back — the previous slide, then the screen's default.
+                if (!OnboardRouter.backMovesForward(this@SlideIntroActivity)) {
+                    if (current > 0) binding.vuPager.setCurrentItem(current - 1, true)
+                    else OnboardRouter.passBackThrough(this@SlideIntroActivity, this)
+                    return
+                }
                 if (!ui.backAdvances && current < pages.lastIndex) {
                     binding.vuPager.setCurrentItem(current + 1, true)
                 } else if (!forwarding) {

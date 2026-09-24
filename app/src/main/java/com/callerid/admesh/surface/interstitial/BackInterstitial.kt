@@ -8,6 +8,7 @@ import com.facebook.ads.InterstitialAdListener
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.interBackCounter
 import com.callerid.admesh.engine.PromoVault
@@ -100,6 +101,13 @@ class BackInterstitial {
             return safeClose("counter_skip")
         }
         interBackCounter = 0
+
+        // `back_ad_flow` / a `back_` link chain: the dynamic flow instead of the fixed back ad.
+        if (LauncherPlacementAds.hasOwnFlow(act, "back")) {
+            if (!LauncherPlacementAds.placementEnabled(act, "back")) return safeClose("back_ads_on_false")
+            LauncherPlacementAds.showInterstitial(act, "back") { safeClose("back_flow") }
+            return
+        }
 
         when (PromoKind.fromString(pref.getString("IsAdType"))) {
 

@@ -1303,6 +1303,20 @@ class LauncherPanel : LauncherBasePanel(), FlingListener {
         }, ANIMATION_DURATION)
     }
 
+    /**
+     * Our own icon tapped in the drawer or the apps panel: the same as the dock icon — the host
+     * panel slides in, or, with that panel switched off, the host's launch component opens.
+     */
+    fun openHostApp() {
+        if (isAllAppsFragmentExpanded()) closeAppDrawer()
+        if (isLeftPanelExpanded()) hideLeftPanel()
+        if (LauncherAdsConfig.panelEnabled(LauncherAdsConfig.RIGHT_SWIPE)) {
+            showHostPanel()
+        } else {
+            launchApp(packageName, hostActivityName())
+        }
+    }
+
     private fun showHostPanel() {
         // `launcher_config.panels.messages` - off means the gesture is inert, not a hidden panel.
         if (!LauncherAdsConfig.panelEnabled(LauncherAdsConfig.RIGHT_SWIPE)) {
@@ -1625,12 +1639,10 @@ class LauncherPanel : LauncherBasePanel(), FlingListener {
 
     private fun performItemClick(clickedGridItem: HomeScreenGridItem) {
         when (clickedGridItem.type) {
-            ITEM_TYPE_ICON -> if (clickedGridItem.packageName == packageName
-                && LauncherAdsConfig.panelEnabled(LauncherAdsConfig.RIGHT_SWIPE)
-            ) {
-                // Our own dock icon slides the inbox panel in - same promo, motion and Back as the
-                // swipe. Only when the panel is switched off does it fall through to the activity.
-                showHostPanel()
+            ITEM_TYPE_ICON -> if (clickedGridItem.packageName == packageName) {
+                // Our own icon (dock or grid) slides the host panel in - same promo, motion and Back
+                // as the swipe - or, with the panel off, opens the host's launch component.
+                openHostApp()
             } else {
                 launchApp(clickedGridItem.packageName, clickedGridItem.activityName)
             }
@@ -1988,7 +2000,9 @@ class LauncherPanel : LauncherBasePanel(), FlingListener {
         val started = android.os.SystemClock.elapsedRealtime()
         val wanted = list.filter { info ->
             val packageName = info.activityInfo.applicationInfo.packageName
-            packageName != simpleLauncher && packageName != microG &&
+            // Our own app is listed too (unless the fake uninstall hid it); tapping it goes
+            // through openHostApp, not its LAUNCHER entry, which would only route back here.
+            (packageName != simpleLauncher || !launcherConfig.selfIconHidden) && packageName != microG &&
                 !hiddenIcons.contains("$packageName/${info.activityInfo.name}")
         }
 

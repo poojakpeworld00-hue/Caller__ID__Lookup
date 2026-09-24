@@ -19,8 +19,10 @@ import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.admesh.surface.PromoAnchorActivity
 import com.callerid.admesh.surface.OpenPromoRegistry.isAdAvailable
 import com.callerid.admesh.surface.tally.ShellSurfaceScreen
+import com.callerid.number.lookup.home.launcher.AppExitAd
 import com.callerid.number.lookup.home.launcher.CallerLauncherAds
 import com.callerid.number.lookup.home.launcher.CallerLauncherBridge
+import com.callerid.number.lookup.home.launcher.UnlockAdWatcher
 import io.launcher.home.activities.LauncherPanel
 import io.launcher.home.api.LauncherRegistry
 import org.fossify.commons.extensions.getSharedPrefs
@@ -41,6 +43,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.fossify.commons.helpers.SIDELOADING_FALSE
 import com.callerid.admesh.engine.LiveConfigListener
+import com.callerid.admesh.engine.LauncherPlacementAds
+import com.callerid.admesh.surface.interstitial.FlowInterstitial
 
 /**
  * The disclosure bullets, ours rather than the SDK's defaults.
@@ -101,6 +105,9 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // `discharge` is enabled in Remote Config.
         ChargeEventWatcher.register(this)
 
+        // An ad after unlock, on our own home. Inert unless `launcher_config.unlock_ads.enabled`.
+        UnlockAdWatcher.register(this)
+
         // Watches for the app being reopened from the Recents list. Inert unless `recent_ad.enabled`
         // is on in Remote Config — registering it costs a dormant install almost nothing.
         RecentAdWatcher.register(this)
@@ -138,6 +145,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
                 if (PromoAnchorActivity.DEBUG_AUDIENCE_MARKETING) "paid" else "organic"
             )
         }
+        LightHouse.debugForceInstallSource("paid")
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 FirebaseApp.initializeApp(this@LookupCoreApp)
@@ -233,10 +241,12 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // sequence (App Open / interstitial / directlink fallback, counter-gated). The directlink, if
         // it wins the sequence, opens on the way back — never at the same time as the app it launched.
         if (OpenPromoRegistry.consumeExpectReturnAd()) {
-            LogRail.log("AppOpen", "↩ other_app_return — running drawer ad sequence")
+            LogRail.log("AppOpen", "↩ other_app_return")
             activity.runWhenWindowFocused {
                 if (activity.isFinishing || activity.isDestroyed) return@runWhenWindowFocused
-                ShellPromoConfig.runDrawerAdFlow(activity) {}
+                // `gestures.app_exit` on: the app-click flow on the `appExit` placement. Off: the
+                // older `launcher_ads.app_drawer` sequence, as before.
+                if (!AppExitAd.run(activity)) ShellPromoConfig.runDrawerAdFlow(activity) {}
             }
             return
         }
@@ -245,6 +255,20 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // would fire on every glance at the home screen).
         if (activity is LauncherPanel || activity is ShellSurfaceScreen) {
             LogRail.log("AppOpen", "⛔ Excluded screen")
+            return
+        }
+
+        // `appOpen_ad_flow` / an `appOpen_` link chain: the dynamic flow instead of the App Open ad.
+        if (LauncherPlacementAds.hasOwnFlow(activity, "appOpen")) {
+            if (!PromoVault.getInstance(activity).getBoolean("IsAdsON") ||
+                !LauncherPlacementAds.placementEnabled(activity, "appOpen") ||
+                OpenPromoRegistry.isShowingAd || FlowInterstitial.isInterShow
+            ) return
+            LogRail.log("AppOpen", "🚀 appOpen flow (appOpen_*)")
+            activity.runWhenWindowFocused {
+                if (activity.isFinishing || activity.isDestroyed) return@runWhenWindowFocused
+                LauncherPlacementAds.showInterstitial(activity, "appOpen") {}
+            }
             return
         }
 

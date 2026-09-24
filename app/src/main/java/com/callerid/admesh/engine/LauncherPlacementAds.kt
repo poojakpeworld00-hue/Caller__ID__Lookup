@@ -11,6 +11,7 @@ import com.callerid.admesh.surface.DrawerAdRunner
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.BuildConfig
 import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * The launcher's full-screen ad placements, configured with QRScanner's keys so one Remote Config
@@ -42,16 +43,64 @@ object LauncherPlacementAds {
     private const val TAG = "LauncherPlacementAds"
 
     // `onboarding` is the "Next" of every onboarding screen (ShellPromoConfig.runOnboardInterstitial).
-    private val PLACEMENTS = listOf("leftPanel", "rightPanel", "drawer", "onboarding", "recent")
+    // `appExit` is the return to the launcher from an app it opened (CallerID's own placement).
+    // The last six are the places that were fixed before: they use the engine only when they have
+    // their own `ad_flow` / link chain (see hasOwnFlow).
+    private val PLACEMENTS = listOf(
+        "leftPanel", "rightPanel", "drawer", "onboarding", "recent", "appExit", "unlock",
+        "splash", "back", "appOpen", "install", "uninstall", "charge", "discharge",
+    )
 
     private val GLOBAL_KEYS = setOf(
         "link_first_then", "link_first_show_all", "link_open_in", "inter_fallback", "RewardedAds",
-        "googleFullNative",
+        "googleFullNative", "ad_flow", "ad_flow_show_all",
     )
 
-    /** Whether [key] is one [PromoConfigLoader] must ingest for this class. */
+    /**
+     * Flat keys that share a placement's prefix but are not placement keys. They are ingested with
+     * their own types (a boolean, an int) elsewhere; storing them again as text would overwrite them.
+     */
+    private val NOT_PLACEMENT_KEYS = setOf("recent_playstore", "recent_playstore_window_sec", "onboarding_home")
+
+    /** Whether [key] is one [PromoConfigLoader] must ingest for this class (legacy flat form). */
     fun isPlacementKey(key: String): Boolean =
-        key in GLOBAL_KEYS || PLACEMENTS.any { key.startsWith("${it}_") }
+        key !in NOT_PLACEMENT_KEYS && (key in GLOBAL_KEYS || PLACEMENTS.any { key.startsWith("${it}_") })
+
+    // ---------------- Where a placement's settings live ----------------
+    //
+    // The clean form is one `placements` object in the audience block:
+    //   "placements": { "drawer": { "ads_on": true, "DirectLink": [...], "link_first_then": "reward" }, … }
+    // The older flat form (`drawer_ads_on`, `drawer_DirectLink`, …) is still read, after it, so a config
+    // not yet migrated keeps working exactly as before. Global keys (`googleInter`, `link_first_then`,
+    // `inter_fallback`, …) stay flat: the whole ad layer reads them there.
+
+    private var placementsRaw: String? = null
+    private var placementsJson: JSONObject? = null
+
+    private fun placementsBlock(vault: PromoVault): JSONObject? {
+        val raw = vault.getString(PLACEMENTS_KEY).orEmpty()
+        synchronized(this) {
+            if (raw != placementsRaw) {
+                placementsRaw = raw
+                placementsJson = raw.takeIf { it.isNotBlank() }?.let { runCatching { JSONObject(it) }.getOrNull() }
+            }
+            return placementsJson
+        }
+    }
+
+    /**
+     * [name]'s own value for [key] as text (arrays / objects as JSON, booleans as "true"/"false"),
+     * from `placements.<name>.<key>`, else the flat `<name>_<key>`; null when neither is set.
+     */
+    private fun own(vault: PromoVault, name: String, key: String): String? {
+        val nested = placementsBlock(vault)?.optJSONObject(name)
+            ?.takeIf { it.has(key) && !it.isNull(key) }?.get(key)?.toString()
+        return nested?.takeIf { it.isNotBlank() }
+            ?: vault.getString("${name}_$key")?.takeIf { it.isNotBlank() }
+    }
+
+    /** The audience-block key [PromoConfigLoader] stores the `placements` object under. */
+    const val PLACEMENTS_KEY = "placements"
 
     private fun normalize(placement: String?): String? = when (placement) {
         "leftSwipe", "leftPanel" -> "leftPanel"
@@ -71,9 +120,7 @@ object LauncherPlacementAds {
     }
 
     private fun resolve(vault: PromoVault, placement: String?, key: String): String {
-        names(placement).forEach { name ->
-            vault.getString("${name}_$key")?.takeIf { it.isNotBlank() }?.let { return it }
-        }
+        names(placement).forEach { name -> own(vault, name, key)?.let { return it } }
         return vault.getString(key).orEmpty()
     }
 
@@ -83,9 +130,7 @@ object LauncherPlacementAds {
     /** `<placement>_ads_on` (or its parent's) set to `false` mutes it; default on. */
     fun placementEnabled(context: Context, placement: String?): Boolean {
         val vault = PromoVault.getInstance(context)
-        val value = names(placement).firstNotNullOfOrNull { name ->
-            vault.getString("${name}_ads_on")?.trim()?.takeIf { it.isNotEmpty() }
-        }
+        val value = names(placement).firstNotNullOfOrNull { name -> own(vault, name, "ads_on")?.trim() }
         return value?.lowercase() != "false"
     }
 
@@ -143,8 +188,34 @@ object LauncherPlacementAds {
     private fun fallbacks(vault: PromoVault, placement: String?): List<String> =
         resolve(vault, placement, "inter_fallback").split(',').map { it.trim().lowercase() }.filter { it.isNotEmpty() }
 
+    /**
+     * `<placement>_ad_flow` (or the global `ad_flow`): the no-link chain in any order, e.g.
+     * `"reward,app_open,inter"`, with `ad_flow_show_all` `true` = every ready one, else a
+     * waterfall. Null when not configured, so the placement keeps its default chain.
+     */
+    private fun adFlow(vault: PromoVault, placement: String?): DrawerAdFlow? {
+        val steps = resolve(vault, placement, "ad_flow").split(',').map { it.trim() }.filter { it.isNotEmpty() }
+        if (steps.isEmpty()) return null
+        val sequence = steps.mapNotNull { followUp(vault, placement, it) }
+        val showAll = resolve(vault, placement, "ad_flow_show_all").trim().toBoolean()
+        return DrawerAdFlow(true, 0, sequence, showAll = showAll, startFromFirst = true, onDemand = true)
+    }
+
+    /**
+     * Whether [placement] has a flow **of its own** — its own `ad_flow`, or its own link chain that
+     * can run. Global keys do not count: the places that used to be fixed (splash, back, app open,
+     * install / uninstall, charge / discharge) switch to the engine only when configured for it by
+     * name, so a global setting never changes them silently.
+     */
+    fun hasOwnFlow(context: Context, placement: String): Boolean {
+        val vault = PromoVault.getInstance(context)
+        fun set(key: String) = names(placement).any { own(vault, it, key) != null }
+        return set("ad_flow") || (set("link_first_then") && linkFirst(vault, placement) != null)
+    }
+
     /** The plain chain: the placement's interstitial, then each `inter_fallback` format in order. */
     private fun interFlow(vault: PromoVault, placement: String?): DrawerAdFlow {
+        adFlow(vault, placement)?.let { return it }
         val sequence = buildList {
             resolve(vault, placement, "googleInter").takeIf { it.isNotBlank() }
                 ?.let { add(DrawerAdSpec(DrawerAdType.INTER, it)) }
@@ -155,6 +226,7 @@ object LauncherPlacementAds {
 
     /** App launch: a full-screen native, falling back to the placement's interstitial. */
     private fun fullNativeFlow(vault: PromoVault, placement: String?): DrawerAdFlow {
+        adFlow(vault, placement)?.let { return it }
         val sequence = buildList {
             resolveFullNative(vault, placement).takeIf { it.isNotBlank() }
                 ?.let { add(DrawerAdSpec(DrawerAdType.FULLSCREEN_NATIVE, it)) }
@@ -171,6 +243,7 @@ object LauncherPlacementAds {
     fun hasOwnInter(context: Context, placement: String?): Boolean {
         val vault = PromoVault.getInstance(context)
         if (linkFirst(vault, placement) != null) return true
+        if (adFlow(vault, placement) != null) return true
         val unit = resolve(vault, placement, "googleInter")
         return (unit.isNotBlank() && unit != vault.getString("googleInter").orEmpty()) ||
             fallbacks(vault, placement).any { followUp(vault, placement, it) != null }
@@ -180,9 +253,10 @@ object LauncherPlacementAds {
     fun preload(context: Context) {
         val vault = PromoVault.getInstance(context)
         if (!vault.getBoolean("IsAdsON")) return
-        listOf("leftSwipe", "rightSwipe", "appLaunch").filter { placementEnabled(context, it) }.forEach { p ->
+        listOf("leftSwipe", "rightSwipe", "appLaunch", "appExit").filter { placementEnabled(context, it) }.forEach { p ->
             linkFirst(vault, p)?.let { DrawerAdRunner.preload(context, it.then) }
-            DrawerAdRunner.preload(context, if (p == "appLaunch") fullNativeFlow(vault, p) else interFlow(vault, p))
+            val fullNative = p == "appLaunch" || p == "appExit"
+            DrawerAdRunner.preload(context, if (fullNative) fullNativeFlow(vault, p) else interFlow(vault, p))
         }
     }
 
@@ -261,6 +335,15 @@ object LauncherPlacementAds {
         if (sequence.isEmpty()) return proceed()
         log("$placement: inter_fallback ${sequence.map { it.type.key }}")
         DrawerAdRunner.run(activity, DrawerAdFlow(true, 0, sequence, startFromFirst = true), pointerKey(placement), proceed)
+    }
+
+    /** Runs [placement]'s `ad_flow` if it has one (false = none, the caller shows its own ad). */
+    fun showAdFlow(activity: Activity, placement: String, proceed: () -> Unit): Boolean {
+        val vault = PromoVault.getInstance(activity)
+        val flow = adFlow(vault, placement) ?: return false
+        log("$placement: ad_flow ${flow.sequence.map { it.type.key }}${if (flow.showAll) " [show_all]" else ""}")
+        DrawerAdRunner.run(activity, flow, pointerKey(placement), proceed)
+        return true
     }
 
     /**

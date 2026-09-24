@@ -64,6 +64,11 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                // Organic: Back is Back — it never accepts the terms on the user's behalf.
+                if (!OnboardRouter.backMovesForward(this@ConsentGateActivity)) {
+                    OnboardRouter.passBackThrough(this@ConsentGateActivity, this)
+                    return
+                }
                 prefs.isTermsAccepted = true
                 proceedToNextScreen()
             }

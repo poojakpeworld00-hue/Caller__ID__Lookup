@@ -272,6 +272,8 @@ class DrawerSurface(
         // The app-launch promo is applied inside launchApp, for every surface that opens an app.
         if (SponsoredTiles.isSponsored(launcher)) {
             activity?.let { a -> SponsoredTiles.open(a, launcher) }
+        } else if (launcher.packageName == context.applicationContext.packageName) {
+            activity?.openHostApp()
         } else {
             activity?.launchApp(launcher.packageName, launcher.activityName)
         }

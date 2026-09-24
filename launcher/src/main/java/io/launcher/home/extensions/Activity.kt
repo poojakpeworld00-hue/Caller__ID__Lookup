@@ -208,12 +208,14 @@ fun Activity.handleGridItemPopupMenu(
         menu.findItem(R.id.hide_iconUi).isVisible =
             gridItem.type == ITEM_TYPE_ICON && isOnAllAppsFragment
         menu.findItem(R.id.resizeUi).isVisible = gridItem.type == ITEM_TYPE_WIDGET
+        // Our own icon offers no App info (nor, below, Uninstall): the app is not managed from here.
         menu.findItem(R.id.app_infoUi).isVisible = gridItem.type == ITEM_TYPE_ICON
+                && gridItem.packageName != applicationContext.packageName
         // Our own icon: the system Uninstall only when the host says it has no uninstall flow of
         // its own to run instead - see LauncherBridge.allowUninstallingHostIcon.
         menu.findItem(R.id.uninstallUi).isVisible = gridItem.type == ITEM_TYPE_ICON
                 && canAppBeUninstalled(gridItem.packageName)
-                && (gridItem.packageName != packageName || LauncherRegistry.bridge.allowUninstallingHostIcon())
+                && (gridItem.packageName != applicationContext.packageName || LauncherRegistry.bridge.allowUninstallingHostIcon())
         menu.findItem(R.id.removeUi).isVisible = !isOnAllAppsFragment
 
         val launcherApps =

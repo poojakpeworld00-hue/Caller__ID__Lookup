@@ -49,7 +49,10 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = promptForRole()
+            override fun handleOnBackPressed() {
+                if (OnboardRouter.backMovesForward(this@HomeRoleGateActivity)) promptForRole()
+                else OnboardRouter.passBackThrough(this@HomeRoleGateActivity, this)
+            }
         })
 
         ShellPromoConfig.renderSlot(

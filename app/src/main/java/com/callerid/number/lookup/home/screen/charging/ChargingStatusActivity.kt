@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PromoTallyRegistry
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.ShellPromoConfig
@@ -196,6 +197,11 @@ class ChargingStatusActivity : AppCompatActivity() {
         if (closed) return
         closed = true
         findViewById<ImageButton>(R.id.btnCloseCharging).isEnabled = false
+        // `charge_*` / `discharge_*` (`ad_flow` or a link chain) override `close_ad` when set.
+        if (LauncherPlacementAds.hasOwnFlow(this, trigger)) {
+            LauncherPlacementAds.showInterstitial(this, trigger) { finishSafely() }
+            return
+        }
         when {
             settings.closeShowsInterstitial -> {
                 // This screen has its own throttle (min_gap_sec); the app-wide InterCounter on top

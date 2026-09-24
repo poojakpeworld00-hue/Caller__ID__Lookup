@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.nativeBannerCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
+import com.callerid.admesh.engine.PerScreenPromo
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.TAG_EVENT
 import com.callerid.admesh.engine.trackEvent
@@ -97,6 +98,8 @@ class InlinePromoStrip {
         if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeBanner")
+            // The screen's own switch: `ScreenAds.<Activity>.show` (else `ScreenAds.default.show`).
+            || !PerScreenPromo.resolve(context, context.javaClass.simpleName).show
         ) {
             layout.removeAllViews()
             layout.invisible()

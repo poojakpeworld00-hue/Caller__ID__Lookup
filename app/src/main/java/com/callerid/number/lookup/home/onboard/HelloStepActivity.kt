@@ -29,7 +29,10 @@ class HelloStepActivity : ShellBaseActivity() {
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = goToNextStep()
+            override fun handleOnBackPressed() {
+                if (OnboardRouter.backMovesForward(this@HelloStepActivity)) goToNextStep()
+                else OnboardRouter.passBackThrough(this@HelloStepActivity, this)
+            }
         })
 
         ShellPromoConfig.renderSlot(

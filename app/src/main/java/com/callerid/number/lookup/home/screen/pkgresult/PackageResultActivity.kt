@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.R
@@ -313,6 +314,12 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
         binding.pkgresCloseVw.isEnabled = false
         binding.pkgresDoneVw.isEnabled = false
         binding.pkgresOpenVw.isEnabled = false
+        // `install_*` / `uninstall_*` (`ad_flow` or a link chain): a close ad, then the screen goes.
+        val placement = if (installed) "install" else "uninstall"
+        if (LauncherPlacementAds.hasOwnFlow(this, placement)) {
+            LauncherPlacementAds.showInterstitial(this, placement) { finishSafely() }
+            return
+        }
         finishSafely()
     }
 

@@ -97,6 +97,10 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         if (!standalone) {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    if (!OnboardRouter.backMovesForward(this@LanguageSelectActivity)) {
+                        OnboardRouter.passBackThrough(this@LanguageSelectActivity, this)
+                        return
+                    }
                     if (forwarding) return
                     forwarding = true
                     onContinue()

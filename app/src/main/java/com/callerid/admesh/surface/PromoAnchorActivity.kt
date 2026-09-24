@@ -582,6 +582,13 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     fun renderPreloadedAd(activity: Activity, adsPreference: PromoVault, onDismissed: () -> Unit) {
+        // `splash_ad_flow` / a `splash_` link chain: the dynamic flow instead of the fixed splash ad.
+        if (com.callerid.admesh.engine.LauncherPlacementAds.hasOwnFlow(activity, "splash")) {
+            if (!com.callerid.admesh.engine.LauncherPlacementAds.placementEnabled(activity, "splash")) return onDismissed()
+            Log.d(APPOPEN_TAG, "showPreloaded() → splash flow (splash_*)")
+            com.callerid.admesh.engine.LauncherPlacementAds.showInterstitial(activity, "splash") { onDismissed() }
+            return
+        }
         when (PromoKind.fromString(adsPreference.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
                 Log.d(APPOPEN_TAG, "showPreloaded() → appOpenReady=${appOpenAd != null}, interstitialReady=${interstitialAd != null}")

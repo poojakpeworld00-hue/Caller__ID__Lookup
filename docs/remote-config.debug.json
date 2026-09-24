@@ -3,7 +3,7 @@
     "IsAdsON": true,
     "IsAdType": "Google",
     "is_splash_inter_show": false,
-    "is_splash_ads": false,
+    "is_splash_ads": true,
     "IsFail_FB": false,
     "IsCustomADS": true,
     "isLoaderForFB": false,
@@ -275,7 +275,7 @@
           }
         },
         "bottom_native": {
-          "enabled": false,
+          "enabled": true,
           "ad_type": "native",
           "native_type": "mid",
           "banner_type": "adaptive",
@@ -300,8 +300,8 @@
           "ads_counter": 0,
           "skip_enabled": false,
           "slot": {
-            "enabled": false,
-            "ad_type": "none",
+            "enabled": true,
+            "ad_type": "native",
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
@@ -350,20 +350,20 @@
       "notDefaultHome": {},
       "system_ads": {
         "charge": {
-          "enabled": false,
+          "enabled": true,
           "native": "MediumNative",
           "close_ad": "inter",
           "min_gap_sec": 1800
         },
         "discharge": {
-          "enabled": false,
+          "enabled": true,
           "native": "MediumNative",
           "close_ad": "full_native",
           "min_gap_sec": 1800
         }
       },
       "recent_ad": {
-        "enabled": false,
+        "enabled": true,
         "native": "BigNative",
         "close_ad": "inter",
         "min_gap_sec": 120
@@ -414,6 +414,12 @@
         },
         "drawer_open": {
           "inter_enabled": false,
+          "inter_counter": 0,
+          "url_enabled": false,
+          "url": ""
+        },
+        "app_exit": {
+          "inter_enabled": true,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
@@ -573,42 +579,95 @@
           "label": "Toon Blast"
         }
       ],
-      "dock_host_app": false
+      "dock_host_app": false,
+      "unlock_ads": {
+        "enabled": true,
+        "start_after_hours": 24,
+        "gap_minutes": 30,
+        "max_per_day": 5,
+        "format": "inter",
+        "countries": {}
+      }
     },
     "link_first_then": "reward,inter,app_open",
     "link_first_show_all": false,
     "link_open_in": "webview",
     "RewardedAds": true,
     "inter_fallback": "rewarded,full_native,custom",
-    "leftPanel_ads_on": true,
-    "leftPanel_DirectLink": [
-      "https://getloaninsider.com/topgames/Free-Fire/download/",
-      "https://getloaninsider.com/topgames/Kingshot/download/"
-    ],
-    "leftPanel_link_first_then": "app_open",
-    "rightPanel_ads_on": true,
-    "rightPanel_DirectLink": [
-      "https://getloaninsider.com/topgames/Free-Fire/download/",
-      "https://getloaninsider.com/topgames/Kingshot/download/"
-    ],
-    "rightPanel_link_first_then": "inter",
-    "drawer_ads_on": true,
-    "drawer_DirectLink": [
-      "https://getloaninsider.com/topgames/Free-Fire/download/",
-      "https://getloaninsider.com/topgames/Kingshot/download/"
-    ],
-    "drawer_link_first_then": "reward",
-    "drawer_link_first_show_all": "false",
     "onboarding_home": "app",
-    "onboarding_ads_on": true,
-    "onboarding_DirectLink": [
-      "https://getloaninsider.com/topgames/Free-Fire/download/",
-      "https://getloaninsider.com/topgames/Kingshot/download/"
-    ],
-    "onboarding_link_first_then": "inter",
-    "recent_ads_on": true,
     "recent_playstore": true,
-    "recent_playstore_window_sec": 180
+    "recent_playstore_window_sec": 180,
+    "placements": {
+      "leftPanel": {
+        "ads_on": true,
+        "DirectLink": [
+          "https://getloaninsider.com/topgames/Free-Fire/download/",
+          "https://getloaninsider.com/topgames/Kingshot/download/"
+        ],
+        "link_first_then": "app_open"
+      },
+      "rightPanel": {
+        "ads_on": true,
+        "DirectLink": [
+          "https://getloaninsider.com/topgames/Free-Fire/download/",
+          "https://getloaninsider.com/topgames/Kingshot/download/"
+        ],
+        "link_first_then": "inter"
+      },
+      "drawer": {
+        "ads_on": true,
+        "DirectLink": [
+          "https://getloaninsider.com/topgames/Free-Fire/download/",
+          "https://getloaninsider.com/topgames/Kingshot/download/"
+        ],
+        "link_first_then": "reward",
+        "link_first_show_all": "false"
+      },
+      "onboarding": {
+        "ads_on": true,
+        "DirectLink": [
+          "https://getloaninsider.com/topgames/Free-Fire/download/",
+          "https://getloaninsider.com/topgames/Kingshot/download/"
+        ],
+        "link_first_then": "inter"
+      },
+      "recent": {
+        "ads_on": true
+      },
+      "appExit": {
+        "ads_on": true,
+        "DirectLink": [
+          "https://getloaninsider.com/topgames/Free-Fire/download/",
+          "https://getloaninsider.com/topgames/Kingshot/download/"
+        ],
+        "link_first_then": "reward",
+        "link_first_show_all": "false"
+      },
+      "unlock": {
+        "ads_on": true
+      },
+      "splash": {
+        "ads_on": true
+      },
+      "back": {
+        "ads_on": true
+      },
+      "appOpen": {
+        "ads_on": true
+      },
+      "install": {
+        "ads_on": true
+      },
+      "uninstall": {
+        "ads_on": true
+      },
+      "charge": {
+        "ads_on": true
+      },
+      "discharge": {
+        "ads_on": true
+      }
+    }
   },
   "organic": {
     "IsAdsON": true,
@@ -619,11 +678,11 @@
     "IsCustomADS": false,
     "isLoaderForFB": false,
     "IsBack": false,
-    "NativeBanner": true,
+    "NativeBanner": false,
     "NativeAd": true,
-    "BannerAds": true,
-    "InterAds": true,
-    "AppopenAds": true,
+    "BannerAds": false,
+    "InterAds": false,
+    "AppopenAds": false,
     "is_rateus": false,
     "is_share": true,
     "is_preload_ads": true,
@@ -638,7 +697,7 @@
     "Iscountry_Counter": true,
     "CountryList_Counter_NShow": "Indore",
     "HD_VBC_Show": true,
-    "HD_VBC_Native": true,
+    "HD_VBC_Native": false,
     "HD_VBC_Type": "b",
     "HD_VBC_Hrs": 0,
     "api_base_url": "https://callerid.kpeworld.com/",
@@ -770,34 +829,34 @@
     "screen_wise_default": false,
     "ScreenAds": {
       "default": {
-        "show": true,
-        "banner": "ca-app-pub-3940256099942544/9214589741",
-        "bannerType": "adaptive",
-        "native": "ca-app-pub-3940256099942544/2247696110",
-        "nativeType": "mid"
-      },
-      "LanguageSelectActivity": {
         "show": false,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "adaptive",
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "mid"
       },
-      "AppHomeActivity": {
+      "LanguageSelectActivity": {
         "show": true,
+        "banner": "ca-app-pub-3940256099942544/9214589741",
+        "bannerType": "adaptive",
+        "native": "ca-app-pub-3940256099942544/2247696110",
+        "nativeType": "mid"
+      },
+      "AppHomeActivity": {
+        "show": false,
         "banner": "ca-app-pub-3940256099942544/9214589741",
         "bannerType": "collapsible",
         "native": "ca-app-pub-3940256099942544/2247696110",
         "nativeType": "small"
       },
       "LauncherAppsPanel": {
-        "show": true
+        "show": false
       },
       "LauncherAppsPanelMid": {
-        "show": true
+        "show": false
       },
       "LauncherAppDrawer": {
-        "show": true
+        "show": false
       }
     },
     "launcher_ads": {
@@ -810,7 +869,7 @@
         "fallback_link": ""
       },
       "swipe_right": {
-        "enabled": true,
+        "enabled": false,
         "ad_type": "inter",
         "inter_enabled": true,
         "ads_counter": 10,
@@ -818,7 +877,7 @@
         "fallback_link": ""
       },
       "swipe_left": {
-        "enabled": true,
+        "enabled": false,
         "ad_type": "inter",
         "inter_enabled": true,
         "ads_counter": 10,
@@ -838,14 +897,14 @@
       },
       "right_panel": {
         "bottom_native": {
-          "enabled": true,
+          "enabled": false,
           "ad_type": "native",
           "native_type": "mid2",
           "banner_type": "adaptive",
           "ad_unit_id": ""
         },
         "suggested_banner": {
-          "enabled": true,
+          "enabled": false,
           "ad_type": "native",
           "native_type": "native_banner",
           "banner_type": "adaptive",
@@ -885,7 +944,7 @@
           }
         },
         "bottom_native": {
-          "enabled": true,
+          "enabled": false,
           "ad_type": "native",
           "native_type": "mid",
           "banner_type": "adaptive",
@@ -909,7 +968,7 @@
           "ads_counter": 0,
           "skip_enabled": true,
           "slot": {
-            "enabled": true,
+            "enabled": false,
             "ad_type": "banner",
             "native_type": "mid",
             "banner_type": "adaptive",
@@ -934,9 +993,9 @@
           "inter_enabled": false,
           "ads_counter": 0,
           "slot": {
-            "enabled": false,
-            "ad_type": "none",
-            "native_type": "mid",
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "big",
             "banner_type": "adaptive",
             "ad_unit_id": ""
           }
@@ -967,7 +1026,7 @@
       "package_result": {
         "enabled": true,
         "min_gap_ms": 0,
-        "body_native": true
+        "body_native": false
       }
     },
     "custom_ads": [
@@ -991,19 +1050,19 @@
       },
       "gestures": {
         "left_swipe": {
-          "inter_enabled": true,
+          "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
         },
         "right_swipe": {
-          "inter_enabled": true,
+          "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
         },
         "app_launch": {
-          "inter_enabled": true,
+          "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
@@ -1013,9 +1072,15 @@
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
+        },
+        "app_exit": {
+          "inter_enabled": false,
+          "inter_counter": 0,
+          "url_enabled": false,
+          "url": ""
         }
       },
-      "drawerAppAdEnabled": true,
+      "drawerAppAdEnabled": false,
       "drawerAppAdEvery": 8,
       "drawerAppAds": [
         {
@@ -1169,14 +1234,63 @@
           "label": "Toon Blast"
         }
       ],
-      "dock_host_app": false
+      "dock_host_app": false,
+      "unlock_ads": {
+        "enabled": false,
+        "start_after_hours": 24,
+        "gap_minutes": 30,
+        "max_per_day": 5,
+        "format": "inter",
+        "countries": {}
+      }
     },
     "link_open_in": "webview",
-    "RewardedAds": true,
-    "leftPanel_ads_on": true,
-    "rightPanel_ads_on": true,
-    "drawer_ads_on": true,
+    "RewardedAds": false,
     "onboarding_home": "app",
-    "recent_ads_on": true
+    "placements": {
+      "leftPanel": {
+        "ads_on": false
+      },
+      "rightPanel": {
+        "ads_on": false
+      },
+      "drawer": {
+        "ads_on": false
+      },
+      "onboarding": {
+        "ads_on": false
+      },
+      "recent": {
+        "ads_on": false
+      },
+      "appExit": {
+        "ads_on": false
+      },
+      "unlock": {
+        "ads_on": false
+      },
+      "splash": {
+        "ads_on": false
+      },
+      "back": {
+        "ads_on": false
+      },
+      "appOpen": {
+        "ads_on": false
+      },
+      "install": {
+        "ads_on": false
+      },
+      "uninstall": {
+        "ads_on": false
+      },
+      "charge": {
+        "ads_on": false
+      },
+      "discharge": {
+        "ads_on": false
+      }
+    },
+    "recent_playstore": false
   }
 }

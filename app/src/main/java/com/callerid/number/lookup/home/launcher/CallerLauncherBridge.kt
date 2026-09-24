@@ -1,6 +1,7 @@
 package com.callerid.number.lookup.home.launcher
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.provider.Telephony
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.callerid.number.lookup.home.LookupCoreApp
 import com.callerid.number.lookup.home.kit.applyNativeAdTheme
 import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.onboard.SwipeCoachPrompt
+import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.store.LanguageRegistry
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.launcher.home.activities.LauncherPanel
@@ -73,6 +75,14 @@ class CallerLauncherBridge : LauncherBridge {
         return if (showHost) context.applicationContext.packageName else Telephony.Sms.getDefaultSmsPackage(context)
     }
 
+    /**
+     * What our own icon opens from the launcher (dock, drawer, apps panel) when the host panel is
+     * off: the app's home, not its LAUNCHER entry — that is the splash, which may route straight
+     * back to this launcher. The launcher only runs once onboarding is done.
+     */
+    override fun hostLaunchComponent(context: Context): ComponentName =
+        ComponentName(context, AppHomeActivity::class.java)
+
     override fun isOrganicAudience(): Boolean =
         !PromoVault.getInstance(LookupCoreApp.appContext).getBoolean("OnMaketing")
 
@@ -102,6 +112,8 @@ class CallerLauncherBridge : LauncherBridge {
     override fun onAppLaunched(packageName: String) {
         OpenPromoRegistry.expectReturnAd()
         ShellPromoConfig.preloadDrawerAds(LookupCoreApp.appContext)
+        // The app-exit flow loads while the user is in the other app.
+        LauncherPlacementAds.preload(LookupCoreApp.appContext)
     }
 
     override fun onLauncherResume(activity: Activity) {
