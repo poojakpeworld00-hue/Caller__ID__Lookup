@@ -16,7 +16,7 @@ import com.callerid.admesh.surface.InlinePromoStrip
 import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.BuildConfig
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import io.launcher.home.extensions.isDefaultLauncher
 import org.json.JSONObject
 
 object ShellPromoConfig {

@@ -13,7 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.TextView
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import io.launcher.home.extensions.isDefaultLauncher
 import com.callerid.number.lookup.home.kit.LogRail
 
 import kotlinx.coroutines.Job

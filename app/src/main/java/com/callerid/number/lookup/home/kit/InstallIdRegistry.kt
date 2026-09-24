@@ -4,7 +4,7 @@ import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import io.launcher.home.extensions.isDefaultLauncher
 
 object InstallIdRegistry {
 

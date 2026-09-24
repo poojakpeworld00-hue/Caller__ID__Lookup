@@ -10,7 +10,7 @@ import com.callerid.admesh.surface.TipSheetActivity
 import com.callerid.number.lookup.home.kit.InstallIdRegistry
 import com.callerid.number.lookup.home.runtime.incoming.IdentOverlayService
 import com.callerid.number.lookup.home.runtime.incoming.PhoneStateReceiver
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import io.launcher.home.extensions.isDefaultLauncher
 
 object OverlayKit {
 

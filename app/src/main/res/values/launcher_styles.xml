@@ -2,20 +2,11 @@
 
     <style name="LauncherBaseTheme" parent="AppTheme.Base" />
 
-    <style name="LauncherTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+    <!-- The :launcher module's right-hand panel hosts HomeShellFragment; give it the app theme
+         instead of the launcher's dark wallpaper theme, or its layouts inflate unreadable. -->
+    <style name="LauncherHostPanelTheme" parent="Theme.CallerIdLookup" />
+    <color name="lnch_host_panel_bg">@color/surface</color>
 
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:enforceStatusBarContrast">false</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
 
     
     <style name="OnboardingTheme" parent="LauncherBaseTheme">
@@ -87,35 +78,7 @@
     </style>
 
     <!-- One quick-action tile in the home card (Dialer / Block / Lookup / Tools). -->
-    <style name="QuickActionTile" parent="">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingVertical">10dp</item>
-        <item name="android:background">@drawable/form_qa_tile</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
 
-    <style name="QuickActionTileIcon" parent="">
-        <item name="android:layout_width">22dp</item>
-        <item name="android:layout_height">22dp</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:contentDescription">@null</item>
-        <item name="android:tint">#FF2353F3</item>
-    </style>
 
-    <style name="QuickActionTileLabel" parent="">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textColor">#FF0E1524</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
 </resources>

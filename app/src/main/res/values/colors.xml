@@ -125,10 +125,7 @@
 
     
 
-    <color name="semitransparent_navigation">#33000000</color>
 
-    <color name="all_app_bg">#80000000</color>
-    <color name="all_app_search_bg">#33ffffff</color>
     <color name="panel_search_fill">#19ffffff</color>
     <color name="panel_search_stroke">#33ffffff</color>
     <color name="panel_divider">#dabababa</color>

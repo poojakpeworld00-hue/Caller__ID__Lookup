@@ -2,6 +2,7 @@ package com.callerid.number.lookup.home
 
 import android.app.Activity
 import android.app.Application
+import android.appwidget.AppWidgetHost
 import android.content.Context
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -18,8 +19,12 @@ import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.admesh.surface.PromoAnchorActivity
 import com.callerid.admesh.surface.OpenPromoRegistry.isAdAvailable
 import com.callerid.admesh.surface.tally.ShellSurfaceScreen
-import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
-import com.callerid.number.lookup.home.shell.ext.config
+import com.callerid.number.lookup.home.launcher.CallerLauncherAds
+import com.callerid.number.lookup.home.launcher.CallerLauncherBridge
+import io.launcher.home.activities.LauncherPanel
+import io.launcher.home.api.LauncherRegistry
+import org.fossify.commons.extensions.getSharedPrefs
+import org.fossify.commons.helpers.BaseConfig
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.pkgresult.PackageEventWatcher
 import com.callerid.number.lookup.home.screen.recent.RecentAdWatcher
@@ -76,6 +81,10 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
         lateinit var appContext: Context
             private set
+
+        // v2: v1 shipped to test devices without the widget-host release below.
+        private const val LEGACY_LAUNCHER_DROPPED = "legacy_launcher_dropped_v2"
+        private const val LEGACY_WIDGET_HOST_ID = 12345
     }
 
     override fun onCreate() {
@@ -91,7 +100,14 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // is on in Remote Config — registering it costs a dormant install almost nothing.
         RecentAdWatcher.register(this)
 
-        config.appSideloadingStatus = SIDELOADING_FALSE
+        BaseConfig.newInstance(this).appSideloadingStatus = SIDELOADING_FALSE
+
+        dropLegacyLauncherState()
+        LauncherRegistry.install(
+            context = this,
+            bridge = CallerLauncherBridge(),
+            ads = CallerLauncherAds(),
+        )
 
         LightHouseRichPush.setActivities(
             splashActivity = LaunchGateActivity::class.java,
@@ -150,6 +166,32 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         }
     }
 
+    /**
+     * One-time, on the first start after the in-app launcher was replaced by the :launcher module.
+     *
+     * The old launcher kept its home grid in a hand-rolled SQLite `apps.db` (v5) and marked it built
+     * with `was_home_screen_init` in fossify's shared prefs. The module uses the same file name for
+     * its Room database and the same pref key, so left alone Room would try to adopt a schema it did
+     * not create and the module would skip seeding a grid it never built.
+     */
+    private fun dropLegacyLauncherState() {
+        val prefs = getSharedPrefs()
+        if (prefs.getBoolean(LEGACY_LAUNCHER_DROPPED, false)) return
+        deleteDatabase("apps.db")
+        // Both launchers bind widgets under host id 12345. The ids the old one allocated are
+        // still held by the system with no grid row pointing at them; release them all so the
+        // module starts on a clean host (system_server NPEs on size updates for such ids).
+        runCatching { AppWidgetHost(this, LEGACY_WIDGET_HOST_ID).deleteHost() }
+        prefs.edit()
+            .remove("was_home_screen_init")
+            // Grid sizes come from the module's OEM layout match on first run, not the old defaults.
+            .remove("home_column_count")
+            .remove("home_row_count")
+            .remove("drawer_column_count")
+            .putBoolean(LEGACY_LAUNCHER_DROPPED, true)
+            .apply()
+    }
+
     private fun handleAppForeground() {
 
         LogRail.log("AppOpen", "handleAppForeground() called")
@@ -196,7 +238,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
         // Ordinary returns never monetise the always-foreground launcher shells (an App Open there
         // would fire on every glance at the home screen).
-        if (activity is LauncherHomeActivity || activity is ShellSurfaceScreen) {
+        if (activity is LauncherPanel || activity is ShellSurfaceScreen) {
             LogRail.log("AppOpen", "⛔ Excluded screen")
             return
         }

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Process
 import android.util.Log
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import io.launcher.home.extensions.isDefaultLauncher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
 
 object CrashSentry {

@@ -63,21 +63,6 @@
         </intent>
     </queries>
 
-    
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-        
-        <intent>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.CREATE_SHORTCUT" />
-        </intent>
-    </queries>
-
     <application
         android:name=".LookupCoreApp"
         android:allowBackup="false"
@@ -127,7 +112,7 @@
 
         
         <activity
-            android:name=".shell.screens.RoleCoachActivity"
+            android:name=".onboard.RoleCoachActivity"
             android:screenOrientation="portrait"
             android:exported="false"
             android:taskAffinity=""
@@ -145,103 +130,20 @@
             android:name=".screen.AppHomeActivity"
             android:exported="false" />
 
-        
-        
         <activity
-            android:name=".shell.screens.HelloStepActivity"
+            android:name=".onboard.HelloStepActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/OnboardingTheme" />
 
         <activity
-            android:name=".shell.screens.HomeRoleGateActivity"
+            android:name=".onboard.HomeRoleGateActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/OnboardingTheme" />
 
-        <activity
-            android:name=".shell.screens.HomeBoardActivity"
-            android:clearTaskOnLaunch="true"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme">
-
-            <intent-filter>
-                <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".shell.screens.BoardSettingsActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:label="@string/launcher_settings"
-            android:parentActivityName=".shell.screens.HomeBoardActivity"
-            android:theme="@style/LauncherBaseTheme" />
-
-        <activity
-            android:name=".shell.screens.MaskedAppsActivity"
-            android:exported="false"
-            android:label="@string/hidden_icons"
-            android:parentActivityName=".shell.screens.BoardSettingsActivity"
-            android:theme="@style/LauncherBaseTheme" />
-
-        <activity
-            android:name="org.fossify.commons.activities.CustomizationActivity"
-            android:exported="false"
-            android:label="@string/customize_colors"
-            android:parentActivityName=".shell.screens.BoardSettingsActivity"
-            android:theme="@style/LauncherBaseTheme" />
-
-        
-        <receiver
-            android:name=".shell.signals.ScreenLockAdminReceiver"
-            android:exported="true"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_policies" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".shell.gadgets.DigitClockProvider"
-            android:exported="false"
-            android:label="@string/digital_clock_widget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/digital_clock_widget_info" />
-        </receiver>
-
-        <receiver
-            android:name=".shell.gadgets.DialClockProvider"
-            android:exported="false"
-            android:label="@string/analog_clock_widget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/analog_clock_widget_info" />
-        </receiver>
-
-        
         <activity
             android:screenOrientation="portrait"
             android:name=".permit.fullscreen.FsiGateActivity"
@@ -386,9 +288,6 @@
             android:theme="@style/Theme.OverlayGuide"
             android:turnScreenOn="true" />
 
-        
-
-        
         <receiver
             android:name=".runtime.incoming.PhoneStateReceiver"
             android:exported="true">
@@ -452,8 +351,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:windowSoftInputMode="adjustResize" />
-
-        
 
         <service
             android:name="com.callerid.admesh.surface.tally.jobs.ShellJobRunner"

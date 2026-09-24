@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenMainBinding
-import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
+import io.launcher.home.activities.LauncherPanel
 import com.callerid.number.lookup.home.screen.main.HomeShellDriver
 import com.callerid.number.lookup.home.screen.main.HomeShellFragment
 import com.callerid.number.lookup.home.screen.main.HomeShellOwner
@@ -83,7 +83,7 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
     override fun onShellBackExhausted() {
         runCatching {
             startActivity(
-                Intent(this, LauncherHomeActivity::class.java).addFlags(
+                Intent(this, LauncherPanel::class.java).addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 )
             )

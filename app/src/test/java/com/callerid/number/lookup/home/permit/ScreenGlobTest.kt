@@ -44,9 +44,9 @@ class ScreenGlobTest {
     @Test
     fun `one alias can fan out to two screens`() {
         assertTrue(ScreenGlob.refersTo("MainActivity", "AppHomeActivity"))
-        assertTrue(ScreenGlob.refersTo("MainActivity", "HomeBoardActivity"))
+        assertTrue(ScreenGlob.refersTo("MainActivity", "LauncherPanel"))
         assertTrue(ScreenGlob.refersTo("SettingsActivity", "SettingsHubActivity"))
-        assertTrue(ScreenGlob.refersTo("SettingsActivity", "BoardSettingsActivity"))
+        assertTrue(ScreenGlob.refersTo("SettingsActivity", "LauncherPrefsPanel"))
     }
 
     @Test

@@ -1,7 +1,9 @@
 package com.callerid.number.lookup.home.screen.main
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.callerid.number.lookup.home.launcher.LauncherShellHost
 
 interface HomeShellOwner {
 
@@ -27,7 +29,11 @@ interface HomeShellOwner {
     fun bringHostToFront()
 }
 
-val Fragment.homeShellHost: HomeShellOwner? get() = activity as? HomeShellOwner
+/** The standalone [com.callerid.number.lookup.home.screen.AppHomeActivity], or the launcher's stand-in. */
+val Activity.homeShellOwner: HomeShellOwner?
+    get() = this as? HomeShellOwner ?: LauncherShellHost.of(this)
+
+val Fragment.homeShellHost: HomeShellOwner? get() = activity?.homeShellOwner
 
 val Fragment.homeShellController: HomeShellDriver? get() = homeShellHost?.homeShellController
 

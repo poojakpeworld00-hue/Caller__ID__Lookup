@@ -21,7 +21,7 @@ import com.callerid.number.lookup.home.store.RegionResolver
 import com.callerid.number.lookup.home.store.LanguageRegistry
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenLanguageBinding
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.permit.fullscreen.FsiPermit
 import com.callerid.number.lookup.home.permit.fullscreen.FsiGateActivity

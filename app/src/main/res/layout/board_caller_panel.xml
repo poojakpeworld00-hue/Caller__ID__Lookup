@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.callerid.number.lookup.home.shell.panels.CallPanel
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/caller_panel_holderVw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    
+
     <include
         android:id="@+id/bannerSlotVw"
         layout="@layout/part_bottom_banner"
@@ -17,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
-    
+
     <View
         android:id="@+id/callerAdBannerDividerVw"
         style="@style/AdDivider"
@@ -29,4 +28,4 @@
         android:layout_height="match_parent"
         android:layout_above="@id/callerAdBannerDividerVw" />
 
-</com.callerid.number.lookup.home.shell.panels.CallPanel>
+</RelativeLayout>

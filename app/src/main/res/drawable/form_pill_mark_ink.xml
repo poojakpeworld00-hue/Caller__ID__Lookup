@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!-- The right (free-up-space) pill's tile: ink rather than accent — it opens the cleaner. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="9dp" />
-    <solid android:color="#FF0B1220" />
-</shape>

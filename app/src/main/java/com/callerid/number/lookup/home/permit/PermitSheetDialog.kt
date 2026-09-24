@@ -24,7 +24,7 @@ import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.engine.logPermissionResult
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.R
-import com.callerid.number.lookup.home.screen.main.HomeShellOwner
+import com.callerid.number.lookup.home.screen.main.homeShellOwner
 import com.callerid.number.lookup.home.screen.reveal.RevealConfig
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.screen.consent.OverlayKit
@@ -274,7 +274,7 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
 
     private fun launchOverlay(finishAfter: Boolean) {
 
-        val controller = (activity as? HomeShellOwner)?.homeShellController
+        val controller = activity?.homeShellOwner?.homeShellController
         if (controller != null) {
             controller.startOverlayPermissionFlow()
 

@@ -34,4 +34,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Caller ID Lookup"
 include(":app")
+include(":launcher")
  

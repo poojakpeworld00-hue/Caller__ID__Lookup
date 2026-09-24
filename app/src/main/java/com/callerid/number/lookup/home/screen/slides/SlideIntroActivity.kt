@@ -15,7 +15,7 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenOnboardingBinding
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.screen.reveal.RevealConfig
