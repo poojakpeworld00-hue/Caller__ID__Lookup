@@ -15,8 +15,8 @@ object PermitSource {
     private const val DEFAULT_CONFIG = """
         {
           "permission_engine": {
-            "notification": { "enabled": true, "activities": ["LaunchGateActivity", "HelloStepActivity", "AppHomeActivity", "HomeBoardActivity", "FsiGateActivity"], "delay": 0, "priority": 1 },
-            "phone_state":  { "enabled": true, "activities": ["HelloStepActivity", "AppHomeActivity", "HomeBoardActivity"], "delay": 0, "priority": 2 }
+            "notification": { "enabled": true, "activities": ["LaunchGateActivity", "AppHomeActivity", "LauncherPanel"], "delay": 0, "priority": 1 },
+            "phone_state":  { "enabled": false, "activities": [], "delay": 0, "priority": 2 }
           }
         }
     """

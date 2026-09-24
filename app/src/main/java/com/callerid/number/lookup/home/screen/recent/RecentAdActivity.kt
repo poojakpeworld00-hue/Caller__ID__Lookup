@@ -4,6 +4,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.InlinePromo
@@ -15,8 +16,9 @@ import com.callerid.number.lookup.home.frame.FrameActivity
 /**
  * The page [RecentAdWatcher] puts on top when the app is reopened from the Recents list.
  *
- * `recent_ad.native` chooses the body format (`big` / `mid` / `mid2`, or `off` for none) and
- * `recent_ad.close_ad` what fires on the way out (`inter`, `directlink`, or `none`). The screen
+ * `recent_ad.native` chooses the body format (`big` / `mid` / `mid2`, `full_native` for a
+ * full-screen native page, or `off` for none) and `recent_ad.close_ad` what fires on the way out
+ * (`inter`, `full_native`, `custom`, `directlink`, or `none`). The screen
  * closes itself either way — the close ad never becomes a reason the user cannot leave.
  */
 class RecentAdActivity : FrameActivity<ScreenRecentAdBinding>() {
@@ -48,6 +50,14 @@ class RecentAdActivity : FrameActivity<ScreenRecentAdBinding>() {
     private fun fillAd() {
         if (!settings.showsBodyNative) return
 
+        // QRScanner's `native: FullNative` — the whole page is a full-screen native, and closing
+        // it closes the page.
+        if (settings.nativeType.trim().lowercase() in FULL_NATIVE) {
+            leaving = true
+            LauncherPlacementAds.showFullNative(this, PLACEMENT) { close() }
+            return
+        }
+
         val frame = binding.recentAdFrameVw
         val shimmer = binding.recentShimmerVw
         val promo = InlinePromo()
@@ -67,14 +77,35 @@ class RecentAdActivity : FrameActivity<ScreenRecentAdBinding>() {
         if (leaving) return
         leaving = true
 
+        // `recent_ads_on: false` keeps the page but drops its close ad.
+        if (!LauncherPlacementAds.placementEnabled(this, PLACEMENT)) return close()
+
+        val closeAd = settings.closeAd.trim().lowercase()
         when {
-            settings.closeShowsInterstitial -> FlowInterstitial().renderInterstitial(this) { close() }
+            // `recent_googleInter` / a `recent_` link-first chain / `inter_fallback` go through the
+            // placement engine; otherwise the app-wide interstitial as before.
+            settings.closeShowsInterstitial ->
+                if (LauncherPlacementAds.hasOwnInter(this, PLACEMENT)) {
+                    LauncherPlacementAds.showInterstitial(this, PLACEMENT) { close() }
+                } else {
+                    FlowInterstitial().renderInterstitial(this) { close() }
+                }
+            // QRScanner's other two close ads: a full-screen native (`recent_googleFullNative`,
+            // else `googleNative`), or this app's house ad.
+            closeAd in FULL_NATIVE -> LauncherPlacementAds.showFullNative(this, PLACEMENT) { close() }
+            closeAd == "custom" -> LauncherPlacementAds.showStep(this, PLACEMENT, "custom") { close() }
             settings.closeShowsLink -> {
                 DirectLinkOpener.open(this, ShellPromoConfig.directLink(this))
                 close()
             }
             else -> close()
         }
+    }
+
+    private companion object {
+        /** The `recent_` placement keys: `recent_ads_on`, `recent_googleInter`, `recent_googleFullNative`, … */
+        const val PLACEMENT = "recent"
+        val FULL_NATIVE = setOf("full_native", "fullnative", "full")
     }
 
     private fun close() {

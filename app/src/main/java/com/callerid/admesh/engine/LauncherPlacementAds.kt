@@ -42,7 +42,7 @@ object LauncherPlacementAds {
     private const val TAG = "LauncherPlacementAds"
 
     // `onboarding` is the "Next" of every onboarding screen (ShellPromoConfig.runOnboardInterstitial).
-    private val PLACEMENTS = listOf("leftPanel", "rightPanel", "drawer", "onboarding")
+    private val PLACEMENTS = listOf("leftPanel", "rightPanel", "drawer", "onboarding", "recent")
 
     private val GLOBAL_KEYS = setOf(
         "link_first_then", "link_first_show_all", "link_open_in", "inter_fallback", "RewardedAds",
@@ -60,9 +60,18 @@ object LauncherPlacementAds {
         else -> placement
     }
 
+    /**
+     * The placement's own name, then its parent. An onboarding screen (`onboarding_welcome`, …) falls
+     * back to the shared `onboarding` keys, so one set configures every screen and a screen only
+     * needs keys of its own where it differs.
+     */
+    private fun names(placement: String?): List<String> {
+        val name = normalize(placement)?.takeIf { it.isNotBlank() } ?: return emptyList()
+        return if (name.startsWith("onboarding_")) listOf(name, "onboarding") else listOf(name)
+    }
+
     private fun resolve(vault: PromoVault, placement: String?, key: String): String {
-        val name = normalize(placement)
-        if (!name.isNullOrBlank()) {
+        names(placement).forEach { name ->
             vault.getString("${name}_$key")?.takeIf { it.isNotBlank() }?.let { return it }
         }
         return vault.getString(key).orEmpty()
@@ -71,10 +80,13 @@ object LauncherPlacementAds {
     private fun resolveFullNative(vault: PromoVault, placement: String?): String =
         resolve(vault, placement, "googleFullNative").ifBlank { vault.getString("googleNative").orEmpty() }
 
+    /** `<placement>_ads_on` (or its parent's) set to `false` mutes it; default on. */
     fun placementEnabled(context: Context, placement: String?): Boolean {
-        val name = normalize(placement) ?: return true
-        return PromoVault.getInstance(context).getString("${name}_ads_on")
-            ?.trim()?.lowercase() != "false"
+        val vault = PromoVault.getInstance(context)
+        val value = names(placement).firstNotNullOfOrNull { name ->
+            vault.getString("${name}_ads_on")?.trim()?.takeIf { it.isNotEmpty() }
+        }
+        return value?.lowercase() != "false"
     }
 
     private fun directLinks(vault: PromoVault, placement: String?): List<String> {
@@ -95,8 +107,13 @@ object LauncherPlacementAds {
                 else DrawerAdSpec(DrawerAdType.REWARDED, resolve(vault, placement, "googleRewarded"))
             "inter", "interstitial" -> DrawerAdSpec(DrawerAdType.INTER, resolve(vault, placement, "googleInter"))
             "app_open", "appopen" -> DrawerAdSpec(DrawerAdType.APPOPEN, resolve(vault, placement, "googleAppopen"))
-            "full_native", "fullscreen_native" ->
+            "full_native", "fullscreen_native", "fullnative", "full" ->
                 DrawerAdSpec(DrawerAdType.FULLSCREEN_NATIVE, resolveFullNative(vault, placement))
+            // This app's house ad; needs `IsCustomADS`, like QRScanner's `custom` step.
+            "custom", "custom_ads" ->
+                if (vault.getBoolean("IsCustomADS")) DrawerAdSpec(DrawerAdType.CUSTOM, "custom") else null
+            "directlink", "direct_link", "browser" -> directLinks(vault, placement).takeIf { it.isNotEmpty() }
+                ?.let { DrawerAdSpec(DrawerAdType.DIRECTLINK, it.first(), it, resolve(vault, placement, "link_open_in")) }
             else -> null
         }?.takeIf { it.adUnitId.isNotBlank() }
 
@@ -133,7 +150,7 @@ object LauncherPlacementAds {
                 ?.let { add(DrawerAdSpec(DrawerAdType.INTER, it)) }
             fallbacks(vault, placement).forEach { name -> followUp(vault, placement, name)?.let { add(it) } }
         }
-        return DrawerAdFlow(true, 0, sequence, showAll = false, startFromFirst = true)
+        return DrawerAdFlow(true, 0, sequence, showAll = false, startFromFirst = true, onDemand = true)
     }
 
     /** App launch: a full-screen native, falling back to the placement's interstitial. */
@@ -144,7 +161,7 @@ object LauncherPlacementAds {
             resolve(vault, placement, "googleInter").takeIf { it.isNotBlank() }
                 ?.let { add(DrawerAdSpec(DrawerAdType.INTER, it)) }
         }
-        return DrawerAdFlow(true, 0, sequence, showAll = false, startFromFirst = true)
+        return DrawerAdFlow(true, 0, sequence, showAll = false, startFromFirst = true, onDemand = true)
     }
 
     /**
@@ -215,6 +232,35 @@ object LauncherPlacementAds {
         val opened = chain.links.asReversed().count { DirectLinkOpener.open(activity, it, chain.openIn) }
         if (opened > 0) DrawerAdRunner.onReturnTo(activity, afterLinks) else afterLinks()
         return true
+    }
+
+    /**
+     * One named ad for [placement] — `custom`, `rewarded`, `directlink`, … (the `inter_fallback`
+     * vocabulary) — then [proceed], whether or not it could show.
+     */
+    fun showStep(activity: Activity, placement: String?, step: String, proceed: () -> Unit) {
+        val vault = PromoVault.getInstance(activity)
+        val spec = followUp(vault, placement, step) ?: return proceed()
+        DrawerAdRunner.run(activity, DrawerAdFlow(true, 0, listOf(spec), startFromFirst = true, onDemand = true), pointerKey(placement), proceed)
+    }
+
+    /** Whether `inter_fallback` (for [placement], or global) names any step this app can show. */
+    fun hasFallback(context: Context, placement: String?): Boolean {
+        val vault = PromoVault.getInstance(context)
+        return fallbacks(vault, placement).any { followUp(vault, placement, it) != null }
+    }
+
+    /**
+     * QRScanner's InterFallbackAds: when an interstitial could not show, walk `inter_fallback`
+     * (`rewarded`, `full_native`, `custom`, `directlink`, in the configured order) and show the
+     * first that can. [proceed] runs exactly once, after it or straight away when nothing shows.
+     */
+    fun runFallback(activity: Activity, placement: String?, proceed: () -> Unit) {
+        val vault = PromoVault.getInstance(activity)
+        val sequence = fallbacks(vault, placement).mapNotNull { followUp(vault, placement, it) }
+        if (sequence.isEmpty()) return proceed()
+        log("$placement: inter_fallback ${sequence.map { it.type.key }}")
+        DrawerAdRunner.run(activity, DrawerAdFlow(true, 0, sequence, startFromFirst = true), pointerKey(placement), proceed)
     }
 
     /**

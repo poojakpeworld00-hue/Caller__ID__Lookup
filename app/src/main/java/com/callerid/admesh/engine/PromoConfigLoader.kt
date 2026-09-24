@@ -30,8 +30,17 @@ object PromoConfigLoader {
                 "HD_VBC_Native", "is_preload_ads",
                 "is_splash_inter_show", "is_splash_ads", "InterAds", "AppopenAds",
                 "NativeAd", "is_rateus", "is_share", "Perm_Sheet_Show",
-                "screen_wise_ad", "screen_wise_default"
+                "screen_wise_ad", "screen_wise_default",
+                // First-session Recents → Play Store home (RecentAdWatcher).
+                "recent_playstore"
             ).forEach { key -> if (root.has(key)) putBoolean(key, root.optBoolean(key, false)) }
+
+            // QRScanner's names for the same two switches, so its config pastes across unchanged.
+            // The CallerID name wins when both are present.
+            mapOf("BannerAdPresenter" to "BannerAds", "NativeBannerPresenter" to "NativeBanner")
+                .forEach { (alias, key) ->
+                    if (root.has(alias) && !root.has(key)) putBoolean(key, root.optBoolean(alias, false))
+                }
 
             listOf(
                 "IsAdType", "In_App_Update_Link", "CountryList_Counter_NShow",
@@ -65,7 +74,8 @@ object PromoConfigLoader {
                 "MarketBannerCounter", "MarketAppopenCounter", "AppopenCounter",
                 "Perm_Sheet_Interval_Days", "HD_VBC_Hrs",
                 
-                "Config_Sync_Hrs"
+                "Config_Sync_Hrs",
+                "recent_playstore_window_sec"
             ).forEach { key -> if (root.has(key)) putInt(key, root.optInt(key, 0)) }
 
             applyInlineTheme(context, root)

@@ -1,6 +1,7 @@
 package com.callerid.number.lookup.home.onboard
 
 import android.animation.ValueAnimator
+import com.callerid.number.lookup.home.permit.PermitEngine
 import android.app.role.RoleManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -38,7 +39,10 @@ class HomeRoleGateActivity : ShellBaseActivity() {
 
         excludeAppFromRecents()
 
-        binding.onboardingSetDefaultVw.setOnClickListener { openHomeSettings() }
+        // Once the role is held (auto_next off), the CTA is how the user moves on.
+        binding.onboardingSetDefaultVw.setOnClickListener {
+            if (isDefaultLauncher()) goHome() else openHomeSettings()
+        }
         binding.onboardingSkipVw.setOnClickListener { goToNextStep() }
 
         val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
@@ -130,8 +134,22 @@ class HomeRoleGateActivity : ShellBaseActivity() {
             // ROLE_HOME dialog it returns RESULT_CANCELED and is still not the default launcher,
             // so we stay on this screen instead of walking on to the next onboarding page. (A
             // grant lands as isDefaultLauncher() above / onResume -> goHome; Skip stays explicit.)
-            REQ_ROLE_HOME -> if (resultCode == RESULT_OK) goToNextStep()
+            REQ_ROLE_HOME -> if (resultCode == RESULT_OK) goToNextStep() else askOnDecline()
         }
+    }
+
+    private var askedOnDecline = false
+
+    /**
+     * QRScanner's `set_home` moment: the user came back from the Home-app choice without picking
+     * us, so both system surfaces are closed and nothing races the permission dialog. Whether
+     * anything is asked is `permission_engine` — a rule listing `HomeRoleGateActivity`. Once per
+     * visit, so a second decline does not ask again.
+     */
+    private fun askOnDecline() {
+        if (askedOnDecline) return
+        askedOnDecline = true
+        PermitEngine.check(this)
     }
 
     override fun onResume() {
@@ -142,7 +160,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         SwipeCoachPrompt.dismiss()
 
         if (isDefaultLauncher()) {
-            goHome()
+            advanceAfterGrant()
             return
         }
 
@@ -152,6 +170,18 @@ class HomeRoleGateActivity : ShellBaseActivity() {
             autoOpenPending = false
             openHomeSettings()
         }
+    }
+
+    /**
+     * The role is held. `auto_next` (default on) moves on after `auto_next_delay_ms`; off waits for
+     * the CTA, as in QRScanner.
+     */
+    private fun advanceAfterGrant() {
+        val (auto, delayMs) = ShellPromoConfig.onboardAutoNext(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
+        if (!auto) return
+        binding.root.postDelayed({
+            if (!isFinishing && !isDestroyed) goHome()
+        }, delayMs)
     }
 
     private fun goHome() {

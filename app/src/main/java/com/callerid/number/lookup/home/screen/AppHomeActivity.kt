@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenMainBinding
 import io.launcher.home.activities.LauncherPanel
@@ -55,7 +56,9 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         }
 
         shell?.setPanelVisible(true)
-        homeShellController.startFirstRunPriming()
+        // QRScanner's `home` moment: permission_engine rules listing AppHomeActivity, then the
+        // FSI / permission-sheet priming — one after the other, never two dialogs at once.
+        PermitEngine.check(this) { homeShellController.startFirstRunPriming() }
     }
 
     override fun onNewIntent(intent: Intent) {

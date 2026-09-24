@@ -75,7 +75,7 @@ object DrawerAdRunner {
                 DrawerAdType.APPOPEN -> loadAppOpen(context, spec.adUnitId)
                 DrawerAdType.REWARDED -> loadRewarded(context, spec.adUnitId)
                 DrawerAdType.FULLSCREEN_NATIVE -> loadNative(context, spec.adUnitId)
-                DrawerAdType.DIRECTLINK -> Unit // a URL, nothing to load
+                DrawerAdType.DIRECTLINK, DrawerAdType.CUSTOM -> Unit // a URL / house ad, nothing to load
             }
         }
     }
@@ -86,6 +86,37 @@ object DrawerAdRunner {
         DrawerAdType.REWARDED -> rewardedAds.containsKey(spec.adUnitId)
         DrawerAdType.FULLSCREEN_NATIVE -> nativeAds.containsKey(spec.adUnitId)
         DrawerAdType.DIRECTLINK -> spec.adUnitId.isNotBlank() || spec.urls.isNotEmpty()
+        // Nothing to preload; whether a house ad exists is decided when it renders (miss → next).
+        DrawerAdType.CUSTOM -> true
+    }
+
+    // ---------------- On-demand ----------------
+
+    /** Callbacks waiting on an in-flight load, keyed like [loading] ("inter:<unit>", …). */
+    private val waiters = HashMap<String, MutableList<(Boolean) -> Unit>>()
+
+    /** Tells whoever waits on [key] whether its load succeeded. */
+    private fun settle(key: String, ok: Boolean) {
+        waiters.remove(key)?.forEach { runCatching { it(ok) } }
+    }
+
+    /**
+     * Loads [spec] now and calls [then] with whether it is ready — or false after
+     * [ON_DEMAND_TIMEOUT_MS], so a slow network cannot hold the user's action hostage.
+     */
+    private fun loadNow(context: Context, spec: DrawerAdSpec, then: (Boolean) -> Unit) {
+        val prefix = when (spec.type) {
+            DrawerAdType.INTER -> "inter"
+            DrawerAdType.APPOPEN -> "appopen"
+            DrawerAdType.REWARDED -> "rewarded"
+            DrawerAdType.FULLSCREEN_NATIVE -> "native"
+            else -> return then(isReady(spec))
+        }
+        var answered = false
+        val once: (Boolean) -> Unit = { ok -> if (!answered) { answered = true; then(ok) } }
+        waiters.getOrPut("$prefix:${spec.adUnitId}") { mutableListOf() }.add(once)
+        mainHandler.postDelayed({ once(false) }, ON_DEMAND_TIMEOUT_MS)
+        preload(context, DrawerAdFlow(true, 0, listOf(spec)))
     }
 
     /**
@@ -141,6 +172,19 @@ object DrawerAdRunner {
         val idx = order[k]
         val spec = flow.sequence[idx]
         if (!isReady(spec)) {
+            // Only the first candidate waits: every step waiting would stack one timeout per step.
+            if (flow.onDemand && k == 0 && spec.adUnitId.isNotBlank()) {
+                log("${spec.type.key} not ready — loading on demand")
+                loadNow(activity, spec) { ok ->
+                    if (ok && !activity.isFinishing && !activity.isDestroyed) {
+                        // Ready now: retry this step without on-demand, so a second miss moves on.
+                        attempt(activity, flow.copy(onDemand = false), order, k, pointerKey, done)
+                    } else {
+                        attempt(activity, flow, order, k + 1, pointerKey, done)
+                    }
+                }
+                return
+            }
             log("${spec.type.key} not ready — next")
             attempt(activity, flow, order, k + 1, pointerKey, done)
             return
@@ -162,6 +206,7 @@ object DrawerAdRunner {
                 DrawerAdType.APPOPEN -> showAppOpen(activity, spec.adUnitId, afterShown, next)
                 DrawerAdType.REWARDED -> showRewarded(activity, spec.adUnitId, afterShown, next)
                 DrawerAdType.FULLSCREEN_NATIVE -> showNative(activity, spec.adUnitId, afterShown, next)
+                DrawerAdType.CUSTOM -> showCustom(activity, afterShown, next)
                 DrawerAdType.DIRECTLINK -> {
                     if (!openLink(activity, spec)) {
                         next()
@@ -190,10 +235,12 @@ object DrawerAdRunner {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interAds[unitId] = ad
                     loading.remove("inter:$unitId")
+                    settle("inter:$unitId", true)
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     loading.remove("inter:$unitId")
+                    settle("inter:$unitId", false)
                     log("inter load failed: ${error.message}")
                 }
             }
@@ -226,10 +273,12 @@ object DrawerAdRunner {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAds[unitId] = ad
                     loading.remove("appopen:$unitId")
+                    settle("appopen:$unitId", true)
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     loading.remove("appopen:$unitId")
+                    settle("appopen:$unitId", false)
                     log("appopen load failed: ${error.message}")
                 }
             }
@@ -262,10 +311,12 @@ object DrawerAdRunner {
                 override fun onAdLoaded(ad: RewardedAd) {
                     rewardedAds[unitId] = ad
                     loading.remove("rewarded:$unitId")
+                    settle("rewarded:$unitId", true)
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     loading.remove("rewarded:$unitId")
+                    settle("rewarded:$unitId", false)
                     log("rewarded load failed: ${error.message}")
                 }
             }
@@ -296,10 +347,12 @@ object DrawerAdRunner {
             .forNativeAd { ad ->
                 nativeAds.put(unitId, ad)?.destroy()
                 loading.remove("native:$unitId")
+                settle("native:$unitId", true)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     loading.remove("native:$unitId")
+                    settle("native:$unitId", false)
                     log("native load failed: ${error.message}")
                 }
             })
@@ -375,6 +428,40 @@ object DrawerAdRunner {
         ad.mediaContent?.let { media.mediaContent = it }
 
         view.setNativeAd(ad)
+    }
+
+    // ---------------- House ad (custom_ads) ----------------
+
+    /**
+     * This app's own full-screen house ad over the current screen, with a close button — QRScanner's
+     * `custom` fallback step. No house ad (or `IsCustomADS` off) → [onFailed], so the chain moves on.
+     */
+    private fun showCustom(activity: Activity, onShown: () -> Unit, onFailed: () -> Unit) {
+        val content = activity.findViewById<ViewGroup>(android.R.id.content) ?: return onFailed()
+        val overlay = android.widget.FrameLayout(activity).apply {
+            setBackgroundColor(android.graphics.Color.BLACK)
+            isClickable = true
+            elevation = 64f
+        }
+        val remove = { runCatching { content.removeView(overlay) } }
+        val close = ImageView(activity).apply {
+            setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+            val size = (40 * resources.displayMetrics.density).toInt()
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                size, size, android.view.Gravity.TOP or android.view.Gravity.END
+            ).apply { topMargin = size; marginEnd = size / 2 }
+            setOnClickListener { remove(); onShown() }
+        }
+        val slot = android.widget.FrameLayout(activity)
+        overlay.addView(slot, ViewGroup.LayoutParams(MATCH, MATCH))
+        overlay.addView(close)
+        content.addView(overlay, ViewGroup.LayoutParams(MATCH, MATCH))
+        InHouseRegistry().fetchHouseAd(
+            context = activity,
+            container = slot,
+            type = InHouseRegistry.CustomAdType.FULLSCREEN_NATIVE,
+            onFail = { remove(); onFailed() },
+        )
     }
 
     // ---------------- Direct link ----------------
@@ -470,6 +557,8 @@ object DrawerAdRunner {
     }
 
     private val MATCH = ViewGroup.LayoutParams.MATCH_PARENT
+
+    private const val ON_DEMAND_TIMEOUT_MS = 8_000L
 
     private fun log(message: String) {
         if (BuildConfig.DEBUG) Log.d(TAG, message)

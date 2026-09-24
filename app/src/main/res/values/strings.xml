@@ -631,6 +631,43 @@
     <string name="pkgres_open_app">Open app</string>
     <string name="pkgres_unable_to_open">Can\'t open this app</string>
     <string name="pkgres_app_icon">App icon</string>
+    <!-- Install: privacy check of the new app's permissions. -->
+    <string name="pkgres_privacy_status">Privacy check</string>
+    <string name="pkgres_privacy_title">Checking %1$s</string>
+    <string name="pkgres_privacy_done_title">%1$s privacy check</string>
+    <string name="pkgres_privacy_step_read">Reading app permissions…</string>
+    <string name="pkgres_privacy_step_sensitive">Checking sensitive access…</string>
+    <string name="pkgres_privacy_step_allowed">Checking what\'s already allowed…</string>
+    <string name="pkgres_privacy_summary">%1$d sensitive permissions requested · %2$d allowed</string>
+    <string name="pkgres_privacy_summary_none">No sensitive permissions requested</string>
+    <string name="pkgres_privacy_allowed">Allowed</string>
+    <string name="pkgres_privacy_not_allowed">Not allowed</string>
+    <string name="pkgres_privacy_review">Review permissions</string>
+    <string name="pkgres_perm_location">Location</string>
+    <string name="pkgres_perm_camera">Camera</string>
+    <string name="pkgres_perm_microphone">Microphone</string>
+    <string name="pkgres_perm_contacts">Contacts</string>
+    <string name="pkgres_perm_sms">SMS</string>
+    <string name="pkgres_perm_call_log">Call logs</string>
+    <string name="pkgres_perm_phone">Phone</string>
+    <string name="pkgres_perm_media">Photos, media &amp; files</string>
+    <string name="pkgres_perm_calendar">Calendar</string>
+    <string name="pkgres_perm_sensors">Body sensors</string>
+    <string name="pkgres_perm_nearby">Nearby devices</string>
+    <string name="pkgres_perm_notifications">Notifications</string>
+    <!-- Uninstall: storage and memory check. -->
+    <string name="pkgres_optimize_status">System optimizing</string>
+    <string name="pkgres_optimize_title">Optimizing after %1$s</string>
+    <string name="pkgres_optimize_done_title">%1$s removed</string>
+    <string name="pkgres_optimize_step_removed">Confirming the app is removed…</string>
+    <string name="pkgres_optimize_step_storage">Checking storage…</string>
+    <string name="pkgres_optimize_step_memory">Checking memory…</string>
+    <string name="pkgres_optimize_summary">Here\'s your phone now.</string>
+    <string name="pkgres_optimize_row_removed">App and its data</string>
+    <string name="pkgres_optimize_removed">Removed</string>
+    <string name="pkgres_optimize_row_storage">Storage available</string>
+    <string name="pkgres_optimize_row_memory">Memory available</string>
+    <string name="pkgres_of_total">%1$s of %2$s</string>
     
     <string name="apps">Apps</string>
     <string name="clear">Clear</string>

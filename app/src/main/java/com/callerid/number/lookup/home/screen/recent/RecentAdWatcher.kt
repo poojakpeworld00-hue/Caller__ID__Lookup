@@ -70,13 +70,20 @@ object RecentAdWatcher {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) {
                 top = WeakReference(activity)
+                topResumed = true
             }
 
             override fun onActivityPaused(activity: Activity) {
+                if (top.get() === activity) topResumed = false
                 // The armed screen pausing is the app going to the overview — the moment to launch.
                 if (armed.get() === activity) {
                     armed.clear()
-                    launchAdPage(activity)
+                    if (armedForPlayStore) {
+                        armedForPlayStore = false
+                        launchPlayStoreFrom(activity)
+                    } else {
+                        launchAdPage(activity)
+                    }
                 }
             }
 
@@ -95,9 +102,12 @@ object RecentAdWatcher {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action != Intent.ACTION_CLOSE_SYSTEM_DIALOGS) return
                 when (intent.getStringExtra("reason")) {
-                    "recentapps", "recent_apps" -> armIfAllowed(context.applicationContext)
+                    "recentapps", "recent_apps" -> {
+                        val app = context.applicationContext
+                        if (!armPlayStoreIfFirstSession(app)) armIfAllowed(app)
+                    }
                     // Home is an exit, not a return. Never fire on the way out.
-                    "homekey" -> armed.clear()
+                    "homekey" -> { armed.clear(); armedForPlayStore = false }
                 }
             }
         }
@@ -137,6 +147,70 @@ object RecentAdWatcher {
 
         armed = WeakReference(activity)
         log("armed ${activity::class.java.simpleName}")
+    }
+
+    /** Whether [top] is actually resumed — a paused screen will never deliver the pause we wait on. */
+    private var topResumed = false
+
+    private var armedForPlayStore = false
+
+    private val main = android.os.Handler(android.os.Looper.getMainLooper())
+
+    private const val PLAY_STORE_FIRED_KEY = "__recent_playstore_fired"
+
+    /**
+     * `recent_playstore` (QRScanner): a Recents press within the first `recent_playstore_window_sec`
+     * (default 180) after install opens the Play Store home instead of the overview — once per
+     * install. Returns true when it armed (or fired), so the recent-page ad is not armed on top.
+     *
+     * The window counts from the install time Android records, so an existing user updating the
+     * app never gets it. Launched from the screen's `onPause` — the last moment its window still
+     * counts as visible for the background-activity-launch check — or at once if the screen has
+     * already paused, since no second pause is coming.
+     */
+    private fun armPlayStoreIfFirstSession(context: Context): Boolean {
+        return runCatching {
+        val vault = PromoVault.getInstance(context)
+        if (!vault.getBoolean("recent_playstore")) return false
+        if (vault.getBoolean(PLAY_STORE_FIRED_KEY)) return false
+        val windowMs = vault.getInt("recent_playstore_window_sec", 180).coerceAtLeast(0) * 1000L
+        val installedAt = context.packageManager.getPackageInfo(context.packageName, 0).firstInstallTime
+        if (System.currentTimeMillis() - installedAt > windowMs) return false
+        val activity = top.get() ?: return false
+        if (activity.isFinishing || activity.isDestroyed || armedForPlayStore) return false
+
+        if (!topResumed) {
+            log("play store: top already paused — starting now")
+            launchPlayStoreFrom(activity)
+            return true
+        }
+        armedForPlayStore = true
+        armed = WeakReference(activity)
+        log("play store: armed on ${activity::class.java.simpleName}")
+        // A Recents press that never pauses this screen must not leave it armed.
+        main.postDelayed({
+            if (armedForPlayStore) {
+                armedForPlayStore = false
+                armed.clear()
+                log("play store: disarmed — no pause within 2s (one-shot kept)")
+            }
+        }, 2_000L)
+        true
+        }.getOrElse { Log.w(TAG, "recent_playstore failed", it); false }
+    }
+
+    /** The Play Store home. CLEAR_TASK so it opens at its home tab, not the page it was left on. */
+    private fun launchPlayStoreFrom(activity: Activity) {
+        runCatching {
+            val intent = activity.packageManager.getLaunchIntentForPackage("com.android.vending")
+                ?: Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://play.google.com/store/apps"))
+                    .setPackage("com.android.vending")
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            activity.startActivity(intent)
+            // Spent only once a start did not throw.
+            PromoVault.getInstance(activity).putBoolean(PLAY_STORE_FIRED_KEY, true)
+            log("play store: fired (one-shot spent)")
+        }.onFailure { Log.w(TAG, "launchPlayStoreFrom failed", it) }
     }
 
     private fun launchAdPage(from: Activity) {

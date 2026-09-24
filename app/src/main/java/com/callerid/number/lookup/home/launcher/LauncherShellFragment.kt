@@ -12,6 +12,7 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.databinding.BoardCallerPanelBinding
 import com.callerid.number.lookup.home.kit.followAdContainer
 import com.callerid.number.lookup.home.onboard.OnboardRouter
+import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.main.HomeShellFragment
 import io.launcher.home.api.LauncherPanelContent
 
@@ -56,7 +57,13 @@ class LauncherShellFragment : Fragment(), LauncherPanelContent {
         val controller = host?.homeShellController ?: return
         if (visible) {
             renderBanner()
-            if (OnboardRouter.wasOnboardingCompleted(requireContext())) controller.startFirstRunPriming()
+            if (OnboardRouter.wasOnboardingCompleted(requireContext())) {
+                // QRScanner's `home` moment: permission_engine rules listing LauncherPanel, then the
+                // FSI / permission-sheet priming. Primed only if the panel is still open by then.
+                PermitEngine.check(requireActivity()) {
+                    if (host?.shellVisible == true) controller.startFirstRunPriming()
+                }
+            }
         } else {
             // Sheets and dialogs are anchored to the Activity, not the panel; take them down with it.
             controller.onShellHidden()

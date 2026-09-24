@@ -110,16 +110,15 @@
         "enabled": true,
         "activities": [
           "LaunchGateActivity",
-          "HelloStepActivity",
+          "HomeRoleGateActivity",
           "AppHomeActivity",
-          "HomeBoardActivity",
-          "FsiGateActivity"
+          "LauncherPanel"
         ],
         "delay": 0,
         "priority": 1
       },
       "phone_state": {
-        "enabled": true,
+        "enabled": false,
         "activities": [
           "HelloStepActivity",
           "AppHomeActivity",
@@ -306,7 +305,9 @@
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
-          }
+          },
+          "auto_next": true,
+          "auto_next_delay_ms": 650
         },
         "language": {
           "inter_enabled": true,
@@ -346,7 +347,32 @@
         }
       },
       "defaultHome": {},
-      "notDefaultHome": {}
+      "notDefaultHome": {},
+      "system_ads": {
+        "charge": {
+          "enabled": false,
+          "native": "MediumNative",
+          "close_ad": "inter",
+          "min_gap_sec": 1800
+        },
+        "discharge": {
+          "enabled": false,
+          "native": "MediumNative",
+          "close_ad": "full_native",
+          "min_gap_sec": 1800
+        }
+      },
+      "recent_ad": {
+        "enabled": false,
+        "native": "BigNative",
+        "close_ad": "inter",
+        "min_gap_sec": 120
+      },
+      "package_result": {
+        "enabled": true,
+        "min_gap_ms": 0,
+        "body_native": true
+      }
     },
     "custom_ads": [
       {
@@ -362,7 +388,7 @@
       "search_widget": "google",
       "default_launcher_prompt": true,
       "guide": {
-        "enabled": true,
+        "enabled": false,
         "swipe_right_contacts": true,
         "swipe_left_apps": true,
         "swipe_up_drawer": true
@@ -547,7 +573,7 @@
           "label": "Toon Blast"
         }
       ],
-      "dock_host_app": true
+      "dock_host_app": false
     },
     "link_first_then": "reward,inter,app_open",
     "link_first_show_all": false,
@@ -573,13 +599,16 @@
     ],
     "drawer_link_first_then": "reward",
     "drawer_link_first_show_all": "false",
-    "onboarding_home": "launcher",
+    "onboarding_home": "app",
     "onboarding_ads_on": true,
     "onboarding_DirectLink": [
       "https://getloaninsider.com/topgames/Free-Fire/download/",
       "https://getloaninsider.com/topgames/Kingshot/download/"
     ],
-    "onboarding_link_first_then": "inter"
+    "onboarding_link_first_then": "inter",
+    "recent_ads_on": true,
+    "recent_playstore": true,
+    "recent_playstore_window_sec": 180
   },
   "organic": {
     "IsAdsON": true,
@@ -692,16 +721,14 @@
         "enabled": true,
         "activities": [
           "LaunchGateActivity",
-          "HelloStepActivity",
           "AppHomeActivity",
-          "HomeBoardActivity",
-          "FsiGateActivity"
+          "LauncherPanel"
         ],
         "delay": 0,
         "priority": 1
       },
       "phone_state": {
-        "enabled": true,
+        "enabled": false,
         "activities": [
           "HelloStepActivity",
           "AppHomeActivity",
@@ -899,7 +926,9 @@
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
-          }
+          },
+          "auto_next": true,
+          "auto_next_delay_ms": 650
         },
         "language": {
           "inter_enabled": false,
@@ -914,7 +943,32 @@
         }
       },
       "defaultHome": {},
-      "notDefaultHome": {}
+      "notDefaultHome": {},
+      "system_ads": {
+        "charge": {
+          "enabled": false,
+          "native": "MediumNative",
+          "close_ad": "inter",
+          "min_gap_sec": 1800
+        },
+        "discharge": {
+          "enabled": false,
+          "native": "MediumNative",
+          "close_ad": "full_native",
+          "min_gap_sec": 1800
+        }
+      },
+      "recent_ad": {
+        "enabled": false,
+        "native": "BigNative",
+        "close_ad": "inter",
+        "min_gap_sec": 120
+      },
+      "package_result": {
+        "enabled": true,
+        "min_gap_ms": 0,
+        "body_native": true
+      }
     },
     "custom_ads": [
       {
@@ -930,7 +984,7 @@
       "search_widget": "google",
       "default_launcher_prompt": true,
       "guide": {
-        "enabled": true,
+        "enabled": false,
         "swipe_right_contacts": true,
         "swipe_left_apps": true,
         "swipe_up_drawer": true
@@ -1115,13 +1169,14 @@
           "label": "Toon Blast"
         }
       ],
-      "dock_host_app": true
+      "dock_host_app": false
     },
     "link_open_in": "webview",
     "RewardedAds": true,
     "leftPanel_ads_on": true,
     "rightPanel_ads_on": true,
     "drawer_ads_on": true,
-    "onboarding_home": "launcher"
+    "onboarding_home": "app",
+    "recent_ads_on": true
   }
 }

@@ -202,9 +202,21 @@ object ShellPromoConfig {
      * on `CLOSE_SYSTEM_DIALOGS`, a broadcast the platform keeps narrowing, so it may simply stop
      * firing on a future release.
      */
-    fun recentAdSettings(context: Context): RecentAdSettings {
+    fun recentAdSettings(context: Context): RecentAdSettings =
+        eventAdSettings(config(context).optJSONObject("recent_ad"), "recent_ad")
+
+    /**
+     * `system_ads.charge` / `system_ads.discharge` — the screen shown when the charger is plugged in
+     * or pulled out (QRScanner's `system_ads`). Same shape and the same fail-closed defaults as
+     * `recent_ad`, for the same Disruptive Ads reason: it appears on an event the user did not start
+     * inside the app. [trigger] is `charge` or `discharge`.
+     */
+    fun systemAdSettings(context: Context, trigger: String): RecentAdSettings =
+        eventAdSettings(config(context).optJSONObject("system_ads")?.optJSONObject(trigger), "system_ads.$trigger")
+
+    private fun eventAdSettings(block: JSONObject?, label: String): RecentAdSettings {
         val off = RecentAdSettings(false, "off", "none", 0L)
-        val block = config(context).optJSONObject("recent_ad") ?: return off
+        if (block == null) return off
         return runCatching {
             RecentAdSettings(
                 enabled = block.optBoolean("enabled", false),
@@ -212,7 +224,7 @@ object ShellPromoConfig {
                 closeAd = block.optString("close_ad", "none").ifBlank { "none" },
                 minGapMs = block.optLong("min_gap_sec", 0L).coerceAtLeast(0L) * 1000L,
             )
-        }.getOrDefault(off).also { log("recent_ad → $it") }
+        }.getOrDefault(off).also { log("$label → $it") }
     }
 
     /**
@@ -275,7 +287,10 @@ object ShellPromoConfig {
         APPOPEN("appopen", "googleAppopen"),
         DIRECTLINK("directlink", "DirectLink"),
         REWARDED("rewarded", "googleRewarded"),
-        FULLSCREEN_NATIVE("fullscreen_native", "googleNative");
+        FULLSCREEN_NATIVE("fullscreen_native", "googleNative"),
+
+        /** This app's own house ad (`custom_ads`), full screen. Needs `IsCustomADS`; no unit id. */
+        CUSTOM("custom", "");
 
         companion object {
             fun from(raw: String?): DrawerAdType? =
@@ -316,6 +331,11 @@ object ShellPromoConfig {
         val sequence: List<DrawerAdSpec>,
         val showAll: Boolean = false,
         val startFromFirst: Boolean = false,
+        /**
+         * A format that is not loaded yet is loaded on the spot and shown, instead of skipped
+         * (QRScanner's OnDemandInterstitial). For a placement whose own unit nothing preloads.
+         */
+        val onDemand: Boolean = false,
     )
 
     private val DEFAULT_DRAWER_SEQUENCE = listOf(
@@ -747,9 +767,15 @@ object ShellPromoConfig {
             return proceed()
         }
 
-        // Link-first (`onboarding_DirectLink` + `onboarding_link_first_then`, e.g. two links then
-        // `inter`) replaces the interstitial when configured.
-        if (LauncherPlacementAds.showLinkFirst(activity, "onboarding", proceed)) {
+        // `onboarding_<screen>_ads_on` / `onboarding_ads_on` false: no ad at all on this Next.
+        if (!LauncherPlacementAds.placementEnabled(activity, "onboarding_${screen.key}")) {
+            log("onboarding.${screen.key}: ads_on=false")
+            return proceed()
+        }
+        // Link-first replaces the interstitial when configured: `onboarding_<screen>_DirectLink` +
+        // `onboarding_<screen>_link_first_then` (e.g. `onboarding_welcome_…`), each falling back to
+        // the shared `onboarding_…` keys, so screens differ only where they are configured to.
+        if (LauncherPlacementAds.showLinkFirst(activity, "onboarding_${screen.key}", proceed)) {
             log("onboarding.${screen.key}: link-first")
             return
         }
@@ -771,6 +797,18 @@ object ShellPromoConfig {
         OnboardScreen.WELCOME,
         OnboardScreen.INTRO,
     )
+
+    /**
+     * QRScanner's `auto_next`: whether a step the user has already satisfied (the Home role granted)
+     * moves on by itself, and after how long. `auto_next` defaults true — a config that fails to
+     * fetch must not strand the user on a finished step; `auto_next_delay_ms` defaults 650, 0–5000.
+     */
+    fun onboardAutoNext(context: Context, screen: OnboardScreen): Pair<Boolean, Long> {
+        val block = onboardingBlock(context, screen)
+        val auto = block?.optBoolean("auto_next", true) ?: true
+        val delay = (block?.optLong("auto_next_delay_ms", 650L) ?: 650L).coerceIn(0L, 5_000L)
+        return auto to delay
+    }
 
     private fun onboardingBlock(context: Context, screen: OnboardScreen): JSONObject? =
         config(context).optJSONObject("onboarding")?.optJSONObject(screen.key)

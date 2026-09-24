@@ -1,14 +1,25 @@
 package com.callerid.number.lookup.home.screen.pkgresult
 
+import android.Manifest
 import android.animation.ObjectAnimator
+import android.app.ActivityManager
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
+import android.os.StatFs
+import android.provider.Settings
+import android.text.format.Formatter
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.OvershootInterpolator
-import android.widget.Toast
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,12 +31,17 @@ import com.callerid.number.lookup.home.databinding.ScreenPackageResultBinding
 import com.callerid.number.lookup.home.frame.FrameActivity
 
 /**
- * The install / uninstall "complete" screen, ported from the reference app's package-result page.
+ * The screen shown when another app is installed or removed (launched by [PackageEventWatcher]).
  *
- * Launched by [PackageEventWatcher] on a package event. It resolves the affected app's label,
- * version and icon from the PackageManager for an install; a removed package is already gone, so
- * those come from [PackageMetadataCache] instead. It then shows the installed or removed card and
- * offers Done and — for an install — Open app.
+ *  - **Install → privacy check.** Reads the new app's requested permissions, groups the sensitive
+ *    ones (location, camera, microphone, contacts, SMS, …) and shows which are already allowed,
+ *    with a shortcut into the app's permission settings.
+ *  - **Uninstall → system optimizing.** Confirms the app is gone, then shows the storage and
+ *    memory the phone has available now.
+ *
+ * A short stepped progress plays first, but everything the results show is read from the device —
+ * nothing is invented or claimed to have been done that was not. A removed package is already gone,
+ * so its label and icon come from [PackageMetadataCache].
  */
 class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
 
@@ -33,36 +49,37 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
 
     private val installed: Boolean by lazy { intent.getBooleanExtra(EXTRA_INSTALLED, true) }
     private val affectedPackage: String by lazy { intent.getStringExtra(EXTRA_PACKAGE).orEmpty() }
-    private val launchClass: String? by lazy { intent.getStringExtra(EXTRA_CLASS) }
 
-    /** For a removed app the package is gone, so its label/version/icon come from the cache. */
+    /** For a removed app the package is gone, so its label/icon come from the cache. */
     private val cachedMeta by lazy {
         if (installed) null else PackageMetadataCache.read(this, affectedPackage)
     }
+
+    private val handler = Handler(Looper.getMainLooper())
 
     private var closed = false
 
     override fun initView() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         applyInsets()
-        applyOutcomeTheme()
-        bindContent()
+        bindHeader()
         wireButtons()
         fillAd()
         playEntrance()
+        runCheck()
     }
 
-    /**
-     * A second package event arrives here rather than as a fresh Activity (the screen is singleTask),
-     * so re-create to read the new event's package and installed state cleanly.
-     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         recreate()
     }
 
-    /** The hero takes the status-bar inset; the action row clears the navigation bar. */
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroy()
+    }
+
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.pkgresContentVw) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -77,49 +94,20 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
         ViewCompat.requestApplyInsets(binding.pkgresContentVw)
     }
 
-    /** Installed vs removed: the hero wash, the badge glyph, the status pill and the CTA tint. */
-    private fun applyOutcomeTheme() = with(binding) {
-        pkgresHeroVw.setBackgroundResource(
-            if (installed) R.drawable.form_pkgres_hero_installed
-            else R.drawable.form_pkgres_hero_removed
-        )
-        pkgresBadgeVw.setBackgroundResource(
-            if (installed) R.drawable.form_pkgres_badge_installed
-            else R.drawable.form_pkgres_badge_removed
-        )
-        pkgresBadgeIconVw.setImageResource(
-            if (installed) R.drawable.sym_check else R.drawable.sym_pkgres_minus
-        )
+    private fun bindHeader() = with(binding) {
+        pkgresHeroVw.setBackgroundResource(R.drawable.form_pkgres_hero_installed)
+        pkgresBadgeVw.setBackgroundResource(R.drawable.form_pkgres_badge_installed)
+        pkgresBadgeIconVw.setImageResource(if (installed) R.drawable.sym_shield_check else R.drawable.sym_check)
         pkgresStatusVw.apply {
-            setBackgroundResource(
-                if (installed) R.drawable.form_pkgres_status_installed
-                else R.drawable.form_pkgres_status_removed
-            )
-            setText(
-                if (installed) R.string.pkgres_installed_status else R.string.pkgres_removed_status
-            )
-            setTextColor(
-                getColor(if (installed) R.color.pkgres_installed else R.color.pkgres_removed)
-            )
+            setBackgroundResource(R.drawable.form_pkgres_status_installed)
+            setText(if (installed) R.string.pkgres_privacy_status else R.string.pkgres_optimize_status)
+            setTextColor(getColor(R.color.pkgres_installed))
         }
-    }
-
-    private fun bindContent() = with(binding) {
-        val label = resolveLabel()
-
         pkgresTitleVw.text = getString(
-            if (installed) R.string.pkgres_installed_title else R.string.pkgres_removed_title,
-            label,
+            if (installed) R.string.pkgres_privacy_title else R.string.pkgres_optimize_title,
+            resolveLabel(),
         )
-        pkgresSubtitleVw.setText(
-            if (installed) R.string.pkgres_installed_subtitle else R.string.pkgres_removed_subtitle
-        )
-        pkgresVersionVw.text = resolveVersion()
-        pkgresTimeLabelVw.setText(
-            if (installed) R.string.pkgres_installed_time_label
-            else R.string.pkgres_removed_time_label
-        )
-        pkgresTimeVw.setText(R.string.pkgres_just_now)
+        pkgresSubtitleVw.text = ""
 
         // Icon: from the PackageManager for an installed app, from the pre-uninstall cache for a
         // removed one (the package is gone). Empty tile only if neither has it.
@@ -145,33 +133,130 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
             ?: affectedPackage.substringAfterLast('.').replaceFirstChar { it.uppercase() }
     }
 
-    private fun resolveVersion(): String {
-        if (installed) {
-            runCatching {
-                val pkg = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    packageManager.getPackageInfo(
-                        affectedPackage, PackageManager.PackageInfoFlags.of(0)
-                    )
-                } else {
-                    @Suppress("DEPRECATION")
-                    packageManager.getPackageInfo(affectedPackage, 0)
-                }
-                pkg.versionName?.let { return it }
-            }
+    // ---------------- The check ----------------
+
+    /** The stepped progress, then the results. The steps are paced; the results are real. */
+    private fun runCheck() {
+        val steps = if (installed) {
+            listOf(R.string.pkgres_privacy_step_read, R.string.pkgres_privacy_step_sensitive, R.string.pkgres_privacy_step_allowed)
+        } else {
+            listOf(R.string.pkgres_optimize_step_removed, R.string.pkgres_optimize_step_storage, R.string.pkgres_optimize_step_memory)
         }
-        return cachedMeta?.version?.takeIf { it.isNotBlank() }
-            ?: intent.getStringExtra(EXTRA_VERSION)?.takeIf { it.isNotBlank() }
-            ?: getString(R.string.dash)
+        steps.forEachIndexed { i, step ->
+            handler.postDelayed({
+                binding.pkgresStepVw.setText(step)
+                binding.pkgresProgressBarVw.setProgressCompat((i + 1) * 100 / steps.size, true)
+            }, STEP_MS * i)
+        }
+        handler.postDelayed({ showResults() }, STEP_MS * steps.size)
     }
+
+    private fun showResults() {
+        if (isFinishing || isDestroyed) return
+        if (installed) showPrivacyResults() else showOptimizeResults()
+        binding.pkgresProgressVw.visibility = View.GONE
+        // An app asking for nothing sensitive has no rows: the subtitle says so, no empty card.
+        if (binding.pkgresChecksVw.childCount > 0) binding.pkgresChecksVw.apply {
+            visibility = View.VISIBLE
+            alpha = 0f
+            animate().alpha(1f).setDuration(260L).start()
+        }
+        binding.pkgresOpenVw.isEnabled = true
+    }
+
+    private fun showPrivacyResults() {
+        val groups = sensitiveGroups()
+        val allowed = groups.count { it.second }
+        binding.pkgresTitleVw.text = getString(R.string.pkgres_privacy_done_title, resolveLabel())
+        binding.pkgresSubtitleVw.text = if (groups.isEmpty()) {
+            getString(R.string.pkgres_privacy_summary_none)
+        } else {
+            getString(R.string.pkgres_privacy_summary, groups.size, allowed)
+        }
+        groups.forEach { (label, isAllowed) ->
+            addRow(
+                getString(label),
+                getString(if (isAllowed) R.string.pkgres_privacy_allowed else R.string.pkgres_privacy_not_allowed),
+                if (isAllowed) R.color.pkgres_removed else R.color.pkgres_installed,
+            )
+        }
+    }
+
+    private fun showOptimizeResults() {
+        binding.pkgresTitleVw.text = getString(R.string.pkgres_optimize_done_title, resolveLabel())
+        binding.pkgresSubtitleVw.setText(R.string.pkgres_optimize_summary)
+        addRow(getString(R.string.pkgres_optimize_row_removed), getString(R.string.pkgres_optimize_removed), R.color.pkgres_installed)
+
+        runCatching {
+            val stat = StatFs(Environment.getDataDirectory().path)
+            addRow(
+                getString(R.string.pkgres_optimize_row_storage),
+                getString(R.string.pkgres_of_total, size(stat.availableBytes), size(stat.totalBytes)),
+                R.color.pkgres_installed,
+            )
+        }
+        runCatching {
+            val info = ActivityManager.MemoryInfo()
+            (getSystemService(ACTIVITY_SERVICE) as ActivityManager).getMemoryInfo(info)
+            addRow(
+                getString(R.string.pkgres_optimize_row_memory),
+                getString(R.string.pkgres_of_total, size(info.availMem), size(info.totalMem)),
+                R.color.pkgres_installed,
+            )
+        }
+    }
+
+    /**
+     * The sensitive permission groups the new app asks for, each with whether any permission in it
+     * is already granted. Groups the app does not request are left out.
+     */
+    private fun sensitiveGroups(): List<Pair<Int, Boolean>> {
+        val info = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                packageManager.getPackageInfo(
+                    affectedPackage, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfo(affectedPackage, PackageManager.GET_PERMISSIONS)
+            }
+        }.getOrNull() ?: return emptyList()
+
+        val requested = info.requestedPermissions ?: return emptyList()
+        val granted = requested.filterIndexed { i, _ -> isGranted(info, i) }.toSet()
+        return SENSITIVE.mapNotNull { (label, permissions) ->
+            val asked = permissions.filter { it in requested }
+            if (asked.isEmpty()) null else label to asked.any { it in granted }
+        }
+    }
+
+    private fun isGranted(info: PackageInfo, index: Int): Boolean {
+        val flags = info.requestedPermissionsFlags ?: return false
+        return index < flags.size && flags[index] and PackageInfo.REQUESTED_PERMISSION_GRANTED != 0
+    }
+
+    private fun addRow(title: String, value: String, dotColor: Int) {
+        val row = LayoutInflater.from(this).inflate(R.layout.row_pkgres_check, binding.pkgresChecksVw, false)
+        row.findViewById<TextView>(R.id.pkgresRowTitleVw).text = title
+        row.findViewById<TextView>(R.id.pkgresRowValueVw).text = value
+        row.findViewById<View>(R.id.pkgresRowDotVw).background.mutate().setTint(getColor(dotColor))
+        binding.pkgresChecksVw.addView(row)
+    }
+
+    private fun size(bytes: Long): String = Formatter.formatShortFileSize(this, bytes)
+
+    // ---------------- Actions ----------------
 
     private fun wireButtons() = with(binding) {
         pkgresCloseVw.setOnClickListener { close() }
         pkgresDoneVw.setOnClickListener { close() }
-
         if (installed) {
-            pkgresOpenVw.setOnClickListener { openApp() }
+            // Review permissions: the new app's own settings page, where each one can be changed.
+            pkgresOpenVw.setText(R.string.pkgres_privacy_review)
+            pkgresOpenVw.isEnabled = false // until the check has run
+            pkgresOpenVw.setOnClickListener { openNewAppSettings() }
         } else {
-            // Nothing to open once it is removed — let Done fill the row.
+            // Nothing to review once it is removed — let Done fill the row.
             pkgresOpenVw.visibility = View.GONE
             (pkgresDoneVw.layoutParams as? android.widget.LinearLayout.LayoutParams)?.let {
                 it.marginEnd = 0
@@ -180,7 +265,17 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
         }
     }
 
-    /** The icon settles in and the card rises — the screen arrives rather than snapping on. */
+    private fun openNewAppSettings() {
+        runCatching {
+            startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", affectedPackage, null))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+        }
+        finishSafely()
+    }
+
+    /** The icon settles in and the copy rises — the screen arrives rather than snapping on. */
     private fun playEntrance() = with(binding) {
         pkgresAppIconVw.scaleX = 0.6f
         pkgresAppIconVw.scaleY = 0.6f
@@ -189,11 +284,9 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
             .setInterpolator(OvershootInterpolator(2.2f))
             .setDuration(420L)
             .start()
-
         pkgresBadgeVw.alpha = 0f
         pkgresBadgeVw.animate().alpha(1f).setStartDelay(260L).setDuration(220L).start()
-
-        listOf<View>(pkgresStatusVw, pkgresTitleVw, pkgresSubtitleVw, pkgresDetailsVw)
+        listOf<View>(pkgresStatusVw, pkgresTitleVw, pkgresSubtitleVw, pkgresBodyVw)
             .forEachIndexed { index, view ->
                 view.alpha = 0f
                 ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, dp(12).toFloat(), 0f).apply {
@@ -205,26 +298,6 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
             }
     }
 
-    private fun openApp() {
-        val launch = runCatching {
-            launchClass?.takeIf { it.isNotBlank() }?.let {
-                Intent(Intent.ACTION_MAIN)
-                    .addCategory(Intent.CATEGORY_LAUNCHER)
-                    .setClassName(affectedPackage, it)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            } ?: packageManager.getLaunchIntentForPackage(affectedPackage)
-        }.getOrNull()
-
-        if (launch == null) {
-            Toast.makeText(this, R.string.pkgres_unable_to_open, Toast.LENGTH_SHORT).show()
-            return
-        }
-        runCatching { startActivity(launch) }.onFailure {
-            Toast.makeText(this, R.string.pkgres_unable_to_open, Toast.LENGTH_SHORT).show()
-        }
-        finishSafely()
-    }
-
     private fun fillAd() {
         if (!ShellPromoConfig.packageResultSettings(this).bodyNative) return
         binding.adNativeFrameVw.visibility = View.VISIBLE
@@ -234,18 +307,14 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
     private fun close() {
         if (closed) return
         closed = true
-        setButtonsEnabled(false)
+        binding.pkgresCloseVw.isEnabled = false
+        binding.pkgresDoneVw.isEnabled = false
+        binding.pkgresOpenVw.isEnabled = false
         finishSafely()
     }
 
     /** Back behaves as Done, so the screen has one way out. */
     override fun performBack() = close()
-
-    private fun setButtonsEnabled(enabled: Boolean) = with(binding) {
-        pkgresCloseVw.isEnabled = enabled
-        pkgresDoneVw.isEnabled = enabled
-        pkgresOpenVw.isEnabled = enabled
-    }
 
     private fun finishSafely() {
         if (!isFinishing) finish()
@@ -259,5 +328,42 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
         const val EXTRA_LABEL = "package_label"
         const val EXTRA_VERSION = "package_version"
         const val EXTRA_CLASS = "package_class"
+
+        /** How long each progress step shows; three steps, so the check reads for about 2 s. */
+        private const val STEP_MS = 700L
+
+        /** The permission groups a user would care about, as Settings names them. */
+        private val SENSITIVE: List<Pair<Int, List<String>>> = listOf(
+            R.string.pkgres_perm_location to listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                "android.permission.ACCESS_BACKGROUND_LOCATION",
+            ),
+            R.string.pkgres_perm_camera to listOf(Manifest.permission.CAMERA),
+            R.string.pkgres_perm_microphone to listOf(Manifest.permission.RECORD_AUDIO),
+            R.string.pkgres_perm_contacts to listOf(
+                Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.GET_ACCOUNTS,
+            ),
+            R.string.pkgres_perm_sms to listOf(
+                Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS,
+            ),
+            R.string.pkgres_perm_call_log to listOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG),
+            R.string.pkgres_perm_phone to listOf(
+                Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, "android.permission.READ_PHONE_NUMBERS",
+            ),
+            R.string.pkgres_perm_media to listOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                "android.permission.READ_MEDIA_IMAGES",
+                "android.permission.READ_MEDIA_VIDEO",
+                "android.permission.READ_MEDIA_AUDIO",
+                "android.permission.MANAGE_EXTERNAL_STORAGE",
+            ),
+            R.string.pkgres_perm_calendar to listOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR),
+            R.string.pkgres_perm_sensors to listOf(Manifest.permission.BODY_SENSORS),
+            R.string.pkgres_perm_nearby to listOf(
+                "android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT", "android.permission.NEARBY_WIFI_DEVICES",
+            ),
+            R.string.pkgres_perm_notifications to listOf("android.permission.POST_NOTIFICATIONS"),
+        )
     }
 }

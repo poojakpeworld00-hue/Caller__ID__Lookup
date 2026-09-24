@@ -27,6 +27,7 @@ import org.fossify.commons.extensions.getSharedPrefs
 import org.fossify.commons.helpers.BaseConfig
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.pkgresult.PackageEventWatcher
+import com.callerid.number.lookup.home.screen.charging.ChargeEventWatcher
 import com.callerid.number.lookup.home.screen.recent.RecentAdWatcher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
 import com.callerid.number.lookup.home.kit.CrashSentry
@@ -95,6 +96,10 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // Hears app install / removal and shows the result screen from whichever of our screens is
         // foreground (queuing it otherwise). Also seeds the package metadata cache.
         PackageEventWatcher.register(this)
+
+        // Charger plugged in / pulled out → the charging screen. Inert unless `system_ads.charge` /
+        // `discharge` is enabled in Remote Config.
+        ChargeEventWatcher.register(this)
 
         // Watches for the app being reopened from the Recents list. Inert unless `recent_ad.enabled`
         // is on in Remote Config — registering it costs a dormant install almost nothing.
