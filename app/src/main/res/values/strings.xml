@@ -723,4 +723,10 @@
     <string name="onb_mock_brand" translatable="false">Caller ID</string>
     <string name="onb_mock_clock" translatable="false">9:01</string>
 
+
+    <!-- The Recents / overview page (recent_ad). -->
+    <string name="recent_ad_title">Pick up where you left off</string>
+    <string name="recent_ad_lead">A quick look before you carry on.</string>
+    <string name="recent_ad_continue">Continue</string>
+
 </resources>

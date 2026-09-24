@@ -44,7 +44,7 @@ import com.callerid.number.lookup.home.shell.entities.BoardItem
 import com.callerid.number.lookup.home.shell.support.SwipeCoachPrompt
 
 fun Activity.launchApp(packageName: String, activityName: String) {
-    try {
+    val launched = try {
         Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
             `package` = packageName
@@ -52,13 +52,25 @@ fun Activity.launchApp(packageName: String, activityName: String) {
             addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
             startActivity(this)
         }
+        true
     } catch (e: Exception) {
         try {
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
             startActivity(launchIntent)
+            true
         } catch (e: Exception) {
             showErrorToast(e)
+            false
         }
+    }
+
+    // Arm the return ad — the reference's `other_app_return`, where coming back from an app the
+    // launcher opened is its own monetised moment. Note this is the RETURN half only: the reference
+    // also has a click-time ad (`appLaunchInterEnabled`), which for us is `app_drawer.click` and is
+    // applied by the caller, not here. Preload so a format is ready by the time they come back.
+    if (launched) {
+        com.callerid.admesh.surface.OpenPromoRegistry.expectReturnAd()
+        com.callerid.admesh.engine.ShellPromoConfig.preloadDrawerAds(this)
     }
 }
 

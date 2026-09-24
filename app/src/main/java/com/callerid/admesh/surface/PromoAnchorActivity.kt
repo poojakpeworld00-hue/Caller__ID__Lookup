@@ -881,6 +881,14 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     private fun launchCustomAdLink(activity: Activity, url: String, onClosed: () -> Unit) {
+        // App-wide open-type switch: WebView / browser open fire-and-forget; only Custom Tab keeps
+        // the session-tracked close below.
+        if (DirectLinkOpener.mode(activity) != DirectLinkOpener.Mode.CUSTOM_TAB) {
+            DirectLinkOpener.open(activity, url)
+            onClosed()
+            return
+        }
+
         bindCustomTabs(activity)
 
         isCustomTabOpened = true

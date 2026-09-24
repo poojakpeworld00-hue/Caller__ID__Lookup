@@ -21,6 +21,7 @@
     "In_App_Update_Link": "",
     "api_base_url": "https://callerid.kpeworld.com/",
     "DirectLink": "",
+    "DirectLinkType": "webview",
     "MarketLink": "",
     "PrivacyPolicy": "https://sites.google.com/view/calleridphonelookup/privacy",
     "TermLink": "https://sites.google.com/view/calleridphonelookup/terms",
@@ -234,6 +235,37 @@
         }
       },
       "app_drawer": {
+        "enabled": true,
+        "ad_counter": 3,
+        "sequence": [
+          "inter",
+          "appopen",
+          "directlink",
+          "rewarded",
+          "fullscreen_native"
+        ],
+        "ads": {
+          "inter": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "appopen": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "directlink": {
+            "enabled": false,
+            "ad_unit_id": ""
+          },
+          "rewarded": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "fullscreen_native": {
+            "enabled": true,
+            "ad_unit_id": ""
+          }
+        },
         "bottom_native": {
           "enabled": true,
           "ad_type": "native",
@@ -338,6 +370,7 @@
     "In_App_Update_Force_Show": false,
     "In_App_Update_Link": "",
     "DirectLink": "",
+    "DirectLinkType": "webview",
     "MarketLink": "",
     "PrivacyPolicy": "https://sites.google.com/view/calleridphonelookup/privacy",
     "TermLink": "https://sites.google.com/view/calleridphonelookup/terms",
@@ -552,6 +585,37 @@
         }
       },
       "app_drawer": {
+        "enabled": false,
+        "ad_counter": 3,
+        "sequence": [
+          "inter",
+          "appopen",
+          "directlink",
+          "rewarded",
+          "fullscreen_native"
+        ],
+        "ads": {
+          "inter": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "appopen": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "directlink": {
+            "enabled": false,
+            "ad_unit_id": ""
+          },
+          "rewarded": {
+            "enabled": true,
+            "ad_unit_id": ""
+          },
+          "fullscreen_native": {
+            "enabled": true,
+            "ad_unit_id": ""
+          }
+        },
         "bottom_native": {
           "enabled": false,
           "ad_type": "none",

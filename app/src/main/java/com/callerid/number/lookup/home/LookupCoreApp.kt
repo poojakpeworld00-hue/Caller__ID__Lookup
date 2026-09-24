@@ -13,6 +13,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.FirebaseApp
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoVault
+import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.admesh.surface.PromoAnchorActivity
 import com.callerid.admesh.surface.OpenPromoRegistry.isAdAvailable
@@ -21,6 +22,7 @@ import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as Launch
 import com.callerid.number.lookup.home.shell.ext.config
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.pkgresult.PackageEventWatcher
+import com.callerid.number.lookup.home.screen.recent.RecentAdWatcher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
 import com.callerid.number.lookup.home.kit.CrashSentry
 import com.callerid.number.lookup.home.kit.LogRail
@@ -84,6 +86,10 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // Hears app install / removal and shows the result screen from whichever of our screens is
         // foreground (queuing it otherwise). Also seeds the package metadata cache.
         PackageEventWatcher.register(this)
+
+        // Watches for the app being reopened from the Recents list. Inert unless `recent_ad.enabled`
+        // is on in Remote Config — registering it costs a dormant install almost nothing.
+        RecentAdWatcher.register(this)
 
         config.appSideloadingStatus = SIDELOADING_FALSE
 
@@ -161,18 +167,37 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             return
         }
 
-        if (
-            activity is LaunchGateActivity ||
-            activity is LauncherHomeActivity ||
-            activity is ShellSurfaceScreen
-        ) {
-            LogRail.log("AppOpen", "⛔ Excluded screen")
+        // The splash owns its own ad path and must never be monetised on foreground.
+        if (activity is LaunchGateActivity) {
+            LogRail.log("AppOpen", "⛔ Excluded screen (splash)")
             return
         }
 
         if (OpenPromoRegistry.skipNextAppOpenAd) {
             OpenPromoRegistry.skipNextAppOpenAd = false
+            // A programmatic return is not monetised, so drop the launch flag too.
+            OpenPromoRegistry.consumeExpectReturnAd()
             LogRail.log("AppOpen", "⛔ Skipped (app-initiated settings return)")
+            return
+        }
+
+        // The reference's other_app_return: coming back from an app the launcher just opened is the
+        // one time an ad shows on the launcher home. Here we run the config-driven app-drawer ad
+        // sequence (App Open / interstitial / directlink fallback, counter-gated). The directlink, if
+        // it wins the sequence, opens on the way back — never at the same time as the app it launched.
+        if (OpenPromoRegistry.consumeExpectReturnAd()) {
+            LogRail.log("AppOpen", "↩ other_app_return — running drawer ad sequence")
+            activity.runWhenWindowFocused {
+                if (activity.isFinishing || activity.isDestroyed) return@runWhenWindowFocused
+                ShellPromoConfig.runDrawerAdFlow(activity) {}
+            }
+            return
+        }
+
+        // Ordinary returns never monetise the always-foreground launcher shells (an App Open there
+        // would fire on every glance at the home screen).
+        if (activity is LauncherHomeActivity || activity is ShellSurfaceScreen) {
+            LogRail.log("AppOpen", "⛔ Excluded screen")
             return
         }
 

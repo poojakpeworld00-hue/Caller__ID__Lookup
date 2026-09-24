@@ -1,10 +1,8 @@
 package com.callerid.number.lookup.home.shell.lists
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -21,6 +19,7 @@ import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.getColoredDrawableWithColor
 import org.fossify.commons.extensions.realScreenSize
+import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.shell.screens.ShellBaseActivity
 import com.callerid.number.lookup.home.databinding.CellLauncherLabelBinding
@@ -263,15 +262,12 @@ class AppTileAdapter(
         }
     }
 
-    /** Opens a promo tile's configured link in the browser; a null-scheme/blank link is ignored. */
+    /**
+     * Opens a promo tile's configured link in the Remote-Config open type (WebView / Custom Tab /
+     * browser, default WebView); a null-scheme/blank link is ignored.
+     */
     private fun openPromo(link: String) {
-        val uri = runCatching { Uri.parse(link).takeIf { !it.scheme.isNullOrBlank() } }.getOrNull()
-            ?: return
-        runCatching {
-            activity.startActivity(
-                Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            )
-        }
+        DirectLinkOpener.open(activity, link)
     }
 
     override fun onChange(position: Int) =

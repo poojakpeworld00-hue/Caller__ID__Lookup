@@ -19,7 +19,21 @@
 
     <style name="Theme.CallerIdLookup" parent="Base.Theme.CallerIdLookup" />
 
-    
+    <!--
+      The direct-link WebView. Chrome-less and always light: the pages are third-party landing
+      pages that assume a white background, and a Custom Tab / browser could not hide its toolbar.
+    -->
+    <style name="Theme.PromoWeb" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="29">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+    </style>
+
+
     <style name="Theme.OverlayGuide" parent="Theme.CallerIdLookup">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>

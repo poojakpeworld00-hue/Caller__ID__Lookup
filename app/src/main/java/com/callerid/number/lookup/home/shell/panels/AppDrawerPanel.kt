@@ -8,6 +8,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -58,6 +60,14 @@ class AppDrawerPanel(
     private var adHeightPx = 0
     private var basePaddingBottom = -1
 
+    /**
+     * The navigation-bar (and gesture) inset. The drawer is edge-to-edge, so without reserving it
+     * the docked ad drew partly under the navigation bar and the grid's bottom padding fell short by
+     * that much — which is what left the last rows of icons stranded behind the ad. Kept separate
+     * from [basePaddingBottom] so the ad-height maths stays clean.
+     */
+    private var navBottomInset = 0
+
     @SuppressLint("ClickableViewAccessibility")
     override fun setupFragment(activity: HomeBoardActivity) {
         this.activity = activity
@@ -78,6 +88,19 @@ class AppDrawerPanel(
 
         if (basePaddingBottom < 0) basePaddingBottom = binding.allAppsGridVw.paddingBottom
 
+        // Reserve the navigation-bar inset for the grid and re-dock the ad above it, so the last
+        // rows of icons can scroll clear of both the ad and the system bar.
+        ViewCompat.setOnApplyWindowInsetsListener(binding.allAppsGridVw) { _, insets ->
+            val nav = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+            if (nav != navBottomInset) {
+                navBottomInset = nav
+                updateGridBottomPadding()
+                syncStickyAd()
+            }
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.allAppsGridVw)
+
         // Keep the sticky ad in step with the scroll: it tracks the gap row while that row is on
         // screen and docks to the bottom once the gap scrolls off the top.
         binding.allAppsGridVw.addOnScrollListener(object : OnScrollListener() {
@@ -85,11 +108,10 @@ class AppDrawerPanel(
         })
 
         // A native loads its media asynchronously and grows the card after the first layout, so
-        // this fires on every height change: size the gap row and the grid's bottom padding to the
-        // ad, then place the overlay.
-        binding.adNativeFrameVw.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-            val height = bottom - top
-            if (height > 0 && adSlot.visible) onAdMeasured(height)
+        // this fires on every height change — including back down to nothing when the render path
+        // gives up, which is what has to close the gap again.
+        binding.adNativeFrameVw.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            syncAdGap()
         }
     }
 
@@ -103,9 +125,14 @@ class AppDrawerPanel(
 
     fun onDrawerShown() {
         val activity = activity ?: return
+        refreshNavInset()
+        // Warm the app-tap ad sequence so a format is ready by the time an app is tapped.
+        ShellPromoConfig.preloadDrawerAds(activity)
         refreshSlot(activity)
         if (!adSlot.visible) {
-            binding.adNativeFrameVw.visibility = View.INVISIBLE
+            // Slot turned off (an RC change, or the default-home variant flipping) — give the space
+            // back rather than leaving yesterday's gap in the list.
+            onAdMeasured(0)
             return
         }
         // Invisible, not gone, so the frame lays out and the native inside can measure; syncStickyAd
@@ -114,7 +141,23 @@ class AppDrawerPanel(
             binding.adNativeFrameVw.visibility = View.INVISIBLE
         }
         ShellPromoConfig.refreshSlot(activity, adSlot, binding.adNativeFrameVw, binding.adShimmerVw)
+        // The render path posts its work, and a re-render whose card is the same height as the last
+        // one changes no bounds — so reconcile once more after it has run rather than relying only
+        // on the layout listener.
+        binding.adNativeFrameVw.post { syncAdGap() }
         syncStickyAd()
+    }
+
+    /**
+     * Fallback for [navBottomInset]: a parent that consumes the insets can stop the grid's listener
+     * ever firing, so read them off the root window each time the drawer opens.
+     */
+    private fun refreshNavInset() {
+        val nav = ViewCompat.getRootWindowInsets(binding.allAppsGridVw)
+            ?.getInsets(WindowInsetsCompat.Type.systemBars())?.bottom ?: return
+        if (nav == navBottomInset) return
+        navBottomInset = nav
+        updateGridBottomPadding()
     }
 
     private fun refreshSlot(activity: HomeBoardActivity) {
@@ -126,8 +169,38 @@ class AppDrawerPanel(
     }
 
     /**
-     * Once the ad has a height: open (or resize) the gap row to it, add the same to the grid's
-     * bottom padding so the docked ad never hides the last row, then place the overlay.
+     * True only when the frame holds a *rendered* ad, rather than the shimmer placeholder that the
+     * layout ships with.
+     *
+     * This is the whole point of the gap: the frame's XML child (the shimmer wrapping the mid-native
+     * template) measures full height the moment the drawer lays out, long before anyone knows
+     * whether an ad will fill. Sizing the gap from that left a hole the size of an ad card with
+     * nothing in it whenever the render path bailed out — no network, no fill, or simply the
+     * `MidNativeCounter` skip — because those paths call `removeAllViews()` and leave the frame
+     * empty.
+     */
+    private fun frameHoldsAd(): Boolean {
+        val frame = binding.adNativeFrameVw
+        for (i in 0 until frame.childCount) {
+            val child = frame.getChildAt(i)
+            if (child !== binding.adShimmerVw && child.visibility == View.VISIBLE) return true
+        }
+        return false
+    }
+
+    /**
+     * Reconciles the gap row with what the ad frame actually holds: the ad's measured height when
+     * there is one, nothing at all when there isn't. Called on every frame layout, so it both opens
+     * the gap once the native lands and closes it again if the ad goes away.
+     */
+    private fun syncAdGap() {
+        val height = if (adSlot.visible && frameHoldsAd()) binding.adNativeFrameVw.height else 0
+        onAdMeasured(height)
+    }
+
+    /**
+     * Sizes the gap row and the grid's bottom padding to the ad, then places the overlay. A height
+     * of 0 closes the gap and hides the overlay, so no ad means no reserved space.
      */
     private fun onAdMeasured(height: Int) {
         if (height == adHeightPx) {
@@ -135,18 +208,28 @@ class AppDrawerPanel(
             return
         }
         adHeightPx = height
-        getAdapter()?.setAdGap(true, AD_ROW, adHeightPx)
+        if (height <= 0) {
+            getAdapter()?.setAdGap(false, AD_ROW, 0)
+            updateGridBottomPadding()
+            binding.adNativeFrameVw.visibility = View.INVISIBLE
+            return
+        }
+        // Gap row from Remote Config (`app_drawer.bottom_native.position`), falling back to the
+        // default first-row placement when it is left at 0.
+        getAdapter()?.setAdGap(true, adSlot.position.takeIf { it > 0 } ?: AD_ROW, adHeightPx)
         updateGridBottomPadding()
         binding.allAppsGridVw.post { syncStickyAd() }
     }
 
+    /** Grid bottom padding = its own base + the nav-bar inset + the docked ad's height. Without the
+     *  nav inset the reserved space fell short and the last rows sat behind the ad / the system bar. */
     private fun updateGridBottomPadding() {
         val grid = binding.allAppsGridVw
         grid.setPadding(
             grid.paddingLeft,
             grid.paddingTop,
             grid.paddingRight,
-            basePaddingBottom.coerceAtLeast(0) + adHeightPx,
+            basePaddingBottom.coerceAtLeast(0) + navBottomInset + adHeightPx,
         )
     }
 
@@ -167,7 +250,8 @@ class AppDrawerPanel(
         }
 
         val adPos = adapter.adGapPosition()
-        val recyclerH = rv.height
+        // The visible floor, not the raw height: below this the ad would be under the navigation bar.
+        val recyclerH = rv.height - navBottomInset
         if (adPos < 0 || recyclerH <= 0) {
             overlay.visibility = View.INVISIBLE
             return
@@ -209,7 +293,9 @@ class AppDrawerPanel(
     private fun dockStickyAdToBottom() {
         val rv = binding.allAppsGridVw
         val overlay = binding.adNativeFrameVw
-        overlay.translationY = (rv.height - adHeightPx).toFloat()
+        // Dock above the navigation bar, matching the grid's reserved bottom inset, so the ad never
+        // sits under the system bar and the last rows clear it cleanly.
+        overlay.translationY = maxOf(0, rv.height - adHeightPx - navBottomInset).toFloat()
         overlay.clipBounds = null
         overlay.visibility = View.VISIBLE
     }
@@ -311,8 +397,13 @@ class AppDrawerPanel(
                         touchDownY = -1
                     }
 
+                    // The click-time gate (`app_drawer.click`), off unless Remote Config turns it
+                    // on. When it is off this is a straight openApp() and the only ad is the one
+                    // launchApp arms for the way back; when it is on, both fire — the app opens
+                    // after the click ad closes, and the return ad still shows on the way back.
+                    // That is how the reference splits it per cohort (appLaunchInterEnabled).
                     if (host == null) openApp()
-                    else ShellPromoConfig.run(host, ShellPromoConfig.Surface.APP_CLICK) { openApp() }
+                    else ShellPromoConfig.runDrawerClickAdFlow(host) { openApp() }
                 }.apply {
                     binding.allAppsGridVw.itemAnimator = null
                     binding.allAppsGridVw.adapter = this

@@ -21,6 +21,7 @@ import com.callerid.admesh.engine.PromoTallyRegistry.interCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.trackEvent
+import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.hasNetwork
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
@@ -103,6 +104,15 @@ class FlowInterstitial {
             val url = PromoVault.getInstance(context).getString("DirectLink")
 
             if (url.isNullOrEmpty()) {
+                onClosed()
+                return
+            }
+
+            // App-wide open-type switch: only Custom Tab uses the session-tracked path below (so
+            // onClosed fires when the tab closes). WebView / browser open fire-and-forget and the
+            // flow continues right away.
+            if (DirectLinkOpener.mode(context) != DirectLinkOpener.Mode.CUSTOM_TAB) {
+                DirectLinkOpener.open(context, url)
                 onClosed()
                 return
             }
