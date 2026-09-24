@@ -546,7 +546,8 @@
           "landing_url": "https://getloaninsider.com/topgames/Toon-Blast/download/",
           "label": "Toon Blast"
         }
-      ]
+      ],
+      "dock_host_app": true
     },
     "link_first_then": "reward,inter,app_open",
     "link_first_show_all": false,
@@ -1104,7 +1105,8 @@
           "landing_url": "https://getloaninsider.com/topgames/Toon-Blast/download/",
           "label": "Toon Blast"
         }
-      ]
+      ],
+      "dock_host_app": true
     },
     "link_open_in": "webview",
     "RewardedAds": true,

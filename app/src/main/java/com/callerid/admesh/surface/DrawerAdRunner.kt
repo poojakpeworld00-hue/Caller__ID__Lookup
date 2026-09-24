@@ -425,7 +425,7 @@ object DrawerAdRunner {
      * Play Store and returned. If the launcher is destroyed while they are away the flow is simply
      * dropped: they have left, and there is nothing left to continue on.
      */
-    private fun onReturnTo(activity: Activity, action: () -> Unit) {
+    fun onReturnTo(activity: Activity, action: () -> Unit) {
         val app = activity.application
         if (app == null) return action()
 

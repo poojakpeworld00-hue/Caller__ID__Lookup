@@ -6,7 +6,9 @@ import android.util.Log
 import com.callerid.admesh.engine.ShellPromoConfig.DrawerAdFlow
 import com.callerid.admesh.engine.ShellPromoConfig.DrawerAdSpec
 import com.callerid.admesh.engine.ShellPromoConfig.DrawerAdType
+import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.DrawerAdRunner
+import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.BuildConfig
 import org.json.JSONArray
 
@@ -97,18 +99,18 @@ object LauncherPlacementAds {
             else -> null
         }?.takeIf { it.adUnitId.isNotBlank() }
 
-    /** The link-first chain for [placement], or null when it is off (no order, no links, or no `IsCustomADS`). */
-    private fun linkFirst(vault: PromoVault, placement: String?): Pair<DrawerAdSpec, DrawerAdFlow>? {
+    private class LinkFirst(val links: List<String>, val openIn: DirectLinkOpener.Mode?, val then: DrawerAdFlow)
+
+    /**
+     * The link-first chain for [placement] — its links, then the follow-ups — or null when it is
+     * off (no order, no links, or no `IsCustomADS`).
+     */
+    private fun linkFirst(vault: PromoVault, placement: String?): LinkFirst? {
         val order = resolve(vault, placement, "link_first_then")
             .split(',').map { it.trim() }.filter { it.isNotEmpty() }
         val links = directLinks(vault, placement)
         if (order.isEmpty() || links.isEmpty() || !vault.getBoolean("IsCustomADS")) return null
-        val link = DrawerAdSpec(
-            type = DrawerAdType.DIRECTLINK,
-            adUnitId = links.first(),
-            urls = links,
-            openType = resolve(vault, placement, "link_open_in"),
-        )
+        val openIn = DirectLinkOpener.modeOf(resolve(vault, placement, "link_open_in"))
         val showAll = resolve(vault, placement, "link_first_show_all").trim().toBoolean()
         val then = DrawerAdFlow(
             enabled = true,
@@ -117,7 +119,7 @@ object LauncherPlacementAds {
             showAll = showAll,
             startFromFirst = true,
         )
-        return link to then
+        return LinkFirst(links, openIn, then)
     }
 
     private fun fallbacks(vault: PromoVault, placement: String?): List<String> =
@@ -161,7 +163,7 @@ object LauncherPlacementAds {
         val vault = PromoVault.getInstance(context)
         if (!vault.getBoolean("IsAdsON")) return
         listOf("leftSwipe", "rightSwipe", "appLaunch").filter { placementEnabled(context, it) }.forEach { p ->
-            linkFirst(vault, p)?.let { DrawerAdRunner.preload(context, it.second) }
+            linkFirst(vault, p)?.let { DrawerAdRunner.preload(context, it.then) }
             DrawerAdRunner.preload(context, if (p == "appLaunch") fullNativeFlow(vault, p) else interFlow(vault, p))
         }
     }
@@ -171,20 +173,7 @@ object LauncherPlacementAds {
         val vault = PromoVault.getInstance(activity)
         if (!vault.getBoolean("IsAdsON") || !placementEnabled(activity, placement)) return proceed()
 
-        val chain = linkFirst(vault, placement)
-        if (chain != null) {
-            val (link, then) = chain
-            log("$placement: link-first → ${link.urls.size} link(s), then ${then.sequence.map { it.type.key }}")
-            // Suppress the global App Open on the return from the link: the follow-up chosen here is the ad.
-            com.callerid.admesh.surface.OpenPromoRegistry.skipNextAppOpenAd = true
-            DrawerAdRunner.run(activity, DrawerAdFlow(true, 0, listOf(link), startFromFirst = true), pointerKey(placement)) {
-                // Consumed by the foreground hook on a real return; cleared here for a link that never opened.
-                com.callerid.admesh.surface.OpenPromoRegistry.skipNextAppOpenAd = false
-                if (then.sequence.isEmpty()) proceed()
-                else DrawerAdRunner.run(activity, then, pointerKey(placement), proceed)
-            }
-            return
-        }
+        if (runLinkFirst(activity, vault, placement, proceed)) return
 
         val flow = interFlow(vault, placement)
         log("$placement: inter chain ${flow.sequence.map { "${it.type.key}(${it.adUnitId})" }}")
@@ -195,9 +184,34 @@ object LauncherPlacementAds {
     fun showFullNative(activity: Activity, placement: String?, proceed: () -> Unit) {
         val vault = PromoVault.getInstance(activity)
         if (!vault.getBoolean("IsAdsON") || !placementEnabled(activity, placement)) return proceed()
+        // A link-first chain configured for the drawer placement takes the app click too.
+        if (runLinkFirst(activity, vault, placement, proceed)) return
         val flow = fullNativeFlow(vault, placement)
         log("$placement: full-native chain ${flow.sequence.map { "${it.type.key}(${it.adUnitId})" }}")
         DrawerAdRunner.run(activity, flow, pointerKey(placement), proceed)
+    }
+
+    /**
+     * Runs [placement]'s link-first chain when one is configured; false when there is none.
+     *
+     * As in QRScanner, every link opens at once as a stack — last one on top, so the user closes
+     * them in the listed order and each close reveals the next. The follow-ups run once the whole
+     * stack is gone and the launcher is back in front.
+     */
+    private fun runLinkFirst(activity: Activity, vault: PromoVault, placement: String?, proceed: () -> Unit): Boolean {
+        val chain = linkFirst(vault, placement) ?: return false
+        log("$placement: link-first → ${chain.links.size} link(s), then ${chain.then.sequence.map { it.type.key }}")
+        val afterLinks = {
+            // Consumed by the foreground hook on a real return; cleared here for links that never opened.
+            OpenPromoRegistry.skipNextAppOpenAd = false
+            if (chain.then.sequence.isEmpty()) proceed()
+            else DrawerAdRunner.run(activity, chain.then, pointerKey(placement), proceed)
+        }
+        // Suppress the global App Open on the return from the links: the follow-up chosen here is the ad.
+        OpenPromoRegistry.skipNextAppOpenAd = true
+        val opened = chain.links.asReversed().count { DirectLinkOpener.open(activity, it, chain.openIn) }
+        if (opened > 0) DrawerAdRunner.onReturnTo(activity, afterLinks) else afterLinks()
+        return true
     }
 
     private fun pointerKey(placement: String?) = "__launcher_placement_ptr_${normalize(placement)}"

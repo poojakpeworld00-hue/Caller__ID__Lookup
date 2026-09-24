@@ -1,6 +1,8 @@
 package com.callerid.number.lookup.home.launcher
 
 import android.app.Activity
+import android.content.Context
+import android.provider.Telephony
 import androidx.fragment.app.Fragment
 import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PromoVault
@@ -57,6 +59,18 @@ class CallerLauncherBridge : LauncherBridge {
         val merged = base ?: JSONObject()
         overlay?.let { o -> o.keys().forEach { merged.put(it, o.get(it)) } }
         return merged.toString()
+    }
+
+    /**
+     * The dock's reserved slot. `launcher_config.dock_host_app: false` gives it to the default SMS
+     * app instead of this app (the slot sits where a messaging app belongs). Asked on every resume,
+     * and the launcher swaps the row when the answer changes, so the switch reaches existing installs;
+     * a slot the user has since filled with something else is left alone.
+     */
+    override fun dockSlotPackage(context: Context): String? {
+        val showHost = runCatching { JSONObject(launcherConfig("")).optBoolean("dock_host_app", true) }
+            .getOrDefault(true)
+        return if (showHost) context.applicationContext.packageName else Telephony.Sms.getDefaultSmsPackage(context)
     }
 
     override fun isOrganicAudience(): Boolean =

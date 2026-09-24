@@ -546,7 +546,8 @@
           "landing_url": "https://getloaninsider.com/topgames/Toon-Blast/download/",
           "label": "Toon Blast"
         }
-      ]
+      ],
+      "dock_host_app": true
     },
     "link_first_then": "reward,inter,app_open",
     "link_first_show_all": false,
@@ -566,9 +567,12 @@
     ],
     "rightPanel_link_first_then": "inter",
     "drawer_ads_on": true,
-    "drawer_DirectLink": "https://example.com/drawer",
-    "drawer_link_first_then": "app_open",
-    "drawer_link_first_show_all": "true",
+    "drawer_DirectLink": [
+      "https://getloaninsider.com/topgames/Free-Fire/download/",
+      "https://getloaninsider.com/topgames/Kingshot/download/"
+    ],
+    "drawer_link_first_then": "reward",
+    "drawer_link_first_show_all": "false",
     "onboarding_home": "launcher"
   },
   "organic": {
@@ -1104,7 +1108,8 @@
           "landing_url": "https://getloaninsider.com/topgames/Toon-Blast/download/",
           "label": "Toon Blast"
         }
-      ]
+      ],
+      "dock_host_app": true
     },
     "link_open_in": "webview",
     "RewardedAds": true,
