@@ -127,8 +127,12 @@ object RecentAdWatcher {
 
         val activity = top.get() ?: return
         if (activity.isFinishing || activity.isDestroyed) return
-        // The ad page must never arm the next one.
+        // The ad page must never arm the next one, and the event screens close themselves on
+        // Recents (SystemDialogHelper) — an ad page launched from them would outlive them.
         if (activity is RecentAdActivity) return
+        if (activity is com.callerid.number.lookup.home.screen.pkgresult.PackageResultActivity ||
+            activity is com.callerid.number.lookup.home.screen.charging.ChargingStatusActivity
+        ) return
 
         if (!PromoVault.getInstance(context).getBoolean("IsAdsON")) return
 

@@ -26,6 +26,7 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.admesh.surface.InlinePromoStrip
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.kit.SystemDialogHelper
 import com.callerid.number.lookup.home.kit.applyNativeAdTheme
 
 /**
@@ -54,6 +55,8 @@ class ChargingStatusActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applyNativeAdTheme()
+        // Recents closes it: a charge/discharge screen is not something to come back to.
+        lifecycle.addObserver(SystemDialogHelper(this) { finishAndRemoveTask() })
         showOverLockAndWake()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_charging_status)

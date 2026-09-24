@@ -29,6 +29,7 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.databinding.ScreenPackageResultBinding
 import com.callerid.number.lookup.home.frame.FrameActivity
+import com.callerid.number.lookup.home.kit.SystemDialogHelper
 
 /**
  * The screen shown when another app is installed or removed (launched by [PackageEventWatcher]).
@@ -60,6 +61,8 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
     private var closed = false
 
     override fun initView() {
+        // Recents closes it: an install/uninstall screen is not something to come back to.
+        lifecycle.addObserver(SystemDialogHelper(this) { finishAndRemoveTask() })
         WindowCompat.setDecorFitsSystemWindows(window, false)
         applyInsets()
         bindHeader()
