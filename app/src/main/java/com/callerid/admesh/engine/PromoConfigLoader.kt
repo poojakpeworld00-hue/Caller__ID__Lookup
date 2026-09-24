@@ -47,7 +47,9 @@ object PromoConfigLoader {
 
                 "intro_display", "ScreenAds", "launcher_ads",
                 // The :launcher module's own config, already audience-resolved by this block.
-                "launcher_config"
+                "launcher_config",
+                // "app" | "launcher": where onboarding hands off (OnboardRouter.homeActivity).
+                "onboarding_home"
             ).forEach { key -> if (root.has(key)) putString(key, root.optString(key, "")) }
 
             // The launcher's per-placement ad keys (`leftPanel_googleInter`, `drawer_link_first_then`,

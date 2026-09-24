@@ -14,6 +14,9 @@ import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.kit.LogRail
 import io.launcher.home.activities.LauncherPanel
+import com.callerid.admesh.engine.PromoVault
+import com.callerid.number.lookup.home.LookupCoreApp
+import com.callerid.number.lookup.home.screen.AppHomeActivity
 import org.fossify.commons.extensions.getSharedPrefs
 import io.launcher.home.extensions.isDefaultLauncher
 import com.callerid.number.lookup.home.screen.locale.LanguageSelectActivity
@@ -48,14 +51,27 @@ object OnboardRouter {
     fun goHome(activity: Activity) {
         markOnboardingCompleted(activity)
         activity.startActivity(
-            Intent(activity, LauncherPanel::class.java).addFlags(
+            Intent(activity, homeActivity()).addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             )
         )
         activity.finish()
     }
 
-    fun homeActivity(): Class<*> = LauncherPanel::class.java
+    /**
+     * Where the app lands once onboarding is over — the end of the flow and every later launcher-icon
+     * tap. `onboarding_home` in the GET_DATA_LIST audience block: `"app"` opens the app's own home
+     * ([AppHomeActivity]); anything else, or unset, the launcher home. The system HOME button always
+     * opens the launcher once the app holds the Home role; this only decides the app's own hand-off.
+     */
+    fun homeActivity(): Class<*> =
+        if (PromoVault.getInstance(LookupCoreApp.appContext).getString(HOME_KEY)?.trim()?.lowercase() == "app") {
+            AppHomeActivity::class.java
+        } else {
+            LauncherPanel::class.java
+        }
+
+    private const val HOME_KEY = "onboarding_home"
 
     /**
      * The screens that carry a "Step n of m" indicator, in numbering order. The intro slides are

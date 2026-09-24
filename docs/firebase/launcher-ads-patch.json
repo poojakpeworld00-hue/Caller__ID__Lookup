@@ -5,10 +5,6 @@
         "os_style": false,
         "search_widget": "google",
         "default_launcher_prompt": true,
-        "panels": {
-          "apps": true,
-          "host": true
-        },
         "guide": {
           "enabled": true,
           "swipe_right_contacts": true,
@@ -264,10 +260,6 @@
         "os_style": false,
         "search_widget": "google",
         "default_launcher_prompt": true,
-        "panels": {
-          "apps": true,
-          "host": true
-        },
         "guide": {
           "enabled": true,
           "swipe_right_contacts": true,
@@ -513,10 +505,6 @@
         "os_style": false,
         "search_widget": "google",
         "default_launcher_prompt": true,
-        "panels": {
-          "apps": true,
-          "host": true
-        },
         "guide": {
           "enabled": true,
           "swipe_right_contacts": true,
@@ -772,10 +760,6 @@
         "os_style": false,
         "search_widget": "google",
         "default_launcher_prompt": true,
-        "panels": {
-          "apps": true,
-          "host": true
-        },
         "guide": {
           "enabled": true,
           "swipe_right_contacts": true,

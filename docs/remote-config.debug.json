@@ -361,10 +361,6 @@
       "os_style": false,
       "search_widget": "google",
       "default_launcher_prompt": true,
-      "panels": {
-        "apps": true,
-        "host": true
-      },
       "guide": {
         "enabled": true,
         "swipe_right_contacts": true,
@@ -572,7 +568,8 @@
     "drawer_ads_on": true,
     "drawer_DirectLink": "https://example.com/drawer",
     "drawer_link_first_then": "app_open",
-    "drawer_link_first_show_all": "true"
+    "drawer_link_first_show_all": "true",
+    "onboarding_home": "launcher"
   },
   "organic": {
     "IsAdsON": true,
@@ -922,10 +919,6 @@
       "os_style": false,
       "search_widget": "google",
       "default_launcher_prompt": true,
-      "panels": {
-        "apps": true,
-        "host": true
-      },
       "guide": {
         "enabled": true,
         "swipe_right_contacts": true,
@@ -1117,6 +1110,7 @@
     "RewardedAds": true,
     "leftPanel_ads_on": true,
     "rightPanel_ads_on": true,
-    "drawer_ads_on": true
+    "drawer_ads_on": true,
+    "onboarding_home": "launcher"
   }
 }
