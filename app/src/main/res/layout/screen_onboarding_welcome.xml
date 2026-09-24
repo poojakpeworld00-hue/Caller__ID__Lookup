@@ -34,7 +34,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/onboarding_footerVw"
         android:layout_below="@id/onboarding_step_headerVw"
         android:clipChildren="false"
         android:clipToPadding="false"
