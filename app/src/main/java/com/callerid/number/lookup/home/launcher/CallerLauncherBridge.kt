@@ -2,7 +2,10 @@ package com.callerid.number.lookup.home.launcher
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PromoVault
+import com.callerid.admesh.engine.ShellPromoConfig
+import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.LookupCoreApp
 import com.callerid.number.lookup.home.kit.applyNativeAdTheme
@@ -21,6 +24,13 @@ class CallerLauncherBridge : LauncherBridge {
         // The module's ads-helper slot entries are not used here: CallerLauncherAds reads this
         // app's own `launcher_ads` slot blocks instead, so the module keeps its defaults.
         if (key == LauncherKeys.ADS_CONFIG) return fallback
+        // launcher_config lives inside the GET_DATA_LIST audience block (as in QRScanner), so the
+        // ingested copy is already organic/marketing-resolved. A top-level parameter still works.
+        if (key == LauncherKeys.LAUNCHER_CONFIG) {
+            PromoVault.getInstance(LookupCoreApp.appContext).getString(key, "")
+                ?.takeIf { it.isNotBlank() }
+                ?.let { return it }
+        }
         return runCatching { FirebaseRemoteConfig.getInstance().getString(key) }
             .getOrNull()
             .orEmpty()
@@ -45,7 +55,17 @@ class CallerLauncherBridge : LauncherBridge {
         LanguageRegistry.applySaved(activity)
         activity.applyNativeAdTheme()
         (activity as? LauncherPanel)?.let { LauncherShellHost.attach(it) }
+        LauncherPlacementAds.preload(activity)
         return true
+    }
+
+    /**
+     * Another app was just opened from the launcher: the return from it is its own monetised moment
+     * (the `launcher_ads.app_drawer` sequence, run by LookupCoreApp on the next foreground).
+     */
+    override fun onAppLaunched(packageName: String) {
+        OpenPromoRegistry.expectReturnAd()
+        ShellPromoConfig.preloadDrawerAds(LookupCoreApp.appContext)
     }
 
     override fun onLauncherResume(activity: Activity) {
@@ -53,6 +73,8 @@ class CallerLauncherBridge : LauncherBridge {
         SwipeCoachPrompt.dismiss()
         LanguageRegistry.applySaved(activity)
         LauncherShellHost.of(activity)?.homeShellController?.onHostResume()
+        // Replaces whatever the last gesture used, so the next one has an ad ready.
+        LauncherPlacementAds.preload(activity)
     }
 
     override fun isDebug(): Boolean = BuildConfig.DEBUG

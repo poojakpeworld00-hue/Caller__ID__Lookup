@@ -84,7 +84,9 @@ object LauncherPromoController {
         }
         counters[gesture] = 0
 
-        val url = LauncherAdsConfig.promoUrl(gesture)
+        // A promo link opens a separate task, and launching an app alongside it would race it for
+        // the foreground, so the app-launch placement is ad-only.
+        val url = if (gesture == LauncherAdsConfig.APP_LAUNCH) "" else LauncherAdsConfig.promoUrl(gesture)
         if (url.isNotEmpty()) {
             Log.d(TAG, "$gesture: opening promo link")
             openLink(activity, url)
@@ -96,7 +98,11 @@ object LauncherPromoController {
         runCatching {
             // once() is the continuation of whatever the user asked for, so the contract is that
             // the host runs it exactly once whatever happened - no ad, a failure, a skip.
-            LauncherRegistry.ads.showInterstitial(activity, gesture) {
+            // Leaving for another app gets a full-screen native (QRScanner's choice); the host
+            // falls back to an interstitial when none is ready.
+            val show = if (gesture == LauncherAdsConfig.APP_LAUNCH) LauncherRegistry.ads::showFullNative
+            else LauncherRegistry.ads::showInterstitial
+            show(activity, gesture) {
                 Log.d(TAG, "$gesture: interstitial closed")
                 once()
             }

@@ -78,7 +78,28 @@ fun Activity.restoreNavigationBar() {
         .show(WindowInsetsCompat.Type.systemBars())
 }
 
+/**
+ * Opens another app, behind the `appLaunch` promo when one is configured.
+ *
+ * The gate lives here rather than at the call sites because there are three of them — the drawer,
+ * the home grid and the apps panel — and the placement is "the user is leaving for another app",
+ * which is true of all three. The launch itself always happens; the promo only precedes it.
+ *
+ * The host app itself is not gated: opening it from its own home screen is not leaving.
+ */
 fun Activity.launchApp(packageName: String, activityName: String) {
+    if (packageName == applicationContext.packageName) return launchAppNow(packageName, activityName)
+    io.launcher.home.promo.LauncherPromoController.run(
+        this, io.launcher.home.promo.LauncherAdsConfig.APP_LAUNCH
+    ) {
+        // Just as the app opens, so the host can arm the ad it shows on the way back.
+        io.launcher.home.api.LauncherRegistry.bridge.onAppLaunched(packageName)
+        launchAppNow(packageName, activityName)
+    }
+}
+
+/** The bare launch, with no promo. */
+fun Activity.launchAppNow(packageName: String, activityName: String) {
     try {
         Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)

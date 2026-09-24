@@ -50,7 +50,14 @@ data class LauncherSetup(
     val gestures: Map<String, GestureSetup> = emptyMap(),
     /** The audience's `unlock_ads` object as raw JSON; empty when absent, which reads as off. */
     val unlockAdsJson: String = "",
+    /** Sponsored tiles seeded among the drawer's apps: one after every [drawerAppAdEvery] apps. */
+    val drawerAppAdEnabled: Boolean = false,
+    val drawerAppAdEvery: Int = 8,
+    val drawerAppAds: List<SponsoredApp> = emptyList(),
 ) {
+    /** One sponsored drawer tile: an app-icon-shaped cell that opens [landingUrl]. */
+    data class SponsoredApp(val logo: String, val landingUrl: String, val label: String)
+
     fun guideStepEnabled(configKey: String): Boolean = guideEnabled && (guideSteps[configKey] ?: true)
 
     fun panelEnabled(name: String): Boolean = panels[name] ?: true
@@ -128,7 +135,21 @@ data class LauncherSetup(
                 guideSteps = guideSteps,
                 gestures = gestureMap,
                 unlockAdsJson = audience.optJSONObject(KEY_UNLOCK_ADS)?.toString().orEmpty(),
+                // QRScanner's key names, so its feed pastes across unchanged.
+                drawerAppAdEnabled = audience.optBoolean("drawerAppAdEnabled", false),
+                drawerAppAdEvery = audience.optInt("drawerAppAdEvery", 8).coerceAtLeast(1),
+                drawerAppAds = sponsoredApps(audience.optJSONArray("drawerAppAds")),
             )
+        }
+
+        private fun sponsoredApps(array: org.json.JSONArray?): List<SponsoredApp> {
+            if (array == null) return emptyList()
+            return (0 until array.length()).mapNotNull { i ->
+                val o = array.optJSONObject(i) ?: return@mapNotNull null
+                val url = o.optString("landing_url").trim()
+                if (url.isEmpty()) null
+                else SponsoredApp(o.optString("logo").trim(), url, o.optString("label").trim())
+            }
         }
     }
 }

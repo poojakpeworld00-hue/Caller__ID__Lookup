@@ -56,4 +56,6 @@
     <string name="launcher_search_apps_hint">Search apps</string>
     <string name="launcher_suggested_apps">Suggested apps</string>
     <string name="launcher_searched_apps">Searched apps</string>
+    <!-- A sponsored drawer tile's label: the ad disclosure, then the promoted app's name. -->
+    <string name="lnch_sponsored_label">Ad · %1$s</string>
 </resources>

@@ -4,10 +4,12 @@ import android.app.Activity
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PerScreenPromo
 import com.callerid.admesh.engine.PromoTallyRegistry
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.ShellPromoConfig
+import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.InlinePromo
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.LookupCoreApp
@@ -81,10 +83,29 @@ class CallerLauncherAds : LauncherAds {
      * already calls its close callback for ads-off, no network and no fill.
      */
     override fun showInterstitial(activity: Activity, tag: String, onDone: () -> Unit) {
+        if (!LauncherPlacementAds.placementEnabled(activity, tag)) return onDone()
+        // A placement with its own unit, a link-first chain or a full-native fallback goes through
+        // the placement engine (QRScanner's `<placement>_*` keys); otherwise the app-wide
+        // preloaded interstitial exactly as before.
+        if (LauncherPlacementAds.hasOwnInter(activity, tag)) {
+            LauncherPlacementAds.showInterstitial(activity, tag, onDone)
+            return
+        }
         // The launcher has already applied its own per-gesture counter; letting the app-wide
         // InterCounter apply on top would skip ads the launcher believes it is showing.
         PromoTallyRegistry.interCounter = PromoVault.getInstance(activity).getInt("InterCounter")
         FlowInterstitial().renderInterstitial(activity) { onDone() }
+    }
+
+    /** Leaving for another app: a full-screen native (the `drawer` placement's unit), else its interstitial. */
+    override fun showFullNative(activity: Activity, tag: String, onDone: () -> Unit) =
+        LauncherPlacementAds.showFullNative(activity, tag, onDone)
+
+    /** Sponsored drawer tiles open through the same opener as every direct link (`link_open_in`, default WebView). */
+    override fun openSponsored(activity: Activity, url: String) {
+        val mode = DirectLinkOpener.modeOf(PromoVault.getInstance(activity).getString("link_open_in"))
+            ?: DirectLinkOpener.Mode.WEBVIEW
+        DirectLinkOpener.open(activity, url, mode)
     }
 
     /**

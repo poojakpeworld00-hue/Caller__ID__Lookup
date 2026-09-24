@@ -54,6 +54,25 @@ interface LauncherAds {
      */
     fun showInterstitial(activity: Activity, tag: String, onDone: () -> Unit) = onDone()
 
+    /**
+     * A full-screen native for [tag] — the app-launch placement asks for this. Same contract as
+     * [showInterstitial]: run [onDone] exactly once. Defaults to the interstitial.
+     */
+    fun showFullNative(activity: Activity, tag: String, onDone: () -> Unit) =
+        showInterstitial(activity, tag, onDone)
+
+    /**
+     * Opens a sponsored drawer tile's landing page. Hosts route it through their own link opener
+     * (WebView / Custom Tab); the default hands it to whatever handles `ACTION_VIEW`.
+     */
+    fun openSponsored(activity: Activity, url: String) {
+        runCatching {
+            activity.startActivity(
+                android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+            )
+        }
+    }
+
     /** No ads anywhere. Every launcher surface still works. */
     object NoOp : LauncherAds
 

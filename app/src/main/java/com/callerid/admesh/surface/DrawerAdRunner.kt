@@ -58,15 +58,14 @@ object DrawerAdRunner {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    private var interAd: InterstitialAd? = null
-    private var appOpenAd: AppOpenAd? = null
-    private var rewardedAd: RewardedAd? = null
-    private var nativeAd: NativeAd? = null
+    // Keyed by ad-unit id: the launcher's placements (leftPanel / rightPanel / drawer) each carry
+    // their own unit, and one shared slot per format would serve one placement's ad on another.
+    private val interAds = HashMap<String, InterstitialAd>()
+    private val appOpenAds = HashMap<String, AppOpenAd>()
+    private val rewardedAds = HashMap<String, RewardedAd>()
+    private val nativeAds = HashMap<String, NativeAd>()
 
-    private var loadingInter = false
-    private var loadingAppOpen = false
-    private var loadingRewarded = false
-    private var loadingNative = false
+    private val loading = HashSet<String>()
 
     /** Loads every loadable format in the sequence that is not already in hand. */
     fun preload(context: Context, flow: DrawerAdFlow) {
@@ -82,10 +81,10 @@ object DrawerAdRunner {
     }
 
     private fun isReady(spec: DrawerAdSpec): Boolean = when (spec.type) {
-        DrawerAdType.INTER -> interAd != null
-        DrawerAdType.APPOPEN -> appOpenAd != null
-        DrawerAdType.REWARDED -> rewardedAd != null
-        DrawerAdType.FULLSCREEN_NATIVE -> nativeAd != null
+        DrawerAdType.INTER -> interAds.containsKey(spec.adUnitId)
+        DrawerAdType.APPOPEN -> appOpenAds.containsKey(spec.adUnitId)
+        DrawerAdType.REWARDED -> rewardedAds.containsKey(spec.adUnitId)
+        DrawerAdType.FULLSCREEN_NATIVE -> nativeAds.containsKey(spec.adUnitId)
         DrawerAdType.DIRECTLINK -> spec.adUnitId.isNotBlank() || spec.urls.isNotEmpty()
     }
 
@@ -184,19 +183,17 @@ object DrawerAdRunner {
     // ---------------- Interstitial ----------------
 
     private fun loadInter(context: Context, unitId: String) {
-        if (interAd != null || loadingInter || unitId.isBlank()) return
-        loadingInter = true
+        if (unitId.isBlank() || interAds.containsKey(unitId) || !loading.add("inter:$unitId")) return
         InterstitialAd.load(
             context, unitId, AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
-                    interAd = ad
-                    loadingInter = false
+                    interAds[unitId] = ad
+                    loading.remove("inter:$unitId")
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    interAd = null
-                    loadingInter = false
+                    loading.remove("inter:$unitId")
                     log("inter load failed: ${error.message}")
                 }
             }
@@ -204,8 +201,7 @@ object DrawerAdRunner {
     }
 
     private fun showInter(activity: Activity, unitId: String, onShown: () -> Unit, onFailed: () -> Unit) {
-        val ad = interAd ?: return onFailed()
-        interAd = null
+        val ad = interAds.remove(unitId) ?: return onFailed()
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 loadInter(activity, unitId)
@@ -223,19 +219,17 @@ object DrawerAdRunner {
     // ---------------- App Open ----------------
 
     private fun loadAppOpen(context: Context, unitId: String) {
-        if (appOpenAd != null || loadingAppOpen || unitId.isBlank()) return
-        loadingAppOpen = true
+        if (unitId.isBlank() || appOpenAds.containsKey(unitId) || !loading.add("appopen:$unitId")) return
         AppOpenAd.load(
             context, unitId, AdRequest.Builder().build(),
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
-                    appOpenAd = ad
-                    loadingAppOpen = false
+                    appOpenAds[unitId] = ad
+                    loading.remove("appopen:$unitId")
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    appOpenAd = null
-                    loadingAppOpen = false
+                    loading.remove("appopen:$unitId")
                     log("appopen load failed: ${error.message}")
                 }
             }
@@ -243,8 +237,7 @@ object DrawerAdRunner {
     }
 
     private fun showAppOpen(activity: Activity, unitId: String, onShown: () -> Unit, onFailed: () -> Unit) {
-        val ad = appOpenAd ?: return onFailed()
-        appOpenAd = null
+        val ad = appOpenAds.remove(unitId) ?: return onFailed()
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 loadAppOpen(activity, unitId)
@@ -262,19 +255,17 @@ object DrawerAdRunner {
     // ---------------- Rewarded ----------------
 
     private fun loadRewarded(context: Context, unitId: String) {
-        if (rewardedAd != null || loadingRewarded || unitId.isBlank()) return
-        loadingRewarded = true
+        if (unitId.isBlank() || rewardedAds.containsKey(unitId) || !loading.add("rewarded:$unitId")) return
         RewardedAd.load(
             context, unitId, AdRequest.Builder().build(),
             object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
-                    rewardedAd = ad
-                    loadingRewarded = false
+                    rewardedAds[unitId] = ad
+                    loading.remove("rewarded:$unitId")
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    rewardedAd = null
-                    loadingRewarded = false
+                    loading.remove("rewarded:$unitId")
                     log("rewarded load failed: ${error.message}")
                 }
             }
@@ -282,8 +273,7 @@ object DrawerAdRunner {
     }
 
     private fun showRewarded(activity: Activity, unitId: String, onShown: () -> Unit, onFailed: () -> Unit) {
-        val ad = rewardedAd ?: return onFailed()
-        rewardedAd = null
+        val ad = rewardedAds.remove(unitId) ?: return onFailed()
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 loadRewarded(activity, unitId)
@@ -301,17 +291,15 @@ object DrawerAdRunner {
     // ---------------- Fullscreen native ----------------
 
     private fun loadNative(context: Context, unitId: String) {
-        if (nativeAd != null || loadingNative || unitId.isBlank()) return
-        loadingNative = true
+        if (unitId.isBlank() || nativeAds.containsKey(unitId) || !loading.add("native:$unitId")) return
         AdLoader.Builder(context, unitId)
             .forNativeAd { ad ->
-                nativeAd?.destroy()
-                nativeAd = ad
-                loadingNative = false
+                nativeAds.put(unitId, ad)?.destroy()
+                loading.remove("native:$unitId")
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    loadingNative = false
+                    loading.remove("native:$unitId")
                     log("native load failed: ${error.message}")
                 }
             })
@@ -320,9 +308,8 @@ object DrawerAdRunner {
     }
 
     private fun showNative(activity: Activity, unitId: String, onShown: () -> Unit, onFailed: () -> Unit) {
-        val ad = nativeAd
-        if (ad == null || activity.isFinishing || activity.isDestroyed) return onFailed()
-        nativeAd = null
+        if (activity.isFinishing || activity.isDestroyed) return onFailed()
+        val ad = nativeAds.remove(unitId) ?: return onFailed()
 
         val shown = runCatching {
             val dialog = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)

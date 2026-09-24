@@ -45,8 +45,17 @@ object PromoConfigLoader {
 
                 "api_base_url",
 
-                "intro_display", "ScreenAds", "launcher_ads"
+                "intro_display", "ScreenAds", "launcher_ads",
+                // The :launcher module's own config, already audience-resolved by this block.
+                "launcher_config"
             ).forEach { key -> if (root.has(key)) putString(key, root.optString(key, "")) }
+
+            // The launcher's per-placement ad keys (`leftPanel_googleInter`, `drawer_link_first_then`,
+            // …) and the link-first switches. Always stored as strings, whatever their JSON type, so
+            // a key that is a boolean in one config and a string in the next never clashes in prefs.
+            root.keys().forEach { key ->
+                if (LauncherPlacementAds.isPlacementKey(key)) putString(key, root.optString(key, ""))
+            }
 
             listOf(
                 "InterCounter", "InterBackCounter", "MarketInterCounter", "MarketBackCounter",

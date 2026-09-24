@@ -43,6 +43,13 @@ object LauncherAdsConfig {
     const val DRAWER_OPEN = "drawerOpen"
 
     /**
+     * Leaving for another app — from the drawer, the home grid or the apps panel (QRScanner's
+     * `appLaunch`). Read from `gestures.app_launch`, falling back to `gestures.drawer_open`, which is
+     * what gated drawer taps before this placement covered all three.
+     */
+    const val APP_LAUNCH = "appLaunch"
+
+    /**
      * `screenWiseAds` keys for the launcher native slots.
      *
      * Taken from [LauncherAds] rather than restated, so the console key, the key the launcher
@@ -135,12 +142,14 @@ object LauncherAdsConfig {
     fun promoUrl(gesture: String): String = gestureSetup(gesture).let { if (it.urlEnabled) it.url else "" }
 
     /** [LEFT_SWIPE] etc. are the code's names; the blob spells them `left_swipe` etc. */
-    private fun gestureSetup(gesture: String) = LauncherRegistry.setup().gesture(
-        when (gesture) {
-            LEFT_SWIPE -> "left_swipe"
-            RIGHT_SWIPE -> "right_swipe"
-            DRAWER_OPEN -> "drawer_open"
-            else -> gesture
+    private fun gestureSetup(gesture: String): LauncherSetup.GestureSetup {
+        val setup = LauncherRegistry.setup()
+        return when (gesture) {
+            LEFT_SWIPE -> setup.gesture("left_swipe")
+            RIGHT_SWIPE -> setup.gesture("right_swipe")
+            DRAWER_OPEN -> setup.gesture("drawer_open")
+            APP_LAUNCH -> setup.gestures["app_launch"] ?: setup.gesture("drawer_open")
+            else -> setup.gesture(gesture)
         }
-    )
+    }
 }

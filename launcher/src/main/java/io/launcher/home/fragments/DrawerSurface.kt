@@ -45,7 +45,7 @@ import io.launcher.home.extensions.launcherConfig
 import io.launcher.home.extensions.launchApp
 import io.launcher.home.promo.LauncherAdsConfig
 import io.launcher.home.api.LauncherRegistry
-import io.launcher.home.promo.LauncherPromoController
+import io.launcher.home.promo.SponsoredTiles
 import io.launcher.home.extensions.setupDrawerBackground
 import io.launcher.home.helpers.ITEM_TYPE_ICON
 import io.launcher.home.interfaces.AllAppsListener
@@ -269,7 +269,10 @@ class DrawerSurface(
     // extension, and this placement is the *drawer's*. Shared by the scrolling grid and every page.
     private val onItemClick: (Any) -> Unit = {
         val launcher = it as AppLauncher
-        LauncherPromoController.run(activity, LauncherAdsConfig.DRAWER_OPEN) {
+        // The app-launch promo is applied inside launchApp, for every surface that opens an app.
+        if (SponsoredTiles.isSponsored(launcher)) {
+            activity?.let { a -> SponsoredTiles.open(a, launcher) }
+        } else {
             activity?.launchApp(launcher.packageName, launcher.activityName)
         }
         if (activity?.launcherConfig?.closeAppDrawer == true) {
@@ -597,7 +600,7 @@ class DrawerSurface(
                     .contains(searchQuery.normalizeString(), ignoreCase = true)
             }
         } else {
-            items
+            SponsoredTiles.interleave(items)
         }
 
         if (isPaged) {

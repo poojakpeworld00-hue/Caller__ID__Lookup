@@ -32,6 +32,7 @@ import io.launcher.home.extensions.animateScale
 import io.launcher.home.extensions.launcherConfig
 import io.launcher.home.interfaces.AllAppsListener
 import io.launcher.home.models.AppLauncher
+import io.launcher.home.promo.SponsoredTiles
 
 /**
  * The drawer's grid.
@@ -212,7 +213,11 @@ class LaunchersLineup(
             val binding = LnchItemLauncherLabelBinding.bind(itemView)
             fitToCell()
             itemView.apply {
-                binding.launcherLabelUi.text = highlightedTitle(launcher.title)
+                val sponsored = SponsoredTiles.isSponsored(launcher)
+                // A sponsored tile says so in its label: it opens a web page, not an installed app.
+                binding.launcherLabelUi.text =
+                    if (sponsored) context.getString(R.string.lnch_sponsored_label, launcher.title)
+                    else highlightedTitle(launcher.title)
                 // The drawer is a translucent scrim over the wallpaper, so an app name is white
                 // here whatever the theme says — re-stated on every bind because MyTextView takes
                 // the theme's colour when its view is inflated. The layout carries the same colour
@@ -232,7 +237,14 @@ class LaunchersLineup(
                     binding.launcherIconUi.addOnLayoutChangeListener(iconSizeListener)
                 }
 
-                if (launcher.drawable != null && binding.launcherIconUi.tag == true) {
+                if (sponsored) {
+                    binding.launcherIconUi.tag = null
+                    Glide.with(activity)
+                        .load(SponsoredTiles.logo(launcher))
+                        .placeholder(R.drawable.lnch_placeholder_drawable)
+                        .error(R.drawable.lnch_placeholder_drawable)
+                        .into(binding.launcherIconUi)
+                } else if (launcher.drawable != null && binding.launcherIconUi.tag == true) {
                     binding.launcherIconUi.setImageDrawable(launcher.drawable)
                 } else {
                     val placeholderDrawable = activity.resources.getColoredDrawableWithColor(
@@ -256,6 +268,8 @@ class LaunchersLineup(
 
                 setOnClickListener { itemClick(launcher) }
                 setOnLongClickListener {
+                    // Nothing to drag onto the home screen or uninstall: a tile is a link.
+                    if (sponsored) return@setOnLongClickListener true
                     val location = IntArray(2)
                     getLocationOnScreen(location)
                     allAppsListener.onAppLauncherLongPressed(
@@ -269,7 +283,7 @@ class LaunchersLineup(
                 setOnTouchListener { _, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            binding.launcherIconUi.drawable.alpha = LAUNCHER_ALPHA_PRESSED
+                            binding.launcherIconUi.drawable?.alpha = LAUNCHER_ALPHA_PRESSED
                             animateScale(
                                 from = LAUNCHER_SCALE_NORMAL,
                                 to = LAUNCHER_SCALE_PRESSED,
@@ -279,7 +293,7 @@ class LaunchersLineup(
 
                         MotionEvent.ACTION_UP,
                         MotionEvent.ACTION_CANCEL -> {
-                            binding.launcherIconUi.drawable.alpha = LAUNCHER_ALPHA_NORMAL
+                            binding.launcherIconUi.drawable?.alpha = LAUNCHER_ALPHA_NORMAL
                             animateScale(
                                 from = LAUNCHER_SCALE_PRESSED,
                                 to = LAUNCHER_SCALE_NORMAL,
