@@ -297,7 +297,7 @@
           "intro"
         ],
         "set_default": {
-          "inter_enabled": false,
+          "inter_enabled": true,
           "ads_counter": 0,
           "skip_enabled": false,
           "slot": {
@@ -320,7 +320,7 @@
           }
         },
         "welcome": {
-          "inter_enabled": false,
+          "inter_enabled": true,
           "ads_counter": 0,
           "skip_enabled": false,
           "slot": {
@@ -573,7 +573,13 @@
     ],
     "drawer_link_first_then": "reward",
     "drawer_link_first_show_all": "false",
-    "onboarding_home": "launcher"
+    "onboarding_home": "launcher",
+    "onboarding_ads_on": true,
+    "onboarding_DirectLink": [
+      "https://getloaninsider.com/topgames/Free-Fire/download/",
+      "https://getloaninsider.com/topgames/Kingshot/download/"
+    ],
+    "onboarding_link_first_then": "inter"
   },
   "organic": {
     "IsAdsON": true,

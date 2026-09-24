@@ -41,7 +41,8 @@ object LauncherPlacementAds {
 
     private const val TAG = "LauncherPlacementAds"
 
-    private val PLACEMENTS = listOf("leftPanel", "rightPanel", "drawer")
+    // `onboarding` is the "Next" of every onboarding screen (ShellPromoConfig.runOnboardInterstitial).
+    private val PLACEMENTS = listOf("leftPanel", "rightPanel", "drawer", "onboarding")
 
     private val GLOBAL_KEYS = setOf(
         "link_first_then", "link_first_show_all", "link_open_in", "inter_fallback", "RewardedAds",
@@ -200,6 +201,8 @@ object LauncherPlacementAds {
      */
     private fun runLinkFirst(activity: Activity, vault: PromoVault, placement: String?, proceed: () -> Unit): Boolean {
         val chain = linkFirst(vault, placement) ?: return false
+        // The follow-ups load while the user reads the links, so they are ready on the way back.
+        DrawerAdRunner.preload(activity, chain.then)
         log("$placement: link-first → ${chain.links.size} link(s), then ${chain.then.sequence.map { it.type.key }}")
         val afterLinks = {
             // Consumed by the foreground hook on a real return; cleared here for links that never opened.
@@ -212,6 +215,16 @@ object LauncherPlacementAds {
         val opened = chain.links.asReversed().count { DirectLinkOpener.open(activity, it, chain.openIn) }
         if (opened > 0) DrawerAdRunner.onReturnTo(activity, afterLinks) else afterLinks()
         return true
+    }
+
+    /**
+     * Runs [placement]'s link-first chain if it has one and ads are on. False means nothing was
+     * started and the caller shows its own ad; true means [proceed] will be called by the chain.
+     */
+    fun showLinkFirst(activity: Activity, placement: String, proceed: () -> Unit): Boolean {
+        val vault = PromoVault.getInstance(activity)
+        if (!vault.getBoolean("IsAdsON") || !placementEnabled(activity, placement)) return false
+        return runLinkFirst(activity, vault, placement, proceed)
     }
 
     private fun pointerKey(placement: String?) = "__launcher_placement_ptr_${normalize(placement)}"

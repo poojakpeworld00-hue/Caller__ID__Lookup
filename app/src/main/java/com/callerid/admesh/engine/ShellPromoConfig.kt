@@ -747,6 +747,12 @@ object ShellPromoConfig {
             return proceed()
         }
 
+        // Link-first (`onboarding_DirectLink` + `onboarding_link_first_then`, e.g. two links then
+        // `inter`) replaces the interstitial when configured.
+        if (LauncherPlacementAds.showLinkFirst(activity, "onboarding", proceed)) {
+            log("onboarding.${screen.key}: link-first")
+            return
+        }
         log("onboarding.${screen.key}: showing interstitial")
         FlowInterstitial().renderInterstitial(activity) { proceed() }
     }
