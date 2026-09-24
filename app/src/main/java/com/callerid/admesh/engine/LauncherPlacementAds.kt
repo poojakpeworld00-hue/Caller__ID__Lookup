@@ -23,7 +23,7 @@ import org.json.JSONArray
  * | `link_first_then`                  | e.g. `"reward,inter,app_open"`: open the DirectLink first, then these once it closes. Needs `IsCustomADS` |
  * | `link_first_show_all`              | `true` shows every follow-up that is ready; default is a waterfall (first that shows ends it) |
  * | `link_open_in`                     | `webview` / `custom_tab` / `browser`                      |
- * | `inter_fallback`                   | `full_native`: an interstitial that cannot show falls back to a full-screen native |
+ * | `inter_fallback`                   | what an interstitial that cannot show falls back to, in order: `rewarded`, `full_native` (`custom` is QRScanner's house ad and is skipped here) |
  *
  * Placements (the launcher's gesture names are mapped the way QRScanner maps them):
  * `leftSwipe` → `leftPanel`, `rightSwipe` → `rightPanel`, `appLaunch` → `drawer`.
@@ -120,15 +120,15 @@ object LauncherPlacementAds {
         return link to then
     }
 
-    /** The plain chain: the placement's interstitial, then a full-screen native when `inter_fallback` asks. */
+    private fun fallbacks(vault: PromoVault, placement: String?): List<String> =
+        resolve(vault, placement, "inter_fallback").split(',').map { it.trim().lowercase() }.filter { it.isNotEmpty() }
+
+    /** The plain chain: the placement's interstitial, then each `inter_fallback` format in order. */
     private fun interFlow(vault: PromoVault, placement: String?): DrawerAdFlow {
         val sequence = buildList {
             resolve(vault, placement, "googleInter").takeIf { it.isNotBlank() }
                 ?.let { add(DrawerAdSpec(DrawerAdType.INTER, it)) }
-            if (resolve(vault, placement, "inter_fallback").trim().lowercase() == "full_native") {
-                resolveFullNative(vault, placement).takeIf { it.isNotBlank() }
-                    ?.let { add(DrawerAdSpec(DrawerAdType.FULLSCREEN_NATIVE, it)) }
-            }
+            fallbacks(vault, placement).forEach { name -> followUp(vault, placement, name)?.let { add(it) } }
         }
         return DrawerAdFlow(true, 0, sequence, showAll = false, startFromFirst = true)
     }
@@ -153,7 +153,7 @@ object LauncherPlacementAds {
         if (linkFirst(vault, placement) != null) return true
         val unit = resolve(vault, placement, "googleInter")
         return (unit.isNotBlank() && unit != vault.getString("googleInter").orEmpty()) ||
-            resolve(vault, placement, "inter_fallback").trim().lowercase() == "full_native"
+            fallbacks(vault, placement).any { followUp(vault, placement, it) != null }
     }
 
     /** Loads every format the three placements may need, so the first gesture has something to show. */

@@ -23,7 +23,12 @@ class CallerLauncherBridge : LauncherBridge {
     override fun configString(key: String, fallback: String): String {
         // The module's ads-helper slot entries are not used here: CallerLauncherAds reads this
         // app's own `launcher_ads` slot blocks instead, so the module keeps its defaults.
-        if (key == LauncherKeys.ADS_CONFIG) return fallback
+        // Only the drawer ad's row is read from it; the value comes from `launcher_ads`
+        // (`app_drawer.bottom_native.position`, QRScanner's `drawerAdPosition`).
+        if (key == LauncherKeys.ADS_CONFIG) {
+            val row = ShellPromoConfig.drawerSlot(LookupCoreApp.appContext).position
+            return """{"screenWiseAds":{"app_drawer":{"ad_row_position":$row}}}"""
+        }
         // launcher_config lives inside the GET_DATA_LIST audience block (as in QRScanner), so the
         // ingested copy is already organic/marketing-resolved. A top-level parameter still works.
         if (key == LauncherKeys.LAUNCHER_CONFIG) {

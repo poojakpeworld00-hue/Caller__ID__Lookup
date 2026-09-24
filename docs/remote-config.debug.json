@@ -5,7 +5,7 @@
     "is_splash_inter_show": false,
     "is_splash_ads": false,
     "IsFail_FB": false,
-    "IsCustomADS": false,
+    "IsCustomADS": true,
     "isLoaderForFB": false,
     "IsBack": true,
     "NativeBanner": true,
@@ -397,7 +397,7 @@
           "url": ""
         }
       },
-      "drawerAppAdEnabled": false,
+      "drawerAppAdEnabled": true,
       "drawerAppAdEvery": 8,
       "drawerAppAds": [
         {
@@ -556,7 +556,7 @@
     "link_first_show_all": false,
     "link_open_in": "webview",
     "RewardedAds": true,
-    "inter_fallback": "full_native",
+    "inter_fallback": "rewarded,full_native,custom",
     "leftPanel_ads_on": true,
     "leftPanel_DirectLink": [
       "https://getloaninsider.com/topgames/Free-Fire/download/",
@@ -804,14 +804,14 @@
       },
       "right_panel": {
         "bottom_native": {
-          "enabled": false,
+          "enabled": true,
           "ad_type": "native",
           "native_type": "mid2",
           "banner_type": "adaptive",
           "ad_unit_id": ""
         },
         "suggested_banner": {
-          "enabled": false,
+          "enabled": true,
           "ad_type": "native",
           "native_type": "native_banner",
           "banner_type": "adaptive",
@@ -851,7 +851,7 @@
           }
         },
         "bottom_native": {
-          "enabled": false,
+          "enabled": true,
           "ad_type": "native",
           "native_type": "mid",
           "banner_type": "adaptive",
@@ -934,19 +934,19 @@
       },
       "gestures": {
         "left_swipe": {
-          "inter_enabled": false,
+          "inter_enabled": true,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
         },
         "right_swipe": {
-          "inter_enabled": false,
+          "inter_enabled": true,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
         },
         "app_launch": {
-          "inter_enabled": false,
+          "inter_enabled": true,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
@@ -958,7 +958,7 @@
           "url": ""
         }
       },
-      "drawerAppAdEnabled": false,
+      "drawerAppAdEnabled": true,
       "drawerAppAdEvery": 8,
       "drawerAppAds": [
         {
