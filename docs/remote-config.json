@@ -326,7 +326,7 @@
           "skip_enabled": false,
           "slot": {
             "enabled": true,
-            "ad_type": "banner",
+            "ad_type": "native",
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
@@ -374,15 +374,7 @@
         "body_native": true
       }
     },
-    "custom_ads": [
-      {
-        "icon": "https://appdata.blr1.digitaloceanspaces.com/pja/caller_id/Frame%201234570076.png",
-        "title": "Identify Unknown Caller",
-        "description": "See caller name, location and spam status before answering any call.",
-        "bannerImage": "https://appdata.blr1.digitaloceanspaces.com/pja/caller_id/1.png",
-        "buttonText": "Check Now"
-      }
-    ],
+    "custom_ads": [],
     "launcher_config": {
       "os_style": false,
       "search_widget": "google",
@@ -1024,15 +1016,7 @@
         "body_native": false
       }
     },
-    "custom_ads": [
-      {
-        "icon": "https://appdata.blr1.digitaloceanspaces.com/pja/caller_id/Frame%201234570076.png",
-        "title": "Identify Unknown Caller",
-        "description": "See caller name, location and spam status before answering any call.",
-        "bannerImage": "https://appdata.blr1.digitaloceanspaces.com/pja/caller_id/1.png",
-        "buttonText": "Check Now"
-      }
-    ],
+    "custom_ads": [],
     "launcher_config": {
       "os_style": false,
       "search_widget": "google",
