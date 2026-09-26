@@ -3,7 +3,7 @@
     "IsAdsON": true,
     "IsAdType": "Google",
     "is_splash_inter_show": false,
-    "is_splash_ads": true,
+    "is_splash_ads": false,
     "IsFail_FB": false,
     "IsCustomADS": true,
     "isLoaderForFB": false,

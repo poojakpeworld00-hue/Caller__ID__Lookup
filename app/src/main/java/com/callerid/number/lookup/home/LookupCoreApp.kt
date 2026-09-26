@@ -145,7 +145,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
                 if (PromoAnchorActivity.DEBUG_AUDIENCE_MARKETING) "paid" else "organic"
             )
         }
-        LightHouse.debugForceInstallSource("paid")
+//        LightHouse.debugForceInstallSource("paid")
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 FirebaseApp.initializeApp(this@LookupCoreApp)

@@ -76,6 +76,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CallerIdLookup">
 
+        <!-- The launcher module offers two home-screen clock widgets; this app ships none. Removed
+             here so the module stays unchanged. (The launcher's own home clock and search bar
+             are built-in views, not these widgets.) -->
+        <receiver
+            android:name="io.launcher.home.widgets.AnalogClockWidgetProvider"
+            tools:node="remove" />
+        <receiver
+            android:name="io.launcher.home.widgets.DigitalClockWidgetProvider"
+            tools:node="remove" />
+
         <activity
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
