@@ -21,7 +21,7 @@ import com.callerid.number.lookup.home.store.RegionResolver
 import com.callerid.number.lookup.home.store.LanguageRegistry
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenLanguageBinding
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.permit.fullscreen.FsiPermit
 import com.callerid.number.lookup.home.permit.fullscreen.FsiGateActivity
@@ -72,6 +72,12 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         )
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)
 
+        if (!standalone) {
+            OnboardRouter.bindStepHeader(
+                this, ShellPromoConfig.OnboardScreen.LANGUAGE, binding.root
+            )
+        }
+
         resolveRegion()
 
         val onPick: (LanguageItem) -> Unit = { viewModel.select(it.tag) }
@@ -91,6 +97,10 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
         if (!standalone) {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    if (!OnboardRouter.backMovesForward(this@LanguageSelectActivity)) {
+                        OnboardRouter.passBackThrough(this@LanguageSelectActivity, this)
+                        return
+                    }
                     if (forwarding) return
                     forwarding = true
                     onContinue()

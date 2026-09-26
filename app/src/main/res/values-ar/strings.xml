@@ -31,16 +31,16 @@
     <string name="onboarding_skip">تخطٍّ</string>
     <string name="onboarding_next">التالي</string>
     <string name="onboarding_title">اعرف من المتصل</string>
-    <string name="onboarding_desc">سمِّ الأرقام المجهولة فور ظهورها، وشاهد من يتصل ومن أين، وصُدّ المكالمات المزعجة قبل أول رنّة.</string>
-    <string name="onboarding_title_2">احظر الإزعاج والاحتيال</string>
-    <string name="onboarding_desc_2">تُكتشف مكالمات الإزعاج والنصب والمسجّلة وتُصدّ، فتتوقف عن الوصول إليك.</string>
+    <string name="onboarding_desc">ضع اسمًا للأرقام غير المألوفة فور ظهورها، واعرف من يتصل ومن أين، وارفض الأرقام التي حظرتها قبل الرنة الأولى.</string>
+    <string name="onboarding_title_2">احظر المتصلين غير المرغوب فيهم</string>
+    <string name="onboarding_desc_2">الأرقام في قائمة الحظر تُرفض قبل أن يرن هاتفك، والمكالمات المُبلّغ عنها كإزعاج تُعلَّم فور ورودها.</string>
     <string name="onboarding_title_3">ابحث عن أي رقم</string>
     <string name="onboarding_desc_3">ابحث عن أي رقم مجهول واعرف من خلفه: الاسم، الموقع، طبيعة العمل.</string>
     <string name="onboarding_get_started">ابدأ</string>
 
     
     <string name="home_title">أنت محمي</string>
-    <string name="home_subtitle">معرّف المتصل وحظر الإزعاج مفعّلان</string>
+    <string name="home_subtitle">معرّف المتصل مفعّل وقائمة الحظر تعمل</string>
     <string name="home_greeting">صباح الخير</string>
     <string name="home_search_hint">ابحث عن اسم أو رقم…</string>
     <string name="home_protection_active">الحماية مفعّلة</string>

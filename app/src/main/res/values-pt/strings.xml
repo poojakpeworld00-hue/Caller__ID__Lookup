@@ -31,16 +31,16 @@
     <string name="onboarding_skip">Pular</string>
     <string name="onboarding_next">Avançar</string>
     <string name="onboarding_title">Saiba quem está ligando</string>
-    <string name="onboarding_desc">Dê nome a números desconhecidos de imediato, veja quem liga e de onde, e trave chamadas incómodas antes do primeiro toque.</string>
-    <string name="onboarding_title_2">Bloqueie spam e fraude</string>
-    <string name="onboarding_desc_2">Chamadas incómodas, de golpe e gravadas são detetadas e afastadas, para deixarem de chegar até si.</string>
+    <string name="onboarding_desc">Dê nome aos números desconhecidos de imediato, veja quem liga e de onde, e rejeite os números que bloquear antes do primeiro toque.</string>
+    <string name="onboarding_title_2">Bloqueie quem não quer atender</string>
+    <string name="onboarding_desc_2">Os números da sua lista de bloqueio são rejeitados antes de o telefone tocar, e as chamadas denunciadas como spam são assinaladas assim que entram.</string>
     <string name="onboarding_title_3">Pesquise qualquer número</string>
     <string name="onboarding_desc_3">Pesquise qualquer número desconhecido e veja quem está por trás: nome, onde está, o que faz.</string>
     <string name="onboarding_get_started">Começar</string>
 
     
     <string name="home_title">Você está protegido</string>
-    <string name="home_subtitle">Identificador de chamadas e bloqueio de spam ativos</string>
+    <string name="home_subtitle">O identificador está ativo e a sua lista de bloqueio a funcionar</string>
     <string name="home_greeting">Bom dia</string>
     <string name="home_search_hint">Pesquisar nome ou número…</string>
     <string name="home_protection_active">Proteção ativa</string>

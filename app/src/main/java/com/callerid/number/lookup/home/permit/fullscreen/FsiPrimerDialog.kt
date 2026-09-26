@@ -12,7 +12,7 @@ import android.widget.TextView
 import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.permit.PermitEngine
-import com.callerid.number.lookup.home.screen.main.HomeShellOwner
+import com.callerid.number.lookup.home.screen.main.homeShellOwner
 
 object FsiPrimerDialog {
 
@@ -48,7 +48,7 @@ object FsiPrimerDialog {
             enableTapped = true
             dialog.dismiss()
             PermitEngine.request(activity, "notification") {
-                (activity as? HomeShellOwner)?.homeShellController?.openFsiSettings()
+                activity.homeShellOwner?.homeShellController?.openFsiSettings()
             }
         }
         view.findViewById<TextView>(R.id.fsDialogLaterVw).setOnClickListener {

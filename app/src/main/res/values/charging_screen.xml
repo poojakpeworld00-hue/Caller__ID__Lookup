@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The charge / discharge screen (ported from QRScanner). -->
+<resources>
+    <color name="charging_accent_surface">#2412dfff</color>
+    <color name="charging_bg_accent_glow">#12ec0070</color>
+    <color name="charging_bg_bottom">#040a12</color>
+    <color name="charging_bg_center">#081624</color>
+    <color name="charging_bg_energy_glow">#28217ec0</color>
+    <color name="charging_bg_top">#06101d</color>
+    <color name="charging_card_stroke">#71507694</color>
+    <color name="charging_chip_surface">#d90a2132</color>
+    <color name="charging_chip_text">#e8f8ff</color>
+    <color name="charging_close_icon">#f8fbff</color>
+    <color name="charging_close_ripple">#30ec0070</color>
+    <color name="charging_close_surface">#d9132233</color>
+    <color name="charging_discharge_secondary">#a5c2e0</color>
+    <color name="charging_metric_surface_end">#d90c1825</color>
+    <color name="charging_metric_surface_start">#e916293b</color>
+    <color name="charging_orb_center">#10263a</color>
+    <color name="charging_orb_edge">#030912</color>
+    <color name="charging_orb_highlight">#78bfefff</color>
+    <color name="charging_ring_accent">#FF0C3CCC</color>
+    <color name="charging_ring_disconnected">#718297</color>
+    <color name="charging_ring_primary">#12dfff</color>
+    <color name="charging_ring_secondary">#2684ff</color>
+    <color name="charging_ring_track">#273a4c</color>
+    <color name="charging_status_dot">#12dfff</color>
+    <color name="charging_subtitle_text">#c5d4e3</color>
+    <color name="charging_text_primary">#f8fbff</color>
+    <color name="charging_text_secondary">#a9bbd0</color>
+    <string name="charging_battery_added">Battery added</string>
+    <string name="charging_battery_added_value">+%1$d%%</string>
+    <string name="charging_close">Close charging screen</string>
+    <string name="charging_connected_subtitle">Power connected • %1$s</string>
+    <string name="charging_connected_title">Charging</string>
+    <string name="charging_disconnected_safely">Power disconnected safely</string>
+    <string name="charging_disconnected_title">Charging stopped</string>
+    <string name="charging_live_energy">Live energy</string>
+    <string name="charging_percentage_preview">68%</string>
+    <string name="charging_percentage_value">%1$d%%</string>
+    <string name="charging_power_flow_active">Power flow active</string>
+    <string name="charging_power_source">Power source</string>
+    <string name="charging_ready_to_use">%1$d%% ready to use</string>
+    <string name="charging_session_complete">Session complete</string>
+    <string name="charging_session_time">Session time</string>
+    <string name="charging_source_ac">AC adapter</string>
+    <string name="charging_source_dock">Dock</string>
+    <string name="charging_source_power">Power</string>
+    <string name="charging_source_usb">USB</string>
+    <string name="charging_source_wireless">Wireless</string>
+    <string name="charging_time_calculating">Calculating…</string>
+    <string name="charging_time_full">Full</string>
+    <string name="charging_time_hours_minutes">%1$d hr %2$02d min</string>
+    <string name="charging_time_minutes">%1$d min</string>
+    <string name="charging_time_under_minute">Under 1 min</string>
+    <string name="charging_until_full">Until full</string>
+    <style name="Theme.Charging" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_charging_screen</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

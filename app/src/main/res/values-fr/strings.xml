@@ -31,16 +31,16 @@
     <string name="onboarding_skip">Ignorer</string>
     <string name="onboarding_next">Suivant</string>
     <string name="onboarding_title">Sachez qui appelle</string>
-    <string name="onboarding_desc">Nommez les numéros inconnus à vue, voyez qui appelle et d\'où, et écartez les appels indésirables avant la première sonnerie.</string>
-    <string name="onboarding_title_2">Bloquez spam et fraude</string>
-    <string name="onboarding_desc_2">Les appels indésirables, frauduleux et automatisés sont repérés et écartés, pour qu\'ils cessent de vous atteindre.</string>
+    <string name="onboarding_desc">Mettez un nom sur les numéros inconnus d\'un coup d\'œil, voyez qui appelle et d\'où, et rejetez les numéros que vous bloquez avant la première sonnerie.</string>
+    <string name="onboarding_title_2">Bloquez les appelants indésirables</string>
+    <string name="onboarding_desc_2">Les numéros de votre liste de blocage sont rejetés avant que le téléphone sonne, et les appels signalés comme spam sont marqués dès leur arrivée.</string>
     <string name="onboarding_title_3">Recherchez n\'importe quel numéro</string>
     <string name="onboarding_desc_3">Cherchez n\'importe quel numéro inconnu et découvrez qui se cache derrière : nom, lieu, activité.</string>
     <string name="onboarding_get_started">Commencer</string>
 
     
     <string name="home_title">Vous êtes protégé</string>
-    <string name="home_subtitle">L\'identification et le blocage du spam sont actifs</string>
+    <string name="home_subtitle">L\'identification est active et votre liste de blocage fonctionne</string>
     <string name="home_greeting">Bonjour</string>
     <string name="home_search_hint">Rechercher un nom ou un numéro…</string>
     <string name="home_protection_active">Protection active</string>

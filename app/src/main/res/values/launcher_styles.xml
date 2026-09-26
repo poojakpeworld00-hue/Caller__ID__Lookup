@@ -2,20 +2,11 @@
 
     <style name="LauncherBaseTheme" parent="AppTheme.Base" />
 
-    <style name="LauncherTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+    <!-- The :launcher module's right-hand panel hosts HomeShellFragment; give it the app theme
+         instead of the launcher's dark wallpaper theme, or its layouts inflate unreadable. -->
+    <style name="LauncherHostPanelTheme" parent="Theme.CallerIdLookup" />
+    <color name="lnch_host_panel_bg">@color/surface</color>
 
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:enforceStatusBarContrast">false</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
 
     
     <style name="OnboardingTheme" parent="LauncherBaseTheme">
@@ -85,5 +76,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/cid_onb_on_mock</item>
     </style>
+
+    <!-- One quick-action tile in the home card (Dialer / Block / Lookup / Tools). -->
+
+
 
 </resources>

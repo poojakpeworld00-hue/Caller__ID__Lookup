@@ -32,16 +32,16 @@
     <string name="onboarding_skip">スキップ</string>
     <string name="onboarding_next">次へ</string>
     <string name="onboarding_title">発信者をすぐに確認</string>
-    <string name="onboarding_desc">見知らぬ番号をその場で名前にし、誰がどこから掛けているかを見て、迷惑電話は最初の呼び出し音の前に止めます。</string>
-    <string name="onboarding_title_2">迷惑電話と詐欺をブロック</string>
-    <string name="onboarding_desc_2">迷惑・詐欺・自動音声の電話を見つけて締め出し、あなたに届かないようにします。</string>
+    <string name="onboarding_desc">見慣れない番号にすぐ名前を。誰がどこから電話しているかを表示し、ブロックした番号は最初の呼び出し音の前に拒否します。</string>
+    <string name="onboarding_title_2">迷惑な相手をブロック</string>
+    <string name="onboarding_desc_2">ブロックリストの番号は着信音が鳴る前に拒否され、迷惑電話として報告された番号は着信時に表示されます。</string>
     <string name="onboarding_title_3">どんな番号でも検索</string>
     <string name="onboarding_desc_3">見知らぬ番号を検索すれば、その先にいる相手が分かります — 名前、所在地、事業。</string>
     <string name="onboarding_get_started">始める</string>
 
     
     <string name="home_title">あなたは保護されています</string>
-    <string name="home_subtitle">発信者識別と迷惑電話ブロックが有効です</string>
+    <string name="home_subtitle">発信者識別は有効で、ブロックリストが働いています</string>
     <string name="home_greeting">おはようございます</string>
     <string name="home_search_hint">名前または番号で検索…</string>
     <string name="home_protection_active">保護が有効</string>

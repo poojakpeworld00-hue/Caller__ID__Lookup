@@ -15,7 +15,7 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenOnboardingBinding
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.screen.reveal.RevealConfig
@@ -85,6 +85,12 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val current = binding.vuPager.currentItem
+                // Organic: Back is Back — the previous slide, then the screen's default.
+                if (!OnboardRouter.backMovesForward(this@SlideIntroActivity)) {
+                    if (current > 0) binding.vuPager.setCurrentItem(current - 1, true)
+                    else OnboardRouter.passBackThrough(this@SlideIntroActivity, this)
+                    return
+                }
                 if (!ui.backAdvances && current < pages.lastIndex) {
                     binding.vuPager.setCurrentItem(current + 1, true)
                 } else if (!forwarding) {

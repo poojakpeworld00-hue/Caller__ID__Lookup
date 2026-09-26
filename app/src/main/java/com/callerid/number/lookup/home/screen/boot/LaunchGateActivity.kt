@@ -33,8 +33,8 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenSplashBinding
-import com.callerid.number.lookup.home.shell.screens.HelloStepActivity
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.HelloStepActivity
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.screen.locale.LanguageSelectActivity
 import com.callerid.number.lookup.home.screen.slides.SlideIntroActivity

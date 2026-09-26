@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.nativeBannerCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
+import com.callerid.admesh.engine.PerScreenPromo
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.TAG_EVENT
 import com.callerid.admesh.engine.trackEvent
@@ -97,6 +98,8 @@ class InlinePromoStrip {
         if (!hasNetwork(context)
             || !adsPref.getBoolean("IsAdsON")
             || !adsPref.getBoolean("NativeBanner")
+            // The screen's own switch: `ScreenAds.<Activity>.show` (else `ScreenAds.default.show`).
+            || !PerScreenPromo.resolve(context, context.javaClass.simpleName).show
         ) {
             layout.removeAllViews()
             layout.invisible()
@@ -141,7 +144,8 @@ class InlinePromoStrip {
                         } else {
 
                             if (adsPref.getBoolean("IsFail_FB")) {
-                                showFBNativeBannerFallback(context, layout)
+                                
+                                showFBNativeBannerFallback(context, layout, shimmer)
                             } else {
                                 layout.removeAllViews()
                                 shimmer?.stopShimmer()
@@ -153,12 +157,18 @@ class InlinePromoStrip {
                         }
                     } catch (e: Exception) {
                         Log.e("InlinePromoStrip", "Google NativeBanner failed: ${e.message}")
+                        
+                        runCatching {
+                            shimmer?.stopShimmer()
+                            shimmer?.isVisible = false
+                            layout.removeAllViews()
+                        }
                     }
                 }
             }
 
             PromoKind.FACEBOOK -> {
-                showFBNativeBannerFallback(context, layout)
+                showFBNativeBannerFallback(context, layout, shimmer)
             }
 
             PromoKind.UNKNOWN, PromoKind.CUSTOM -> {

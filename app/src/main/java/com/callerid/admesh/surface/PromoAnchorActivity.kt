@@ -83,7 +83,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
     private var isGoogleAdsEnabled = true
     private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
-    private companion object {
+    
+    companion object {
 
         const val APPOPEN_TAG = "AppOpenAd"
 
@@ -91,7 +92,35 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
         const val DEBUG_AUDIENCE_MARKETING = true
 
+        /**
+         * Applies [DEBUG_AUDIENCE_MARKETING] to **release** builds too, instead of letting real
+         * attribution decide.
+         *
+         * A signed APK is the only way to exercise the release config — R8, the real ad units,
+         * the shrunk resources — but a release APK installed by adb or a direct download has no
+         * Play install referrer, so LightHouse settles it organic and the `marketing` half of
+         * the config can never be reached on a test device. This forces both halves of the
+         * decision (the audience read below and the SDK's own install source in `LookupCoreApp`)
+         * onto the chosen side so they agree.
+         *
+         * **Must be `false` in anything that reaches Play.** Left `true`, every real install is
+         * pinned to one audience and genuine attribution is never consulted. The splash logs a
+         * warning on every launch while it is on, so a build that ships by accident says so in
+         * logcat.
+         */
+        const val FORCE_AUDIENCE_IN_RELEASE = false
+
+        /**
+         * True when the audience is being forced rather than resolved — either because this is a
+         * debug build, or because [FORCE_AUDIENCE_IN_RELEASE] is still on.
+         */
+        val isAudienceForced: Boolean
+            get() = BuildConfig.DEBUG || FORCE_AUDIENCE_IN_RELEASE
+
         const val ATTRIBUTION_WAIT_MS = 5_000L
+
+        
+        const val COUNTRY_LIST_ALL = "all"
     }
 
     open fun getData(
@@ -187,15 +216,17 @@ open class PromoAnchorActivity : AppCompatActivity() {
         }
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
-        RemoteConfigRules.applyTo(remoteConfig)
-        activity?.let {
-            remoteConfig.fetchAndActivate().addOnCompleteListener(it) { task ->
-                if (task.isSuccessful) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        setResponceInPref(remoteConfig)
+        activity?.let { host ->
+            
+            RemoteConfigRules.withSettings(remoteConfig) {
+                remoteConfig.fetchAndActivate().addOnCompleteListener(host) { task ->
+                    if (task.isSuccessful) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            setResponceInPref(remoteConfig)
+                        }
+                    } else {
+                        onGetData?.onError()
                     }
-                } else {
-                    onGetData?.onError()
                 }
             }
         }
@@ -277,7 +308,16 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     }
                 }
 
-                val isMarketingOn =if (BuildConfig.DEBUG) {
+                val isMarketingOn = if (isAudienceForced) {
+                    
+                    if (!BuildConfig.DEBUG) {
+                        Log.w(
+                            CONFIG_TAG,
+                            "FORCE_AUDIENCE_IN_RELEASE is ON — audience pinned to " +
+                                "${if (DEBUG_AUDIENCE_MARKETING) "MARKETING" else "ORGANIC"}, " +
+                                "real attribution ignored. Turn it off before shipping."
+                        )
+                    }
                     DEBUG_AUDIENCE_MARKETING
                 } else {
                     !LightHouse.isOrganicUser(awaitReferrerMs = ATTRIBUTION_WAIT_MS)
@@ -295,16 +335,22 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     }
                 }
 
-                val countryEnableKey =
-                    if (isMarketingOn) "Iscountry_Marketing_Counter" else "Iscountry_Counter"
-                val countryListKey =
-                    if (isMarketingOn) "CountryList_Marketing_Counter_NShow" else "CountryList_Counter_NShow"
+                
+                val countryEnableKey = "Iscountry_Counter"
+                val countryListKey = "CountryList_Counter_NShow"
                 if (BuildConfig.DEBUG) Log.d(
                     "LocationCheck",
                     "install=${if (isMarketingOn) "MARKETING" else "ORGANIC"} → using $countryEnableKey / $countryListKey"
                 )
 
                 if (adsPreference.getBoolean(countryEnableKey)) {
+                    val blockedLocations = (adsPreference.getString(countryListKey, "") ?: "")
+                        .split(",").map { it.trim() }.filter { it.isNotEmpty() }
+
+                    
+                    val blocksEveryone =
+                        blockedLocations.any { it.equals(COUNTRY_LIST_ALL, ignoreCase = true) }
+
                     location?.let { loc ->
                         if (BuildConfig.DEBUG) {
                             Log.d("LocationCheck", "=== Location Info ===")
@@ -313,41 +359,48 @@ open class PromoAnchorActivity : AppCompatActivity() {
                             Log.d("LocationCheck", "City: ${loc.city}")
                         }
 
-                        PromoVault.getInstance(activity).userCountry = loc.country!!
-                        PromoVault.getInstance(activity).userRegion = loc.regionName!!
-                        PromoVault.getInstance(activity).userCity = loc.city!!
+                        adsPreference.userCountry = loc.country.orEmpty()
+                        adsPreference.userRegion = loc.regionName.orEmpty()
+                        adsPreference.userCity = loc.city.orEmpty()
+                    }
 
-                        val storedListStr =
-                            adsPreference.getString(countryListKey, "") ?: ""
+                    val isAllowed = location?.let { loc ->
+                        blockedLocations.any { blocked ->
+                            blocked.equals(loc.country, ignoreCase = true) ||
+                                blocked.equals(loc.regionName, ignoreCase = true) ||
+                                blocked.equals(loc.city, ignoreCase = true)
+                        }
+                    } ?: false
 
-                        val allowedLocations =
-                            storedListStr.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                    
+                    adsPreference.isNShowLocation = blocksEveryone || isAllowed
 
-                        val isAllowed = allowedLocations.any { allowed ->
-                            val match = allowed.equals(
-                                loc.country, ignoreCase = true
-                            ) || allowed.equals(
-                                loc.regionName, ignoreCase = true
-                            ) || allowed.equals(loc.city, ignoreCase = true)
-                            match
+                    when {
+                        blocksEveryone -> {
+                            if (BuildConfig.DEBUG) Log.d(
+                                "LocationCheck",
+                                "\uD83C\uDF0D $countryListKey=\"$COUNTRY_LIST_ALL\" → every location blocked, HD_VBC_Show=false"
+                            )
+                            adsPreference.putBoolean("HD_VBC_Show", false)
                         }
 
-                        if (isAllowed) {
+                        location == null ->
+                            if (BuildConfig.DEBUG) Log.w("LocationCheck", "⚠️ Location not available")
+
+                        isAllowed -> {
                             if (BuildConfig.DEBUG) Log.d(
                                 "LocationCheck", "✅ Location IN list ($countryListKey) → HD_VBC_Show=false (real ads)"
                             )
-
                             adsPreference.putBoolean("HD_VBC_Show", false)
-
-                        } else {
-                            if (BuildConfig.DEBUG) Log.d(
-                                "LocationCheck", "❌ Location NOT in list ($countryListKey) → HD_VBC_Show unchanged"
-                            )
                         }
-                    } ?: run {
-                        if (BuildConfig.DEBUG) Log.w("LocationCheck", "⚠️ Location not available")
+
+                        else -> if (BuildConfig.DEBUG) Log.d(
+                            "LocationCheck", "❌ Location NOT in list ($countryListKey) → HD_VBC_Show unchanged"
+                        )
                     }
                 } else {
+                    
+                    adsPreference.isNShowLocation = false
                     if (BuildConfig.DEBUG) Log.d("LocationCheck", "Country check is disabled in preferences")
                 }
 
@@ -371,7 +424,15 @@ open class PromoAnchorActivity : AppCompatActivity() {
                 val marketingObj = JSONObject(savedMarketingStr)
                 val defaultObj = JSONObject(savedDefaultStr)
 
-                val themeSource = if (isMarketingOn) marketingObj else defaultObj
+                
+                val themeSource = when {
+                    !isMarketingOn -> defaultObj
+                    marketingObj.length() > 0 -> marketingObj
+                    else -> {
+                        Log.w(CONFIG_TAG, "no NativeTheme.marketing block — paid ads fall back to default")
+                        defaultObj
+                    }
+                }
                 val modeKey = resolveInlineThemeKey(activity)
 
                 val themeJson = themeSource.optJSONObject(modeKey)
@@ -521,6 +582,13 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     fun renderPreloadedAd(activity: Activity, adsPreference: PromoVault, onDismissed: () -> Unit) {
+        // `splash_ad_flow` / a `splash_` link chain: the dynamic flow instead of the fixed splash ad.
+        if (com.callerid.admesh.engine.LauncherPlacementAds.hasOwnFlow(activity, "splash")) {
+            if (!com.callerid.admesh.engine.LauncherPlacementAds.placementEnabled(activity, "splash")) return onDismissed()
+            Log.d(APPOPEN_TAG, "showPreloaded() → splash flow (splash_*)")
+            com.callerid.admesh.engine.LauncherPlacementAds.showInterstitial(activity, "splash") { onDismissed() }
+            return
+        }
         when (PromoKind.fromString(adsPreference.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
                 Log.d(APPOPEN_TAG, "showPreloaded() → appOpenReady=${appOpenAd != null}, interstitialReady=${interstitialAd != null}")
@@ -820,6 +888,14 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     private fun launchCustomAdLink(activity: Activity, url: String, onClosed: () -> Unit) {
+        // App-wide open-type switch: WebView / browser open fire-and-forget; only Custom Tab keeps
+        // the session-tracked close below.
+        if (DirectLinkOpener.mode(activity) != DirectLinkOpener.Mode.CUSTOM_TAB) {
+            DirectLinkOpener.open(activity, url)
+            onClosed()
+            return
+        }
+
         bindCustomTabs(activity)
 
         isCustomTabOpened = true

@@ -3,7 +3,6 @@ package com.callerid.number.lookup.home.runtime.incoming
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.role.RoleManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,7 +19,7 @@ import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 import com.callerid.admesh.surface.tally.jobs.ShellJobRunner.Companion.NOTIFICATION_ID
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.BlockListRegistry
-import com.callerid.number.lookup.home.shell.ext.isDefaultLauncher
+import com.callerid.number.lookup.home.kit.InstallIdRegistry
 import com.callerid.number.lookup.home.screen.ringing.RingScreenActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,10 +50,10 @@ class PhoneStateReceiver : BroadcastReceiver() {
                     return
                 }
 
-                if (!number.isNullOrBlank() && Settings.canDrawOverlays(context)) {
-                    IdentOverlayService.start(context, number)
-                } else if (number.isNullOrBlank()) {
+                if (number.isNullOrBlank()) {
                     Log.w(TAG, "ringing without a number — skipping caller-ID card")
+                } else {
+                    showIncomingCard(context, number)
                 }
             }
 
@@ -96,6 +95,20 @@ class PhoneStateReceiver : BroadcastReceiver() {
         }
     }
 
+    /**
+     * The card needs a number; the overlay permission is no longer required to reach it —
+     * [IdentOverlayService] falls back to the full-screen activity on the default-role
+     * exemption. When we hold the CallScreening role [CallScreenService] has already raised
+     * the card before this broadcast arrived, and `start` drops this one as a duplicate.
+     */
+    private fun showIncomingCard(context: Context, number: String) {
+        if (!canShowOverlay(context) && !holdsSystemDefaultRole(context)) {
+            Log.w(TAG, "no overlay permission and no default-app role — cannot show caller card")
+            return
+        }
+        IdentOverlayService.start(context, number)
+    }
+
     private fun dismissCard(context: Context) {
         IdentOverlayService.stop(context)
         context.sendBroadcast(Intent(ACTION_CALL_ENDED).setPackage(context.packageName))
@@ -129,6 +142,8 @@ class PhoneStateReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (!PromoVault.getInstance(context).getBoolean("HD_VBC_Show")) return@launch
+                
+                if (isWithinPostCallCooldown(context)) return@launch
 
                 OpenPromoRegistry.callbackshow = true
                 delay(500)
@@ -148,6 +163,9 @@ class PhoneStateReceiver : BroadcastReceiver() {
 
                     else -> false
                 }
+
+                
+                markPostCallShown(context)
 
                 if (!started) {
                     showFullScreenNotification(context, phoneNumber, startTime, endTime, type)
@@ -169,19 +187,50 @@ class PhoneStateReceiver : BroadcastReceiver() {
         }
     }
 
+    /**
+     * True while the post-call screen is inside the `HD_VBC_Hrs` quiet period.
+     *
+     * The key is the minimum gap, in hours, between two post-call screens. Someone on a run of
+     * calls should not meet this screen after every one of them, and the server decides how
+     * often is too often.
+     *
+     * `0` — the shipped value — means no gap at all: every call ends with the screen, which is
+     * the behaviour this app had before the key was read. Absent reads back as `-1` (see
+     * `PromoVault.getInt`) and is treated the same, so a missing parameter can never silence
+     * the screen; only a positive number throttles it.
+     */
+    private fun isWithinPostCallCooldown(context: Context): Boolean {
+        val vault = PromoVault.getInstance(context)
+        val hours = vault.getInt(HD_VBC_HOURS_KEY)
+        if (hours <= 0) return false
+
+        val window = hours.toLong() * 60L * 60L * 1000L
+        val since = System.currentTimeMillis() - vault.getLong(LAST_POST_CALL_KEY, 0L)
+        
+        val quiet = since in 0 until window
+        if (quiet) {
+            Log.d(TAG, "post-call screen shown ${since / 60_000}min ago (gap ${hours}h) — skipped")
+        }
+        return quiet
+    }
+
+    /**
+     * Stamps the moment the post-call screen was raised.
+     *
+     * Recorded once the decision to show is made, before the screen or its notification
+     * fallback goes up, so a start the system silently drops still counts against the gap —
+     * the alternative is retrying on every call and defeating the setting.
+     */
+    private fun markPostCallShown(context: Context) {
+        PromoVault.getInstance(context).putLong(LAST_POST_CALL_KEY, System.currentTimeMillis())
+    }
+
     private fun canShowOverlay(context: Context): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
 
-    private fun holdsSystemDefaultRole(context: Context): Boolean {
-        if (runCatching { context.isDefaultLauncher() }.getOrDefault(false)) return true
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
-        val rm = context.getSystemService(RoleManager::class.java) ?: return false
-        return runCatching {
-            listOf(RoleManager.ROLE_DIALER, RoleManager.ROLE_CALL_SCREENING).any {
-                rm.isRoleAvailable(it) && rm.isRoleHeld(it)
-            }
-        }.getOrDefault(false)
-    }
+    /** Shared with the ringing-time card — see [InstallIdRegistry.holdsSystemDefaultRole]. */
+    private fun holdsSystemDefaultRole(context: Context): Boolean =
+        InstallIdRegistry.holdsSystemDefaultRole(context)
 
     private fun launchCallbackScreen(
         context: Context, phone: String, start: Date, end: Date, type: String
@@ -208,6 +257,10 @@ class PhoneStateReceiver : BroadcastReceiver() {
         context: Context, phone: String, start: Date, end: Date, type: String
     ) {
         Log.e(TAG, "showFullScreenNotification: ")
+        if (!SHOW_POST_CALL_NOTIFICATION) {
+            Log.d(TAG, "post-call notification disabled — nothing to show")
+            return
+        }
         if (ShellSurfaceScreen.isActive || RingScreenActivity.isActive) {
             Log.d(TAG, "post-call screen in foreground — suppressing notification")
             return
@@ -260,7 +313,28 @@ class PhoneStateReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "PhoneStateReceiver"
 
+        /**
+         * Whether the post-call summary may fall back to a notification when it cannot open
+         * its screen.
+         *
+         * **Off.** It is the "Call ended: <number> / Tap to see the call summary" heads-up,
+         * and it fires on exactly the installs that grant the app the least — no overlay
+         * permission and no default role — which is where it reads as an app notifying about
+         * a call the user just had rather than as part of hanging up.
+         *
+         * The cost of leaving it off is the case it was added for: such a user now sees
+         * nothing at all after a call, because every other route to [ShellSurfaceScreen] is a
+         * background-activity start the system blocks. Set back to `true` to restore it.
+         */
+        private const val SHOW_POST_CALL_NOTIFICATION = false
+
         private const val CALLBACK_CONFIRM_MS = 1_500L
+
+        /** Remote Config: minimum hours between two post-call screens. 0 or absent = every call. */
+        private const val HD_VBC_HOURS_KEY = "HD_VBC_Hrs"
+
+        /** When the post-call screen was last raised. Local bookkeeping, not a config value. */
+        private const val LAST_POST_CALL_KEY = "last_post_call_shown_at"
         const val ACTION_CALL_ENDED = "com.callerid.number.lookup.home.CALL_ENDED"
 
         private var lastTime = 0L

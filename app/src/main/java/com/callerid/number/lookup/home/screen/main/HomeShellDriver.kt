@@ -30,6 +30,37 @@ class HomeShellDriver(private val host: HomeShellOwner) {
 
     private var primingStarted = false
 
+    /**
+     * The sheet came due while the shell was off screen (the launcher's caller panel was
+     * shut — a HOME press during the Settings round trip, say). Held here rather than shown
+     * over the home grid, and flushed the next time the shell is on screen.
+     */
+    private var permissionSheetPending = false
+
+    /**
+     * The shell is on its way off screen (the launcher's caller panel is closing).
+     *
+     * [HomeShellOwner.isShellOnScreen] cannot answer this: the launcher reads the panel's x,
+     * and the panel has not started sliding yet at the moment it is asked to close — so
+     * anything that reacts to the tear-down would still be told the shell is visible.
+     */
+    private var shellOffScreen = false
+
+    /**
+     * We took the sheet down ourselves, so its completion callback is not the user dismissing
+     * it — it must not arm Home's "Manage" hint, which exists to mean "you closed this once
+     * and something is still missing".
+     */
+    private var sheetTakenDownByUs = false
+
+    /**
+     * Whether [onHostCreated] ran. The launcher skips it while its first run is unfinished,
+     * and its `onResume` is not gated the same way — without this the resume-side update
+     * re-check would start a Play flow over the onboarding screens, on a host that never
+     * registered a result launcher for it.
+     */
+    private var hostCreated = false
+
     private val handler = Handler(Looper.getMainLooper())
 
     private val overlayLauncher = activity.registerForActivityResult(
@@ -53,6 +84,7 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     }
 
     fun onHostCreated() {
+        hostCreated = true
         StoreUpdateRegistry.registerLauncher(activity)
         maybeCheckForUpdate()
 
@@ -62,7 +94,13 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     }
 
     fun startFirstRunPriming() {
-        if (primingStarted) return
+        
+        shellOffScreen = false
+        if (primingStarted) {
+            
+            if (permissionSheetPending) maybeAutoShowPermissionSheet()
+            return
+        }
         primingStarted = true
 
         val fsiCfg = FsiSettings.load(activity)
@@ -85,9 +123,12 @@ class HomeShellDriver(private val host: HomeShellOwner) {
         }
 
         StoreUpdateRegistry.resumeUpdate()
+        
+        maybeCheckForUpdate()
     }
 
     fun onHostDestroy() {
+        hostCreated = false
         stopOverlayGrantPoll()
         stopFsiGrantPoll()
         handler.removeCallbacksAndMessages(null)
@@ -99,12 +140,22 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     }
 
     private fun maybeCheckForUpdate() {
+        if (!hostCreated) return
         val pref = PromoVault.getInstance(activity)
         if (!pref.getBoolean("In_App_Update_Show")) return
 
+        val isForceUpdate = pref.getBoolean("In_App_Update_Force_Show")
+
+        
+        if (!isForceUpdate) {
+            val age = System.currentTimeMillis() - pref.getLong(LAST_UPDATE_CHECK_KEY, 0L)
+            if (age in 0 until UPDATE_CHECK_WINDOW_MS) return
+            pref.putLong(LAST_UPDATE_CHECK_KEY, System.currentTimeMillis())
+        }
+
         StoreUpdateRegistry.init(
             activity = activity,
-            isForceUpdate = pref.getBoolean("In_App_Update_Force_Show"),
+            isForceUpdate = isForceUpdate,
             callback = object : StoreUpdateListener {
                 override fun onUpdateSuccess() {}
                 override fun onUpdateCanceled() {}
@@ -113,7 +164,8 @@ class HomeShellDriver(private val host: HomeShellOwner) {
                 }
 
                 override fun onUpdateDownloaded() {
-                    shell?.showUpdateReadyPrompt()
+                    
+                    host.showUpdateReadyPrompt()
                 }
             }
         )
@@ -122,12 +174,39 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     fun showPermissionSheet() {
         PermitSheetDialog.show(activity) {
             shell?.updateOverlayBanner()
-            permissionSheetDismissed = true
+            
+            if (sheetTakenDownByUs) sheetTakenDownByUs = false else permissionSheetDismissed = true
             shell?.refreshHomePermissionHint()
         }
     }
 
+    /**
+     * The shell is going off screen — on the launcher, the caller panel is closing.
+     *
+     * Anything this controller has put on screen is anchored to the Activity rather than to
+     * the panel, so it survives the slide and is left sitting over the launcher's home grid:
+     * a sheet about the caller-ID app's permissions in front of the app drawer and the clock.
+     * That is what a HOME press, a back press, or the shell running out of tab history all
+     * looked like. Both surfaces come down with the panel, and the sheet is re-armed so the
+     * next open still asks.
+     */
+    fun onShellHidden() {
+        shellOffScreen = true
+        
+        FsiPrimerDialog.dismissIfShowing()
+        if (!PermitSheetDialog.isShowing(activity)) return
+        sheetTakenDownByUs = true
+        PermitSheetDialog.dismissIfShowing(activity)
+        permissionSheetPending = true
+    }
+
     private fun maybeAutoShowPermissionSheet() {
+        
+        if (shellOffScreen || !host.isShellOnScreen) {
+            permissionSheetPending = true
+            return
+        }
+        permissionSheetPending = false
         if (PermitSheetDialog.shouldAutoShow(activity)) showPermissionSheet()
     }
 
@@ -191,7 +270,8 @@ class HomeShellDriver(private val host: HomeShellOwner) {
     }
 
     fun startOverlayPermissionFlow() {
-        if (OverlayKit.isGranted(activity)) {
+        
+        if (!OverlayKit.isOfferable(activity) || OverlayKit.isGranted(activity)) {
             shell?.updateOverlayBanner()
             return
         }
@@ -243,7 +323,20 @@ class HomeShellDriver(private val host: HomeShellOwner) {
 
         private const val GRANT_POLL_MS = 350L
 
+        /** Pref holding when the Play update check last ran. */
+        private const val LAST_UPDATE_CHECK_KEY = "last_inapp_update_check_at"
+
+        /** How long a Play update check stays fresh before a resume may run another. */
+        private const val UPDATE_CHECK_WINDOW_MS = 6 * 60 * 60 * 1000L
+
         const val REORDER_FLAGS =
             Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        /**
+         * Marks a [HomeShellOwner.bringHostToFront] intent as the app pulling itself back,
+         * so a host whose `onNewIntent` otherwise means "HOME was pressed" can tell the two
+         * apart. Only the launcher's singleTask home screen has that ambiguity.
+         */
+        const val EXTRA_SELF_REORDER = "extra_self_reorder"
     }
 }

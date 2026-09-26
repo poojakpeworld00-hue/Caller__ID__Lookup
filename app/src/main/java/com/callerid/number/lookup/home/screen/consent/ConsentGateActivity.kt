@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.screen.reveal.RevealConfig
-import com.callerid.number.lookup.home.shell.support.OnboardRouter
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
@@ -64,6 +64,11 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                // Organic: Back is Back — it never accepts the terms on the user's behalf.
+                if (!OnboardRouter.backMovesForward(this@ConsentGateActivity)) {
+                    OnboardRouter.passBackThrough(this@ConsentGateActivity, this)
+                    return
+                }
                 prefs.isTermsAccepted = true
                 proceedToNextScreen()
             }
@@ -106,7 +111,8 @@ class ConsentGateActivity : FrameActivity<ScreenTermsBinding>() {
     }
 
     private fun openOverlayPermission() {
-        if (OverlayKit.isGranted(this)) {
+        
+        if (OverlayKit.isGranted(this) || !OverlayKit.isOfferable(this)) {
             proceedToNextScreen()
             return
         }

@@ -32,16 +32,16 @@
     <string name="onboarding_skip">Bỏ qua</string>
     <string name="onboarding_next">Tiếp theo</string>
     <string name="onboarding_title">Biết ai đang gọi</string>
-    <string name="onboarding_desc">Gọi tên số lạ ngay lập tức, thấy ai gọi và gọi từ đâu, chặn cuộc gọi làm phiền trước hồi chuông đầu tiên.</string>
-    <string name="onboarding_title_2">Chặn spam và lừa đảo</string>
-    <string name="onboarding_desc_2">Cuộc gọi làm phiền, lừa đảo và ghi âm sẵn bị phát hiện và chặn lại, thôi không tới được bạn nữa.</string>
+    <string name="onboarding_desc">Biết tên đằng sau số lạ ngay lập tức, xem ai gọi và từ đâu, và từ chối những số bạn chặn trước hồi chuông đầu tiên.</string>
+    <string name="onboarding_title_2">Chặn người gọi không mong muốn</string>
+    <string name="onboarding_desc_2">Số trong danh sách chặn bị từ chối trước khi máy đổ chuông, còn cuộc gọi bị báo là spam được đánh dấu ngay khi gọi đến.</string>
     <string name="onboarding_title_3">Tra cứu mọi số</string>
     <string name="onboarding_desc_3">Tra bất kỳ số lạ nào và thấy ai đứng sau: tên, ở đâu, làm gì.</string>
     <string name="onboarding_get_started">Bắt đầu</string>
 
     
     <string name="home_title">Bạn đang được bảo vệ</string>
-    <string name="home_subtitle">Nhận diện người gọi và chặn spam đang hoạt động</string>
+    <string name="home_subtitle">Nhận diện người gọi đang bật và danh sách chặn đang hoạt động</string>
     <string name="home_greeting">Chào buổi sáng</string>
     <string name="home_search_hint">Tìm tên hoặc số…</string>
     <string name="home_protection_active">Bảo vệ đang hoạt động</string>

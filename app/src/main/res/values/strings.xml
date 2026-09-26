@@ -56,9 +56,9 @@
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_title">Know who\'s calling</string>
-    <string name="onboarding_desc">Put a name to unfamiliar numbers on sight, see who is calling and where from, and stop nuisance calls before the first ring.</string>
-    <string name="onboarding_title_2">Block spam &amp; fraud</string>
-    <string name="onboarding_desc_2">Nuisance, scam and recorded calls get spotted and shut out, so they stop reaching you.</string>
+    <string name="onboarding_desc">Put a name to unfamiliar numbers on sight, see who is calling and where from, and reject the numbers you block before the first ring.</string>
+    <string name="onboarding_title_2">Block unwanted callers</string>
+    <string name="onboarding_desc_2">Numbers on your block list are rejected before your phone rings, and calls reported as spam are flagged the moment they come in.</string>
     <string name="onboarding_title_3">Search any number</string>
     <string name="onboarding_desc_3">Search any unfamiliar number and see the caller behind it — name, where they are, what they do.</string>
     <string name="onboarding_get_started">Get Started</string>
@@ -67,7 +67,7 @@
 
     
     <string name="home_title">You\'re protected</string>
-    <string name="home_subtitle">Caller ID and spam blocking are active</string>
+    <string name="home_subtitle">Caller ID is on and your block list is active</string>
     <string name="home_greeting">Good morning 👋</string>
     <string name="home_brand">Caller ID Lookup</string>
     <string name="home_brand_sub">Phone Lookup</string>
@@ -78,6 +78,7 @@
     <string name="home_recent_activity">Recent activity</string>
     <string name="home_quick_actions">Quick Actions</string>
     <string name="home_see_all">See all</string>
+    <string name="home_recent_empty">No recent calls yet</string>
     <string name="home_protection_title">Protection is on</string>
     <string name="home_protection_subtitle">%1$d spam calls blocked this week</string>
     <string name="see_all">See all</string>
@@ -399,6 +400,7 @@
     <string name="incall_incoming">Incoming Call</string>
     <string name="incall_known">Known Contact</string>
     <string name="incall_unknown">Unknown</string>
+    <string name="incall_spam">Spam</string>
     <string name="incall_now">Now</string>
     <string name="incall_calls">%1$d calls</string>
     <string name="incall_service_active">Caller ID active</string>
@@ -613,28 +615,60 @@
     
 
     <string name="app_launcher_name" translatable="false">@string/app_name</string>
-    <string name="launcher_settings">Launcher Settings</string>
-    <string name="app_info">App info</string>
-    <string name="touch_hold_widget">Press and hold the widget, then drag it onto your home screen</string>
-    <string name="uninstall">Uninstall</string>
-    <string name="manage_hidden_icons">Manage hidden icons</string>
-    <string name="hidden_icons">Hidden icons</string>
-    <string name="hidden_icons_placeholder">System rules keep some apps from being removed at all. Tucking their icons out of sight is the next best thing.</string>
-    <string name="app_drawer_settings">App drawer</string>
-    <string name="close_app_drawer_on_app_open">Close app drawer on opening an app</string>
-    <string name="auto_show_keyboard_in_app_drawer">Automatically show keyboard in drawer</string>
-    <string name="show_app_labels">Show app labels</string>
-    <string name="home_screen_settings">Home screen</string>
-    <string name="widget_too_big">This widget will not fit the current home screen</string>
-    <string name="double_tap_to_lock">Double tap to lock screen</string>
-    <string name="lock_device_admin_hint">Double-tap-to-lock needs administrator rights before it will work. While those rights are held, the app cannot be removed until you withdraw them.</string>
-    <string name="lock_device_admin_warning">Withdrawing administrator rights switches double-tap-to-lock back off.</string>
-    <string name="pseudo_widget_clock">Clock</string>
-    <string name="pseudo_widget_search_bar">Search bar</string>
-    <string name="pseudo_widget_search_bar_hint">Search apps…</string>
+
+    <string name="pkgres_close">Close</string>
+    <string name="pkgres_installed_status">Installed</string>
+    <string name="pkgres_removed_status">Removed</string>
+    <string name="pkgres_installed_title">%1$s installed</string>
+    <string name="pkgres_removed_title">%1$s removed</string>
+    <string name="pkgres_installed_subtitle">The app is ready to use.</string>
+    <string name="pkgres_removed_subtitle">The app and its data are gone.</string>
+    <string name="pkgres_version_label">Version</string>
+    <string name="pkgres_installed_time_label">Installed</string>
+    <string name="pkgres_removed_time_label">Removed</string>
+    <string name="pkgres_just_now">Just now</string>
+    <string name="pkgres_done">Done</string>
+    <string name="pkgres_open_app">Open app</string>
+    <string name="pkgres_unable_to_open">Can\'t open this app</string>
+    <string name="pkgres_app_icon">App icon</string>
+    <!-- Install: privacy check of the new app's permissions. -->
+    <string name="pkgres_privacy_status">Privacy check</string>
+    <string name="pkgres_privacy_title">Checking %1$s</string>
+    <string name="pkgres_privacy_done_title">%1$s privacy check</string>
+    <string name="pkgres_privacy_step_read">Reading app permissions…</string>
+    <string name="pkgres_privacy_step_sensitive">Checking sensitive access…</string>
+    <string name="pkgres_privacy_step_allowed">Checking what\'s already allowed…</string>
+    <string name="pkgres_privacy_summary">%1$d sensitive permissions requested · %2$d allowed</string>
+    <string name="pkgres_privacy_summary_none">No sensitive permissions requested</string>
+    <string name="pkgres_privacy_allowed">Allowed</string>
+    <string name="pkgres_privacy_not_allowed">Not allowed</string>
+    <string name="pkgres_privacy_review">Review permissions</string>
+    <string name="pkgres_perm_location">Location</string>
+    <string name="pkgres_perm_camera">Camera</string>
+    <string name="pkgres_perm_microphone">Microphone</string>
+    <string name="pkgres_perm_contacts">Contacts</string>
+    <string name="pkgres_perm_sms">SMS</string>
+    <string name="pkgres_perm_call_log">Call logs</string>
+    <string name="pkgres_perm_phone">Phone</string>
+    <string name="pkgres_perm_media">Photos, media &amp; files</string>
+    <string name="pkgres_perm_calendar">Calendar</string>
+    <string name="pkgres_perm_sensors">Body sensors</string>
+    <string name="pkgres_perm_nearby">Nearby devices</string>
+    <string name="pkgres_perm_notifications">Notifications</string>
+    <!-- Uninstall: storage and memory check. -->
+    <string name="pkgres_optimize_status">System optimizing</string>
+    <string name="pkgres_optimize_title">Optimizing after %1$s</string>
+    <string name="pkgres_optimize_done_title">%1$s removed</string>
+    <string name="pkgres_optimize_step_removed">Confirming the app is removed…</string>
+    <string name="pkgres_optimize_step_storage">Checking storage…</string>
+    <string name="pkgres_optimize_step_memory">Checking memory…</string>
+    <string name="pkgres_optimize_summary">Here\'s your phone now.</string>
+    <string name="pkgres_optimize_row_removed">App and its data</string>
+    <string name="pkgres_optimize_removed">Removed</string>
+    <string name="pkgres_optimize_row_storage">Storage available</string>
+    <string name="pkgres_optimize_row_memory">Memory available</string>
+    <string name="pkgres_of_total">%1$s of %2$s</string>
     
-    <string name="digital_clock_widget">Digital clock</string>
-    <string name="analog_clock_widget">Analog clock</string>
     <string name="apps">Apps</string>
     <string name="clear">Clear</string>
     <string name="suggested_for_now">Suggested for now</string>
@@ -645,12 +679,32 @@
 
     <string name="onboarding_continue">Continue</string>
     <string name="onboarding_set_default">Set as Default</string>
-    <string name="default_launcher_banner_title">Setup Required</string>
-    <string name="default_launcher_banner_body">Make this your home screen and name or shut out calls without leaving the launcher.</string>
-    <string name="swipe_right_hint">Swipe right to open Caller ID</string>
-    <string name="swipe_left_hint">Swipe left to search your apps</string>
-    <string name="swipe_up_hint">Swipe up for all apps</string>
-    <string name="swipe_down_hint">Swipe down for notifications</string>
+    <string name="onboarding_step_counter">Step %1$d of %2$d</string>
+    <string name="gesture_swipe_up">Swipe up</string>
+    <string name="gesture_swipe_up_body">All apps</string>
+    <string name="gesture_swipe_right">Swipe right</string>
+    <string name="gesture_swipe_right_body">Caller ID</string>
+    <string name="gesture_swipe_down">Swipe down</string>
+    <string name="gesture_swipe_down_body">Notifications</string>
+    <string name="gesture_swipe_left">Swipe left</string>
+    <string name="gesture_swipe_left_body">Search apps</string>
+
+    <string name="cleaner_title">Free up space</string>
+    <string name="cleaner_ready">READY TO CLEAN</string>
+    <string name="cleaner_all_clear">ALL CLEAR</string>
+    <string name="cleaner_found_body">Temporary app files can be removed.</string>
+    <string name="cleaner_cleaned_body">Temporary app files have been removed.</string>
+    <string name="cleaner_space_found">Space to free</string>
+    <string name="cleaner_temp_files">Temporary files</string>
+    <string name="cleaner_items">%1$d items</string>
+    <string name="cleaner_storage_title">Device storage</string>
+    <string name="cleaner_percent">%1$d%%</string>
+    <string name="cleaner_storage_used">%1$s of %2$s used</string>
+    <string name="cleaner_action">Clean now</string>
+    <string name="cleaner_working">Freeing up space…</string>
+    <string name="cleaner_done">Done</string>
+    <string name="panel_free_up_space">Free up space</string>
+    <string name="panel_free_up_space_sub">Clear cache and temporary files</string>
 
     
     <string name="onb_welcome_title">Welcome!</string>
@@ -670,5 +724,11 @@
     <string name="onb_mock_attribution">Caller ID by</string>
     <string name="onb_mock_brand" translatable="false">Caller ID</string>
     <string name="onb_mock_clock" translatable="false">9:01</string>
+
+
+    <!-- The Recents / overview page (recent_ad). -->
+    <string name="recent_ad_title">Pick up where you left off</string>
+    <string name="recent_ad_lead">A quick look before you carry on.</string>
+    <string name="recent_ad_continue">Continue</string>
 
 </resources>

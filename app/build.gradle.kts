@@ -40,10 +40,9 @@ android {
         // shortcut + pinned-item APIs.
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 5
+        versionName = "1.0.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled = true
 
         // LightHouse credentials → obfuscated BuildConfig byte[] (decoded at runtime
         // by Obfuscated.s). buildConfig = true is enabled below.
@@ -88,6 +87,12 @@ android {
 
 kotlin {
     jvmToolchain(17)
+}
+
+// org.fossify:commons (via :launcher) drags in patternLockView, which still depends on the
+// pre-AndroidX support library; it collides class-for-class with androidx. AGP 9 has no Jetifier.
+configurations.configureEach {
+    exclude(group = "com.android.support")
 }
 
 base {
@@ -145,7 +150,6 @@ dependencies {
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.multidex)
     implementation(libs.libphonenumber)
     implementation(libs.libphonenumber.geocoder)
     implementation(libs.libphonenumber.carrier)
@@ -155,17 +159,6 @@ dependencies {
     implementation(libs.lighthouse.extended)
 
     // ── Home-screen launcher ──────────────────────────────────────────────────
-    // Fossify commons supplies the launcher's base activities, theming engine and
-    // the view widgets its layouts reference.
-    implementation(libs.fossify.commons) {
-        // patternLockView (commons' app-lock screen) still depends on the pre-AndroidX
-        // support library, which collides class-for-class with androidx.core / androidx.media.
-        exclude(group = "com.android.support")
-    }
-    // commons keeps this one `implementation`, so the launcher's grid code has to ask
-    // for it directly.
-    implementation(libs.kotlinx.collections.immutable)
-    // The launcher's own storage (app-drawer cache, home-screen grid, hidden icons) is
-    // hand-rolled SQLite rather than Room: AGP 9's built-in Kotlin rejects KSP, and the
-    // external Kotlin plugin needed for KSP does not support AGP 9.
+    // Home grid, drawer, side panels, widgets. Brings org.fossify:commons in as `api`.
+    implementation(project(":launcher"))
 }

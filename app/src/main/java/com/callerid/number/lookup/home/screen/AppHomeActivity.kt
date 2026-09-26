@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.databinding.ScreenMainBinding
-import com.callerid.number.lookup.home.shell.screens.HomeBoardActivity as LauncherHomeActivity
+import io.launcher.home.activities.LauncherPanel
 import com.callerid.number.lookup.home.screen.main.HomeShellDriver
 import com.callerid.number.lookup.home.screen.main.HomeShellFragment
 import com.callerid.number.lookup.home.screen.main.HomeShellOwner
@@ -55,7 +56,9 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         }
 
         shell?.setPanelVisible(true)
-        homeShellController.startFirstRunPriming()
+        // QRScanner's `home` moment: permission_engine rules listing AppHomeActivity, then the
+        // FSI / permission-sheet priming — one after the other, never two dialogs at once.
+        PermitEngine.check(this) { homeShellController.startFirstRunPriming() }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -83,12 +86,20 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
     override fun onShellBackExhausted() {
         runCatching {
             startActivity(
-                Intent(this, LauncherHomeActivity::class.java).addFlags(
+                Intent(this, LauncherPanel::class.java).addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 )
             )
         }
         finishAffinity()
+    }
+
+    /** The shell is the whole screen here — there is nothing else it could cover. */
+    override val isShellOnScreen: Boolean get() = true
+
+    /** The shell is always the visible surface here, so its own Snackbar is the right place. */
+    override fun showUpdateReadyPrompt() {
+        homeShellController.shell?.showUpdateReadyPrompt()
     }
 
     override fun bringHostToFront() {

@@ -17,16 +17,21 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.callerid.admesh.model.PromoKind
+import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PromoTallyRegistry.interCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.trackEvent
+import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.hasNetwork
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
 class FlowInterstitial {
 
     companion object {
+
+        /** The app-wide interstitial has no placement keys of its own: only the global ones apply. */
+        private const val APP_PLACEMENT = "app"
 
         private var _isInterShow: Boolean = false
         var isInterShow: Boolean
@@ -103,6 +108,15 @@ class FlowInterstitial {
             val url = PromoVault.getInstance(context).getString("DirectLink")
 
             if (url.isNullOrEmpty()) {
+                onClosed()
+                return
+            }
+
+            // App-wide open-type switch: only Custom Tab uses the session-tracked path below (so
+            // onClosed fires when the tab closes). WebView / browser open fire-and-forget and the
+            // flow continues right away.
+            if (DirectLinkOpener.mode(context) != DirectLinkOpener.Mode.CUSTOM_TAB) {
+                DirectLinkOpener.open(context, url)
                 onClosed()
                 return
             }
@@ -249,6 +263,19 @@ class FlowInterstitial {
         }
         interCounter = 0
         act.safeLog("inter_counter_triggered")
+
+        // QRScanner's link-first, on every in-app interstitial: `link_first_then` + `DirectLink`
+        // (+ `IsCustomADS`) open the links first, then the listed follow-ups, instead of this ad.
+        if (LauncherPlacementAds.showLinkFirst(act, APP_PLACEMENT) { safeClose("link_first") }) {
+            act.safeLog("inter_link_first")
+            return
+        }
+        // A global `ad_flow` ("reward,inter", "app_open,inter", …) replaces the plain interstitial.
+        if (LauncherPlacementAds.showAdFlow(act, APP_PLACEMENT) { safeClose("ad_flow") }) {
+            act.safeLog("inter_ad_flow")
+            return
+        }
+
         val isPreload = pref.getBoolean("is_preload_ads")
 
         when (PromoKind.fromString(pref.getString("IsAdType"))) {
@@ -429,6 +456,11 @@ class FlowInterstitial {
                     showCustomAfterFacebookFail(activity, pref, safeClose)
                 }
             )
+        } else if (LauncherPlacementAds.hasFallback(activity, APP_PLACEMENT)) {
+            // QRScanner's InterFallbackAds: the `inter_fallback` chain (rewarded / full_native /
+            // custom / directlink, in the configured order), then the flow continues.
+            activity.safeLog("google_fail_fallback_chain")
+            LauncherPlacementAds.runFallback(activity, APP_PLACEMENT) { safeClose("google_fail_fallback") }
         } else {
             if (customEnabled) {
                 activity.safeLog("google_fail_open_custom")
