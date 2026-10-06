@@ -62,6 +62,7 @@
     <string name="nav_contacts">รายชื่อ</string>
     <string name="nav_lookup">ค้นหา</string>
     <string name="nav_settings">ตั้งค่า</string>
+    <string name="home_quiz">เล่นควิซ</string>
 
     
     <string name="recents_today">วันนี้</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">ส่งต่อเถอะ — ช่วยคนใกล้ตัวปิดประตูสายกวนใจ</string>
     <string name="settings_share_text">ระบุชื่อผู้โทรแปลกหน้าและกันสายกวนใจด้วย Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_ad_privacy">ตัวเลือกความเป็นส่วนตัวของโฆษณา</string>
     <string name="settings_terms">ข้อกำหนดการให้บริการ</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

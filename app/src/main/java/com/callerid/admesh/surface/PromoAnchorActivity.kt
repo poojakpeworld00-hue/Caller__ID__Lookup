@@ -43,6 +43,8 @@ import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.model.OnFeedReady
 import com.callerid.admesh.model.fetchGeoFromIp
 import com.callerid.admesh.engine.PromoRevenueGauge
+import com.callerid.admesh.engine.AdsGate
+import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.engine.PromoConfigLoader
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.RemoteConfigRules
@@ -60,6 +62,7 @@ import com.callerid.number.lookup.home.kit.AppPrefs
 import com.callerid.number.lookup.home.kit.AppPrefs.THEME_DARK
 import com.callerid.number.lookup.home.kit.AppPrefs.THEME_LIGHT
 import com.callerid.number.lookup.home.kit.AppPrefs.THEME_SYSTEM
+import com.callerid.number.lookup.home.kit.applyNativeAdTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -199,21 +202,10 @@ open class PromoAnchorActivity : AppCompatActivity() {
             return
         }
 
-        if (!isMobileAdsInitialized.getAndSet(true)) {
-            backgroundExecutor.execute {
-                try {
-                    activity?.let {
-                        isGoogleAdsEnabled = true
-                        MobileAds.initialize(it) {}
-                        if (BuildConfig.DEBUG) Log.d("PromoAnchorActivity", "MobileAds initialized")
-                    }
-                } catch (e: Exception) {
-                    isGoogleAdsEnabled = false
-                    Log.e("PromoAnchorActivity", "Failed to initialize MobileAds", e)
-                    isMobileAdsInitialized.set(false)
-                }
-            }
-        }
+        // MobileAds starts only when UMP allows ad requests; the rest of the splash runs either way.
+        isMobileAdsInitialized.set(true)
+        isGoogleAdsEnabled = AdsGate.startSdk(applicationContext)
+        if (!isGoogleAdsEnabled) Log.w("PromoAnchorActivity", "No ad consent → this launch runs without ads")
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         activity?.let { host ->
@@ -418,36 +410,8 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     }
                 }
 
-                val savedMarketingStr = adsPreference.getString("NativeTheme_marketing", "{}")
-                val savedDefaultStr = adsPreference.getString("NativeTheme_default", "{}")
-
-                val marketingObj = JSONObject(savedMarketingStr)
-                val defaultObj = JSONObject(savedDefaultStr)
-
-                
-                val themeSource = when {
-                    !isMarketingOn -> defaultObj
-                    marketingObj.length() > 0 -> marketingObj
-                    else -> {
-                        Log.w(CONFIG_TAG, "no NativeTheme.marketing block — paid ads fall back to default")
-                        defaultObj
-                    }
-                }
-                val modeKey = resolveInlineThemeKey(activity)
-
-                val themeJson = themeSource.optJSONObject(modeKey)
-
-                themeJson?.let { theme ->
-                    adsPreference.putString("NativebtnColor", theme.optString("btnColor"))
-                    adsPreference.putString("NativebtntxtColor", theme.optString("btnText"))
-                    adsPreference.putString("NativeBgColor", theme.optString("bgColor"))
-                    adsPreference.putString("NativetxtColor", theme.optString("textColor"))
-
-                    if (BuildConfig.DEBUG) Log.d(
-                        "NativeTheme",
-                        "Applied ${if (isMarketingOn) "MARKETING" else "DEFAULT"} $modeKey theme"
-                    )
-                }
+                // The audience's own `NativeTheme`, stored at ingest; re-applied for the cached-config path.
+                activity.applyNativeAdTheme()
 
                 launch {
 
@@ -477,7 +441,9 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                     BackInterstitial().fetchBackInterstitial(activity)
                                 }
 
-                                val isSplashAdsEnabled = adsPreference.getBoolean("is_splash_ads")
+                                // `launcher_ads.onboarding.splash` adds on/off, show mode and appopen / inter on top.
+                                val isSplashAdsEnabled = adsPreference.getBoolean("is_splash_ads") &&
+                                    ShellPromoConfig.splashAdAllowed(activity)
                                 Log.d(
                                     APPOPEN_TAG,
                                     "gate → IsAdsON=$isAdsOn, isSplash=$isSplash, is_splash_ads=$isSplashAdsEnabled, " +
@@ -540,13 +506,18 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     fun warmAds(adsPreference: PromoVault, activity: Activity, onComplete: () -> Unit) {
+        if (!AdsGate.canRequestAds(activity)) return onComplete()
         bindCustomTabs(activity)
         val adType = PromoKind.fromString(adsPreference.getString("IsAdType"))
         Log.d(APPOPEN_TAG, "preload() → IsAdType=$adType, googleAdsEnabled=$isGoogleAdsEnabled")
         when (adType) {
             PromoKind.GOOGLE -> {
                 if (isGoogleAdsEnabled) {
-                    val showInterstitialOnSplash = adsPreference.getBoolean("is_splash_inter_show")
+                    val showInterstitialOnSplash = when (ShellPromoConfig.splashAdType(activity)) {
+                        "inter" -> true
+                        "appopen" -> false
+                        else -> adsPreference.getBoolean("is_splash_inter_show")
+                    }
                     if (showInterstitialOnSplash) {
                         Log.d(APPOPEN_TAG, "preload → is_splash_inter_show=true → loading splash INTERSTITIAL instead of AppOpen")
                         loadGoogleInterstitialWithFallback(activity, adsPreference, onComplete)
@@ -582,6 +553,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     fun renderPreloadedAd(activity: Activity, adsPreference: PromoVault, onDismissed: () -> Unit) {
+        if (!AdsGate.canRequestAds(activity)) return onDismissed()
         // `splash_ad_flow` / a `splash_` link chain: the dynamic flow instead of the fixed splash ad.
         if (com.callerid.admesh.engine.LauncherPlacementAds.hasOwnFlow(activity, "splash")) {
             if (!com.callerid.admesh.engine.LauncherPlacementAds.placementEnabled(activity, "splash")) return onDismissed()
@@ -719,16 +691,45 @@ open class PromoAnchorActivity : AppCompatActivity() {
             })
     }
 
+    /** Runs [show] once this splash is resumed; a splash destroyed first runs [skipped] instead. */
+    private fun whenInFront(activity: Activity, show: () -> Unit, skipped: () -> Unit) {
+        val owner = activity as? androidx.lifecycle.LifecycleOwner ?: return show()
+        val lifecycle = owner.lifecycle
+        if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) return show()
+        if (lifecycle.currentState == androidx.lifecycle.Lifecycle.State.DESTROYED) return skipped()
+        lifecycle.addObserver(object : androidx.lifecycle.LifecycleEventObserver {
+            override fun onStateChanged(source: androidx.lifecycle.LifecycleOwner, event: androidx.lifecycle.Lifecycle.Event) {
+                when (event) {
+                    androidx.lifecycle.Lifecycle.Event.ON_RESUME -> { lifecycle.removeObserver(this); show() }
+                    androidx.lifecycle.Lifecycle.Event.ON_DESTROY -> { lifecycle.removeObserver(this); skipped() }
+                    else -> Unit
+                }
+            }
+        })
+    }
+
     fun renderAppOpenAd(activity: Activity, onDismissed: (() -> Unit)? = null) {
-        appOpenAd?.let { ad ->
+        val ad = appOpenAd ?: run {
+            Log.w(APPOPEN_TAG, "show() → AppOpen ad is null (not loaded in time) → skipping show")
+            onDismissed?.invoke()
+            return
+        }
+        whenInFront(activity, show = { renderAppOpenNow(activity, ad, onDismissed) }, skipped = { onDismissed?.invoke() })
+    }
+
+    private fun renderAppOpenNow(activity: Activity, ad: AppOpenAd, onDismissed: (() -> Unit)?) {
+        run {
             Log.d(APPOPEN_TAG, "show() → displaying AppOpen ad")
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    onDismissed?.invoke()
                     OpenPromoRegistry.isShowingAd = false
+                    AdsGate.fullScreenDismissed()
+                    onDismissed?.invoke()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    OpenPromoRegistry.isShowingAd = false
+                    AdsGate.fullScreenDismissed()
                     onDismissed?.invoke()
                 }
 
@@ -736,19 +737,16 @@ open class PromoAnchorActivity : AppCompatActivity() {
                     OpenPromoRegistry.isShowingAd = true
                 }
             }
+            AdsGate.fullScreenShown()
 
             activity.trackEvent("app_open_loaded")
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
-            appOpenAd?.setOnPaidEventListener {
+            ad.setOnPaidEventListener {
                 PromoRevenueGauge.reportPaidEvent(activity, it)
             }
             ad.show(activity)
-        } ?: run {
-
-            Log.w(APPOPEN_TAG, "show() → AppOpen ad is null (not loaded in time) → skipping show")
-            onDismissed?.invoke()
         }
     }
 
@@ -775,13 +773,19 @@ open class PromoAnchorActivity : AppCompatActivity() {
     }
 
     fun renderGoogleInterstitial(activity: Activity, onDismissed: (() -> Unit)? = null) {
-        interstitialAd?.let { ad ->
+        val ad = interstitialAd ?: run {
+            onDismissed?.invoke()
+            return
+        }
+        whenInFront(activity, skipped = { onDismissed?.invoke() }, show = {
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
+                    AdsGate.fullScreenDismissed()
                     onDismissed?.invoke()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    AdsGate.fullScreenDismissed()
                     onDismissed?.invoke()
                 }
 
@@ -793,11 +797,12 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
             if (BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
 
-            interstitialAd?.setOnPaidEventListener {
+            ad.setOnPaidEventListener {
                 PromoRevenueGauge.reportPaidEvent(activity, it)
             }
+            AdsGate.fullScreenShown()
             ad.show(activity)
-        } ?: run { onDismissed?.invoke() }
+        })
     }
 
     private var fbInterstitial: com.facebook.ads.InterstitialAd? = null
@@ -812,9 +817,15 @@ open class PromoAnchorActivity : AppCompatActivity() {
         fbInterstitial = com.facebook.ads.InterstitialAd(activity, adUnitId)
         fbInterstitial?.loadAd(
             fbInterstitial!!.buildLoadAdConfig().withAdListener(object : InterstitialAdListener {
-                override fun onInterstitialDisplayed(ad: Ad?) {}
+                override fun onInterstitialDisplayed(ad: Ad?) {
+                    AdsGate.fullScreenShown()
+                }
                 override fun onInterstitialDismissed(ad: Ad?) {
-                    onDismissed?.invoke()
+                    AdsGate.fullScreenDismissed()
+                    // The continuation belongs to whoever showed it, not to the loader.
+                    val pending = fbOnDismissed
+                    fbOnDismissed = null
+                    if (pending != null) pending() else onDismissed?.invoke()
                 }
 
                 override fun onError(ad: Ad?, adError: com.facebook.ads.AdError?) {
@@ -831,11 +842,17 @@ open class PromoAnchorActivity : AppCompatActivity() {
         )
     }
 
+    private var fbOnDismissed: (() -> Unit)? = null
+
     fun renderFbInterstitial(onDismissed: (() -> Unit)? = null) {
         val ad = fbInterstitial
 
         if (ad != null && ad.isAdLoaded) {
-            ad.show()
+            fbOnDismissed = onDismissed ?: {}
+            if (!ad.show()) {
+                fbOnDismissed = null
+                onDismissed?.invoke()
+            }
         } else {
             onDismissed?.invoke()
         }
@@ -891,8 +908,9 @@ open class PromoAnchorActivity : AppCompatActivity() {
         // App-wide open-type switch: WebView / browser open fire-and-forget; only Custom Tab keeps
         // the session-tracked close below.
         if (DirectLinkOpener.mode(activity) != DirectLinkOpener.Mode.CUSTOM_TAB) {
-            DirectLinkOpener.open(activity, url)
-            onClosed()
+            // Moves on when the user is back from the page, not the moment it opens.
+            if (DirectLinkOpener.open(activity, url)) DrawerAdRunner.onReturnTo(activity, onClosed)
+            else onClosed()
             return
         }
 

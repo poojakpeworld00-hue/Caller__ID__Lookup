@@ -119,6 +119,7 @@ object PackageEventWatcher {
     /** Records the throttle and launches the result screen from [activity]. */
     private fun fire(activity: Activity, installed: Boolean, pkg: String) {
         prefs(activity).edit { putLong(KEY_LAST_SHOWN, System.currentTimeMillis()) }
+        com.callerid.number.lookup.home.kit.Analytics.log(if (installed) "app_installed_page_open" else "app_removed_page_open")
         activity.startActivity(
             Intent(activity, PackageResultActivity::class.java)
                 .putExtra(PackageResultActivity.EXTRA_INSTALLED, installed)
@@ -137,6 +138,8 @@ object PackageEventWatcher {
 
     /** The config's `enabled` plus its throttle, decided in one place before anything is shown. */
     private fun gatesPass(context: Context): Boolean {
+        if (!com.callerid.admesh.engine.PromoVault.getInstance(context).getBoolean("IsAdsON")) return false
+        if (!com.callerid.number.lookup.home.onboard.OnboardRouter.wasOnboardingCompleted(context)) return false
         val settings = ShellPromoConfig.packageResultSettings(context)
         if (!settings.enabled) return false
         if (settings.minGapMs > 0L) {
@@ -175,6 +178,7 @@ object PackageEventWatcher {
         override fun onActivityResumed(activity: Activity) {
             // Never arm off, or drain onto, the result screen itself.
             if (activity is PackageResultActivity) return
+            if (!com.callerid.number.lookup.home.kit.AdSurfaces.isLanding(activity)) return
             resumed = WeakReference(activity)
 
             // An install that arrived while backgrounded waits here to be shown on the next screen

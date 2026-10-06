@@ -13,7 +13,6 @@ import com.callerid.number.lookup.home.store.CallFlavor
 import com.callerid.number.lookup.home.databinding.CellCallBinding
 import com.callerid.number.lookup.home.databinding.CellSectionHeaderBinding
 import com.callerid.number.lookup.home.screen.shared.CallFormatter
-import com.callerid.number.lookup.home.screen.shared.HomeAnim
 
 class LogAdapter(
     private val onCall: (String) -> Unit,
@@ -23,12 +22,9 @@ class LogAdapter(
 
     private var rows: List<LogRow> = emptyList()
 
-    private var lastAnimated = -1
-
     @SuppressLint("NotifyDataSetChanged")
     fun submit(list: List<LogRow>) {
         rows = list
-        lastAnimated = -1
         notifyDataSetChanged()
     }
 
@@ -50,10 +46,6 @@ class LogAdapter(
             is LogRow.Call -> (holder as CallVH).bind(row)
         }
 
-        if (position > lastAnimated) {
-            lastAnimated = position
-            HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
-        }
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {

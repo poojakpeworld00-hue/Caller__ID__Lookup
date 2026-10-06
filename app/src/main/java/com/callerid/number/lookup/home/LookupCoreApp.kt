@@ -12,6 +12,9 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.FirebaseApp
+import com.callerid.admesh.engine.AdsGate
+import com.callerid.admesh.engine.PromoConfigLoader
+import com.callerid.admesh.surface.AdPreloader
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.ShellPromoConfig
@@ -22,6 +25,7 @@ import com.callerid.admesh.surface.tally.ShellSurfaceScreen
 import com.callerid.number.lookup.home.launcher.AppExitAd
 import com.callerid.number.lookup.home.launcher.CallerLauncherAds
 import com.callerid.number.lookup.home.launcher.CallerLauncherBridge
+import com.callerid.number.lookup.home.launcher.SystemButtonAds
 import com.callerid.number.lookup.home.launcher.UnlockAdWatcher
 import io.launcher.home.activities.LauncherPanel
 import io.launcher.home.api.LauncherRegistry
@@ -32,7 +36,11 @@ import com.callerid.number.lookup.home.screen.pkgresult.PackageEventWatcher
 import com.callerid.number.lookup.home.screen.charging.ChargeEventWatcher
 import com.callerid.number.lookup.home.screen.recent.RecentAdWatcher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
+import com.callerid.number.lookup.home.kit.AdSurfaces
+import com.callerid.number.lookup.home.kit.Analytics
+import com.callerid.number.lookup.home.kit.CrashKeys
 import com.callerid.number.lookup.home.kit.CrashSentry
+import com.callerid.number.lookup.home.onboard.OnboardRouter
 import com.callerid.number.lookup.home.kit.LogRail
 import io.lighthouse.push.LightHouse
 import io.lighthouse.push.LightHouseConfig
@@ -96,6 +104,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         super.onCreate()
         appContext = applicationContext
         PromoVault.getInstance(this)
+        Analytics.init(this)
 
         // Hears app install / removal and shows the result screen from whichever of our screens is
         // foreground (queuing it otherwise). Also seeds the package metadata cache.
@@ -111,6 +120,12 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // Watches for the app being reopened from the Recents list. Inert unless `recent_ad.enabled`
         // is on in Remote Config — registering it costs a dormant install almost nothing.
         RecentAdWatcher.register(this)
+
+        // Default-home "Next" ad owed when the role was granted from the Settings list.
+        OnboardRouter.registerGrantAd(this)
+
+        // Home / Back on the launcher home: `launcher_ads.system_buttons.{home,back}`.
+        SystemButtonAds.register(this)
 
         BaseConfig.newInstance(this).appSideloadingStatus = SIDELOADING_FALSE
 
@@ -132,7 +147,12 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
                 baseUrl = Veiled.s(BuildConfig.LH_BASE_URL),
                 
                 attributionWaitMs = 5_000L,
-                
+                // rc_sync push: fetch + ingest now instead of waiting for the next foreground.
+                useRemoteConfig = true,
+                onRemoteConfigSync = { version ->
+                    LogRail.log("LH_RemoteConfig", "rc_sync v=$version → fetching")
+                    LiveConfigListener.refreshIfStale(this@LookupCoreApp, force = true)
+                },
                 dataDisclosureBullets = DATA_DISCLOSURE_BULLETS,
                 dataDisclosureFooter = DATA_DISCLOSURE_FOOTER,
                 richPushActivity = ShellSurfaceScreen::class.java,
@@ -140,11 +160,15 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         )
         
         
+        // A device flagged as a reinstall is classified organic before the forced source is read;
+        // clearing the flag lets the forced source win.
         if (PromoAnchorActivity.isAudienceForced) {
+            LightHouse.debugForceFlagged(false)
             LightHouse.debugForceInstallSource(
                 if (PromoAnchorActivity.DEBUG_AUDIENCE_MARKETING) "paid" else "organic"
             )
         }
+        LightHouse.debugForceFlagged(false)
         LightHouse.debugForceInstallSource("paid")
         CoroutineScope(Dispatchers.Main).launch {
             try {
@@ -152,7 +176,15 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
                 PermitEngine.init(this@LookupCoreApp)
             } catch (e: Exception) {
-                LogRail.log("CallerPhoneLookApp", "LightHouse init failed: ${e.message}")
+                LogRail.error("CallerPhoneLookApp", "Firebase / PermitEngine init failed", e)
+            }
+        }
+
+        // A config ingested while the launcher home is on screen takes effect at once.
+        PromoConfigLoader.onApplied = {
+            CrashKeys.update(this)
+            (currentActivity as? LauncherPanel)?.takeIf { !it.isFinishing && !it.isDestroyed }?.let { home ->
+                if (!home.reapplyLauncherStyle()) home.onConfigUpdated()
             }
         }
 
@@ -160,6 +192,7 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onStart(owner: LifecycleOwner) {
+                    CrashKeys.update(this@LookupCoreApp)
                     handleAppForeground()
                     
                     LiveConfigListener.start(this@LookupCoreApp)
@@ -228,6 +261,16 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
             return
         }
 
+        // Every return refills what the session has used up.
+        AdPreloader.topUp(activity)
+
+        // Back from an ad's own click-out, or an ad is still up: never an App Open on top of it.
+        if (AdsGate.isFullScreenShowing) {
+            LogRail.log("AppOpen", "⛔ A full-screen ad is showing")
+            OpenPromoRegistry.consumeExpectReturnAd()
+            return
+        }
+
         if (OpenPromoRegistry.skipNextAppOpenAd) {
             OpenPromoRegistry.skipNextAppOpenAd = false
             // A programmatic return is not monetised, so drop the launch flag too.
@@ -241,6 +284,11 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // sequence (App Open / interstitial / directlink fallback, counter-gated). The directlink, if
         // it wins the sequence, opens on the way back — never at the same time as the app it launched.
         if (OpenPromoRegistry.consumeExpectReturnAd()) {
+            // Unlocked back onto the launcher: the unlock ad is this moment's one ad.
+            if (UnlockAdWatcher.claimsForeground()) {
+                LogRail.log("AppOpen", "⛔ Return ad skipped — unlock ad owns this foreground")
+                return
+            }
             LogRail.log("AppOpen", "↩ other_app_return")
             activity.runWhenWindowFocused {
                 if (activity.isFinishing || activity.isDestroyed) return@runWhenWindowFocused
@@ -255,6 +303,18 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
         // would fire on every glance at the home screen).
         if (activity is LauncherPanel || activity is ShellSurfaceScreen) {
             LogRail.log("AppOpen", "⛔ Excluded screen")
+            return
+        }
+
+        // Ad pages, screens with their own ad, pages over another app: no App Open stacked on them.
+        if (AdSurfaces.isExcluded(activity)) {
+            LogRail.log("AppOpen", "⛔ Excluded screen (${activity::class.java.simpleName})")
+            return
+        }
+
+        // Just unlocked onto our home: the unlock ad is this moment's one ad, not both.
+        if (UnlockAdWatcher.claimsForeground()) {
+            LogRail.log("AppOpen", "⛔ Unlock ad owns this foreground")
             return
         }
 
@@ -305,6 +365,8 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
         } else {
             LogRail.log("AppOpen", "❌ Ad NOT shown (conditions failed)")
+            // Not loaded (or expired): load now for the next return.
+            if (adType == PromoKind.GOOGLE && !OpenPromoRegistry.isShowingAd) OpenPromoRegistry.loadAd(activity)
         }
     }
 
@@ -314,7 +376,12 @@ class LookupCoreApp : Application() , Application.ActivityLifecycleCallbacks,
 
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
-
+        // Consent + SDK start for sessions the splash never ran in (launcher after a reboot, a push).
+        if (AdSurfaces.isLanding(activity)) {
+            AdsGate.ensure(activity) {
+                activity.window?.decorView?.post { AdPreloader.topUp(activity) }
+            }
+        }
     }
 
     override fun onActivityDestroyed(activity: Activity) {

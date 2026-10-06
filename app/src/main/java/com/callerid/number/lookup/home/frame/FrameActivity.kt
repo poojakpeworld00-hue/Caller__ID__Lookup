@@ -128,6 +128,7 @@ abstract class FrameActivity<DB : ViewDataBinding> : PromoAnchorActivity() {
     }
 
     protected fun placeCall(number: String) {
+        com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
         if (number.isBlank()) return
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
             == PackageManager.PERMISSION_GRANTED

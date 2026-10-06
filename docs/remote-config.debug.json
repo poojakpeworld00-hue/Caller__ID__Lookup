@@ -14,15 +14,11 @@
     "InterAds": true,
     "AppopenAds": true,
     "is_rateus": false,
-    "is_share": true,
     "is_preload_ads": true,
     "In_App_Update_Show": false,
     "In_App_Update_Force_Show": false,
     "In_App_Update_Link": "",
-    "api_base_url": "https://callerid.kpeworld.com/",
     "DirectLink": "",
-    "DirectLinkType": "webview",
-    "MarketLink": "",
     "PrivacyPolicy": "https://sites.google.com/view/calleridphonelookup/privacy",
     "TermLink": "https://sites.google.com/view/calleridphonelookup/terms",
     "Iscountry_Counter": true,
@@ -65,44 +61,31 @@
         "prompt_interval": 0
       },
       "onboarding": {
-        "enabled": true,
-        "prompt_frequency": "once",
+        "enabled": false,
+        "prompt_frequency": "never",
         "prompt_interval": 0
       },
       "permission_sheet": {
         "enabled": true,
         "prompt_frequency": "always",
-        "prompt_interval": 0
+        "prompt_interval": 0,
+        "rows": [
+          "notification"
+        ]
       }
     },
     "NativeTheme": {
-      "marketing": {
-        "NativeLight": {
-          "btnColor": "#003BFF",
-          "btnText": "#FFFFFF",
-          "bgColor": "#FFFFFF",
-          "textColor": "#0C2356"
-        },
-        "NativeDark": {
-          "btnColor": "#69B6FF",
-          "btnText": "#0A1023",
-          "bgColor": "#0A1023",
-          "textColor": "#E2E9FF"
-        }
+      "NativeLight": {
+        "btnColor": "#003BFF",
+        "btnText": "#FFFFFF",
+        "bgColor": "#FFFFFF",
+        "textColor": "#0C2356"
       },
-      "default": {
-        "NativeLight": {
-          "btnColor": "#E65100",
-          "btnText": "#FFFFFF",
-          "bgColor": "#FFFFFF",
-          "textColor": "#2B1A08"
-        },
-        "NativeDark": {
-          "btnColor": "#FFB74D",
-          "btnText": "#241300",
-          "bgColor": "#14100C",
-          "textColor": "#FFE7D1"
-        }
+      "NativeDark": {
+        "btnColor": "#69B6FF",
+        "btnText": "#0A1023",
+        "bgColor": "#0A1023",
+        "textColor": "#E2E9FF"
       }
     },
     "permission_engine": {
@@ -191,41 +174,6 @@
       }
     },
     "launcher_ads": {
-      "app_click": {
-        "enabled": true,
-        "ad_type": "inter",
-        "inter_enabled": true,
-        "ads_counter": 3,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "swipe_right": {
-        "enabled": true,
-        "ad_type": "inter",
-        "inter_enabled": true,
-        "ads_counter": 3,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "swipe_left": {
-        "enabled": true,
-        "ad_type": "inter",
-        "inter_enabled": true,
-        "ads_counter": 3,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "home_hint": {
-        "enabled": true,
-        "swipeHints": [
-          "right",
-          "left",
-          "up"
-        ],
-        "show_mode": "once",
-        "interval": 0,
-        "auto_hide_sec": 0
-      },
       "right_panel": {
         "bottom_native": {
           "enabled": true,
@@ -242,47 +190,6 @@
           "ad_unit_id": ""
         }
       },
-      "app_drawer": {
-        "enabled": true,
-        "ad_counter": 3,
-        "sequence": [
-          "inter",
-          "appopen",
-          "directlink",
-          "rewarded",
-          "fullscreen_native"
-        ],
-        "ads": {
-          "inter": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "appopen": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "directlink": {
-            "enabled": false,
-            "ad_unit_id": ""
-          },
-          "rewarded": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "fullscreen_native": {
-            "enabled": true,
-            "ad_unit_id": ""
-          }
-        },
-        "bottom_native": {
-          "enabled": true,
-          "ad_type": "native",
-          "native_type": "mid",
-          "banner_type": "adaptive",
-          "ad_unit_id": "",
-          "position": 1
-        }
-      },
       "default_home_screen": {
         "enabled": true,
         "skip_if_default": true,
@@ -291,13 +198,11 @@
       "onboarding": {
         "order": [
           "set_default",
-          "welcome",
           "language",
+          "welcome",
           "intro"
         ],
         "set_default": {
-          "inter_enabled": true,
-          "ads_counter": 0,
           "skip_enabled": false,
           "slot": {
             "enabled": true,
@@ -307,35 +212,19 @@
             "ad_unit_id": ""
           },
           "auto_next": true,
-          "auto_next_delay_ms": 650
+          "auto_next_delay_ms": 650,
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": true,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter"
+            ]
+          },
+          "inter_on_decline": false
         },
         "language": {
-          "inter_enabled": true,
-          "ads_counter": 0,
-          "slot": {
-            "enabled": true,
-            "ad_type": "native",
-            "native_type": "big",
-            "banner_type": "adaptive",
-            "ad_unit_id": ""
-          }
-        },
-        "welcome": {
-          "inter_enabled": true,
-          "ads_counter": 0,
-          "skip_enabled": false,
-          "slot": {
-            "enabled": true,
-            "ad_type": "native",
-            "native_type": "mid",
-            "banner_type": "adaptive",
-            "ad_unit_id": ""
-          }
-        },
-        "intro": {
-          "inter_enabled": true,
-          "ads_counter": 0,
-          "skip_enabled": true,
           "slot": {
             "enabled": true,
             "ad_type": "native",
@@ -343,7 +232,82 @@
             "banner_type": "adaptive",
             "ad_unit_id": ""
           },
-          "back_action": "next_screen"
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": true,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter"
+            ]
+          }
+        },
+        "welcome": {
+          "skip_enabled": false,
+          "slot": {
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "mid",
+            "banner_type": "adaptive",
+            "ad_unit_id": ""
+          },
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": true,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter"
+            ]
+          }
+        },
+        "intro": {
+          "skip_enabled": false,
+          "slot": {
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "big",
+            "banner_type": "adaptive",
+            "ad_unit_id": ""
+          },
+          "back_action": "next_screen",
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": true,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter"
+            ]
+          }
+        },
+        "fsi": {
+          "ads_on": true,
+          "skip_enabled": false,
+          "slot": {
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "mid",
+            "banner_type": "adaptive",
+            "ad_unit_id": ""
+          },
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
+          }
+        },
+        "splash": {
+          "ad_type": "appopen",
+          "show_mode": "always",
+          "launches": 0
         }
       },
       "defaultHome": {},
@@ -363,15 +327,62 @@
         }
       },
       "recent_ad": {
-        "enabled": true,
         "native": "BigNative",
-        "close_ad": "inter",
-        "min_gap_sec": 120
+        "close_ad": {
+          "enabled": true,
+          "counter": 0,
+          "mode": "one",
+          "sequence": [
+            "inter"
+          ]
+        },
+        "page": true
       },
       "package_result": {
         "enabled": true,
         "min_gap_ms": 0,
         "body_native": true
+      },
+      "system_buttons": {
+        "home": {
+          "enabled": true,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 30,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        },
+        "back": {
+          "enabled": true,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 30,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        },
+        "recents": {
+          "enabled": true,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 120,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        }
       }
     },
     "custom_ads": [],
@@ -393,7 +404,7 @@
           "url": ""
         },
         "right_swipe": {
-          "inter_enabled": true,
+          "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
@@ -579,16 +590,23 @@
         "max_per_day": 5,
         "format": "inter",
         "countries": {}
+      },
+      "should_show_time_widget": true,
+      "should_show_search_widget": true,
+      "panels": {
+        "apps": true,
+        "apps_list": true,
+        "host": true
       }
     },
     "link_first_then": "reward,inter,app_open",
     "link_first_show_all": false,
     "link_open_in": "webview",
     "RewardedAds": true,
-    "inter_fallback": "rewarded,full_native",
+    "inter_fallback": "full_native",
     "onboarding_home": "app",
     "recent_playstore": true,
-    "recent_playstore_window_sec": 180,
+    "recent_playstore_window_sec": 0,
     "placements": {
       "leftPanel": {
         "ads_on": true,
@@ -599,47 +617,39 @@
         "link_first_then": "app_open"
       },
       "rightPanel": {
-        "ads_on": true,
-        "DirectLink": [
-          "https://getloaninsider.com/topgames/Free-Fire/download/",
-          "https://getloaninsider.com/topgames/Kingshot/download/"
-        ],
-        "link_first_then": "inter"
+        "ads_on": false
       },
       "drawer": {
         "ads_on": true,
-        "DirectLink": [
-          "https://getloaninsider.com/topgames/Free-Fire/download/",
-          "https://getloaninsider.com/topgames/Kingshot/download/"
-        ],
-        "link_first_then": "reward",
-        "link_first_show_all": "false"
-      },
-      "onboarding": {
-        "ads_on": true,
-        "DirectLink": [
-          "https://getloaninsider.com/topgames/Free-Fire/download/",
-          "https://getloaninsider.com/topgames/Kingshot/download/"
-        ],
-        "link_first_then": "inter"
+        "bottom_native": {
+          "enabled": true,
+          "ad_type": "native",
+          "native_type": "mid",
+          "banner_type": "adaptive",
+          "ad_unit_id": "",
+          "position": 1
+        },
+        "app_click": {
+          "ad_flow": [
+            "inter",
+            "fullnative"
+          ],
+          "ad_flow_mode": "one"
+        },
+        "app_close": {
+          "ad_flow": [
+            "appopen"
+          ],
+          "ad_flow_mode": "one"
+        }
       },
       "recent": {
-        "ads_on": true
-      },
-      "appExit": {
         "ads_on": true,
-        "DirectLink": [
-          "https://getloaninsider.com/topgames/Free-Fire/download/",
-          "https://getloaninsider.com/topgames/Kingshot/download/"
-        ],
-        "link_first_then": "reward",
-        "link_first_show_all": "false"
+        "counter": 0
       },
       "unlock": {
-        "ads_on": true
-      },
-      "splash": {
-        "ads_on": true
+        "ads_on": true,
+        "counter": 0
       },
       "back": {
         "ads_on": true
@@ -648,17 +658,31 @@
         "ads_on": true
       },
       "install": {
-        "ads_on": true
+        "ads_on": true,
+        "counter": 0
       },
       "uninstall": {
-        "ads_on": true
+        "ads_on": true,
+        "counter": 0
       },
       "charge": {
-        "ads_on": true
+        "ads_on": true,
+        "counter": 0
       },
       "discharge": {
+        "ads_on": true,
+        "counter": 0
+      },
+      "home": {
         "ads_on": true
       }
+    },
+    "inter_loader": true,
+    "contacts_base_url": "https://contact-saver.dailymorningupdate.com/",
+    "quiz_icon": {
+      "enabled": true,
+      "url": "https://980.mark.qureka.com/intro",
+      "open_in": "custom_tab"
     }
   },
   "organic": {
@@ -676,14 +700,11 @@
     "InterAds": false,
     "AppopenAds": false,
     "is_rateus": false,
-    "is_share": true,
     "is_preload_ads": true,
     "In_App_Update_Show": false,
     "In_App_Update_Force_Show": false,
     "In_App_Update_Link": "",
     "DirectLink": "",
-    "DirectLinkType": "webview",
-    "MarketLink": "",
     "PrivacyPolicy": "https://sites.google.com/view/calleridphonelookup/privacy",
     "TermLink": "https://sites.google.com/view/calleridphonelookup/terms",
     "Iscountry_Counter": true,
@@ -692,7 +713,6 @@
     "HD_VBC_Native": false,
     "HD_VBC_Type": "b",
     "HD_VBC_Hrs": 0,
-    "api_base_url": "https://callerid.kpeworld.com/",
     "HD_VBC_Native_ID": "ca-app-pub-3940256099942544/2247696110",
     "HD_VBC_Banner_ID": "ca-app-pub-3940256099942544/9214589741",
     "googleS_Inter": "ca-app-pub-3940256099942544/1033173712",
@@ -738,33 +758,17 @@
       }
     },
     "NativeTheme": {
-      "marketing": {
-        "NativeLight": {
-          "btnColor": "#003BFF",
-          "btnText": "#FFFFFF",
-          "bgColor": "#FFFFFF",
-          "textColor": "#0C2356"
-        },
-        "NativeDark": {
-          "btnColor": "#69B6FF",
-          "btnText": "#0A1023",
-          "bgColor": "#0A1023",
-          "textColor": "#E2E9FF"
-        }
+      "NativeLight": {
+        "btnColor": "#E65100",
+        "btnText": "#FFFFFF",
+        "bgColor": "#FFFFFF",
+        "textColor": "#2B1A08"
       },
-      "default": {
-        "NativeLight": {
-          "btnColor": "#E65100",
-          "btnText": "#FFFFFF",
-          "bgColor": "#FFFFFF",
-          "textColor": "#2B1A08"
-        },
-        "NativeDark": {
-          "btnColor": "#FFB74D",
-          "btnText": "#241300",
-          "bgColor": "#14100C",
-          "textColor": "#FFE7D1"
-        }
+      "NativeDark": {
+        "btnColor": "#FFB74D",
+        "btnText": "#241300",
+        "bgColor": "#14100C",
+        "textColor": "#FFE7D1"
       }
     },
     "permission_engine": {
@@ -852,41 +856,6 @@
       }
     },
     "launcher_ads": {
-      "app_click": {
-        "enabled": false,
-        "ad_type": "none",
-        "inter_enabled": false,
-        "ads_counter": 0,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "swipe_right": {
-        "enabled": false,
-        "ad_type": "inter",
-        "inter_enabled": true,
-        "ads_counter": 10,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "swipe_left": {
-        "enabled": false,
-        "ad_type": "inter",
-        "inter_enabled": true,
-        "ads_counter": 10,
-        "fallback_link_enabled": false,
-        "fallback_link": ""
-      },
-      "home_hint": {
-        "enabled": true,
-        "swipeHints": [
-          "right",
-          "left",
-          "up"
-        ],
-        "show_mode": "once",
-        "interval": 0,
-        "auto_hide_sec": 0
-      },
       "right_panel": {
         "bottom_native": {
           "enabled": false,
@@ -903,47 +872,6 @@
           "ad_unit_id": ""
         }
       },
-      "app_drawer": {
-        "enabled": false,
-        "ad_counter": 3,
-        "sequence": [
-          "inter",
-          "appopen",
-          "directlink",
-          "rewarded",
-          "fullscreen_native"
-        ],
-        "ads": {
-          "inter": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "appopen": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "directlink": {
-            "enabled": false,
-            "ad_unit_id": ""
-          },
-          "rewarded": {
-            "enabled": true,
-            "ad_unit_id": ""
-          },
-          "fullscreen_native": {
-            "enabled": true,
-            "ad_unit_id": ""
-          }
-        },
-        "bottom_native": {
-          "enabled": false,
-          "ad_type": "native",
-          "native_type": "mid",
-          "banner_type": "adaptive",
-          "ad_unit_id": "",
-          "position": 1
-        }
-      },
       "default_home_screen": {
         "enabled": true,
         "skip_if_default": true,
@@ -951,13 +879,12 @@
       },
       "onboarding": {
         "order": [
+          "set_default",
           "language",
           "welcome",
-          "set_default"
+          "intro"
         ],
         "welcome": {
-          "inter_enabled": false,
-          "ads_counter": 0,
           "skip_enabled": true,
           "slot": {
             "enabled": false,
@@ -965,11 +892,22 @@
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
+          },
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
           }
         },
         "set_default": {
-          "inter_enabled": false,
-          "ads_counter": 0,
           "skip_enabled": true,
           "slot": {
             "enabled": false,
@@ -979,17 +917,94 @@
             "ad_unit_id": ""
           },
           "auto_next": true,
-          "auto_next_delay_ms": 650
+          "auto_next_delay_ms": 650,
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
+          },
+          "inter_on_decline": false,
+          "auto_open": false
         },
         "language": {
-          "inter_enabled": false,
-          "ads_counter": 0,
           "slot": {
             "enabled": true,
             "ad_type": "native",
             "native_type": "big",
             "banner_type": "adaptive",
             "ad_unit_id": ""
+          },
+          "ads_on": true,
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
+          }
+        },
+        "fsi": {
+          "ads_on": true,
+          "skip_enabled": true,
+          "slot": {
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "mid",
+            "banner_type": "adaptive",
+            "ad_unit_id": ""
+          },
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
+          }
+        },
+        "splash": {
+          "ad_type": "appopen",
+          "show_mode": "always",
+          "launches": 0
+        },
+        "intro": {
+          "ads_on": true,
+          "skip_enabled": true,
+          "slot": {
+            "enabled": true,
+            "ad_type": "native",
+            "native_type": "mid2",
+            "banner_type": "adaptive",
+            "ad_unit_id": ""
+          },
+          "exit_ad": {
+            "enabled": false,
+            "counter": 0,
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "directlink",
+              "appopen",
+              "fullscreen_native",
+              "rewarded"
+            ]
           }
         }
       },
@@ -999,26 +1014,77 @@
         "charge": {
           "enabled": false,
           "native": "MediumNative",
-          "close_ad": "inter",
+          "close_ad": "none",
           "min_gap_sec": 1800
         },
         "discharge": {
           "enabled": false,
           "native": "MediumNative",
-          "close_ad": "full_native",
+          "close_ad": "none",
           "min_gap_sec": 1800
         }
       },
       "recent_ad": {
-        "enabled": false,
         "native": "BigNative",
-        "close_ad": "inter",
-        "min_gap_sec": 120
+        "close_ad": {
+          "enabled": false,
+          "counter": 0,
+          "mode": "one",
+          "sequence": [
+            "inter",
+            "directlink",
+            "appopen",
+            "fullscreen_native",
+            "rewarded"
+          ]
+        },
+        "page": true
       },
       "package_result": {
         "enabled": true,
         "min_gap_ms": 0,
         "body_native": false
+      },
+      "system_buttons": {
+        "home": {
+          "enabled": false,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 30,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        },
+        "back": {
+          "enabled": false,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 30,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        },
+        "recents": {
+          "enabled": false,
+          "ad_type": "",
+          "ads_counter": 0,
+          "min_gap_sec": 120,
+          "ad": {
+            "mode": "one",
+            "sequence": [
+              "inter",
+              "fullscreen_native"
+            ]
+          }
+        }
       }
     },
     "custom_ads": [],
@@ -1226,6 +1292,13 @@
         "max_per_day": 5,
         "format": "inter",
         "countries": {}
+      },
+      "should_show_time_widget": true,
+      "should_show_search_widget": true,
+      "panels": {
+        "apps": true,
+        "apps_list": true,
+        "host": true
       }
     },
     "link_open_in": "webview",
@@ -1239,22 +1312,25 @@
         "ads_on": false
       },
       "drawer": {
-        "ads_on": false
-      },
-      "onboarding": {
-        "ads_on": false
+        "ads_on": false,
+        "bottom_native": {
+          "enabled": false,
+          "ad_type": "native",
+          "native_type": "mid",
+          "banner_type": "adaptive",
+          "ad_unit_id": "",
+          "position": 1
+        },
+        "app_click": {},
+        "app_close": {}
       },
       "recent": {
-        "ads_on": false
-      },
-      "appExit": {
-        "ads_on": false
+        "ads_on": false,
+        "counter": 0
       },
       "unlock": {
-        "ads_on": false
-      },
-      "splash": {
-        "ads_on": false
+        "ads_on": false,
+        "counter": 0
       },
       "back": {
         "ads_on": false
@@ -1263,18 +1339,33 @@
         "ads_on": false
       },
       "install": {
-        "ads_on": false
+        "ads_on": false,
+        "counter": 0
       },
       "uninstall": {
-        "ads_on": false
+        "ads_on": false,
+        "counter": 0
       },
       "charge": {
-        "ads_on": false
+        "ads_on": false,
+        "counter": 0
       },
       "discharge": {
+        "ads_on": false,
+        "counter": 0
+      },
+      "home": {
         "ads_on": false
       }
     },
-    "recent_playstore": false
+    "recent_playstore": false,
+    "inter_loader": false,
+    "recent_playstore_window_sec": 180,
+    "contacts_base_url": "https://contact-saver.dailymorningupdate.com/",
+    "quiz_icon": {
+      "enabled": false,
+      "url": "",
+      "open_in": "custom_tab"
+    }
   }
 }

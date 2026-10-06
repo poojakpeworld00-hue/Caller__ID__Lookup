@@ -61,6 +61,7 @@
     <string name="nav_contacts">संपर्क</string>
     <string name="nav_lookup">लुकअप</string>
     <string name="nav_settings">सेटिंग्स</string>
+    <string name="home_quiz">क्विज़ खेलें</string>
 
     
     <string name="call_incoming">इनकमिंग कॉल…</string>
@@ -255,6 +256,7 @@
     <string name="settings_share_sub">आगे बढ़ाएँ — किसी अपने की कॉल सुरक्षित करवाएँ।</string>
     <string name="settings_share_text">अनजान कॉल करने वालों को नाम दें और परेशान करने वाली कॉल रोकें, Caller ID Lookup के साथ: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">गोपनीयता नीति</string>
+    <string name="settings_ad_privacy">विज्ञापन गोपनीयता विकल्प</string>
     <string name="settings_terms">सेवा की शर्तें</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

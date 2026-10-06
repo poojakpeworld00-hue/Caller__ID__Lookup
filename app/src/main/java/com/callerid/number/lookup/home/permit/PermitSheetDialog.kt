@@ -170,7 +170,8 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
                 R.drawable.sym_apps, isOverlay = true,
             )
         }
-        return list
+        // `intro_display.permission_sheet.rows` narrows the list (e.g. notification only).
+        return list.filter { rowAllowed(ctx, it.key) }
     }
 
     private fun isGranted(row: Row): Boolean {
@@ -337,20 +338,24 @@ class PermitSheetDialog : BottomSheetDialogFragment() {
             fun granted(perm: String) =
                 ContextCompat.checkSelfPermission(activity, perm) == PackageManager.PERMISSION_GRANTED
 
-            
-            if (PermitKit.isOfferable(activity, "notification") &&
+            fun allowed(key: String) = rowAllowed(activity, key)
+            if (allowed("notification") && PermitKit.isOfferable(activity, "notification") &&
                 !granted(Manifest.permission.POST_NOTIFICATIONS) &&
                 !isPermanentlyDenied(activity, "notification", Manifest.permission.POST_NOTIFICATIONS)
             ) return true
-            if (PermitKit.isOfferable(activity, "phone_state") &&
+            if (allowed("phone_state") && PermitKit.isOfferable(activity, "phone_state") &&
                 !granted(Manifest.permission.READ_PHONE_STATE) &&
                 !isPermanentlyDenied(activity, "phone_state", Manifest.permission.READ_PHONE_STATE)
             ) return true
-            if (!granted(Manifest.permission.READ_CALL_LOG)) return true
-            if (!granted(Manifest.permission.READ_CONTACTS)) return true
-            if (OverlayKit.isOfferable(activity) && !OverlayKit.isGranted(activity)) return true
+            if (allowed("call_log") && !granted(Manifest.permission.READ_CALL_LOG)) return true
+            if (allowed("contacts") && !granted(Manifest.permission.READ_CONTACTS)) return true
+            if (allowed("overlay") && OverlayKit.isOfferable(activity) && !OverlayKit.isGranted(activity)) return true
             return false
         }
+
+        /** Whether `intro_display.permission_sheet.rows` lets the sheet list [key]; no `rows` = every row. */
+        private fun rowAllowed(context: android.content.Context, key: String): Boolean =
+            RevealConfig.permissionSheetRows(context)?.contains(key) ?: true
 
         @JvmStatic
         fun isPermanentlyDenied(activity: FragmentActivity, key: String, perm: String): Boolean {

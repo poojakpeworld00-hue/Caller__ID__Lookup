@@ -14,7 +14,7 @@ import com.callerid.number.lookup.home.screen.shared.CallFormatter
 import com.callerid.number.lookup.home.screen.identify.DialCountries
 import com.callerid.number.lookup.home.screen.identify.NumberInfo
 import com.callerid.number.lookup.home.store.StorageRegistry
-import com.callerid.number.lookup.home.wire.LookupPayload
+import com.callerid.number.lookup.home.wire.LookupResponse
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -75,8 +75,10 @@ object IdentOverlayCard {
         if (local.known) return
 
         val remote = withContext(Dispatchers.IO) { lookupOnline(context, number) } ?: return
-        val name = remote.name?.trim()?.takeIf { it.isNotBlank() }
-        val spam = remote.is_spam || remote.is_user_spam
+        val rows = remote.data.orEmpty()
+        val name = rows.firstNotNullOfOrNull { row -> row.name?.trim()?.takeIf { n -> n.any(Char::isLetter) } }
+        val first = rows.firstOrNull()
+        val spam = remote.spam || first?.is_spam == true || first?.is_user_spam == true
         if (name == null && !spam) return
 
         bind(
@@ -91,32 +93,27 @@ object IdentOverlayCard {
     }
 
     /**
-     * The search screen's `api/similar-phone-number` call, for one number.
+     * The search screen's `similar-phone-number` call, for one number.
      *
-     * Returns the first match, which is the API's own best guess; the alternate names it
-     * lists below that are for the search result page, not a card the user reads mid-ring.
+     * The caller takes the first named match, which is the API's own best guess; the alternate
+     * names it lists below that are for the search result page, not a card the user reads mid-ring.
      * Any failure — no credentials, no network, a slow server — is a null, and the card
      * keeps whatever the device could tell it.
      */
-    private suspend fun lookupOnline(context: Context, number: String): LookupPayload? =
+    private suspend fun lookupOnline(context: Context, number: String): LookupResponse? =
         runCatching {
             if (!ApiCredentials.isConfigured) {
-                Log.w(TAG, "lookup skipped: API credentials are placeholders")
+                Log.w(TAG, "lookup skipped: no API key configured")
                 return@runCatching null
             }
             val response = withTimeout(LOOKUP_TIMEOUT_MS) {
-                HttpClientFactory.api.checkPhoneNumber(
-                    id = ApiCredentials.API_ID,
-                    phone = e164(context, number),
-                    hashKey = ApiCredentials.API_HASH,
-                    token = ApiCredentials.API_TOKEN,
-                )
+                HttpClientFactory.api.checkPhoneNumber(phone = e164(context, number))
             }
             if (!response.isSuccessful) {
                 Log.w(TAG, "lookup failed (${response.code()})")
                 return@runCatching null
             }
-            response.body()?.data?.firstOrNull()
+            response.body()
         }.onFailure { Log.w(TAG, "lookup error: ${it.message}") }.getOrNull()
 
     /**

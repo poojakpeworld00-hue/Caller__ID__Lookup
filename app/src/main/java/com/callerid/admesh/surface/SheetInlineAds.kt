@@ -48,7 +48,10 @@ class SheetInlineAds {
         isCollapsible: Boolean = false
     ) {
         val adsPref = PromoVault.getInstance(activity)
-        if (!adsPref.getBoolean("IsAdsON")) {
+        // Same switches as every other banner, and consent.
+        if (!adsPref.getBoolean("IsAdsON") || !adsPref.getBoolean("BannerAds") ||
+            !hasNetwork(activity) || !com.callerid.admesh.engine.AdsGate.canRequestAds(activity)
+        ) {
             removeAd(adContainer)
             return
         }
@@ -313,7 +316,10 @@ class SheetInlineAds {
             return
         }
 
-        if (!adsPreference.getBoolean("IsAdsON")) {
+        if (!adsPreference.getBoolean("IsAdsON") || !adsPreference.getBoolean("NativeAd") ||
+            !adsPreference.getBoolean("HD_VBC_Native") ||
+            !com.callerid.admesh.engine.AdsGate.canRequestAds(context)
+        ) {
             Log.w("987654321", "Native Ads Off")
             layout.removeAllViews()
             layout.invisible()
@@ -456,32 +462,6 @@ class SheetInlineAds {
 
             (binding.mainNativeadView.headlineView as TextView).text = nativeAd.headline
             binding.mainNativeadView.mediaView?.mediaContent = nativeAd.mediaContent
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(
-                Color.parseColor(
-                    PromoVault.getInstance(context).getString("NativeBgColor")
-                )
-            )
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(
-                Color.parseColor(
-                    PromoVault.getInstance(context).getString("NativebtnColor")
-                )
-            )
-            val txtColor =
-                PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-            val btntxtColor =
-                PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#000000"
-
-            (binding.mainNativeadView.headlineView as TextView).apply {
-                setTextColor(Color.parseColor(txtColor))
-            }
-
-            (binding.mainNativeadView.bodyView as TextView).apply {
-                setTextColor(Color.parseColor(txtColor))
-            }
-
-            (adCallToAction as TextView).apply {
-                setTextColor(Color.parseColor(btntxtColor))
-            }
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.bodyView as TextView).text = nativeAd.body
@@ -497,6 +477,8 @@ class SheetInlineAds {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
+
+            NativeAdLook.bind(binding.mainNativeadView, nativeAd)
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }

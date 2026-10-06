@@ -41,13 +41,18 @@ object LiveConfigListener {
                 object : ConfigUpdateListener {
                     override fun onUpdate(configUpdate: ConfigUpdate) {
                         LogRail.log(TAG, "config update: ${configUpdate.updatedKeys}")
-                        
-                        if (configUpdate.updatedKeys.none { it == blobKey() || it == RC_PERMISSION_KEY }) {
-                            LogRail.log(TAG, "none of those is ${blobKey()} → ignored")
-                            return
-                        }
+                        // Always activated: launcher_config / ads_config are read straight from
+                        // Remote Config, so activating is all a change to them needs.
+                        val ingest = configUpdate.updatedKeys.any { it == blobKey() || it == RC_PERMISSION_KEY }
                         FirebaseRemoteConfig.getInstance().activate()
-                            .addOnCompleteListener { apply(app) }
+                            .addOnCompleteListener {
+                                if (ingest) {
+                                    apply(app)
+                                } else {
+                                    LogRail.log(TAG, "activated; ${blobKey()} unchanged → no re-ingest")
+                                    PromoConfigLoader.notifyApplied()
+                                }
+                            }
                     }
 
                     override fun onError(error: FirebaseRemoteConfigException) {
@@ -163,6 +168,7 @@ object LiveConfigListener {
             
             vault.putLong(LAST_SYNC_KEY, System.currentTimeMillis())
             LogRail.log(TAG, "applied live config (marketing=$onMarketing)")
+            PromoConfigLoader.notifyApplied()
         }.onFailure { LogRail.error(TAG, "live config could not be applied", it) }
     }
 }

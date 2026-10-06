@@ -120,12 +120,15 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         binding.rollRecent.layoutManager = LinearLayoutManager(requireContext())
         binding.rollRecent.adapter = recentAdapter
 
-        InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adRecentBannerVw, binding.adRecentShimmerVw)
+        // In the launcher the panel may still be parked off screen: the native waits for onShellShown.
+        if (homeShell?.isShellVisible != false) showRecentBanner() else recentBannerPending = true
         binding.adNativeDividerVw.followAdContainer(binding.adRecentBannerVw)
         binding.adNativeDivider1Vw.followAdContainer(binding.adRecentBannerVw)
         binding.padSettings.setOnClickListener {
             requireActivity().openActivity<SettingsHubActivity>()
         }
+        binding.padQuiz.visibility = if (QuizIcon.isVisible(requireContext())) View.VISIBLE else View.GONE
+        binding.padQuiz.setOnClickListener { QuizIcon.open(requireActivity()) }
 
         binding.qaDialerVw.root.setOnClickListener {
             withCorePermissions { requireActivity().openActivity<DialPadActivity>() }
@@ -249,6 +252,17 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
         // Refresh recents when the caller panel opens so a call placed while it was closed shows.
         loadRecentIfAllowed()
         maybeShowSearchHint()
+        if (recentBannerPending && view != null) {
+            recentBannerPending = false
+            showRecentBanner()
+        }
+    }
+
+    private var recentBannerPending = false
+
+    private fun showRecentBanner() {
+        val activity = activity ?: return
+        InlinePromoStrip().renderNativeBanner(activity, binding.adRecentBannerVw, binding.adRecentShimmerVw)
     }
 
     /** True while the lookup search coach bubble is on screen (used to freeze the panel swipe). */
@@ -371,6 +385,14 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
     override fun onResume() {
         super.onResume()
+        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+        binding.homeGreetingVw.text = getString(
+            when {
+                hour < 12 -> io.launcher.home.R.string.launcher_greeting_morning
+                hour < 17 -> io.launcher.home.R.string.launcher_greeting_afternoon
+                else -> io.launcher.home.R.string.launcher_greeting_evening
+            }
+        ) + " 👋"
         loadRecentIfAllowed()
         refreshPermissionHint()
     }

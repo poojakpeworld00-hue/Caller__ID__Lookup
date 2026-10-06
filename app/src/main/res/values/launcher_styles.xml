@@ -19,7 +19,7 @@
 
     
     <style name="OnboardingButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/form_onboarding_cta</item>
+        <item name="android:background">@drawable/form_btn_primary</item>
         <item name="android:textColor">@color/cid_onb_on_cta</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">16sp</item>

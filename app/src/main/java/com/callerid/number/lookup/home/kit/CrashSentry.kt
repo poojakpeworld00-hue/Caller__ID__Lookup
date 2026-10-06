@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Process
 import android.util.Log
+import com.callerid.number.lookup.home.BuildConfig
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.launcher.home.extensions.isDefaultLauncher
 import com.callerid.number.lookup.home.screen.boot.LaunchGateActivity
 
@@ -24,8 +26,10 @@ object CrashSentry {
 
         Thread.setDefaultUncaughtExceptionHandler { thread, error ->
 
+            // Breadcrumb only: the chained Crashlytics handler records the fatal itself.
             runCatching {
-                LogRail.error(TAG, "Uncaught exception on thread '${thread.name}'", error)
+                if (BuildConfig.DEBUG) Log.e(TAG, "Uncaught exception on thread '${thread.name}'", error)
+                else FirebaseCrashlytics.getInstance().log("$TAG: uncaught on '${thread.name}'")
             }
 
             val restarting = runCatching {

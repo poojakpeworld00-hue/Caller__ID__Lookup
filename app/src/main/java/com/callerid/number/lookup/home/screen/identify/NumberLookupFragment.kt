@@ -397,6 +397,7 @@ class NumberLookupFragment : HolderFragment<BoardLookupBinding>() {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, details)
             }
+            com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
             startActivity(Intent.createChooser(intent, null))
         }
     }

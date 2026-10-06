@@ -11,43 +11,41 @@ import org.json.JSONObject
 
 private const val TAG = "NativeTheme"
 
-fun Context.applyNativeAdTheme(
-    theme: String = AppPrefs.selectedTheme(this).ifEmpty { THEME_SYSTEM }
-) {
-    val adsPref = PromoVault.getInstance(this)
-    val modeKey = when (theme) {
-        THEME_LIGHT -> "NativeLight"
-        THEME_DARK -> "NativeDark"
-        THEME_SYSTEM -> {
-            val isSystemDark =
-                (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                    Configuration.UI_MODE_NIGHT_YES
-            if (isSystemDark) "NativeDark" else "NativeLight"
-        }
+const val NATIVE_THEME_KEY = "NativeTheme"
 
-        else -> "NativeLight"
+fun Context.nativeThemeMode(
+    theme: String = AppPrefs.selectedTheme(this).ifEmpty { THEME_SYSTEM }
+): String = when (theme) {
+    THEME_DARK -> "NativeDark"
+    THEME_LIGHT -> "NativeLight"
+    THEME_SYSTEM -> {
+        val isSystemDark =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
+        if (isSystemDark) "NativeDark" else "NativeLight"
     }
 
+    else -> "NativeLight"
+}
+
+fun Context.applyNativeAdTheme(theme: String = AppPrefs.selectedTheme(this).ifEmpty { THEME_SYSTEM }) {
+    val adsPref = PromoVault.getInstance(this)
+    val modeKey = nativeThemeMode(theme)
+
     try {
-
-        val marketingJson = JSONObject(adsPref.getString("NativeTheme_marketing", "{}"))
-        val defaultJson = JSONObject(adsPref.getString("NativeTheme_default", "{}"))
-
-        val themeJson = if (adsPref.getBoolean("OnMaketing") && marketingJson.has(modeKey))
-            marketingJson.optJSONObject(modeKey)
-        else
-            defaultJson.optJSONObject(modeKey)
-
+        val palette = JSONObject(adsPref.getString(NATIVE_THEME_KEY, "{}").orEmpty().ifBlank { "{}" })
+        val themeJson = palette.optJSONObject(modeKey)
         if (themeJson == null) {
-
-            Log.d(TAG, "No $modeKey palette in NativeTheme_* — native colors left unchanged")
+            Log.d(TAG, "No $modeKey palette in $NATIVE_THEME_KEY — native colors left unchanged")
             return
         }
 
-        adsPref.putString("NativebtnColor", themeJson.optString("btnColor"))
-        adsPref.putString("NativebtntxtColor", themeJson.optString("btnText"))
-        adsPref.putString("NativeBgColor", themeJson.optString("bgColor"))
-        adsPref.putString("NativetxtColor", themeJson.optString("textColor"))
+        adsPref.update {
+            putString("NativebtnColor", themeJson.optString("btnColor"))
+            putString("NativebtntxtColor", themeJson.optString("btnText"))
+            putString("NativeBgColor", themeJson.optString("bgColor"))
+            putString("NativetxtColor", themeJson.optString("textColor"))
+        }
 
         Log.d(TAG, "Applied $modeKey theme to ads dynamically")
     } catch (e: Exception) {

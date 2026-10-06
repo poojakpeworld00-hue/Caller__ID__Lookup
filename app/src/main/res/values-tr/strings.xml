@@ -62,6 +62,7 @@
     <string name="nav_contacts">Kişiler</string>
     <string name="nav_lookup">Sorgula</string>
     <string name="nav_settings">Ayarlar</string>
+    <string name="home_quiz">Bilgi yarışması oyna</string>
 
     
     <string name="recents_today">Bugün</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">Haberi yayın — bir yakınınızın aramalarını da kapatın.</string>
     <string name="settings_share_text">Tanınmayan arayanları adlandırın, rahatsız edici aramaları savın: Caller ID Lookup https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Gizlilik Politikası</string>
+    <string name="settings_ad_privacy">Reklam gizliliği seçenekleri</string>
     <string name="settings_terms">Hizmet Şartları</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

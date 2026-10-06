@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ad_card_margin_h">16dp</dimen>
+    <dimen name="ad_card_margin_top">10dp</dimen>
+    <dimen name="ad_card_margin_bottom">14dp</dimen>
+    <dimen name="ad_card_elevation">3dp</dimen>
+</resources>

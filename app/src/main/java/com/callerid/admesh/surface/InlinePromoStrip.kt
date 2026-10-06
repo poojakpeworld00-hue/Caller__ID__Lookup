@@ -20,7 +20,7 @@ import com.callerid.admesh.engine.TAG_EVENT
 import com.callerid.admesh.engine.trackEvent
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.databinding.FacebookNativeBannerBinding
-import com.callerid.number.lookup.home.databinding.GooglesmallnativeBinding
+import com.callerid.number.lookup.home.databinding.GooglenativebannerBinding
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.facebook.ads.AdOptionsView
@@ -35,7 +35,24 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 
 class InlinePromoStrip {
     companion object {
-        private var nativeAdBanner: NativeAd? = null
+        private var cachedBanner: NativeAd? = null
+        private var cachedAt = 0L
+        private var isLoading = false
+        private const val MAX_AGE_MS = 60 * 60_000L
+
+        /** The pooled native banner, or null when there is none or it is older than an hour. */
+        private var nativeAdBanner: NativeAd?
+            get() {
+                if (cachedBanner != null && android.os.SystemClock.elapsedRealtime() - cachedAt > MAX_AGE_MS) {
+                    runCatching { cachedBanner?.destroy() }
+                    cachedBanner = null
+                }
+                return cachedBanner
+            }
+            set(value) {
+                cachedBanner = value
+                if (value != null) cachedAt = android.os.SystemClock.elapsedRealtime()
+            }
     }
 
     fun fetchNativeBannerAds(activity: Activity) {
@@ -43,13 +60,19 @@ class InlinePromoStrip {
         if (!adsPref.getBoolean("IsAdsON")) return
 
         if (!adsPref.getBoolean("NativeBanner")) return
+        if (!com.callerid.admesh.engine.AdsGate.canRequestAds(activity)) return
+        // Called on every foreground: keep a fresh one, and never stack requests.
+        if (nativeAdBanner != null || isLoading) return
 
         when (PromoKind.fromString(adsPref.getString("IsAdType"))) {
             PromoKind.GOOGLE -> {
-                val adUnitId = adsPref.getString("googleNative") ?: return
+                val adUnitId = adsPref.getString("googleNative").orEmpty()
+                if (adUnitId.isBlank()) return
+                isLoading = true
 
-                val adLoader = AdLoader.Builder(activity, adUnitId).forNativeAd { ad ->
-                    nativeAdBanner?.destroy()
+                val adLoader = AdLoader.Builder(activity.applicationContext, adUnitId).forNativeAd { ad ->
+                    isLoading = false
+                    cachedBanner?.destroy()
                     nativeAdBanner = ad
                     try {
                         activity.trackEvent("native_banner_load")
@@ -60,6 +83,7 @@ class InlinePromoStrip {
                 }.withAdListener(object : AdListener() {
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         Log.e("InlinePromoStrip", "Ad failed to load: ${error.message}")
+                        isLoading = false
                         nativeAdBanner = null
 
                         try {
@@ -130,7 +154,7 @@ class InlinePromoStrip {
                     try {
                         if (context.isFinishing || context.isDestroyed) return@post
                         if (nativeAdBanner != null) {
-                            val binding = GooglesmallnativeBinding.inflate(context.layoutInflater)
+                            val binding = GooglenativebannerBinding.inflate(context.layoutInflater)
                             bindGoogleNativeAd(nativeAdBanner!!, binding, context)
 
                             layout.removeAllViews()
@@ -183,7 +207,7 @@ class InlinePromoStrip {
     }
 
     private fun bindGoogleNativeAd(
-        nativeAd: NativeAd, binding: GooglesmallnativeBinding, context: Activity
+        nativeAd: NativeAd, binding: GooglenativebannerBinding, context: Activity
     ) {
 
         context.trackEvent("native_banner_show_google")
@@ -201,33 +225,6 @@ class InlinePromoStrip {
             mainNativeadView.iconView = adAppIcon
 
             (adHeadline as TextView).text = nativeAd.headline
-
-            val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
-            val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-
-            val txtColor =
-                PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-
-            (binding.mainNativeadView.headlineView as TextView).apply {
-                setTextColor(Color.parseColor(txtColor))
-            }
-
-            (binding.mainNativeadView.bodyView as TextView).apply {
-                setTextColor(Color.parseColor(txtColor))
-            }
-
-            val btntxtColor =
-                PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#000000"
-
-            (adCallToAction as TextView).apply {
-                setTextColor(Color.parseColor(btntxtColor))
-            }
-
-            mainNativeadView.backgroundTintList =
-                ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
-
-            adCallToAction.backgroundTintList =
-                ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
 
             if (nativeAd.body != null) {
                 adBody.visibility = View.VISIBLE
@@ -251,6 +248,8 @@ class InlinePromoStrip {
                 adCallToAction.visibility = View.GONE
             }
 
+            // Remote Config colours (theme fallback), rating line and CTA glow.
+            NativeAdLook.bind(mainNativeadView, nativeAd)
             mainNativeadView.setNativeAd(nativeAd)
         }
     }

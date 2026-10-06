@@ -16,6 +16,11 @@ val lhProps = Properties().apply {
 val lhApiKey: String = lhProps.getProperty("lighthouse.apiKey", "")
 val lhBaseUrl: String = lhProps.getProperty("lighthouse.baseUrl", "")
 
+val contactsApiKey: String = lhProps.getProperty("contactsaver.apiKey", "")
+if (contactsApiKey.isBlank()) {
+    logger.warn("WARNING: contactsaver.apiKey is missing from local.properties — number lookup and contact upload will fail at runtime.")
+}
+
 fun xorByteArrayLiteral(value: String, key: Int = 0x5A): String {
     if (value.isEmpty()) return "new byte[]{}"
     val parts = value.toByteArray(Charsets.UTF_8)
@@ -40,14 +45,15 @@ android {
         // shortcut + pinned-item APIs.
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // LightHouse credentials → obfuscated BuildConfig byte[] (decoded at runtime
         // by Obfuscated.s). buildConfig = true is enabled below.
         buildConfigField("byte[]", "LH_API_KEY", xorByteArrayLiteral(lhApiKey))
         buildConfigField("byte[]", "LH_BASE_URL", xorByteArrayLiteral(lhBaseUrl))
+        buildConfigField("byte[]", "CONTACTS_API_KEY", xorByteArrayLiteral(contactsApiKey))
     }
 
     buildTypes {

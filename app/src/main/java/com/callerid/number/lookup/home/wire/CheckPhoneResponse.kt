@@ -3,7 +3,16 @@ package com.callerid.number.lookup.home.wire
 data class LookupResponse(
     val success: Boolean,
     val count: Int = 0,
+    val country: String? = null,
+    val location: LookupLocation? = null,
+    val spam: Boolean = false,
     val data: List<LookupPayload>?
+)
+
+data class LookupLocation(
+    val city: String? = null,
+    val state: String? = null,
+    val pincode: String? = null
 )
 
 data class LookupPayload(

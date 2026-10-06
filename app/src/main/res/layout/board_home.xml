@@ -25,6 +25,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/homeGreetingVw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_greeting"
@@ -41,6 +42,19 @@
                 android:textColor="@color/on_surface"
                 android:textSize="@dimen/_16ssp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/padQuiz"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:background="@drawable/form_onb_circle_lavender"
+            android:contentDescription="@string/home_quiz"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/sym_quiz_game"
+            android:visibility="gone"
+            app:tint="@color/on_primary_container"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/padSettings"

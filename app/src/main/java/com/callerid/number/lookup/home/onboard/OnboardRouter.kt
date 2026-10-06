@@ -12,6 +12,7 @@ import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.engine.ShellPromoConfig.OnboardScreen
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.LogRail
 import io.launcher.home.activities.LauncherPanel
 import com.callerid.admesh.engine.PromoVault
@@ -60,6 +61,7 @@ object OnboardRouter {
 
     fun markOnboardingCompleted(context: Context) {
         context.getSharedPrefs().edit().putBoolean(WAS_ONBOARDING_COMPLETED, true).apply()
+        Analytics.endFirstSession()
     }
 
     fun goHome(activity: Activity) {
@@ -156,7 +158,20 @@ object OnboardRouter {
             return false
         }
 
-        val next = resolveFrom(activity, activity.getSharedPrefs().getInt(ONBOARDING_STEP, 0))
+        val step = activity.getSharedPrefs().getInt(ONBOARDING_STEP, 0)
+        // Role picked in the Settings list: the system started the launcher and the default-home
+        // screen never resumes, so its "Next" ad is owed to whichever screen comes up now.
+        if (ShellPromoConfig.onboardOrder(activity).getOrNull(step) == OnboardScreen.SET_DEFAULT &&
+            activity.isDefaultLauncher()
+        ) {
+            PromoVault.getInstance(activity).apply {
+                putBoolean(GRANT_AD_PENDING, true)
+                putLong(GRANT_AD_AT, System.currentTimeMillis())
+            }
+            log("role granted from Settings → grant ad pending")
+        }
+
+        val next = resolveFrom(activity, step)
         if (next == homeActivity()) {
             return false
         }
@@ -212,6 +227,58 @@ object OnboardRouter {
         OnboardScreen.SET_DEFAULT -> HomeRoleGateActivity::class.java
         OnboardScreen.INTRO -> SlideIntroActivity::class.java
         OnboardScreen.LANGUAGE -> LanguageSelectActivity::class.java
+        // Never in the order (inOrder = false): they place themselves.
+        OnboardScreen.FSI, OnboardScreen.SPLASH -> error("${screen.key} is not a step of onboarding.order")
+    }
+
+    private const val GRANT_AD_PENDING = "__set_default_grant_ad_pending"
+
+    /** When the grant was seen; the ad is owed to the next landing screen only. */
+    private const val GRANT_AD_AT = "__set_default_grant_ad_at"
+    private const val GRANT_AD_TTL_MS = 2 * 60_000L
+
+    /** The default-home screen ran its own "Next" ad; nothing is owed any more. */
+    fun clearGrantAd(context: Context) {
+        PromoVault.getInstance(context).putBoolean(GRANT_AD_PENDING, false)
+    }
+
+    /**
+     * Shows the default-home "Next" ad (`set_default`) on the first of our landing screens to resume
+     * after a grant made from the Settings list (see [resumeIfUnfinished]). Registered once.
+     */
+    fun registerGrantAd(app: android.app.Application) {
+        app.registerActivityLifecycleCallbacks(object : android.app.Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) {
+                val vault = PromoVault.getInstance(activity)
+                if (!vault.getBoolean(GRANT_AD_PENDING)) return
+                if (System.currentTimeMillis() - vault.getLong(GRANT_AD_AT, 0L) > GRANT_AD_TTL_MS) {
+                    vault.putBoolean(GRANT_AD_PENDING, false)
+                    return
+                }
+                // Only the launcher home or an onboarding step; never the Settings coach-mark or an ad page.
+                val landing = activity is LauncherPanel || activity is AppHomeActivity ||
+                    activity.intent?.getBooleanExtra(EXTRA_LAUNCHER_ONBOARDING, false) == true
+                // The default-home screen shows this ad itself (onResume → goHome); not twice.
+                if (activity is HomeRoleGateActivity) {
+                    vault.putBoolean(GRANT_AD_PENDING, false)
+                    return
+                }
+                if (!landing || activity.isFinishing) return
+                vault.putBoolean(GRANT_AD_PENDING, false)
+                log("grant ad → ${activity::class.java.simpleName}")
+                activity.window.decorView.post {
+                    if (activity.isFinishing || activity.isDestroyed) return@post
+                    ShellPromoConfig.runOnboardInterstitial(activity, OnboardScreen.SET_DEFAULT) {}
+                }
+            }
+
+            override fun onActivityCreated(activity: Activity, state: android.os.Bundle?) = Unit
+            override fun onActivityStarted(activity: Activity) = Unit
+            override fun onActivityPaused(activity: Activity) = Unit
+            override fun onActivityStopped(activity: Activity) = Unit
+            override fun onActivitySaveInstanceState(activity: Activity, state: android.os.Bundle) = Unit
+            override fun onActivityDestroyed(activity: Activity) = Unit
+        })
     }
 
     private fun log(message: String) {
@@ -219,11 +286,20 @@ object OnboardRouter {
     }
 }
 
-/** Drops this app's task from Recents; the onboarding steps are not somewhere to come back to. */
+/**
+ * Drops this app's task from Recents; the onboarding steps are not somewhere to come back to.
+ * The launcher's home task is left alone: excluding it left the fallback Recents half drawn on
+ * Android 16 / ColorOS 16, and the system keeps home tasks out of the cards anyway.
+ */
 fun Activity.excludeAppFromRecents() {
     try {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager ?: return
-        manager.appTasks.forEach { task -> task.setExcludeFromRecents(true) }
+        val home = LauncherPanel::class.java.name
+        manager.appTasks.forEach { task ->
+            val info = runCatching { task.taskInfo }.getOrNull()
+            if (info?.baseActivity?.className == home || info?.topActivity?.className == home) return@forEach
+            task.setExcludeFromRecents(true)
+        }
     } catch (e: Exception) {
         LogRail.error("Recents", "could not exclude task from recents", e)
     }

@@ -168,6 +168,7 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 markPostCallShown(context)
 
                 if (!started) {
+                    OpenPromoRegistry.callbackshow = false
                     showFullScreenNotification(context, phoneNumber, startTime, endTime, type)
                     return@launch
                 }
@@ -175,6 +176,7 @@ class PhoneStateReceiver : BroadcastReceiver() {
                 if (!hasOverlay) {
                     delay(CALLBACK_CONFIRM_MS)
                     if (!ShellSurfaceScreen.isActive) {
+                        OpenPromoRegistry.callbackshow = false
                         Log.w(TAG, "role-backed callback start did not surface — notifying")
                         showFullScreenNotification(context, phoneNumber, startTime, endTime, type)
                     }

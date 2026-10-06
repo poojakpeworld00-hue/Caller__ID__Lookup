@@ -18,6 +18,7 @@ import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.model.PromoKind.*
 import com.callerid.admesh.engine.PromoTallyRegistry.nativeCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
+import com.callerid.admesh.engine.AdsGate
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.PerScreenPromo
 import com.callerid.admesh.engine.trackEvent
@@ -49,7 +50,34 @@ class InlinePromo() {
     }
 
     companion object {
-        private var nativeAd: NativeAd? = null
+        private var cachedAd: NativeAd? = null
+        private var cachedAt = 0L
+
+        /** A native kept longer than this is destroyed and treated as absent. */
+        private const val MAX_AGE_MS = 60 * 60_000L
+
+        private var nativeAd: NativeAd?
+            get() {
+                if (cachedAd != null && android.os.SystemClock.elapsedRealtime() - cachedAt > MAX_AGE_MS) {
+                    Log.d("NativeAds", "pooled native expired (older than 1h) — dropped")
+                    runCatching { cachedAd?.destroy() }
+                    cachedAd = null
+                }
+                return cachedAd
+            }
+            set(value) {
+                cachedAd = value
+                if (value != null) cachedAt = android.os.SystemClock.elapsedRealtime()
+            }
+
+        /** Observers asking while a load is in flight hear the outcome of that load. */
+        private val waiting = mutableListOf<NativeAdObserver>()
+
+        private fun answerWaiting(loaded: Boolean) {
+            val observers = waiting.toList()
+            waiting.clear()
+            observers.forEach { runCatching { if (loaded) it.onNativeAdLoaded() else it.onNativeAdFailed() } }
+        }
 
         /**
          * A load is in flight. The pool is one static slot and every `show*` kicks a refill,
@@ -120,21 +148,28 @@ class InlinePromo() {
 
         val adUnit = PerScreenPromo.inlineAdUnitId(context)
         if (adUnit.isEmpty()) {
+            observer?.onNativeAdFailed()
             return
         }
-        
+        if (!AdsGate.canRequestAds(context)) {
+            observer?.onNativeAdFailed()
+            return
+        }
+        // One request at a time; a caller arriving meanwhile waits on it.
         if (isLoading) {
-            Log.d("NativeAds", "load already in flight — skipped")
+            Log.d("NativeAds", "load already in flight — waiting on it")
+            observer?.let { waiting += it }
             return
         }
         loadingSince = System.currentTimeMillis()
         val adLoader =
-            AdLoader.Builder(context, adUnit)
+            AdLoader.Builder(context.applicationContext, adUnit)
                 .forNativeAd { nativeAds ->
 
-                    nativeAd?.destroy()
+                    cachedAd?.destroy()
                     nativeAd = nativeAds
                     loadingSince = 0L
+                    answerWaiting(loaded = true)
 
                     if (context.isActivityDestroyedCompat()) {
 
@@ -153,6 +188,7 @@ class InlinePromo() {
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         super.onAdFailedToLoad(loadAdError)
                         loadingSince = 0L
+                        answerWaiting(loaded = false)
                         if (context.isActivityDestroyedCompat()) return
                         observer?.onNativeAdFailed()
                         Log.e(
@@ -317,18 +353,6 @@ class InlinePromo() {
             (binding.mainNativeadView.headlineView as TextView).text = nativeAd.headline
             binding.mainNativeadView.mediaView?.mediaContent = nativeAd.mediaContent
 
-            val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
-            val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-            val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-            val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
-
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
-
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
-
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.bodyView as TextView).text = nativeAd.body
@@ -344,6 +368,8 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
+            // Remote Config colours (layout theme as fallback), rating line and CTA glow.
+            NativeAdLook.bind(binding.mainNativeadView, nativeAd)
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
@@ -364,18 +390,6 @@ class InlinePromo() {
             (binding.mainNativeadView.headlineView as TextView).text = nativeAd.headline
             binding.mainNativeadView.mediaView?.mediaContent = nativeAd.mediaContent
 
-            val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
-            val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-            val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-            val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
-
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
-
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
-
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.bodyView as TextView).text = nativeAd.body
@@ -391,6 +405,8 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
+            // Remote Config colours (layout theme as fallback), rating line and CTA glow.
+            NativeAdLook.bind(binding.mainNativeadView, nativeAd)
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
@@ -771,18 +787,6 @@ class InlinePromo() {
 
             (binding.mainNativeadView.headlineView as TextView).text = nativeAd.headline
 
-            val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
-            val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-            val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-            val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
-
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
-
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
-
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.bodyView as TextView).text = nativeAd.body
@@ -798,6 +802,8 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
+            // Remote Config colours (layout theme as fallback), rating line and CTA glow.
+            NativeAdLook.bind(binding.mainNativeadView, nativeAd)
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }
@@ -944,18 +950,6 @@ class InlinePromo() {
             (binding.mainNativeadView.headlineView as TextView).text = nativeAd.headline
             binding.mainNativeadView.mediaView?.mediaContent = nativeAd.mediaContent
 
-            val bgColor = PromoVault.getInstance(context).getString("NativeBgColor")
-            val btnColor = PromoVault.getInstance(context).getString("NativebtnColor")
-            val txtColor = PromoVault.getInstance(context).getString("NativetxtColor") ?: "#000000"
-            val btntxtColor = PromoVault.getInstance(context).getString("NativebtntxtColor") ?: "#FFFFFF"
-
-            binding.mainNativeadView.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(bgColor, "#FFFFFF"))
-            binding.mainNativeadView.callToActionView?.backgroundTintList = ColorStateList.valueOf(parseColorOrNull(btnColor, "#000000"))
-
-            (binding.mainNativeadView.headlineView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (binding.mainNativeadView.bodyView as TextView).setTextColor(parseColorOrNull(txtColor, "#000000"))
-            (adCallToAction as TextView).setTextColor(parseColorOrNull(btntxtColor, "#FFFFFF"))
-
             binding.mainNativeadView.bodyView?.apply {
                 visibility = if (nativeAd.body == null) View.GONE else View.VISIBLE
                 (binding.mainNativeadView.bodyView as TextView).text = nativeAd.body
@@ -971,6 +965,8 @@ class InlinePromo() {
                 (binding.mainNativeadView.callToActionView as TextView).text = nativeAd.callToAction
             }
 
+            // Remote Config colours (layout theme as fallback), rating line and CTA glow.
+            NativeAdLook.bind(binding.mainNativeadView, nativeAd)
             binding.mainNativeadView.setNativeAd(nativeAd)
         }
     }

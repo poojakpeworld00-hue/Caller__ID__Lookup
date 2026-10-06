@@ -13,7 +13,6 @@ import com.callerid.admesh.surface.StripScale
 import com.callerid.admesh.surface.DrawerAdRunner
 import com.callerid.admesh.surface.InlinePromo
 import com.callerid.admesh.surface.InlinePromoStrip
-import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.BuildConfig
 import io.launcher.home.extensions.isDefaultLauncher
@@ -26,89 +25,6 @@ object ShellPromoConfig {
 
     private const val VARIANT_DEFAULT_HOME = "defaultHome"
     private const val VARIANT_NOT_DEFAULT_HOME = "notDefaultHome"
-
-    enum class Surface(val block: String, val counterKey: String) {
-        APP_CLICK("app_click", "__launcher_ads_app_click_count"),
-        SWIPE_RIGHT("swipe_right", "__launcher_ads_swipe_right_count"),
-        SWIPE_LEFT("swipe_left", "__launcher_ads_swipe_left_count"),
-    }
-
-    enum class GestureAd { INTER, LINK, NONE }
-
-    data class Rule(
-        val enabled: Boolean,
-        val adType: GestureAd,
-        val adsCounter: Int,
-        val fallbackLinkEnabled: Boolean,
-        val fallbackLink: String,
-    ) {
-        val canShowInter: Boolean get() = adType == GestureAd.INTER
-        val canOpenLink: Boolean
-            get() = adType == GestureAd.LINK && fallbackLinkEnabled && fallbackLink.isNotBlank()
-    }
-
-    private val DISABLED = Rule(
-        enabled = false,
-        adType = GestureAd.NONE,
-        adsCounter = 0,
-        fallbackLinkEnabled = false,
-        fallbackLink = "",
-    )
-
-    fun rule(context: Context, surface: Surface): Rule {
-        val block = config(context).optJSONObject(surface.block) ?: return DISABLED
-
-        val linkEnabled = block.optBoolean("fallback_link_enabled", false)
-        val link = block.optString("fallback_link", "")
-        val interEnabled = block.optBoolean("inter_enabled", false)
-
-        val adType = when (block.optString("ad_type").trim().lowercase()) {
-            "inter" -> GestureAd.INTER
-            "link" -> GestureAd.LINK
-            "none" -> GestureAd.NONE
-            else -> when {
-                interEnabled -> GestureAd.INTER
-                linkEnabled && link.isNotBlank() -> GestureAd.LINK
-                else -> GestureAd.NONE
-            }
-        }
-
-        return Rule(
-            enabled = block.optBoolean("enabled", false),
-            adType = adType,
-            adsCounter = block.optInt("ads_counter", 0),
-            fallbackLinkEnabled = linkEnabled,
-            fallbackLink = link,
-        )
-    }
-
-    fun run(activity: Activity, surface: Surface, proceed: () -> Unit) {
-        val rule = rule(activity, surface)
-
-        if (!rule.enabled) {
-            log("${surface.block}: disabled")
-            return proceed()
-        }
-
-        if (!rule.canShowInter && !rule.canOpenLink) {
-            log("${surface.block}: nothing enabled (ad_type=${rule.adType})")
-            return proceed()
-        }
-
-        if (!isDue(activity, surface.counterKey, rule.adsCounter, surface.block)) {
-            return proceed()
-        }
-
-        if (rule.canShowInter) {
-            log("${surface.block}: showing interstitial")
-            FlowInterstitial().renderInterstitial(activity) { proceed() }
-            return
-        }
-
-        log("${surface.block}: ad_type=link, opening fallback link")
-        openLink(activity, rule.fallbackLink)
-        proceed()
-    }
 
     enum class SlotAd { NATIVE, BANNER, NONE }
 
@@ -140,10 +56,12 @@ object ShellPromoConfig {
     }
 
     fun drawerSlot(context: Context): Slot {
-        val block = config(context).optJSONObject("app_drawer")?.optJSONObject("bottom_native")
+        // `placements.drawer.bottom_native`; the older `launcher_ads.app_drawer.bottom_native` still reads.
+        val block = LauncherPlacementAds.section(context, "drawer.bottom_native")
+            ?: config(context).optJSONObject("app_drawer")?.optJSONObject("bottom_native")
             ?: return Slot(false, SlotAd.NONE, "mid2", "adaptive", "")
 
-        return slot(block, defaultNativeType = "mid2", label = "app_drawer.bottom_native")
+        return slot(block, defaultNativeType = "mid2", label = "drawer.bottom_native")
     }
 
     /** What the install / uninstall result screen may do, from `package_result` in Remote Config. */
@@ -180,6 +98,10 @@ object ShellPromoConfig {
         val nativeType: String,
         val closeAd: String,
         val minGapMs: Long,
+        /** `close_ad` as an object (`{ enabled, counter, mode, sequence }`); null for the string form. */
+        val closeFlow: JSONObject? = null,
+        /** `recent_ad.page` (default true); false runs `system_buttons.recents.ad` instead of the page. */
+        val pageOn: Boolean = true,
     ) {
         val showsBodyNative: Boolean
             get() = nativeType.isNotBlank() && !nativeType.equals("off", ignoreCase = true)
@@ -214,15 +136,49 @@ object ShellPromoConfig {
     fun systemAdSettings(context: Context, trigger: String): RecentAdSettings =
         eventAdSettings(config(context).optJSONObject("system_ads")?.optJSONObject(trigger), "system_ads.$trigger")
 
+    /**
+     * One system button's ad — `system_buttons.home` / `.back` / `.recents`:
+     * `{ "enabled": false, "ad_type": "", "ads_counter": 0, "min_gap_sec": 30, "ad": { mode, sequence } }`.
+     * Blank `ad_type` uses the button's placement. Off when the block is absent.
+     */
+    data class SystemButtonSettings(
+        val enabled: Boolean,
+        val adType: String,
+        val counter: Int,
+        val minGapMs: Long,
+        val flow: JSONObject? = null,
+    )
+
+    fun systemButtonSettings(context: Context, button: String): SystemButtonSettings {
+        val block = config(context).optJSONObject("system_buttons")?.optJSONObject(button)
+        return SystemButtonSettings(
+            enabled = block?.optBoolean("enabled", false) ?: false,
+            adType = block?.optString("ad_type").orEmpty().trim().lowercase(),
+            counter = (block?.optInt("ads_counter", 0) ?: 0).coerceAtLeast(0),
+            minGapMs = (block?.optLong("min_gap_sec", 30L) ?: 30L).coerceAtLeast(0L) * 1000L,
+            flow = block?.optJSONObject("ad"),
+        ).also { log("system_buttons.$button → $it") }
+    }
+
+    /** Whether `system_buttons.<button>` is present at all (an absent `recents` keeps `recent_ad` in charge). */
+    fun hasSystemButton(context: Context, button: String): Boolean =
+        config(context).optJSONObject("system_buttons")?.has(button) == true
+
+    fun counterDue(context: Context, counterKey: String, target: Int, label: String): Boolean =
+        isDue(context, counterKey, target, label)
+
     private fun eventAdSettings(block: JSONObject?, label: String): RecentAdSettings {
         val off = RecentAdSettings(false, "off", "none", 0L)
         if (block == null) return off
         return runCatching {
+            val flow = block.optJSONObject("close_ad")
             RecentAdSettings(
                 enabled = block.optBoolean("enabled", false),
                 nativeType = block.optString("native", "off").ifBlank { "off" },
-                closeAd = block.optString("close_ad", "none").ifBlank { "none" },
+                closeAd = if (flow != null) "flow" else block.optString("close_ad", "none").ifBlank { "none" },
                 minGapMs = block.optLong("min_gap_sec", 0L).coerceAtLeast(0L) * 1000L,
+                closeFlow = flow,
+                pageOn = block.optBoolean("page", true),
             )
         }.getOrDefault(off).also { log("$label → $it") }
     }
@@ -293,8 +249,18 @@ object ShellPromoConfig {
         CUSTOM("custom", "");
 
         companion object {
-            fun from(raw: String?): DrawerAdType? =
-                entries.firstOrNull { it.key == raw?.trim()?.lowercase() }
+            /** Also takes full_native, app_open, reward, link, interstitial. */
+            fun from(raw: String?): DrawerAdType? {
+                val key = raw?.trim()?.lowercase()?.replace("-", "_")
+                return entries.firstOrNull { it.key == key } ?: when (key) {
+                    "interstitial" -> INTER
+                    "app_open" -> APPOPEN
+                    "direct_link", "link" -> DIRECTLINK
+                    "reward", "rewarded_ad" -> REWARDED
+                    "full_native", "fullnative", "native_full" -> FULLSCREEN_NATIVE
+                    else -> null
+                }
+            }
         }
     }
 
@@ -658,72 +624,22 @@ object ShellPromoConfig {
         ).also { log("$label → $it") }
     }
 
-    enum class HintDirection(val key: String) {
-        RIGHT("right"), LEFT("left"), UP("up"), DOWN("down");
-
-        companion object {
-            fun from(raw: String?): HintDirection? =
-                entries.firstOrNull { it.key == raw?.trim()?.lowercase() }
-        }
-    }
-
-    enum class HintMode { ONCE, ALWAYS, APP_LAUNCHES }
-
-    data class HomeHint(
-        val enabled: Boolean,
-        val directions: List<HintDirection>,
-        val mode: HintMode,
-        val interval: Int,
-        val autoHideSec: Int,
-    ) {
-        val visible: Boolean get() = enabled && directions.isNotEmpty()
-    }
-
-    private val DEFAULT_HINT = HomeHint(
-        enabled = true,
-        directions = listOf(HintDirection.RIGHT),
-        mode = HintMode.ONCE,
-        interval = 0,
-        autoHideSec = 0,
-    )
-
-    fun boardHint(context: Context): HomeHint {
-        val block = config(context).optJSONObject("home_hint") ?: return DEFAULT_HINT
-
-        val listed = block.optJSONArray("swipeHints")
-        val directions = when {
-            listed == null -> DEFAULT_HINT.directions
-
-            else -> (0 until listed.length()).mapNotNull { HintDirection.from(listed.optString(it)) }
-        }
-
-        return HomeHint(
-            enabled = block.optBoolean("enabled", true),
-            directions = directions,
-            mode = when (block.optString("show_mode").trim().lowercase()) {
-                "always" -> HintMode.ALWAYS
-                "app_launches" -> HintMode.APP_LAUNCHES
-                else -> HintMode.ONCE
-            },
-            interval = block.optInt("interval", 0),
-            autoHideSec = block.optInt("auto_hide_sec", 0),
-        ).also { log("home_hint → $it") }
-    }
-
-    fun hintDue(context: Context, hint: HomeHint): Boolean =
-        isDue(context, HINT_COUNTER_KEY, hint.interval, "home_hint")
-
-    private const val HINT_COUNTER_KEY = "__launcher_ads_home_hint_count"
-
     enum class OnboardScreen(
         val key: String,
         private val interByDefault: Boolean,
         private val nativeByDefault: String,
+        /** Whether `onboarding.order` may list it; FSI and splash place themselves. */
+        val inOrder: Boolean = true,
     ) {
         WELCOME("welcome", false, "mid"),
         SET_DEFAULT("set_default", false, "mid"),
         INTRO("intro", true, "mid2"),
-        LANGUAGE("language", true, "big");
+        LANGUAGE("language", true, "big"),
+
+        FSI("fsi", false, "mid", inOrder = false),
+
+        /** Not a screen of the flow: carries the splash ad's switches (see [splashAdPlan]). */
+        SPLASH("splash", false, "mid", inOrder = false);
 
         val counterKey: String get() = "__launcher_ads_onboarding_${key}_count"
 
@@ -731,15 +647,38 @@ object ShellPromoConfig {
 
         companion object {
             fun from(raw: String?): OnboardScreen? =
-                entries.firstOrNull { it.key == raw?.trim()?.lowercase() }
+                entries.firstOrNull { it.inOrder && it.key == raw?.trim()?.lowercase() }
         }
     }
 
-    fun onboardSlot(context: Context, screen: OnboardScreen): Slot = slot(
-        block = onboardingBlock(context, screen)?.optJSONObject("slot"),
-        defaultNativeType = screen.defaults().second,
-        label = "onboarding.${screen.key}.slot",
-    )
+    /**
+     * `onboarding.<screen>.ads_on` (default on): every ad on the screen — its frame and its exit ad.
+     * The older `placements.onboarding[_<screen>].ads_on` still turns it off too.
+     */
+    fun onboardingAdsOn(context: Context, screen: OnboardScreen): Boolean =
+        (onboardingBlock(context, screen)?.optBoolean("ads_on", true) ?: true) &&
+            LauncherPlacementAds.placementEnabled(context, "onboarding_${screen.key}")
+
+    fun onboardSlot(context: Context, screen: OnboardScreen): Slot {
+        if (!onboardingAdsOn(context, screen)) {
+            log("onboarding.${screen.key}: ads_on=false — no frame")
+            return Slot(false, SlotAd.NONE, screen.defaults().second, "adaptive", "")
+        }
+        return slot(
+            block = onboardingBlock(context, screen)?.optJSONObject("slot"),
+            defaultNativeType = screen.defaults().second,
+            label = "onboarding.${screen.key}.slot",
+        )
+    }
+
+    fun onboardingSlot(context: Context, screen: OnboardScreen): Slot = onboardSlot(context, screen)
+
+    fun showSlot(
+        activity: Activity,
+        slot: Slot,
+        container: FrameLayout,
+        shimmer: ShimmerFrameLayout? = null,
+    ) = renderSlot(activity, slot, container, shimmer)
 
     data class ScreenUi(val skipEnabled: Boolean, val backAdvances: Boolean)
 
@@ -752,8 +691,39 @@ object ShellPromoConfig {
         ).also { log("onboarding.${screen.key}.ui → $it") }
     }
 
+    fun onboardingUi(context: Context, screen: OnboardScreen): ScreenUi = onboardUi(context, screen)
+
+    /**
+     * `onboarding.<screen>.inter_on_decline` (default true): false drops the exit ad when the user
+     * declined or skipped the step (set-default then shows it only once the Home role was granted).
+     */
+    fun onboardingInterOnDecline(context: Context, screen: OnboardScreen): Boolean =
+        (onboardingBlock(context, screen)?.optBoolean("inter_on_decline", true) ?: true)
+            .also { log("onboarding.${screen.key}.inter_on_decline → $it") }
+
+    fun runOnboardingInter(activity: Activity, screen: OnboardScreen, proceed: () -> Unit) =
+        runOnboardInterstitial(activity, screen, proceed)
+
     fun runOnboardInterstitial(activity: Activity, screen: OnboardScreen, proceed: () -> Unit) {
         val block = onboardingBlock(activity, screen)
+
+        // `onboarding.<screen>.exit_ad`: present, it decides everything; the older keys below only
+        // serve a config that has no such block.
+        val exit = exitAdFlow(activity, screen)
+        if (exit != null) {
+            if (!PromoVault.getInstance(activity).getBoolean("IsAdsON") || !onboardingAdsOn(activity, screen)) {
+                log("onboarding.${screen.key}: exit ad — ads off")
+                return proceed()
+            }
+            if (!exit.enabled || exit.sequence.isEmpty()) {
+                log("onboarding.${screen.key}: exit ad off")
+                return proceed()
+            }
+            if (!isDue(activity, screen.counterKey, exit.counter, "onboarding.${screen.key}")) return proceed()
+            DrawerAdRunner.run(activity, exit, "__launcher_ads_onboarding_${screen.key}_seq_ptr", proceed)
+            return
+        }
+
         val enabled = block?.optBoolean("inter_enabled", screen.defaults().first)
             ?: screen.defaults().first
 
@@ -779,9 +749,127 @@ object ShellPromoConfig {
             log("onboarding.${screen.key}: link-first")
             return
         }
+        // `onboarding.<screen>.ad_type`: one format instead of the interstitial —
+        // `inter` | `app_open` | `reward` | `link` | `full_native` | `custom`.
+        val adType = block?.optString("ad_type").orEmpty().trim().lowercase()
+        if (adType.isNotEmpty() && adType != "inter" && adType != "interstitial") {
+            log("onboarding.${screen.key}: ad_type=$adType")
+            return LauncherPlacementAds.showStep(activity, "onboarding_${screen.key}", adType, proceed)
+        }
+        // `placements.onboarding_<screen>.ad_flow`: only a flow set for onboarding by name counts.
+        if (LauncherPlacementAds.hasOwnFlow(activity, "onboarding_${screen.key}") &&
+            LauncherPlacementAds.showAdFlow(activity, "onboarding_${screen.key}", proceed)
+        ) {
+            log("onboarding.${screen.key}: ad_flow")
+            return
+        }
         log("onboarding.${screen.key}: showing interstitial")
         FlowInterstitial().renderInterstitial(activity) { proceed() }
     }
+
+    /**
+     * `onboarding.<screen>.exit_ad` — null when the screen has no such block:
+     * `{ "enabled": true, "counter": 0, "mode": "one" | "all" | "sequence", "sequence": [...], "ads": {...} }`.
+     * `one`: first ready format every time; `sequence`: one per exit, taking turns; `all`: every
+     * ready format back to back. A format with no unit id of its own uses the global one.
+     */
+    fun exitAdFlow(context: Context, screen: OnboardScreen): DrawerAdFlow? {
+        val exit = onboardingBlock(context, screen)?.optJSONObject("exit_ad") ?: return null
+        return flowFrom(context, exit, "onboarding.${screen.key}.exit_ad")
+    }
+
+    /** An ad flow from any `{ enabled, counter, mode, sequence, ads }` block (exit_ad, recent_ad.close_ad). */
+    fun flowFrom(context: Context, block: JSONObject, label: String): DrawerAdFlow {
+        val mode = block.optString("mode").trim().lowercase()
+        val resolved = JSONObject(block.toString()).apply {
+            if (!has("enabled")) put("enabled", true)
+            put("show_all_ads", mode == "all")
+            put("always_start_first", mode != "sequence")
+        }
+        // Nothing preloads these flows, so a format is loaded on the spot.
+        return parseFlow(context, resolved, resolved, label).copy(onDemand = true)
+    }
+
+    /**
+     * Runs [flow] once, then [proceed] — on every path. [counterKey] / [pointerKey] keep this
+     * flow's pacing apart from every other flow's.
+     */
+    fun runFlow(
+        activity: Activity,
+        flow: DrawerAdFlow,
+        counterKey: String,
+        pointerKey: String,
+        label: String,
+        proceed: () -> Unit,
+    ) {
+        if (!PromoVault.getInstance(activity).getBoolean("IsAdsON")) return proceed()
+        if (!flow.enabled || flow.sequence.isEmpty()) {
+            log("$label: flow off")
+            return proceed()
+        }
+        if (!isDue(activity, counterKey, flow.counter, label)) return proceed()
+        DrawerAdRunner.run(activity, flow, pointerKey, proceed)
+    }
+
+    enum class SplashShow { ONCE, ALWAYS, AFTER_LAUNCHES }
+
+    /**
+     * `onboarding.splash`: `ads_on` (false → no splash ad; `placements.splash.ads_on` mutes it too),
+     * `ad_type` (`appopen` | `inter`; empty keeps `is_splash_inter_show`), `show_mode`
+     * (`always` default | `once` | `after_launches` with `launches`).
+     */
+    data class SplashAdPlan(val adsOn: Boolean, val adType: String, val mode: SplashShow, val launches: Int)
+
+    fun splashAdPlan(context: Context): SplashAdPlan {
+        val block = onboardingBlock(context, OnboardScreen.SPLASH)
+        return SplashAdPlan(
+            adsOn = (block?.optBoolean("ads_on", true) ?: true) &&
+                LauncherPlacementAds.placementEnabled(context, "splash"),
+            adType = block?.optString("ad_type").orEmpty().trim().lowercase().replace("_", ""),
+            mode = when (block?.optString("show_mode").orEmpty().trim().lowercase()) {
+                "once" -> SplashShow.ONCE
+                "after_launches", "after_x_launches", "after" -> SplashShow.AFTER_LAUNCHES
+                else -> SplashShow.ALWAYS
+            },
+            launches = (block?.optInt("launches", 0) ?: 0).coerceAtLeast(0),
+        )
+    }
+
+    fun splashAdType(context: Context): String? =
+        splashAdPlan(context).adType.takeIf { it == "appopen" || it == "inter" }
+
+    @Volatile
+    private var splashDecision: Boolean? = null
+
+    /** Whether this launch's splash ad runs; decided once per process, remembered for once / after_launches. */
+    fun splashAdAllowed(context: Context): Boolean {
+        splashDecision?.let { return it }
+        synchronized(this) {
+            splashDecision?.let { return it }
+            val plan = splashAdPlan(context)
+            val pref = PromoVault.getInstance(context)
+            val allowed = when {
+                !plan.adsOn -> false
+                plan.mode == SplashShow.ONCE -> {
+                    val seen = pref.getBoolean(SPLASH_SHOWN_KEY)
+                    pref.putBoolean(SPLASH_SHOWN_KEY, true)
+                    !seen
+                }
+                plan.mode == SplashShow.AFTER_LAUNCHES -> {
+                    val launch = pref.getInt(SPLASH_LAUNCH_KEY, 0) + 1
+                    pref.putInt(SPLASH_LAUNCH_KEY, launch)
+                    launch > plan.launches
+                }
+                else -> true
+            }
+            log("splash ad: ${plan.mode} launches=${plan.launches} → $allowed")
+            splashDecision = allowed
+            return allowed
+        }
+    }
+
+    private const val SPLASH_SHOWN_KEY = "__splash_ad_shown_once"
+    private const val SPLASH_LAUNCH_KEY = "__splash_ad_launch_count"
 
     fun onboardOrder(context: Context): List<OnboardScreen> {
         val listed = config(context).optJSONObject("onboarding")?.optJSONArray("order")
@@ -809,6 +897,13 @@ object ShellPromoConfig {
         val delay = (block?.optLong("auto_next_delay_ms", 650L) ?: 650L).coerceIn(0L, 5_000L)
         return auto to delay
     }
+
+    /**
+     * `onboarding.<screen>.auto_open` (default true): the set-default step opens the system
+     * home-app page by itself on arrival. False shows the screen first and waits for the CTA.
+     */
+    fun onboardingAutoOpen(context: Context, screen: OnboardScreen): Boolean =
+        onboardingBlock(context, screen)?.optBoolean("auto_open", true) ?: true
 
     private fun onboardingBlock(context: Context, screen: OnboardScreen): JSONObject? =
         config(context).optJSONObject("onboarding")?.optJSONObject(screen.key)
@@ -879,11 +974,6 @@ object ShellPromoConfig {
             pref.putInt(counterKey, 0)
             true
         }
-    }
-
-    /** Links open in the Remote-Config open type ([DirectLinkOpener]: WebView / Custom Tab / browser). */
-    private fun openLink(activity: Activity, url: String) {
-        if (!DirectLinkOpener.open(activity, url)) log("fallback link failed for '$url'")
     }
 
     private fun log(message: String) {

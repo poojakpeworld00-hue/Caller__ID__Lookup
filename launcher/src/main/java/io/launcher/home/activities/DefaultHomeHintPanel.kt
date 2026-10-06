@@ -23,6 +23,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import io.launcher.home.R
+import io.launcher.home.api.LauncherRegistry
 import timber.log.Timber
 
 /**
@@ -364,9 +365,16 @@ class DefaultHomeHintPanel : AppCompatActivity() {
             if (activity.isFinishing || activity.isDestroyed) return
             if (kind.isSatisfied(activity)) return
             runCatching {
+                // The host's own default-home hint when it has one, so onboarding and the launcher
+                // show the same card; this panel otherwise.
+                val hostHint = if (kind == Kind.DEFAULT_HOME) {
+                    LauncherRegistry.bridge.defaultHomeHintIntent(activity)
+                } else {
+                    null
+                }
                 activity.startActivity(
-                    Intent(activity, DefaultHomeHintPanel::class.java)
-                        .putExtra(EXTRA_KIND, kind.name)
+                    (hostHint ?: Intent(activity, DefaultHomeHintPanel::class.java)
+                        .putExtra(EXTRA_KIND, kind.name))
                         .addFlags(
                             Intent.FLAG_ACTIVITY_NEW_TASK or
                                 Intent.FLAG_ACTIVITY_NO_ANIMATION,

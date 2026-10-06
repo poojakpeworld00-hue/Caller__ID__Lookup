@@ -35,6 +35,10 @@ class RecentAdActivity : FrameActivity<ScreenRecentAdBinding>() {
         applyInsets()
         fillAd()
         binding.recentContinueVw.setOnClickListener { leave() }
+        // Registered after FrameActivity's back-ad callback, so Back runs only this page's close ad.
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() = leave()
+        })
     }
 
     override fun performBack() = leave()
@@ -79,6 +83,14 @@ class RecentAdActivity : FrameActivity<ScreenRecentAdBinding>() {
 
         // `recent_ads_on: false` keeps the page but drops its close ad.
         if (!LauncherPlacementAds.placementEnabled(this, PLACEMENT)) return close()
+
+        // `recent_ad.close_ad` as an object { enabled, counter, mode, sequence } runs the ad flow.
+        settings.closeFlow?.let { block ->
+            val flow = ShellPromoConfig.flowFrom(this, block, "recent_ad.close_ad")
+            return ShellPromoConfig.runFlow(
+                this, flow, "__recent_close_count", "__recent_close_seq_ptr", "recent_ad.close_ad"
+            ) { close() }
+        }
 
         val closeAd = settings.closeAd.trim().lowercase()
         when {

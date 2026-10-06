@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AdCard">
+        <item name="android:background">@drawable/bg_ad_card</item>
+    </style>
+    <color name="ad_sk">#EEF1F6</color>
+    <style name="AdIconR12">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="AdHeadline">
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/mulish_bold</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/lk_ink</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="AdTag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:background">@drawable/bg_ad_tag</item>
+        <item name="android:fontFamily">@font/mulish_bold</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:text">@string/ad_badge</item>
+        <item name="android:textColor">@color/ad_tag_fg</item>
+        <item name="android:textSize">9.5sp</item>
+    </style>
+    <style name="AdStars">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:fontFamily">@font/mulish_bold</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/lk_sub</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="AdBody">
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/mulish_semibold</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@color/ad_body</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="AdCta">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/mulish_bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/ad_cta_fg</item>
+        <item name="android:textSize">13.5sp</item>
+    </style>
+    <style name="AdIconR16">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <color name="ad_green">#12B76A</color>
+    <style name="AdIconR10">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+    <color name="ad_star">#F59E0B</color>
+    <color name="lk_ink">#12172B</color>
+    <string name="ad_badge">Ad</string>
+    <color name="ad_tag_fg">#8A4B00</color>
+    <color name="lk_sub">#5E6478</color>
+    <color name="ad_body">#3A4050</color>
+    <color name="ad_cta_fg">#FFFFFF</color>
+    <color name="ad_cta_bg">#12172B</color>
+    <color name="ad_green_deep">#067647</color>
+    <color name="lk_card">#FFFFFF</color>
+    <color name="lk_border">#E9EDF5</color>
+    <color name="ad_tag_bg">#FEF3E2</color>
+    <color name="ad_tag_bd">#F5DDB0</color>
+</resources>

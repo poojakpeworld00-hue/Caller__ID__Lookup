@@ -126,6 +126,17 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
         binding.rowTermsVw.lblTitle.setText(R.string.settings_terms)
         binding.rowTermsVw.root.setOnClickListener { openTermLink() }
 
+        // UMP privacy options: only where the user must be able to change their ad consent.
+        val consent = com.callerid.admesh.engine.GmaConsentRegistry.getInstance(applicationContext)
+        binding.rowAdPrivacyVw.root.visibility = if (consent.isPrivacyOptionsRequired) View.VISIBLE else View.GONE
+        binding.rowAdPrivacyVw.picIcon.setImageResource(R.drawable.sym_policy)
+        binding.rowAdPrivacyVw.lblTitle.setText(R.string.settings_ad_privacy)
+        binding.rowAdPrivacyVw.root.setOnClickListener {
+            consent.showPrivacyOptionsForm(this) { error ->
+                if (error != null) android.util.Log.w("SettingsHubActivity", "privacy options: ${error.message}")
+            }
+        }
+
         maybeShowCallScreeningHint()
     }
 

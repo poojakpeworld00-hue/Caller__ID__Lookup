@@ -25,6 +25,7 @@ import com.callerid.number.lookup.home.screen.directory.DirectoryFragment
 import com.callerid.number.lookup.home.screen.identify.NumberLookupFragment
 import com.callerid.number.lookup.home.screen.history.RecentsFragment
 import com.callerid.number.lookup.home.screen.consent.OverlayKit
+import com.callerid.number.lookup.home.screen.reveal.RevealConfig
 import com.callerid.number.lookup.home.kit.rateApp
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -260,7 +261,8 @@ class HomeShellFragment : HolderFragment<BoardHomeShellBinding>() {
         val coreGranted = isPermissionGranted(Manifest.permission.READ_CALL_LOG) &&
             isPermissionGranted(Manifest.permission.READ_CONTACTS)
         
-        val show = coreGranted && OverlayKit.isOfferable(ctx) && !OverlayKit.isGranted(ctx)
+        val overlayAsked = RevealConfig.permissionSheetRows(ctx)?.contains("overlay") ?: true
+        val show = coreGranted && overlayAsked && OverlayKit.isOfferable(ctx) && !OverlayKit.isGranted(ctx)
         binding.overlayBannerVw.visibility = if (show) View.VISIBLE else View.GONE
     }
 

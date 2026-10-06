@@ -64,6 +64,9 @@ class PackageResultActivity : FrameActivity<ScreenPackageResultBinding>() {
     override fun initView() {
         // Recents closes it: an install/uninstall screen is not something to come back to.
         lifecycle.addObserver(SystemDialogHelper(this) { finishAndRemoveTask() })
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() = close()
+        })
         WindowCompat.setDecorFitsSystemWindows(window, false)
         applyInsets()
         bindHeader()

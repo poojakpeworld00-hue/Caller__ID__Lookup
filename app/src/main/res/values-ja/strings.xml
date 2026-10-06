@@ -62,6 +62,7 @@
     <string name="nav_contacts">連絡先</string>
     <string name="nav_lookup">検索</string>
     <string name="nav_settings">設定</string>
+    <string name="home_quiz">クイズで遊ぶ</string>
 
     
     <string name="recents_today">今日</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">広めてください — 大切な人の着信も固めましょう。</string>
     <string name="settings_share_text">見知らぬ着信に名前を、迷惑電話に締め出しを。Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">プライバシーポリシー</string>
+    <string name="settings_ad_privacy">広告のプライバシー設定</string>
     <string name="settings_terms">利用規約</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

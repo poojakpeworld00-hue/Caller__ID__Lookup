@@ -61,6 +61,7 @@
     <string name="nav_contacts">Contatos</string>
     <string name="nav_lookup">Buscar</string>
     <string name="nav_settings">Configurações</string>
+    <string name="home_quiz">Jogar quiz</string>
 
     
     <string name="call_incoming">Chamada recebida…</string>
@@ -255,6 +256,7 @@
     <string name="settings_share_sub">Passe a palavra: ajude alguém a blindar as chamadas.</string>
     <string name="settings_share_text">Dê nome a quem liga sem se identificar e afaste chamadas incómodas com o Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Política de Privacidade</string>
+    <string name="settings_ad_privacy">Opções de privacidade de anúncios</string>
     <string name="settings_terms">Termos de Serviço</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

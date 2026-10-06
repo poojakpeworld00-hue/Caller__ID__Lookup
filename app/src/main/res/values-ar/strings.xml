@@ -61,6 +61,7 @@
     <string name="nav_contacts">جهات الاتصال</string>
     <string name="nav_lookup">بحث</string>
     <string name="nav_settings">الإعدادات</string>
+    <string name="home_quiz">العب الاختبار</string>
 
     
     <string name="call_incoming">مكالمة واردة…</string>
@@ -255,6 +256,7 @@
     <string name="settings_share_sub">مرّرها — ساعد أحدهم على تحصين مكالماته.</string>
     <string name="settings_share_text">سمِّ المتصلين المجهولين وصُدّ المكالمات المزعجة مع Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">سياسة الخصوصية</string>
+    <string name="settings_ad_privacy">خيارات خصوصية الإعلانات</string>
     <string name="settings_terms">شروط الخدمة</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

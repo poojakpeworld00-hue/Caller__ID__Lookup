@@ -12,6 +12,8 @@ import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.number.lookup.home.databinding.ScreenOnboardingDefaultLauncherBinding
 import io.launcher.home.extensions.isDefaultLauncher
 import io.launcher.home.extensions.roleManager
+import io.launcher.home.helpers.LauncherScan
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.followAdContainer
 import com.callerid.number.lookup.home.kit.openActivity
 import org.fossify.commons.extensions.beVisibleIf
@@ -38,12 +40,17 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         setContentView(binding.root)
 
         excludeAppFromRecents()
+        Analytics.screen("set_default")
 
         // Once the role is held (auto_next off), the CTA is how the user moves on.
         binding.onboardingSetDefaultVw.setOnClickListener {
+            Analytics.log("set_default_cta_click")
             if (isDefaultLauncher()) goHome() else openHomeSettings()
         }
-        binding.onboardingSkipVw.setOnClickListener { goToNextStep() }
+        binding.onboardingSkipVw.setOnClickListener {
+            Analytics.log("set_default_skip_click")
+            goToNextStep()
+        }
 
         val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)
@@ -71,7 +78,13 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         // waiting for the CTA — the user's first decision is made in the place it can actually be
         // made. Spent by the first onResume (see below), and skipped on a rotation restore so the
         // page is not reopened underneath the user.
-        if (savedInstanceState == null) autoOpenPending = true
+        // `onboarding.set_default.auto_open: false` keeps the user here until the CTA.
+        if (savedInstanceState == null) {
+            autoOpenPending = ShellPromoConfig.onboardingAutoOpen(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)
+        }
+
+        // About to become the home screen: build the app list and icons now for the first frame.
+        LauncherScan.prewarm(this)
 
         playEntrance()
     }
@@ -142,6 +155,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     }
 
     private var askedOnDecline = false
+    private var grantLogged = false
 
     /**
      * QRScanner's `set_home` moment: the user came back from the Home-app choice without picking
@@ -152,6 +166,7 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun askOnDecline() {
         if (askedOnDecline) return
         askedOnDecline = true
+        Analytics.log("set_default_declined")
         PermitEngine.check(this)
     }
 
@@ -163,6 +178,10 @@ class HomeRoleGateActivity : ShellBaseActivity() {
         SwipeCoachPrompt.dismiss()
 
         if (isDefaultLauncher()) {
+            if (!grantLogged) {
+                grantLogged = true
+                Analytics.log("set_default_granted")
+            }
             advanceAfterGrant()
             return
         }
@@ -190,6 +209,8 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun goHome() {
         if (leaving) return
         leaving = true
+        // This screen shows the ad itself; nothing is owed to the next screen.
+        OnboardRouter.clearGrantAd(this)
         ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
             OnboardRouter.advance(
                 activity = this,
@@ -201,6 +222,12 @@ class HomeRoleGateActivity : ShellBaseActivity() {
     private fun goToNextStep() {
         if (leaving) return
         leaving = true
+        OnboardRouter.clearGrantAd(this)
+        // `inter_on_decline: false`: no ad for a user who did not make us the home screen.
+        if (!ShellPromoConfig.onboardingInterOnDecline(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT)) {
+            OnboardRouter.advance(this)
+            return
+        }
         ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.SET_DEFAULT) {
             OnboardRouter.advance(this)
         }

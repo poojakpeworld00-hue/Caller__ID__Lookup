@@ -62,6 +62,7 @@
     <string name="nav_contacts">Контакты</string>
     <string name="nav_lookup">Поиск</string>
     <string name="nav_settings">Настройки</string>
+    <string name="home_quiz">Играть в викторину</string>
 
     
     <string name="recents_today">Сегодня</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">Передайте дальше — помогите близкому закрыть свои звонки.</string>
     <string name="settings_share_text">Называйте незнакомых звонящих и отсекайте назойливые вызовы с Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Политика конфиденциальности</string>
+    <string name="settings_ad_privacy">Настройки конфиденциальности рекламы</string>
     <string name="settings_terms">Условия использования</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

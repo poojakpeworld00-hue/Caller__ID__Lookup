@@ -20,6 +20,7 @@ import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.screen.reveal.RevealConfig
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.followAdContainer
 import org.fossify.commons.extensions.beVisibleIf
 
@@ -72,8 +73,12 @@ class SlideIntroActivity : FrameActivity<ScreenOnboardingBinding>() {
         val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.INTRO)
         binding.padSkip.beVisibleIf(ui.skipEnabled)
 
-        binding.padSkip.setOnClickListener { finishOnboarding() }
+        binding.padSkip.setOnClickListener {
+            Analytics.log("intro_skip_click")
+            finishOnboarding()
+        }
         binding.padNext.setOnClickListener {
+            Analytics.log("intro_next_click")
             val current = binding.vuPager.currentItem
             if (current < pages.lastIndex) {
                 binding.vuPager.currentItem = current + 1

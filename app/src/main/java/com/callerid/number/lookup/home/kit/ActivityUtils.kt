@@ -150,6 +150,7 @@ fun Context.shareApp() {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, shareText)
     }
+    com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
     startActivity(Intent.createChooser(shareIntent, "Share app via"))
 }
 

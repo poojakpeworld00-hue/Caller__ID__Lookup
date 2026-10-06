@@ -8,7 +8,9 @@ import com.facebook.ads.InterstitialAdListener
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.callerid.admesh.engine.AdsGate
 import com.callerid.admesh.engine.LauncherPlacementAds
+import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.model.PromoKind
 import com.callerid.admesh.engine.PromoTallyRegistry.interBackCounter
 import com.callerid.admesh.engine.PromoVault
@@ -25,6 +27,17 @@ class BackInterstitial {
                 _isInterBAckShow = value
             }
         private var googleInterBack: InterstitialAd? = null
+        private var googleInterBackLoadedAt = 0L
+        private var isLoadingBack = false
+        private const val MAX_AGE_MS = 60 * 60_000L
+
+        /** The loaded back interstitial, or null when there is none or it is older than an hour. */
+        private fun freshBackInter(): InterstitialAd? {
+            if (googleInterBack != null && android.os.SystemClock.elapsedRealtime() - googleInterBackLoadedAt > MAX_AGE_MS) {
+                googleInterBack = null
+            }
+            return googleInterBack
+        }
     }
 
     fun fetchBackInterstitial(activity: Activity) {
@@ -45,24 +58,35 @@ class BackInterstitial {
             return
         }
 
-        val id = pref.getString("googleBackInter") ?: return
+        if (!AdsGate.canRequestAds(activity)) return
+        // Called on every foreground: never replace a fresh ad or stack a second request.
+        if (freshBackInter() != null || isLoadingBack) return
+
+        val id = pref.getString("googleBackInter").orEmpty()
+        if (id.isBlank()) return
         val req = AdRequest.Builder().build()
 
         if (PromoKind.fromString(pref.getString("IsAdType")) == PromoKind.GOOGLE) {
+            isLoadingBack = true
+            val app = activity.applicationContext
             InterstitialAd.load(
-                activity, id, req,
+                app, id, req,
                 object : InterstitialAdLoadCallback() {
 
                     override fun onAdLoaded(ad: InterstitialAd) {
+                        isLoadingBack = false
                         googleInterBack = ad
+                        googleInterBackLoadedAt = android.os.SystemClock.elapsedRealtime()
                         Log.d("BackInterstitial", "Back Inter Loaded")
-                        activity.safeLog("Back_Inter_Loaded")
+                        app.safeLog("Back_Inter_Loaded")
                     }
 
                     override fun onAdFailedToLoad(err: LoadAdError) {
+                        isLoadingBack = false
                         googleInterBack = null
                         Log.e("BackInterstitial", "Back Inter Load Fail: ${err.message}")
-                        activity.safeLog("Back_Inter_Load_FAILED:${err.message}")
+                        // Analytics event names cannot carry free text; the code is enough.
+                        app.safeLog("Back_Inter_Load_FAILED_${err.code}")
                     }
                 })
         }
@@ -93,10 +117,12 @@ class BackInterstitial {
 
         if (!pref.getBoolean("InterAds")) return safeClose("inter_ads_disabled")
         if (!pref.getBoolean("IsBack")) return safeClose("back_ads_disabled")
+        if (!AdsGate.canRequestAds(act)) return safeClose("no_consent")
 
+        // `<`, not `!=`: a missing key reads -1, and a lowered remote value can sit below the count.
         val target = pref.getInt("InterBackCounter")
 
-        if (interBackCounter != target) {
+        if (interBackCounter < target) {
             interBackCounter++
             return safeClose("counter_skip")
         }
@@ -142,28 +168,45 @@ class BackInterstitial {
         pref: PromoVault,
         safeClose: (String) -> Unit
     ) {
-        val ad = googleInterBack
+        val ad = freshBackInter()
         if (ad == null) {
+            // Refilled for the next Back whatever this one ends up showing.
+            fetchBackInterstitial(activity)
             return handleGoogleFail(activity, pref, safeClose)
         }
         activity.safeLog("google_back_inter_show_attempt")
+
+        if (com.callerid.number.lookup.home.BuildConfig.DEBUG) PromoRevenueGauge.emitDebugRevenue(activity)
+        ad.setOnPaidEventListener { PromoRevenueGauge.reportPaidEvent(activity, it) }
+
+        // The failure path runs once: a show() that throws and then also reports onAdFailedToShow.
+        var failHandled = false
+        fun failOnce() {
+            if (failHandled) return
+            failHandled = true
+            handleGoogleFail(activity, pref, safeClose)
+        }
 
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
                 isInterBAckShow = true
+                AdsGate.fullScreenShown()
             }
 
             override fun onAdDismissedFullScreenContent() {
                 googleInterBack = null
                 isInterBAckShow = false
+                AdsGate.fullScreenDismissed()
                 safeClose("Google_Dismiss")
                 fetchBackInterstitial(activity)
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 googleInterBack = null
-                handleGoogleFail(activity, pref, safeClose)
+                isInterBAckShow = false
+                AdsGate.fullScreenDismissed()
+                failOnce()
                 fetchBackInterstitial(activity)
             }
         }
@@ -172,7 +215,9 @@ class BackInterstitial {
             ad.show(activity)
         } catch (e: Exception) {
             googleInterBack = null
-            handleGoogleFail(activity, pref, safeClose)
+            isInterBAckShow = false
+            AdsGate.fullScreenDismissed()
+            failOnce()
             fetchBackInterstitial(activity)
         }
     }
@@ -202,7 +247,7 @@ class BackInterstitial {
         onFail: () -> Unit
     ) {
         val pref = PromoVault.getInstance(context)
-        val isLoader = pref.getBoolean("isLoaderForFB")
+        val isLoader = InterLoader.enabled(pref)
         val fbId = pref.getString("faceB_InterAds") ?: return onFail()
 
         val fb = com.facebook.ads.InterstitialAd(context, fbId)
@@ -228,12 +273,14 @@ class BackInterstitial {
                     }
 
                     override fun onInterstitialDismissed(ad: Ad?) {
+                        AdsGate.fullScreenDismissed()
                         if (context is Activity) FullScreenWaiter.hide()
                         onDismiss()
                     }
 
                     override fun onLoggingImpression(ad: Ad?) {}
                     override fun onInterstitialDisplayed(ad: Ad?) {
+                        AdsGate.fullScreenShown()
                         if (context is Activity) FullScreenWaiter.hide()
                     }
 

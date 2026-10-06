@@ -158,6 +158,7 @@ abstract class HolderFragment<VB : ViewBinding> : Fragment() {
     }
 
     protected fun placeCall(number: String) {
+        com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
         if (number.isBlank()) return
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE)
             == PackageManager.PERMISSION_GRANTED

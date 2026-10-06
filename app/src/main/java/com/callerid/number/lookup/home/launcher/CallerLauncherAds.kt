@@ -2,7 +2,9 @@ package com.callerid.number.lookup.home.launcher
 
 import android.app.Activity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PerScreenPromo
@@ -13,7 +15,10 @@ import com.callerid.admesh.surface.DirectLinkOpener
 import com.callerid.admesh.surface.InlinePromo
 import com.callerid.admesh.surface.interstitial.FlowInterstitial
 import com.callerid.number.lookup.home.LookupCoreApp
+import com.callerid.number.lookup.home.R
+import com.google.android.gms.ads.nativead.NativeAdView
 import io.launcher.home.api.LauncherAds
+import io.launcher.home.api.LauncherIcons
 
 /**
  * The launcher module's ad surface, backed by this app's own ad layer (admesh).
@@ -59,7 +64,7 @@ class CallerLauncherAds : LauncherAds {
             InlinePromo().fetchNativeAds(activity, object : InlinePromo.NativeAdObserver {
                 override fun onNativeAdLoaded() {
                     if (activity.isFinishing || activity.isDestroyed) return
-                    paint(activity, slot, container)
+                    paint(activity, key, slot, container)
                 }
 
                 override fun onNativeAdFailed() = Unit
@@ -67,15 +72,40 @@ class CallerLauncherAds : LauncherAds {
             return
         }
 
-        paint(activity, slot, container)
+        paint(activity, key, slot, container)
     }
 
-    private fun paint(activity: Activity, slot: ShellPromoConfig.Slot, container: FrameLayout) {
+    private fun paint(activity: Activity, key: String, slot: ShellPromoConfig.Slot, container: FrameLayout) {
         // refreshSlot keeps an ad already on screen rather than swapping it for a blank when the
         // shared native cache is momentarily empty.
         ShellPromoConfig.refreshSlot(activity, slot, container)
         // A slot that was GONE at the last inset dispatch has no nav-bar padding yet.
         ViewCompat.requestApplyInsets(container)
+        if (key == LauncherAds.SLOT_DRAWER_TOP) shapeDrawerAdIcon(container)
+    }
+
+    /**
+     * The drawer-top native sits among the drawer's icons, so its icon gets the launcher's shape.
+     * Templates render on a posted frame and house ads load their icon via Glide, hence the retries;
+     * LauncherIcons.applyTo leaves an already-shaped icon alone.
+     */
+    private fun shapeDrawerAdIcon(container: FrameLayout) {
+        val apply = Runnable { runCatching { drawerAdIcon(container)?.let(LauncherIcons::applyTo) } }
+        apply.run()
+        container.post(apply)
+        container.postDelayed(apply, 600)
+        container.postDelayed(apply, 1800)
+    }
+
+    private fun drawerAdIcon(container: View): ImageView? {
+        (container.findNativeAdView()?.iconView as? ImageView)?.let { return it }
+        return container.findViewById(R.id.gif_image) ?: container.findViewById(R.id.only_banner_logo)
+    }
+
+    private fun View.findNativeAdView(): NativeAdView? = when (this) {
+        is NativeAdView -> this
+        is ViewGroup -> (0 until childCount).firstNotNullOfOrNull { getChildAt(it).findNativeAdView() }
+        else -> null
     }
 
     /**

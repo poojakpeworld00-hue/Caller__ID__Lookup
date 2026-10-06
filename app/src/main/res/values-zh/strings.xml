@@ -62,6 +62,7 @@
     <string name="nav_contacts">联系人</string>
     <string name="nav_lookup">查询</string>
     <string name="nav_settings">设置</string>
+    <string name="home_quiz">玩问答游戏</string>
 
     
     <string name="recents_today">今天</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">传出去 —— 帮身边人把来电也守住。</string>
     <string name="settings_share_text">为陌生来电标出名字，把骚扰挡在门外，用 Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">隐私政策</string>
+    <string name="settings_ad_privacy">广告隐私设置</string>
     <string name="settings_terms">服务条款</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

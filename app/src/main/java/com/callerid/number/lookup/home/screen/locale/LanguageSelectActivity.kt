@@ -30,6 +30,7 @@ import com.callerid.number.lookup.home.screen.reveal.RevealConfig
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.screen.slides.SlideIntroActivity
 import com.callerid.number.lookup.home.screen.consent.ConsentGateActivity
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.AppPrefs
 import com.callerid.number.lookup.home.kit.LogRail
 import kotlinx.coroutines.launch
@@ -174,6 +175,7 @@ class LanguageSelectActivity : FrameActivity<ScreenLanguageBinding>() {
 
     private fun onContinue() {
         val tag = viewModel.selectedTag.value ?: AppPrefs.LANGUAGE_DEFAULT
+        Analytics.log("language_done_click", "lang" to tag, "source" to if (standalone) "settings" else "flow")
         AppPrefs.setLanguage(this, tag)
         prefs.isLanguageSelected = true
 

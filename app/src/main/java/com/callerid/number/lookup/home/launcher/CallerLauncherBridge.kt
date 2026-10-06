@@ -3,6 +3,9 @@ package com.callerid.number.lookup.home.launcher
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
+import android.os.LocaleList
 import android.provider.Telephony
 import androidx.fragment.app.Fragment
 import com.callerid.admesh.engine.LauncherPlacementAds
@@ -11,8 +14,12 @@ import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.LookupCoreApp
+import com.callerid.number.lookup.home.kit.Analytics
+import com.callerid.number.lookup.home.kit.AppPrefs
+import com.callerid.number.lookup.home.kit.LogRail
 import com.callerid.number.lookup.home.kit.applyNativeAdTheme
 import com.callerid.number.lookup.home.onboard.OnboardRouter
+import com.callerid.number.lookup.home.onboard.RoleCoachActivity
 import com.callerid.number.lookup.home.onboard.SwipeCoachPrompt
 import com.callerid.number.lookup.home.screen.AppHomeActivity
 import com.callerid.number.lookup.home.store.LanguageRegistry
@@ -83,6 +90,8 @@ class CallerLauncherBridge : LauncherBridge {
     override fun hostLaunchComponent(context: Context): ComponentName =
         ComponentName(context, AppHomeActivity::class.java)
 
+    override fun defaultHomeHintIntent(context: Context): Intent = RoleCoachActivity.intent(context)
+
     override fun isOrganicAudience(): Boolean =
         !PromoVault.getInstance(LookupCoreApp.appContext).getBoolean("OnMaketing")
 
@@ -102,6 +111,7 @@ class CallerLauncherBridge : LauncherBridge {
         activity.applyNativeAdTheme()
         (activity as? LauncherPanel)?.let { LauncherShellHost.attach(it) }
         LauncherPlacementAds.preload(activity)
+        Analytics.log("launcher_home_open")
         return true
     }
 
@@ -110,6 +120,7 @@ class CallerLauncherBridge : LauncherBridge {
      * (the `launcher_ads.app_drawer` sequence, run by LookupCoreApp on the next foreground).
      */
     override fun onAppLaunched(packageName: String) {
+        Analytics.log("launcher_app_click")
         OpenPromoRegistry.expectReturnAd()
         ShellPromoConfig.preloadDrawerAds(LookupCoreApp.appContext)
         // The app-exit flow loads while the user is in the other app.
@@ -123,6 +134,33 @@ class CallerLauncherBridge : LauncherBridge {
         LauncherShellHost.of(activity)?.homeShellController?.onHostResume()
         // Replaces whatever the last gesture used, so the next one has an ad ready.
         LauncherPlacementAds.preload(activity)
+    }
+
+    /**
+     * The launcher's context in the in-app language: AppCompat's per-app locale cannot reach the
+     * home task on Android 14+, so the launcher is built in the saved language here.
+     */
+    override fun localizeContext(base: Context): Context {
+        val saved = runCatching { AppPrefs.selectedLanguage(base) }.getOrDefault("")
+        if (saved.isEmpty()) return base
+        val tag = if (saved == "in") "id" else saved
+        val config = Configuration(base.resources.configuration)
+        if (config.locales[0]?.language == tag) return base
+        config.setLocales(LocaleList.forLanguageTags(tag))
+        return base.createConfigurationContext(config)
+    }
+
+    override fun onHomePressed(activity: Activity, alreadyOnHome: Boolean) =
+        SystemButtonAds.onHome(activity, alreadyOnHome)
+
+    override fun onWorkspaceBack(activity: Activity) = SystemButtonAds.onBack(activity)
+
+    override fun onNonFatal(error: Throwable) {
+        LogRail.error("Launcher", error.message ?: error.javaClass.simpleName, error)
+    }
+
+    override fun onEvent(name: String, params: Map<String, String>) {
+        Analytics.log(name, *params.map { (k, v) -> k to v }.toTypedArray())
     }
 
     override fun isDebug(): Boolean = BuildConfig.DEBUG

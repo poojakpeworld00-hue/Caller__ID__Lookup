@@ -89,6 +89,7 @@ object ChargeEventWatcher {
 
     private fun fire(activity: Activity, trigger: String) {
         prefs(activity).edit { putLong(lastKey(trigger), System.currentTimeMillis()) }
+        com.callerid.number.lookup.home.kit.Analytics.log("${trigger}_page_open")
         activity.startActivity(
             Intent(activity, ChargingStatusActivity::class.java)
                 .putExtra(ChargingStatusActivity.EXTRA_TRIGGER, trigger)
@@ -128,6 +129,7 @@ object ChargeEventWatcher {
         override fun onActivityResumed(activity: Activity) {
             // Never arm off, or drain onto, the charging screen itself.
             if (activity is ChargingStatusActivity) return
+            if (!com.callerid.number.lookup.home.kit.AdSurfaces.isLanding(activity)) return
             resumed = WeakReference(activity)
             val trigger = takePending(activity.applicationContext) ?: return
             runCatching {

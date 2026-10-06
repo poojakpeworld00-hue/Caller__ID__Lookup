@@ -36,6 +36,30 @@ class StripPromo {
 
     companion object {
         var bannerCounter = 0
+
+        /** Destroys the AdViews a slot still holds before it is refilled (they kept refreshing off screen). */
+        fun destroyBannersIn(container: FrameLayout) {
+            for (i in 0 until container.childCount) {
+                (container.getChildAt(i) as? AdView)?.let { runCatching { it.destroy() } }
+            }
+        }
+    }
+
+    private fun bindLifecycle(activity: Activity, adView: AdView) {
+        val owner = activity as? androidx.lifecycle.LifecycleOwner ?: return
+        owner.lifecycle.addObserver(object : androidx.lifecycle.LifecycleEventObserver {
+            override fun onStateChanged(source: androidx.lifecycle.LifecycleOwner, event: androidx.lifecycle.Lifecycle.Event) {
+                when (event) {
+                    androidx.lifecycle.Lifecycle.Event.ON_PAUSE -> runCatching { adView.pause() }
+                    androidx.lifecycle.Lifecycle.Event.ON_RESUME -> runCatching { adView.resume() }
+                    androidx.lifecycle.Lifecycle.Event.ON_DESTROY -> {
+                        source.lifecycle.removeObserver(this)
+                        runCatching { adView.destroy() }
+                    }
+                    else -> Unit
+                }
+            }
+        })
     }
 
     fun renderBanner(
@@ -51,7 +75,9 @@ class StripPromo {
     ) {
         val pref = PromoVault.getInstance(activity)
 
-        if (!hasNetwork(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds")) {
+        if (!hasNetwork(activity)|| !pref.getBoolean("IsAdsON") || !pref.getBoolean("BannerAds") ||
+            !com.callerid.admesh.engine.AdsGate.canRequestAds(activity)
+        ) {
             hide(container)
             observer?.onAdFailed()
             return
@@ -149,11 +175,12 @@ class StripPromo {
 
         shimmer?.startShimmer()
         shimmer?.visibility = View.VISIBLE
+        destroyBannersIn(container)
         container.removeAllViews()
         shimmer?.let { container.addView(it) }
         container.visibility = View.VISIBLE
 
-        if (googleBanner == null) googleBanner = AdView(activity)
+        if (googleBanner == null) googleBanner = AdView(activity).also { bindLifecycle(activity, it) }
         googleBanner?.adUnitId = adUnitId
 
         if (isCollapsable) {

@@ -19,10 +19,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.callerid.admesh.engine.trackEvent
-import com.callerid.admesh.surface.InlinePromo
+import com.callerid.admesh.engine.ShellPromoConfig
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.AppHomeActivity
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.LogRail
 import com.callerid.number.lookup.home.kit.followAdContainer
 
@@ -74,6 +75,8 @@ class FsiGateActivity : AppCompatActivity() {
         window.setBackgroundDrawableResource(R.color.fsi_bg_edge)
 
         if (returningFromSettings || FsiPermit.isGranted(this)) {
+            // Already satisfied: no prompt, so this is the screen's one event.
+            if (!returningFromSettings) Analytics.log("fsi_perm_bypass")
             LogRail.log("FSI", "Screen onCreate: returning/granted → continue (no render)")
             continueToNext()
             return
@@ -103,13 +106,19 @@ class FsiGateActivity : AppCompatActivity() {
                 startGrantPoll()
             }
         }
-        findViewById<TextView>(R.id.fsScreenSkipVw).setOnClickListener {
-            trackEvent("fsi_screen_skip")
-            continueToNext()
+        // `onboarding.fsi.skip_enabled: false` makes this a required step: no Skip, and Back does nothing.
+        val skipEnabled = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.FSI).skipEnabled
+        findViewById<TextView>(R.id.fsScreenSkipVw).apply {
+            visibility = if (skipEnabled) View.VISIBLE else View.GONE
+            setOnClickListener {
+                trackEvent("fsi_screen_skip")
+                continueToNext()
+            }
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (!skipEnabled) return
                 trackEvent("fsi_screen_skip")
                 continueToNext()
             }
@@ -117,9 +126,11 @@ class FsiGateActivity : AppCompatActivity() {
 
         playIntroAnimation()
 
+        // `launcher_ads.onboarding.fsi.slot`: a mid native unless Remote Config switches or drops it.
         val adFrame = findViewById<FrameLayout>(R.id.adNativeFrameVw)
-        InlinePromo().renderMidNative(
+        ShellPromoConfig.renderSlot(
             this,
+            ShellPromoConfig.onboardSlot(this, ShellPromoConfig.OnboardScreen.FSI),
             adFrame,
             findViewById<ShimmerFrameLayout>(R.id.adShimmerVw),
         )
@@ -293,12 +304,15 @@ class FsiGateActivity : AppCompatActivity() {
             ?: AppHomeActivity::class.java
         LogRail.log("FSI", "Screen continueToNext → ${nextClass.simpleName}")
 
-        startActivity(
-            Intent(this, nextClass).addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        // The exit ad (`onboarding.fsi.exit_ad`) runs on Skip and on a grant alike, then the hop.
+        ShellPromoConfig.runOnboardInterstitial(this, ShellPromoConfig.OnboardScreen.FSI) {
+            startActivity(
+                Intent(this, nextClass).addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                )
             )
-        )
-        finish()
+            finish()
+        }
     }
 
     companion object {

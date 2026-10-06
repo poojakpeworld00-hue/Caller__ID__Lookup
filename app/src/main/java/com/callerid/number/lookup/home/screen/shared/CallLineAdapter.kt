@@ -19,8 +19,6 @@ class CallLineAdapter(
 
     private var items: List<CallCardModel> = initial
 
-    private var lastAnimated = -1
-
     @SuppressLint("NotifyDataSetChanged")
     fun submit(list: List<CallCardModel>) {
         items = list
@@ -84,10 +82,6 @@ class CallLineAdapter(
             }
         }
 
-        if (position > lastAnimated) {
-            lastAnimated = position
-            HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
-        }
     }
 
     override fun onViewDetachedFromWindow(holder: VH) {

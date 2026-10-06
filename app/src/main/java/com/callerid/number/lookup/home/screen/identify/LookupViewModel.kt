@@ -9,7 +9,7 @@ import android.util.Log
 import com.callerid.number.lookup.home.store.ContactSource
 import com.callerid.number.lookup.home.store.identify.TraceArchive
 import com.callerid.number.lookup.home.store.identify.LocalDigitResolver
-import com.callerid.number.lookup.home.wire.LookupPayload
+import com.callerid.number.lookup.home.wire.LookupResponse
 import com.callerid.number.lookup.home.runtime.ApiCredentials
 import com.callerid.number.lookup.home.runtime.HttpClientFactory
 import kotlinx.coroutines.Dispatchers
@@ -62,25 +62,34 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
             val data = withContext(Dispatchers.IO) {
                 val contactName = contactsRepository.lookupNameByNumber(normalized)
                 val offline = LocalDigitResolver.lookup(normalized, region)
-                val apiList = fetchFromApi(normalized)
-                Triple(contactName, offline, apiList)
+                val apiResponse = fetchFromApi(normalized)
+                Triple(contactName, offline, apiResponse)
             }
             delay(SHIMMER_MIN_MS)
             if (token != searchToken) return@launch
 
-            val (contactName, offline, apiList) = data
-            val api = apiList.firstOrNull()
+            val (contactName, offline, apiResponse) = data
+            val apiList = apiResponse?.data.orEmpty()
+            // A "name" with no letters is just the number echoed back.
+            val apiNames = apiList
+                .mapNotNull { it.name?.trim()?.takeIf { n -> n.any(Char::isLetter) } }
 
-            val apiPrimary = api?.name?.trim()?.takeIf { it.isNotBlank() }
+            val apiPrimary = apiNames.firstOrNull()
             val displayName = apiPrimary ?: contactName
 
             val apiCarrier = apiList.firstNotNullOfOrNull { it.carrierOrNull }
             val apiCountry = apiList.firstNotNullOfOrNull { it.country?.takeIf { c -> c.isNotBlank() } }
+                ?: apiResponse?.country?.takeIf { it.isNotBlank() }?.let(::isoToCountryName)
             val apiLineType = apiList.firstNotNullOfOrNull { it.lineTypeOrNull }
             val apiCity = apiList.firstNotNullOfOrNull { it.city?.takeIf { c -> c.isNotBlank() } }
+                ?: apiResponse?.location?.let { loc ->
+                    listOfNotNull(loc.city, loc.state)
+                        .map(String::trim).filter(String::isNotBlank).distinct()
+                        .joinToString(", ").takeIf { it.isNotBlank() }
+                }
+            val api = apiList.firstOrNull()
 
-            val nicknames = apiList
-                .mapNotNull { it.name?.trim()?.takeIf { n -> n.isNotBlank() } }
+            val nicknames = apiNames
                 .distinct()
                 .filter {
                     !it.equals(displayName, ignoreCase = true) &&
@@ -99,7 +108,7 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
                 lineType = apiLineType ?: offline?.lineType,
                 valid = offline?.valid,
                 city = apiCity ?: offline?.location,
-                isSpam = api?.is_spam == true || api?.is_user_spam == true,
+                isSpam = apiResponse?.spam == true || api?.is_spam == true || api?.is_user_spam == true,
                 spamType = api?.spamType,
                 nicknames = nicknames
             )
@@ -110,24 +119,22 @@ class LookupViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private suspend fun fetchFromApi(phone: String): List<LookupPayload> = runCatching {
+    private suspend fun fetchFromApi(phone: String): LookupResponse? = runCatching {
         if (!ApiCredentials.isConfigured) {
-            Log.w(TAG, "checkPhoneNumber skipped: API credentials are placeholders")
-            return@runCatching emptyList()
+            Log.w(TAG, "checkPhoneNumber skipped: no API key configured")
+            return@runCatching null
         }
-        val response = HttpClientFactory.api.checkPhoneNumber(
-            id = ApiCredentials.API_ID,
-            phone = phone,
-            hashKey = ApiCredentials.API_HASH,
-            token = ApiCredentials.API_TOKEN
-        )
+        val response = HttpClientFactory.api.checkPhoneNumber(phone = phone)
         if (response.isSuccessful) {
-            response.body()?.data.orEmpty()
+            response.body()
         } else {
             Log.e(TAG, "checkPhoneNumber failed (${response.code()})")
-            emptyList()
+            null
         }
-    }.onFailure { Log.e(TAG, "checkPhoneNumber error: ${it.message}") }.getOrDefault(emptyList())
+    }.onFailure { Log.e(TAG, "checkPhoneNumber error: ${it.message}") }.getOrNull()
+
+    private fun isoToCountryName(iso: String): String =
+        Locale("", iso).displayCountry.takeIf { it.isNotBlank() && !it.equals(iso, true) } ?: iso
 
     private fun saveToHistory(result: LookupResult) {
         val subtitle = result.country

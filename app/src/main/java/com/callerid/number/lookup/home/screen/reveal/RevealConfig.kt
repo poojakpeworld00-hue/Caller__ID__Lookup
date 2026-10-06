@@ -46,18 +46,34 @@ object RevealConfig {
     fun permissionSheet(context: Context): RevealSpec =
         load(context, PERMISSION_SHEET, defaultEnabled = true, defaultFrequency = RevealCadence.ALWAYS)
 
+    /**
+     * `permission_sheet.rows`: the row keys the sheet may list (`notification` | `phone_state` |
+     * `call_log` | `contacts` | `overlay`), or null (absent / not an array) for every row.
+     */
+    fun permissionSheetRows(context: Context): Set<String>? {
+        val rows = screen(context, PERMISSION_SHEET)?.optJSONArray("rows") ?: return null
+        return (0 until rows.length())
+            .map { rows.optString(it).trim().lowercase() }
+            .filter { it.isNotEmpty() }
+            .toSet()
+    }
+
+    private fun screen(context: Context, key: String): JSONObject? {
+        val ads = PromoVault.getInstance(context)
+        val raw = ads.getString(RC_KEY)
+        return if (raw.isNullOrBlank()) null else runCatching {
+            val root = JSONObject(raw)
+            audienceContainer(root, isMarketing = ads.getBoolean("OnMaketing")).optJSONObject(key)
+        }.getOrNull()
+    }
+
     private fun load(
         context: Context,
         key: String,
         defaultEnabled: Boolean,
         defaultFrequency: RevealCadence
     ): RevealSpec {
-        val ads = PromoVault.getInstance(context)
-        val raw = ads.getString(RC_KEY)
-        val obj = if (raw.isNullOrBlank()) null else runCatching {
-            val root = JSONObject(raw)
-            audienceContainer(root, isMarketing = ads.getBoolean("OnMaketing")).optJSONObject(key)
-        }.getOrNull()
+        val obj = screen(context, key)
 
         if (obj == null) return RevealSpec(defaultEnabled, defaultFrequency, 0)
 

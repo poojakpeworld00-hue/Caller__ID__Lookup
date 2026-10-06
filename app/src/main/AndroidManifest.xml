@@ -378,6 +378,19 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
+        <!-- No AdMob native-ad validator popup over test natives in debug builds. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
+        <!-- Opaque black window for the SDKs' full-screen ad activities (see Theme.AdWindow). -->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:theme="@style/Theme.AdWindow"
+            tools:replace="android:theme" />
+        <activity
+            android:name="com.facebook.ads.AudienceNetworkActivity"
+            android:theme="@style/Theme.AdWindow"
+            tools:replace="android:theme" />
         <activity
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"

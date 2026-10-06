@@ -100,6 +100,7 @@ class LookupResultActivity : FrameActivity<ScreenLookupDetailBinding>() {
 
     private fun message() {
         if (rawNumber.isBlank()) return
+        com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
         runCatching { startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$rawNumber"))) }
     }
 
@@ -116,6 +117,7 @@ class LookupResultActivity : FrameActivity<ScreenLookupDetailBinding>() {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, details)
             }
+            com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
             startActivity(Intent.createChooser(intent, null))
         }
     }

@@ -171,6 +171,7 @@ class CallDetailActivity : FrameActivity<ScreenCallDetailBinding>() {
 
     private fun message() {
         if (number.isBlank()) return
+        com.callerid.admesh.engine.AdsGate.skipNextAppOpen()
         runCatching { startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:$number"))) }
     }
 

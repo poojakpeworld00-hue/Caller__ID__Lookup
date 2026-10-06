@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.callerid.admesh.surface.interstitial.BackInterstitial
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.frame.FrameActivity
@@ -52,7 +53,9 @@ class AppHomeActivity : FrameActivity<ScreenMainBinding>(), HomeShellOwner {
         }
 
         onBackPressedDispatcher.addCallback(this) {
-            if (shell?.onBackPressed() != true) onShellBackExhausted()
+            if (shell?.onBackPressed() != true) {
+                BackInterstitial().renderBackInterstitial(this@AppHomeActivity) { onShellBackExhausted() }
+            }
         }
 
         shell?.setPanelVisible(true)

@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat
 import io.lighthouse.push.LightHouse
 import io.lighthouse.push.extended.LightHouseRichPush
 import com.callerid.admesh.model.OnFeedReady
+import com.callerid.admesh.engine.AdsGate
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.surface.OpenPromoRegistry
 import com.callerid.admesh.surface.showAppRedirectPopup
@@ -35,6 +36,7 @@ import com.callerid.number.lookup.home.store.StorageRegistry
 import com.callerid.number.lookup.home.databinding.ScreenSplashBinding
 import com.callerid.number.lookup.home.onboard.HelloStepActivity
 import com.callerid.number.lookup.home.onboard.OnboardRouter
+import com.callerid.number.lookup.home.permit.PermitEngine
 import com.callerid.number.lookup.home.screen.reveal.RevealPolicy
 import com.callerid.number.lookup.home.screen.locale.LanguageSelectActivity
 import com.callerid.number.lookup.home.screen.slides.SlideIntroActivity
@@ -112,6 +114,24 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
             }
         })
 
+        // A hung consent / config / ad callback must not stall the splash; a splash ad on screen
+        // is waited for rather than navigated under.
+        armWatchdog()
+    }
+
+    private fun armWatchdog() {
+        handler.postDelayed({
+            if (proceeded.get()) return@postDelayed
+            if (AdsGate.isFullScreenShowing) {
+                Log.d(SPLASH_FLOW_TAG, "watchdog: splash ad on screen — waiting")
+                armWatchdog()
+                return@postDelayed
+            }
+            Log.w(SPLASH_FLOW_TAG, "watchdog fired after ${WATCHDOG_TIMEOUT_MS}ms — forcing navigation")
+            dataReady.set(true)
+            animMinElapsed.set(true)
+            proceedNow()
+        }, WATCHDOG_TIMEOUT_MS)
     }
 
     private fun maybeProceed() {
@@ -152,22 +172,33 @@ class LaunchGateActivity : FrameActivity<ScreenSplashBinding>() {
 
         OpenPromoRegistry.skipNextAppOpenAd = true
         LightHouse.ensureDataDisclosure(this) {
+            // Only the first launch leaves for the disclosure screen; drop the suppression once that
+            // trip (if any) has landed, or it swallows the user's next real return.
+            Handler(Looper.getMainLooper()).postDelayed(
+                { OpenPromoRegistry.skipNextAppOpenAd = false }, 3_000L
+            )
             if (isFinishing || isDestroyed) return@ensureDataDisclosure
             LightHouse.subscribeAsync()
-
-            val launcherOnboarding = !OnboardRouter.wasOnboardingCompleted(this)
-            val next = nextScreen()
-            Log.d(SPLASH_FLOW_TAG, "ensureDataDisclosure done → launching ${next.simpleName}")
-
-            val intent = if (launcherOnboarding && next != OnboardRouter.homeActivity()) {
-                OnboardRouter.onboardingIntent(this, next)
-            } else {
-                Intent(this, next)
-            }
-
-            openActivity(intent, isShowAd = false)
-            finish()
+            // `permission_engine` rules listing LaunchGateActivity are asked before the first screen.
+            PermitEngine.check(this) { openNextScreen() }
         }
+    }
+
+    private fun openNextScreen() {
+        if (isFinishing || isDestroyed) return
+        // Read before nextScreen(): it can mark onboarding completed on the spot.
+        val launcherOnboarding = !OnboardRouter.wasOnboardingCompleted(this)
+        val next = nextScreen()
+        Log.d(SPLASH_FLOW_TAG, "ensureDataDisclosure done → launching ${next.simpleName}")
+
+        val intent = if (launcherOnboarding && next != OnboardRouter.homeActivity()) {
+            OnboardRouter.onboardingIntent(this, next)
+        } else {
+            Intent(this, next)
+        }
+
+        openActivity(intent, isShowAd = false)
+        finish()
     }
 
     private val orbitOffsets by lazy {

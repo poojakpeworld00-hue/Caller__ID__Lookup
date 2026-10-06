@@ -33,48 +33,22 @@
             android:id="@+id/vuPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/padNext"
+            app:layout_constraintBottom_toTopOf="@id/dotsVw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/padSkip" />
 
-        
         <LinearLayout
             android:id="@+id/dotsVw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/padNext"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/padNext" />
-
-        
-        <TextView
-            android:id="@+id/padNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/form_btn_primary"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:minHeight="@dimen/_36sdp"
-            android:minWidth="@dimen/_72sdp"
-            android:paddingHorizontal="@dimen/_18sdp"
-            android:paddingVertical="@dimen/_5sdp"
-            android:text="@string/onboarding_next"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12ssp"
-            android:textStyle="bold"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/adNativeFrameVw"
+            app:layout_constraintBottom_toTopOf="@id/adNativeDividerVw"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@id/dotsVw" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-        
         <View
             android:id="@+id/adNativeDividerVw"
             style="@style/AdDivider"
@@ -83,13 +57,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        
         <FrameLayout
             android:id="@+id/adNativeFrameVw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_5sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/_8sdp"
+            app:layout_constraintBottom_toTopOf="@id/padNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -102,6 +75,26 @@
                 <include layout="@layout/googlemidnative2" />
             </com.facebook.shimmer.ShimmerFrameLayout>
         </FrameLayout>
+
+        <TextView
+            android:id="@+id/padNext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:background="@drawable/form_btn_primary"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:minHeight="@dimen/_40sdp"
+            android:paddingHorizontal="@dimen/_18sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:text="@string/onboarding_next"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

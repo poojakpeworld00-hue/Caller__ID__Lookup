@@ -12,7 +12,6 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.store.ContactItem
 import com.callerid.number.lookup.home.databinding.CellContactBinding
 import com.callerid.number.lookup.home.databinding.CellSectionHeaderBinding
-import com.callerid.number.lookup.home.screen.shared.HomeAnim
 
 class DirectoryAdapter(
     private val onCall: (String) -> Unit,
@@ -21,12 +20,9 @@ class DirectoryAdapter(
 
     private var rows: List<ContactRow> = emptyList()
 
-    private var lastAnimated = -1
-
     @SuppressLint("NotifyDataSetChanged")
     fun submit(list: List<ContactRow>) {
         rows = list
-        lastAnimated = -1
         notifyDataSetChanged()
     }
 
@@ -48,10 +44,6 @@ class DirectoryAdapter(
             is ContactRow.Item -> (holder as ContactVH).bind(row)
         }
 
-        if (position > lastAnimated) {
-            lastAnimated = position
-            HomeAnim.riseIn(holder.itemView, delay = position * HomeAnim.STAGGER_STEP)
-        }
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {

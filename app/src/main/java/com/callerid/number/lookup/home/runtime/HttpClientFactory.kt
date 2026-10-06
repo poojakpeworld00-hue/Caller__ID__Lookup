@@ -15,20 +15,28 @@ object HttpClientFactory {
 
     private const val TAG = "HttpClientFactory"
 
-    const val BASE_URL = "https://callerid.kpeworld.com/"
+    const val BASE_URL = "https://contact-saver.dailymorningupdate.com/"
 
-    private const val RC_KEY = "api_base_url"
+    private const val RC_KEY = "contacts_base_url"
 
     private val okHttpClient: OkHttpClient by lazy {
         val builder = OkHttpClient.Builder()
             .addInterceptor(SignedInterceptor())
 
-            .addInterceptor(ChuckerInterceptor.Builder(LookupCoreApp.appContext).build())
+            // The API key is redacted: Chucker persists captures to an on-device DB.
+            .addInterceptor(
+                ChuckerInterceptor.Builder(LookupCoreApp.appContext)
+                    .redactHeaders(SignedInterceptor.HEADER_API_KEY)
+                    .build()
+            )
 
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor { message ->
                 android.util.Log.d("OkHttp", message)
-            }.apply { level = HttpLoggingInterceptor.Level.BODY }
+            }.apply {
+                level = HttpLoggingInterceptor.Level.BODY
+                redactHeader(SignedInterceptor.HEADER_API_KEY)
+            }
             builder.addInterceptor(logging)
         }
 

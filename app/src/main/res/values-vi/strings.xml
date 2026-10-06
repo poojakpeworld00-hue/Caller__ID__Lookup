@@ -62,6 +62,7 @@
     <string name="nav_contacts">Danh bạ</string>
     <string name="nav_lookup">Tra cứu</string>
     <string name="nav_settings">Cài đặt</string>
+    <string name="home_quiz">Chơi đố vui</string>
 
     
     <string name="recents_today">Hôm nay</string>
@@ -256,6 +257,7 @@
     <string name="settings_share_sub">Lan ra đi — giúp người thân khoá chặt cuộc gọi của họ.</string>
     <string name="settings_share_text">Gọi tên người lạ và chặn cuộc gọi làm phiền với Caller ID Lookup: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="settings_privacy">Chính sách bảo mật</string>
+    <string name="settings_ad_privacy">Lựa chọn quyền riêng tư quảng cáo</string>
     <string name="settings_terms">Điều khoản dịch vụ</string>
     <string name="settings_privacy_url">https://sites.google.com/view/calleridlookuphome/privacy</string>
     <string name="settings_terms_url">https://sites.google.com/view/calleridlookuphome/terms</string>

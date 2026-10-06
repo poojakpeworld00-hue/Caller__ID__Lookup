@@ -8,6 +8,7 @@ import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.databinding.CellGestureTileBinding
 import com.callerid.number.lookup.home.databinding.ScreenOnboardingWelcomeBinding
 import com.callerid.number.lookup.home.permit.PermitEngine
+import com.callerid.number.lookup.home.kit.Analytics
 import com.callerid.number.lookup.home.kit.followAdContainer
 import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.viewBinding
@@ -21,9 +22,16 @@ class HelloStepActivity : ShellBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         excludeAppFromRecents()
+        Analytics.screen("welcome")
 
-        binding.onboardingContinueVw.setOnClickListener { requestOnboardingPermissions() }
-        binding.onboardingSkipVw.setOnClickListener { goToNextStep() }
+        binding.onboardingContinueVw.setOnClickListener {
+            Analytics.log("welcome_continue_click")
+            requestOnboardingPermissions()
+        }
+        binding.onboardingSkipVw.setOnClickListener {
+            Analytics.log("welcome_skip_click")
+            goToNextStep()
+        }
 
         val ui = ShellPromoConfig.onboardUi(this, ShellPromoConfig.OnboardScreen.WELCOME)
         binding.onboardingSkipVw.beVisibleIf(ui.skipEnabled)

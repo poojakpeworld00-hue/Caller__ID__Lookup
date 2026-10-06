@@ -17,12 +17,14 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.callerid.admesh.model.PromoKind
+import com.callerid.admesh.engine.AdsGate
 import com.callerid.admesh.engine.LauncherPlacementAds
 import com.callerid.admesh.engine.PromoTallyRegistry.interCounter
 import com.callerid.admesh.engine.PromoRevenueGauge
 import com.callerid.admesh.engine.PromoVault
 import com.callerid.admesh.engine.trackEvent
 import com.callerid.admesh.surface.DirectLinkOpener
+import com.callerid.admesh.surface.DrawerAdRunner
 import com.callerid.admesh.surface.hasNetwork
 import com.callerid.number.lookup.home.BuildConfig
 import com.callerid.number.lookup.home.R
@@ -40,6 +42,28 @@ class FlowInterstitial {
                 _isInterShow = value
             }
         private var googleInterAd: InterstitialAd? = null
+        private var googleInterLoadedAt = 0L
+        private var isGoogleInterLoading = false
+
+        /** An interstitial kept longer than this is no longer served by AdMob; it is dropped. */
+        private const val INTER_MAX_AGE_MS = 60 * 60_000L
+
+        private fun freshGoogleInter(): InterstitialAd? {
+            if (googleInterAd != null && android.os.SystemClock.elapsedRealtime() - googleInterLoadedAt > INTER_MAX_AGE_MS) {
+                Log.d("FlowInterstitial", "preloaded inter expired (older than 1h) — dropped")
+                googleInterAd = null
+            }
+            return googleInterAd
+        }
+
+        /** Uptime at which an interstitial request started showing; 0 when none is in progress. */
+        private var showInFlightSince = 0L
+        private const val SHOW_IN_FLIGHT_MAX_MS = 60_000L
+
+        /** A show that has not closed (or put an ad on screen) after this long is given up on. */
+        private const val WATCHDOG_MS = 20_000L
+        private const val WATCHDOG_MAX_CHECKS = 6
+
         private var preloadedFbAd: com.facebook.ads.InterstitialAd? = null
         private var isFbPreloading = false
 
@@ -74,6 +98,7 @@ class FlowInterstitial {
         fun preloadFbAd(context: Context) {
             val pref = PromoVault.getInstance(context)
             if (!pref.getBoolean("IsAdsON")) return
+            if (!AdsGate.canRequestAds(context)) return
             if (isFbPreloading || preloadedFbAd != null) return
             val fbId = pref.getString("faceB_InterAds") ?: return
             isFbPreloading = true
@@ -92,12 +117,15 @@ class FlowInterstitial {
                             fbOnDismissed = null
                         }
                         override fun onInterstitialDismissed(ad: com.facebook.ads.Ad?) {
+                            AdsGate.fullScreenDismissed()
                             preloadFbAd(context)
                             fbOnDismissed?.invoke()
                             fbOnDismissed = null
                             fbOnFail = null
                         }
-                        override fun onInterstitialDisplayed(ad: com.facebook.ads.Ad?) {}
+                        override fun onInterstitialDisplayed(ad: com.facebook.ads.Ad?) {
+                            AdsGate.fullScreenShown()
+                        }
                         override fun onAdClicked(ad: com.facebook.ads.Ad?) {}
                         override fun onLoggingImpression(ad: com.facebook.ads.Ad?) {}
                     }).build()
@@ -116,14 +144,18 @@ class FlowInterstitial {
             // onClosed fires when the tab closes). WebView / browser open fire-and-forget and the
             // flow continues right away.
             if (DirectLinkOpener.mode(context) != DirectLinkOpener.Mode.CUSTOM_TAB) {
-                DirectLinkOpener.open(context, url)
-                onClosed()
+                // Carry on once the user is back from the page, not the moment it opens.
+                if (DirectLinkOpener.open(context, url)) DrawerAdRunner.onReturnTo(context, onClosed)
+                else onClosed()
                 return
             }
 
             val uri = Uri.parse(url)
             isOpened = true
             onTabClosed = onClosed
+            // Screens that are not FrameActivities never called handleTabReturn; their resume does it now.
+            DrawerAdRunner.onReturnTo(context) { handleTabReturn(context) }
+            AdsGate.skipNextAppOpen()
 
             getSession(context) { session ->
 
@@ -167,11 +199,19 @@ class FlowInterstitial {
                 }
             }
 
-            CustomTabsClient.bindCustomTabsService(
-                context,
-                "com.android.chrome",
-                serviceConnection as CustomTabsServiceConnection
-            )
+            // Without Chrome the bind fails and onReady never ran; a null session still opens a
+            // Custom Tab in any supporting browser, or falls back to the browser.
+            val bound = runCatching {
+                CustomTabsClient.bindCustomTabsService(
+                    context,
+                    "com.android.chrome",
+                    serviceConnection as CustomTabsServiceConnection
+                )
+            }.getOrDefault(false)
+            if (!bound) {
+                serviceConnection = null
+                onReady(null)
+            }
         }
 
         private fun openInBrowser(
@@ -205,26 +245,35 @@ class FlowInterstitial {
         if (!pref.getBoolean("InterAds")) return
 
         if (!pref.getBoolean("is_preload_ads")) return
+        if (!AdsGate.canRequestAds(activity)) return
 
         val adType = PromoKind.fromString(pref.getString("IsAdType"))
 
-        if (adType == PromoKind.GOOGLE) {
-            activity.safeLog("google_inter_load_start")
-            val id = pref.getString("googleInter") ?: return
-            InterstitialAd.load(
-                activity, id, AdRequest.Builder().build(),
-                object : InterstitialAdLoadCallback() {
-                    override fun onAdFailedToLoad(error: LoadAdError) {
-                        googleInterAd = null
-                        activity.safeLog("google_inter_load_failed_${error.code}")
-                        Log.e("FlowInterstitial", "Load Failed: ${error.message}")
-                    }
-                    override fun onAdLoaded(ad: InterstitialAd) {
-                        googleInterAd = ad
-                        activity.safeLog("google_inter_loaded")
-                        Log.d("FlowInterstitial", "Google inter loaded")
-                    }
-                })
+        // Called on every foreground: a second request would only replace a good ad.
+        if (adType == PromoKind.GOOGLE && freshGoogleInter() == null && !isGoogleInterLoading) {
+            val id = pref.getString("googleInter").orEmpty()
+            if (id.isNotBlank()) {
+                activity.safeLog("google_inter_load_start")
+                isGoogleInterLoading = true
+                val app = activity.applicationContext
+                InterstitialAd.load(
+                    app, id, AdRequest.Builder().build(),
+                    object : InterstitialAdLoadCallback() {
+                        override fun onAdFailedToLoad(error: LoadAdError) {
+                            isGoogleInterLoading = false
+                            googleInterAd = null
+                            app.safeLog("google_inter_load_failed_${error.code}")
+                            Log.e("FlowInterstitial", "Load Failed: ${error.message}")
+                        }
+                        override fun onAdLoaded(ad: InterstitialAd) {
+                            isGoogleInterLoading = false
+                            googleInterAd = ad
+                            googleInterLoadedAt = android.os.SystemClock.elapsedRealtime()
+                            app.safeLog("google_inter_loaded")
+                            Log.d("FlowInterstitial", "Google inter loaded")
+                        }
+                    })
+            }
         }
 
         if (adType == PromoKind.FACEBOOK || pref.getBoolean("IsFail_FB")) {
@@ -241,22 +290,50 @@ class FlowInterstitial {
         act.safeLog("inter_request_start")
 
         val pref = PromoVault.getInstance(act)
+        if (act.isFinishing || act.isDestroyed) return adsClose()
+
+        // A second tap while the first one's ad is still loading or on screen is ignored.
+        val now = android.os.SystemClock.uptimeMillis()
+        if (showInFlightSince != 0L && now - showInFlightSince < SHOW_IN_FLIGHT_MAX_MS) {
+            act.safeLog("inter_request_ignored_in_flight")
+            return
+        }
+        showInFlightSince = now
         var hasClosed = false
 
         fun safeClose(reason: String) {
             if (hasClosed) return
             hasClosed = true
+            showInFlightSince = 0L
             act.safeLog("inter_closed_$reason")
             adsClose()
         }
+
+        // A load or callback that never comes back must not leave the caller waiting for ever.
+        val watchdog = android.os.Handler(android.os.Looper.getMainLooper())
+        var checks = 0
+        lateinit var check: Runnable
+        check = Runnable {
+            if (hasClosed) return@Runnable
+            if (isInterShow || AdsGate.isFullScreenShowing) {
+                if (++checks < WATCHDOG_MAX_CHECKS) watchdog.postDelayed(check, WATCHDOG_MS)
+                return@Runnable
+            }
+            act.safeLog("inter_watchdog_close")
+            safeClose("watchdog")
+        }
+        watchdog.postDelayed(check, WATCHDOG_MS)
+
+        if (!AdsGate.canRequestAds(act)) return safeClose("no_consent")
 
         if (!hasNetwork(act)) return safeClose("no_network")
         if (!pref.getBoolean("IsAdsON")) return safeClose("ads_off")
 
         if (!pref.getBoolean("InterAds")) return safeClose("inter_ads_disabled")
 
+        // `<`, not `!=`: a missing key reads -1 and a lowered remote counter can sit below the count.
         val target = pref.getInt("InterCounter")
-        if (interCounter != target) {
+        if (interCounter < target) {
             interCounter++
             act.safeLog("inter_counter_skip")
             return safeClose("counter_skip")
@@ -331,9 +408,11 @@ class FlowInterstitial {
         safeClose: (String) -> Unit
     ) {
 
-        val inter = googleInterAd
+        val inter = freshGoogleInter()
         if (inter == null) {
             activity.safeLog("google_inter_null")
+            // Refilled for the next request whatever this one ends up showing.
+            fetchInterstitial(activity)
             return handleGoogleFail(activity, pref, safeClose)
         }
 
@@ -345,15 +424,25 @@ class FlowInterstitial {
             PromoRevenueGauge.reportPaidEvent(activity, it)
         }
 
+        // The failure path runs once, even when show() throws and also reports onAdFailedToShow.
+        var failHandled = false
+        fun failOnce() {
+            if (failHandled) return
+            failHandled = true
+            handleGoogleFail(activity, pref, safeClose)
+        }
+
         inter.fullScreenContentCallback = object : FullScreenContentCallback() {
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
                 isInterShow = true
+                AdsGate.fullScreenShown()
             }
 
             override fun onAdDismissedFullScreenContent() {
                 isInterShow = false
+                AdsGate.fullScreenDismissed()
                 googleInterAd = null
                 activity.safeLog("google_inter_dismiss")
                 safeClose("google_dismiss")
@@ -361,9 +450,11 @@ class FlowInterstitial {
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                isInterShow = false
+                AdsGate.fullScreenDismissed()
                 googleInterAd = null
                 activity.safeLog("google_inter_failed_show_${error.code}")
-                handleGoogleFail(activity, pref, safeClose)
+                failOnce()
                 if (pref.getBoolean("is_preload_ads")) fetchInterstitial(activity)
             }
         }
@@ -371,9 +462,11 @@ class FlowInterstitial {
         try {
             inter.show(activity)
         } catch (e: Exception) {
+            isInterShow = false
+            AdsGate.fullScreenDismissed()
             googleInterAd = null
             activity.safeLog("google_inter_exception")
-            handleGoogleFail(activity, pref, safeClose)
+            failOnce()
             fetchInterstitial(activity)
         }
     }
@@ -384,7 +477,7 @@ class FlowInterstitial {
         safeClose: (String) -> Unit
     ) {
         val id = pref.getString("googleInter") ?: return handleGoogleFail(activity, pref, safeClose)
-        val isLoader = pref.getBoolean("isLoaderForFB")
+        val isLoader = InterLoader.enabled(pref)
 
         activity.safeLog("google_inter_ondemand_load_start")
         FullScreenWaiter.show(activity, isLoader)
@@ -395,6 +488,7 @@ class FlowInterstitial {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     FullScreenWaiter.hide()
                     googleInterAd = ad
+                    googleInterLoadedAt = android.os.SystemClock.elapsedRealtime()
                     activity.safeLog("google_inter_ondemand_loaded")
                     renderGoogleInterstitial(activity, pref, safeClose)
                 }
@@ -475,7 +569,7 @@ class FlowInterstitial {
         onFail: () -> Unit
     ) {
         val pref = PromoVault.getInstance(context)
-        val isLoader = pref.getBoolean("isLoaderForFB")
+        val isLoader = InterLoader.enabled(pref)
         val fbId = pref.getString("faceB_InterAds") ?: return onFail()
 
         context.safeLog("facebook_inter_load_start")
@@ -507,12 +601,14 @@ class FlowInterstitial {
                     }
 
                     override fun onInterstitialDismissed(ad: Ad?) {
+                        AdsGate.fullScreenDismissed()
                         context.safeLog("facebook_inter_dismiss")
                         if (context is Activity) FullScreenWaiter.hide()
                         onDismissed()
                     }
 
                     override fun onInterstitialDisplayed(ad: Ad?) {
+                        AdsGate.fullScreenShown()
                         context.safeLog("facebook_inter_displayed")
 
                         if (context is Activity) FullScreenWaiter.hide()

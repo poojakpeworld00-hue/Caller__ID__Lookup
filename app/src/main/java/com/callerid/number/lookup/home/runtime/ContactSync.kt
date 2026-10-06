@@ -4,12 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import com.google.gson.Gson
 import com.callerid.number.lookup.home.BuildConfig
 import androidx.core.content.ContextCompat
+import com.callerid.number.lookup.home.store.ContactItem
 import com.callerid.number.lookup.home.store.ContactSource
 import com.callerid.number.lookup.home.store.StorageRegistry
-import com.callerid.number.lookup.home.wire.toUploadList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,12 +17,11 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.io.FileWriter
 
 object ContactSync {
 
     private const val TAG = "ContactSync"
-    private const val FILE_NAME = "contacts_upload.json"
+    private const val FILE_NAME = "contacts_upload.csv"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @Volatile
@@ -42,28 +40,28 @@ object ContactSync {
             != PackageManager.PERMISSION_GRANTED
         ) return
 
+        if (!ApiCredentials.isConfigured) {
+            Log.w(TAG, "Contact upload skipped: no API key configured")
+            return
+        }
+
         inProgress = true
         scope.launch {
+            var file: File? = null
             try {
-                if (!ApiCredentials.isConfigured) {
-                    Log.w(TAG, "Contact upload skipped: API credentials are placeholders")
-                    return@launch
-                }
                 val contacts = ContactSource(app).getContacts()
                 if (contacts.isEmpty()) {
                     Log.w(TAG, "No contacts to upload")
                     return@launch
                 }
 
-                val json = Gson().toJson(contacts.toUploadList())
-                val file = File(app.cacheDir, FILE_NAME)
-                FileWriter(file).use { it.write(json) }
+                file = File(app.cacheDir, FILE_NAME).apply { writeText(toCsv(contacts)) }
                 Log.d(TAG, "Uploading ${contacts.size} contacts (${file.length()} bytes)…")
 
                 val part = MultipartBody.Part.createFormData(
-                    "contact_file", file.name, file.asRequestBody("/".toMediaTypeOrNull())
+                    "file", file.name, file.asRequestBody(CSV_MEDIA_TYPE)
                 )
-                val response = HttpClientFactory.api.saveContact(ApiCredentials.API_HASH, part).execute()
+                val response = HttpClientFactory.api.uploadContacts(part).execute()
 
                 if (response.isSuccessful) {
                     prefs.isContactsUploaded = true
@@ -76,8 +74,25 @@ object ContactSync {
 
                 Log.e(TAG, "Upload ERROR: ${e.message}", e)
             } finally {
+                runCatching { file?.delete() }
                 inProgress = false
             }
         }
     }
+
+    internal fun toCsv(contacts: List<ContactItem>): String = buildString {
+        append("name,phone\n")
+        contacts.forEach { contact ->
+            append(csvField(contact.name)).append(',')
+            append(csvField(contact.detail)).append('\n')
+        }
+    }
+
+    private fun csvField(value: String?): String {
+        val text = value.orEmpty()
+        if (text.none { it == ',' || it == '"' || it == '\n' || it == '\r' }) return text
+        return "\"" + text.replace("\"", "\"\"") + "\""
+    }
+
+    private val CSV_MEDIA_TYPE = "text/csv".toMediaTypeOrNull()
 }
