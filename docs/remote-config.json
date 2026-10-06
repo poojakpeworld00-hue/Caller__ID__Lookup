@@ -3,7 +3,7 @@
     "IsAdsON": true,
     "IsAdType": "Google",
     "is_splash_inter_show": false,
-    "is_splash_ads": true,
+    "is_splash_ads": false,
     "IsFail_FB": false,
     "IsCustomADS": true,
     "isLoaderForFB": false,
@@ -92,8 +92,6 @@
       "notification": {
         "enabled": true,
         "activities": [
-          "LaunchGateActivity",
-          "HomeRoleGateActivity",
           "AppHomeActivity",
           "LauncherPanel"
         ],
@@ -111,7 +109,7 @@
         "priority": 2
       },
       "fullscreen_permission": {
-        "enabled": true,
+        "enabled": false,
         "android_min_sdk": 34,
         "country_filter_enabled": true,
         "excluded_countries": [
@@ -176,14 +174,14 @@
     "launcher_ads": {
       "right_panel": {
         "bottom_native": {
-          "enabled": true,
-          "ad_type": "native",
+          "enabled": false,
+          "ad_type": "none",
           "native_type": "mid2",
           "banner_type": "adaptive",
           "ad_unit_id": ""
         },
         "suggested_banner": {
-          "enabled": true,
+          "enabled": false,
           "ad_type": "native",
           "native_type": "native_banner",
           "banner_type": "adaptive",
@@ -199,14 +197,13 @@
         "order": [
           "set_default",
           "language",
-          "welcome",
-          "intro"
+          "welcome"
         ],
         "set_default": {
-          "skip_enabled": false,
+          "skip_enabled": true,
           "slot": {
-            "enabled": true,
-            "ad_type": "native",
+            "enabled": false,
+            "ad_type": "none",
             "native_type": "mid",
             "banner_type": "adaptive",
             "ad_unit_id": ""
@@ -222,7 +219,8 @@
               "inter"
             ]
           },
-          "inter_on_decline": false
+          "inter_on_decline": false,
+          "auto_open": true
         },
         "language": {
           "slot": {
@@ -243,11 +241,11 @@
           }
         },
         "welcome": {
-          "skip_enabled": false,
+          "skip_enabled": true,
           "slot": {
             "enabled": true,
             "ad_type": "native",
-            "native_type": "mid",
+            "native_type": "big",
             "banner_type": "adaptive",
             "ad_unit_id": ""
           },
@@ -305,81 +303,57 @@
           }
         },
         "splash": {
-          "ad_type": "appopen",
-          "show_mode": "always",
-          "launches": 0
+          "ads_on": false
         }
       },
       "defaultHome": {},
       "notDefaultHome": {},
       "system_ads": {
         "charge": {
-          "enabled": true,
+          "enabled": false,
           "native": "MediumNative",
           "close_ad": "inter",
           "min_gap_sec": 1800
         },
         "discharge": {
-          "enabled": true,
+          "enabled": false,
           "native": "MediumNative",
           "close_ad": "full_native",
           "min_gap_sec": 1800
         }
       },
       "recent_ad": {
-        "native": "BigNative",
-        "close_ad": {
-          "enabled": true,
-          "counter": 0,
-          "mode": "one",
-          "sequence": [
-            "inter"
-          ]
-        },
-        "page": true
+        "native": "off",
+        "close_ad": "none",
+        "page": false
       },
       "package_result": {
-        "enabled": true,
+        "enabled": false,
         "min_gap_ms": 0,
         "body_native": true
       },
       "system_buttons": {
         "home": {
           "enabled": true,
-          "ad_type": "",
+          "ad_type": "app_open",
           "ads_counter": 0,
-          "min_gap_sec": 30,
-          "ad": {
-            "mode": "one",
-            "sequence": [
-              "inter",
-              "fullscreen_native"
-            ]
-          }
+          "min_gap_sec": 0
         },
         "back": {
           "enabled": true,
-          "ad_type": "",
+          "ad_type": "app_open",
           "ads_counter": 0,
-          "min_gap_sec": 30,
-          "ad": {
-            "mode": "one",
-            "sequence": [
-              "inter",
-              "fullscreen_native"
-            ]
-          }
+          "min_gap_sec": 0
         },
         "recents": {
           "enabled": true,
           "ad_type": "",
           "ads_counter": 0,
-          "min_gap_sec": 120,
+          "min_gap_sec": 0,
           "ad": {
             "mode": "one",
             "sequence": [
-              "inter",
-              "fullscreen_native"
+              "appopen"
             ]
           }
         }
@@ -398,19 +372,19 @@
       },
       "gestures": {
         "left_swipe": {
-          "inter_enabled": true,
-          "inter_counter": 0,
-          "url_enabled": false,
-          "url": ""
-        },
-        "right_swipe": {
           "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
         },
-        "app_launch": {
+        "right_swipe": {
           "inter_enabled": true,
+          "inter_counter": 0,
+          "url_enabled": false,
+          "url": ""
+        },
+        "app_launch": {
+          "inter_enabled": false,
           "inter_counter": 0,
           "url_enabled": false,
           "url": ""
@@ -428,7 +402,7 @@
           "url": ""
         }
       },
-      "drawerAppAdEnabled": true,
+      "drawerAppAdEnabled": false,
       "drawerAppAdEvery": 8,
       "drawerAppAds": [
         {
@@ -584,7 +558,7 @@
       ],
       "dock_host_app": false,
       "unlock_ads": {
-        "enabled": true,
+        "enabled": false,
         "start_after_hours": 24,
         "gap_minutes": 30,
         "max_per_day": 5,
@@ -606,36 +580,25 @@
     "inter_fallback": "full_native",
     "onboarding_home": "app",
     "recent_playstore": true,
-    "recent_playstore_window_sec": 0,
+    "recent_playstore_window_sec": 6000,
     "placements": {
       "leftPanel": {
-        "ads_on": true,
-        "DirectLink": [
-          "https://getloaninsider.com/topgames/Free-Fire/download/",
-          "https://getloaninsider.com/topgames/Kingshot/download/"
-        ],
-        "link_first_then": "app_open"
+        "ads_on": false
       },
       "rightPanel": {
-        "ads_on": false
+        "ads_on": true
       },
       "drawer": {
         "ads_on": true,
         "bottom_native": {
-          "enabled": true,
+          "enabled": false,
           "ad_type": "native",
           "native_type": "mid",
           "banner_type": "adaptive",
           "ad_unit_id": "",
           "position": 1
         },
-        "app_click": {
-          "ad_flow": [
-            "inter",
-            "fullnative"
-          ],
-          "ad_flow_mode": "one"
-        },
+        "app_click": {},
         "app_close": {
           "ad_flow": [
             "appopen"
@@ -648,7 +611,7 @@
         "counter": 0
       },
       "unlock": {
-        "ads_on": true,
+        "ads_on": false,
         "counter": 0
       },
       "back": {
@@ -686,7 +649,7 @@
     }
   },
   "organic": {
-    "IsAdsON": true,
+    "IsAdsON": false,
     "IsAdType": "Google",
     "is_splash_inter_show": false,
     "is_splash_ads": false,
@@ -700,7 +663,7 @@
     "InterAds": false,
     "AppopenAds": false,
     "is_rateus": false,
-    "is_preload_ads": true,
+    "is_preload_ads": false,
     "In_App_Update_Show": false,
     "In_App_Update_Force_Show": false,
     "In_App_Update_Link": "",
@@ -775,9 +738,7 @@
       "notification": {
         "enabled": true,
         "activities": [
-          "LaunchGateActivity",
-          "AppHomeActivity",
-          "LauncherPanel"
+          "LaunchGateActivity"
         ],
         "delay": 0,
         "priority": 1
@@ -793,7 +754,7 @@
         "priority": 2
       },
       "fullscreen_permission": {
-        "enabled": true,
+        "enabled": false,
         "android_min_sdk": 34,
         "country_filter_enabled": true,
         "excluded_countries": [
@@ -879,10 +840,9 @@
       },
       "onboarding": {
         "order": [
-          "set_default",
           "language",
           "welcome",
-          "intro"
+          "set_default"
         ],
         "welcome": {
           "skip_enabled": true,
@@ -893,17 +853,13 @@
             "banner_type": "adaptive",
             "ad_unit_id": ""
           },
-          "ads_on": true,
+          "ads_on": false,
           "exit_ad": {
             "enabled": false,
             "counter": 0,
             "mode": "one",
             "sequence": [
-              "inter",
-              "directlink",
-              "appopen",
-              "fullscreen_native",
-              "rewarded"
+              "inter"
             ]
           }
         },
@@ -918,17 +874,13 @@
           },
           "auto_next": true,
           "auto_next_delay_ms": 650,
-          "ads_on": true,
+          "ads_on": false,
           "exit_ad": {
             "enabled": false,
             "counter": 0,
             "mode": "one",
             "sequence": [
-              "inter",
-              "directlink",
-              "appopen",
-              "fullscreen_native",
-              "rewarded"
+              "inter"
             ]
           },
           "inter_on_decline": false,
@@ -936,31 +888,27 @@
         },
         "language": {
           "slot": {
-            "enabled": true,
+            "enabled": false,
             "ad_type": "native",
             "native_type": "big",
             "banner_type": "adaptive",
             "ad_unit_id": ""
           },
-          "ads_on": true,
+          "ads_on": false,
           "exit_ad": {
             "enabled": false,
             "counter": 0,
             "mode": "one",
             "sequence": [
-              "inter",
-              "directlink",
-              "appopen",
-              "fullscreen_native",
-              "rewarded"
+              "inter"
             ]
           }
         },
         "fsi": {
-          "ads_on": true,
+          "ads_on": false,
           "skip_enabled": true,
           "slot": {
-            "enabled": true,
+            "enabled": false,
             "ad_type": "native",
             "native_type": "mid",
             "banner_type": "adaptive",
@@ -971,24 +919,18 @@
             "counter": 0,
             "mode": "one",
             "sequence": [
-              "inter",
-              "directlink",
-              "appopen",
-              "fullscreen_native",
-              "rewarded"
+              "inter"
             ]
           }
         },
         "splash": {
-          "ad_type": "appopen",
-          "show_mode": "always",
-          "launches": 0
+          "ads_on": false
         },
         "intro": {
-          "ads_on": true,
+          "ads_on": false,
           "skip_enabled": true,
           "slot": {
-            "enabled": true,
+            "enabled": false,
             "ad_type": "native",
             "native_type": "mid2",
             "banner_type": "adaptive",
@@ -999,11 +941,7 @@
             "counter": 0,
             "mode": "one",
             "sequence": [
-              "inter",
-              "directlink",
-              "appopen",
-              "fullscreen_native",
-              "rewarded"
+              "inter"
             ]
           }
         }
@@ -1305,7 +1243,7 @@
     "RewardedAds": false,
     "onboarding_home": "app",
     "recent_playstore": false,
-    "recent_playstore_window_sec": 180,
+    "recent_playstore_window_sec": 6000,
     "placements": {
       "leftPanel": {
         "ads_on": false
