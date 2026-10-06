@@ -438,6 +438,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
                                     InlinePromo().fetchNativeAds(activity)
                                     InlinePromoStrip().fetchNativeBannerAds(activity)
                                     FlowInterstitial().fetchInterstitial(activity)
+                                    ShellPromoConfig.preloadOnboardingExitAds(activity)
                                     BackInterstitial().fetchBackInterstitial(activity)
                                 }
 

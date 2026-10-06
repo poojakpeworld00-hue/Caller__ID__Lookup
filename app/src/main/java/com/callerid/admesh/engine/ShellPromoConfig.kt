@@ -778,6 +778,19 @@ object ShellPromoConfig {
         return flowFrom(context, exit, "onboarding.${screen.key}.exit_ad")
     }
 
+    /**
+     * Loads the onboarding screens' exit ads ahead of the tap, so a preloaded ad shows at once
+     * instead of being fetched behind the loading spinner. Screens sharing a unit share one ad.
+     */
+    fun preloadOnboardingExitAds(context: Context) {
+        if (!PromoVault.getInstance(context).getBoolean("IsAdsON")) return
+        for (screen in onboardOrder(context)) {
+            if (!onboardingAdsOn(context, screen)) continue
+            val flow = exitAdFlow(context, screen) ?: continue
+            if (flow.enabled && flow.sequence.isNotEmpty()) DrawerAdRunner.preload(context, flow)
+        }
+    }
+
     /** An ad flow from any `{ enabled, counter, mode, sequence, ads }` block (exit_ad, recent_ad.close_ad). */
     fun flowFrom(context: Context, block: JSONObject, label: String): DrawerAdFlow {
         val mode = block.optString("mode").trim().lowercase()

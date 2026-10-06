@@ -19,6 +19,8 @@ open class ShellBaseActivity : BaseSimpleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         withFossifyPackageNameSpoofed { super.onCreate(savedInstanceState) }
+        // The exit ad of this step must be in hand before the user taps on.
+        runCatching { com.callerid.admesh.engine.ShellPromoConfig.preloadOnboardingExitAds(this) }
     }
 
     override fun getPackageName(): String {

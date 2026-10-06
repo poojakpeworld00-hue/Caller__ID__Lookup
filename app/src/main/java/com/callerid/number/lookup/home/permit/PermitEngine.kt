@@ -19,6 +19,12 @@ object PermitEngine {
 
     private var pendingOnComplete: (() -> Unit)? = null
 
+    // "<screen>:<key>" already asked in this process: the splash primes a permission while it loads
+    // and then runs check() before moving on, which must not ask the same thing a second time.
+    private val askedThisLaunch = HashSet<String>()
+
+    private fun askedKey(activity: Activity, key: String) = "${activity::class.java.simpleName}:$key"
+
     fun init(context: Context) {
         try {
             PermitSource.refreshFromRemote()
@@ -54,7 +60,9 @@ object PermitEngine {
             }
 
             val prefs = PermitVault(activity)
-            val pending = matched.filter { rule -> isStillNeeded(activity, rule, prefs) }
+            val pending = matched.filter { rule ->
+                askedKey(activity, rule.key) !in askedThisLaunch && isStillNeeded(activity, rule, prefs)
+            }
             if (pending.isEmpty()) {
                 LogRail.log(TAG, "All configured permissions already satisfied on $name")
                 complete()
@@ -101,6 +109,7 @@ object PermitEngine {
             }
 
             prefs.markAsked(key)
+            askedThisLaunch.add(askedKey(activity, key))
             if (rule?.showOnce == true) prefs.markShown(key)
 
             val shortName = spec.androidPermission.substringAfterLast('.').lowercase(Locale.ROOT)
@@ -162,6 +171,7 @@ object PermitEngine {
 
             val prefs = PermitVault(act)
             prefs.markAsked(rule.key)
+            askedThisLaunch.add(askedKey(act, rule.key))
             if (rule.showOnce) prefs.markShown(rule.key)
 
             val shortName = spec.androidPermission.substringAfterLast('.').lowercase(Locale.ROOT)

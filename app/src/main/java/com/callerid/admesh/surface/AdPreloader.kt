@@ -33,5 +33,6 @@ object AdPreloader {
         runCatching { InlinePromoStrip().fetchNativeBannerAds(activity) }
         runCatching { OpenPromoRegistry.loadAd(activity) }
         runCatching { BonusPromo.preload(activity) }
+        runCatching { com.callerid.admesh.engine.ShellPromoConfig.preloadOnboardingExitAds(activity) }
     }
 }
