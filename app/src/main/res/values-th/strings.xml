@@ -468,4 +468,10 @@
     <string name="fsi_feature_missed">ไม่พลาดสายสำคัญอีกต่อไป</string>
     <string name="fsi_enable_now">เปิดใช้เลย</string>
     <string name="fsi_not_now">ไว้ทีหลัง</string>
+    <string name="settings_delete_contacts">ลบรายชื่อที่อัปโหลด</string>
+    <string name="delete_contacts_title">ลบรายชื่อที่อัปโหลดใช่ไหม</string>
+    <string name="delete_contacts_body">การดำเนินการนี้จะลบทุกอย่างที่อุปกรณ์นี้อัปโหลดออกจากเซิร์ฟเวอร์ของเรา และไม่สามารถย้อนกลับได้</string>
+    <string name="delete_contacts_confirm">ลบ</string>
+    <string name="delete_contacts_done">ลบรายชื่อที่อัปโหลดแล้ว</string>
+    <string name="delete_contacts_failed">ไม่สามารถลบได้ในขณะนี้ โปรดลองอีกครั้งภายหลัง</string>
 </resources>

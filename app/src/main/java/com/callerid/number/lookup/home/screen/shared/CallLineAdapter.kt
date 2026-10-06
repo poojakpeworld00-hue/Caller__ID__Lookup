@@ -84,10 +84,5 @@ class CallLineAdapter(
 
     }
 
-    override fun onViewDetachedFromWindow(holder: VH) {
-        super.onViewDetachedFromWindow(holder)
-        holder.itemView.animate().cancel()
-    }
-
     override fun getItemCount(): Int = items.size
 }

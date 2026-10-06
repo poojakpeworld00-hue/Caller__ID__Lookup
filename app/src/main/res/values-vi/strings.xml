@@ -468,4 +468,10 @@
     <string name="fsi_feature_missed">Không bao giờ bỏ lỡ cuộc gọi quan trọng</string>
     <string name="fsi_enable_now">Bật ngay</string>
     <string name="fsi_not_now">Để sau</string>
+    <string name="settings_delete_contacts">Xóa danh bạ đã tải lên</string>
+    <string name="delete_contacts_title">Xóa danh bạ đã tải lên?</string>
+    <string name="delete_contacts_body">Thao tác này xóa mọi dữ liệu thiết bị này đã tải lên khỏi máy chủ của chúng tôi. Không thể hoàn tác.</string>
+    <string name="delete_contacts_confirm">Xóa</string>
+    <string name="delete_contacts_done">Đã xóa danh bạ bạn đã tải lên</string>
+    <string name="delete_contacts_failed">Không thể xóa lúc này. Vui lòng thử lại sau.</string>
 </resources>

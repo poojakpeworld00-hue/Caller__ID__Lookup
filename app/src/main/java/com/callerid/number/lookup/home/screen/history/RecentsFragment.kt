@@ -56,6 +56,7 @@ class RecentsFragment : HolderFragment<BoardRecentsBinding>() {
 
         binding.rollRecents.layoutManager = LinearLayoutManager(requireContext())
         binding.rollRecents.adapter = adapter
+        binding.rollRecents.itemAnimator = null
 
         InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)

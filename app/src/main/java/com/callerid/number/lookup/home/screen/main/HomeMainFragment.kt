@@ -119,6 +119,7 @@ class HomeMainFragment : HolderFragment<BoardHomeBinding>() {
 
         binding.rollRecent.layoutManager = LinearLayoutManager(requireContext())
         binding.rollRecent.adapter = recentAdapter
+        binding.rollRecent.itemAnimator = null
 
         // In the launcher the panel may still be parked off screen: the native waits for onShellShown.
         if (homeShell?.isShellVisible != false) showRecentBanner() else recentBannerPending = true

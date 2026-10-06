@@ -468,4 +468,10 @@
     <string name="fsi_feature_missed">再也不错过重要来电</string>
     <string name="fsi_enable_now">立即开启</string>
     <string name="fsi_not_now">以后再说</string>
+    <string name="settings_delete_contacts">删除已上传的联系人</string>
+    <string name="delete_contacts_title">删除已上传的联系人？</string>
+    <string name="delete_contacts_body">这将从我们的服务器中删除此设备上传的所有内容，且无法撤销。</string>
+    <string name="delete_contacts_confirm">删除</string>
+    <string name="delete_contacts_done">已删除您上传的联系人</string>
+    <string name="delete_contacts_failed">暂时无法删除，请稍后重试。</string>
 </resources>

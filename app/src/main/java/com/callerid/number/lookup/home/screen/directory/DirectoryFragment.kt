@@ -56,6 +56,7 @@ class DirectoryFragment : HolderFragment<BoardContactsBinding>() {
         layoutManager = LinearLayoutManager(requireContext())
         binding.rollContacts.layoutManager = layoutManager
         binding.rollContacts.adapter = adapter
+        binding.rollContacts.itemAnimator = null
 
         InlinePromoStrip().renderNativeBanner(requireActivity(), binding.adNativeFrameVw, binding.adShimmerVw)
         binding.adNativeDividerVw.followAdContainer(binding.adNativeFrameVw)

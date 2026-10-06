@@ -46,11 +46,6 @@ class DirectoryAdapter(
 
     }
 
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.itemView.animate().cancel()
-    }
-
     override fun getItemCount(): Int = rows.size
 
     class HeaderVH(private val binding: CellSectionHeaderBinding) :

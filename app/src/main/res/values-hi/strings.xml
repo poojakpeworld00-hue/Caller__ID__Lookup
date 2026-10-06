@@ -510,4 +510,10 @@
     <string name="fsi_feature_missed">फिर कभी ज़रूरी कॉल न चूकें</string>
     <string name="fsi_enable_now">अभी चालू करें</string>
     <string name="fsi_not_now">अभी नहीं</string>
+    <string name="settings_delete_contacts">अपलोड किए गए संपर्क हटाएं</string>
+    <string name="delete_contacts_title">अपलोड किए गए संपर्क हटाएं?</string>
+    <string name="delete_contacts_body">इससे इस डिवाइस द्वारा अपलोड की गई सारी जानकारी हमारे सर्वर से हट जाएगी। इसे पूर्ववत नहीं किया जा सकता।</string>
+    <string name="delete_contacts_confirm">हटाएं</string>
+    <string name="delete_contacts_done">आपके अपलोड किए गए संपर्क हटा दिए गए</string>
+    <string name="delete_contacts_failed">अभी हटाया नहीं जा सका। कृपया बाद में फिर कोशिश करें।</string>
 </resources>

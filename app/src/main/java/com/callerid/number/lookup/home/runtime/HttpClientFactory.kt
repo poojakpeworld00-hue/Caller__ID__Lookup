@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object HttpClientFactory {
 
@@ -80,6 +81,34 @@ object HttpClientFactory {
                     .create(LookupApi::class.java)
 
                 cached = url to service
+                service
+            }
+        }
+
+    // A big phonebook takes a while to upload and parse, so the contact routes get long timeouts.
+    private val uploadClient: OkHttpClient by lazy {
+        okHttpClient.newBuilder()
+            .writeTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Volatile
+    private var cachedUpload: Pair<String, LookupApi>? = null
+
+    val uploadApi: LookupApi
+        get() {
+            val url = resolvedBaseUrl()
+            cachedUpload?.let { (built, service) -> if (built == url) return service }
+            return synchronized(this) {
+                cachedUpload?.let { (built, service) -> if (built == url) return@synchronized service }
+                val service = Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(uploadClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(LookupApi::class.java)
+                cachedUpload = url to service
                 service
             }
         }

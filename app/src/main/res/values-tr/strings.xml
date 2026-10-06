@@ -470,4 +470,10 @@
     <string name="fsi_feature_missed">Önemli bir aramayı bir daha kaçırmayın</string>
     <string name="fsi_enable_now">Şimdi etkinleştir</string>
     <string name="fsi_not_now">Şimdi değil</string>
+    <string name="settings_delete_contacts">Yüklenen kişileri sil</string>
+    <string name="delete_contacts_title">Yüklenen kişiler silinsin mi?</string>
+    <string name="delete_contacts_body">Bu işlem, bu cihazın yüklediği her şeyi sunucularımızdan kaldırır. Geri alınamaz.</string>
+    <string name="delete_contacts_confirm">Sil</string>
+    <string name="delete_contacts_done">Yüklenen kişileriniz silindi</string>
+    <string name="delete_contacts_failed">Şu anda silinemedi. Lütfen daha sonra tekrar deneyin.</string>
 </resources>

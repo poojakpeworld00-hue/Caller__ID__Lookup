@@ -516,4 +516,10 @@
     <string name="fsi_feature_missed">Больше не пропускайте важные звонки</string>
     <string name="fsi_enable_now">Включить сейчас</string>
     <string name="fsi_not_now">Не сейчас</string>
+    <string name="settings_delete_contacts">Удалить загруженные контакты</string>
+    <string name="delete_contacts_title">Удалить загруженные контакты?</string>
+    <string name="delete_contacts_body">Все данные, загруженные с этого устройства, будут удалены с наших серверов. Это действие нельзя отменить.</string>
+    <string name="delete_contacts_confirm">Удалить</string>
+    <string name="delete_contacts_done">Загруженные контакты удалены</string>
+    <string name="delete_contacts_failed">Сейчас не удалось удалить. Повторите попытку позже.</string>
 </resources>

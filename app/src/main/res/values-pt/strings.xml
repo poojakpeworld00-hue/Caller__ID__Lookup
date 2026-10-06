@@ -512,4 +512,10 @@
     <string name="fsi_feature_missed">Nunca mais perca uma chamada importante</string>
     <string name="fsi_enable_now">Ativar agora</string>
     <string name="fsi_not_now">Agora não</string>
+    <string name="settings_delete_contacts">Excluir contatos enviados</string>
+    <string name="delete_contacts_title">Excluir contatos enviados?</string>
+    <string name="delete_contacts_body">Isso remove dos nossos servidores tudo o que este dispositivo enviou. Não pode ser desfeito.</string>
+    <string name="delete_contacts_confirm">Excluir</string>
+    <string name="delete_contacts_done">Seus contatos enviados foram excluídos</string>
+    <string name="delete_contacts_failed">Não foi possível excluir agora. Tente novamente mais tarde.</string>
 </resources>

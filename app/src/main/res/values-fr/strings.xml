@@ -470,4 +470,10 @@
     <string name="fsi_feature_missed">Ne manquez plus jamais un appel important</string>
     <string name="fsi_enable_now">Activer maintenant</string>
     <string name="fsi_not_now">Plus tard</string>
+    <string name="settings_delete_contacts">Supprimer les contacts importés</string>
+    <string name="delete_contacts_title">Supprimer les contacts importés ?</string>
+    <string name="delete_contacts_body">Cela supprime de nos serveurs tout ce que cet appareil a importé. Action irréversible.</string>
+    <string name="delete_contacts_confirm">Supprimer</string>
+    <string name="delete_contacts_done">Vos contacts importés ont été supprimés</string>
+    <string name="delete_contacts_failed">Suppression impossible pour le moment. Réessayez plus tard.</string>
 </resources>

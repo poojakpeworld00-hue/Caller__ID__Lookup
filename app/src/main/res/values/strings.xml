@@ -733,4 +733,10 @@
     <string name="recent_ad_lead">A quick look before you carry on.</string>
     <string name="recent_ad_continue">Continue</string>
 
+    <string name="settings_delete_contacts">Delete uploaded contacts</string>
+    <string name="delete_contacts_title">Delete uploaded contacts?</string>
+    <string name="delete_contacts_body">This removes everything this device uploaded from our servers. It can\'t be undone.</string>
+    <string name="delete_contacts_confirm">Delete</string>
+    <string name="delete_contacts_done">Your uploaded contacts were deleted</string>
+    <string name="delete_contacts_failed">Couldn\'t delete right now. Please try again later.</string>
 </resources>

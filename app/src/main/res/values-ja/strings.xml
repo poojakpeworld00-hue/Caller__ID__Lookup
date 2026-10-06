@@ -468,4 +468,10 @@
     <string name="fsi_feature_missed">大切な電話を二度と逃さない</string>
     <string name="fsi_enable_now">今すぐ有効にする</string>
     <string name="fsi_not_now">後で</string>
+    <string name="settings_delete_contacts">アップロードした連絡先を削除</string>
+    <string name="delete_contacts_title">アップロードした連絡先を削除しますか？</string>
+    <string name="delete_contacts_body">この端末がアップロードしたデータをすべてサーバーから削除します。元に戻せません。</string>
+    <string name="delete_contacts_confirm">削除</string>
+    <string name="delete_contacts_done">アップロードした連絡先を削除しました</string>
+    <string name="delete_contacts_failed">現在削除できません。後でもう一度お試しください。</string>
 </resources>

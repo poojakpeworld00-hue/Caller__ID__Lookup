@@ -22,6 +22,9 @@ import com.callerid.admesh.surface.InlinePromo
 import com.callerid.number.lookup.home.R
 import com.callerid.number.lookup.home.frame.FrameActivity
 import com.callerid.number.lookup.home.store.StorageRegistry
+import com.callerid.number.lookup.home.runtime.ContactSync
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.callerid.number.lookup.home.databinding.ScreenSettingsBinding
 import com.callerid.number.lookup.home.databinding.CellPrefCardBinding
 import com.callerid.number.lookup.home.databinding.CellSettingRowBinding
@@ -137,6 +140,12 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
             }
         }
 
+        // Only offered once something has actually been uploaded.
+        binding.rowDeleteContactsVw.picIcon.setImageResource(R.drawable.bar_trash_can)
+        binding.rowDeleteContactsVw.lblTitle.setText(R.string.settings_delete_contacts)
+        binding.rowDeleteContactsVw.root.setOnClickListener { confirmDeleteContacts() }
+        refreshDeleteContactsRow()
+
         maybeShowCallScreeningHint()
     }
 
@@ -171,6 +180,28 @@ class SettingsHubActivity : FrameActivity<ScreenSettingsBinding>() {
     override fun onResume() {
         super.onResume()
         refreshCallScreeningCard()
+        refreshDeleteContactsRow()
+    }
+
+    private fun refreshDeleteContactsRow() {
+        binding.rowDeleteContactsVw.root.visibility =
+            if (ContactSync.hasUploaded(this)) View.VISIBLE else View.GONE
+    }
+
+    private fun confirmDeleteContacts() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.delete_contacts_title)
+            .setMessage(R.string.delete_contacts_body)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.delete_contacts_confirm) { _, _ ->
+                lifecycleScope.launch {
+                    val deleted = ContactSync.deleteUploaded(this@SettingsHubActivity)
+                    val msg = if (deleted != null) R.string.delete_contacts_done else R.string.delete_contacts_failed
+                    android.widget.Toast.makeText(this@SettingsHubActivity, msg, android.widget.Toast.LENGTH_SHORT).show()
+                    refreshDeleteContactsRow()
+                }
+            }
+            .show()
     }
 
     private fun setupCallScreening() {
