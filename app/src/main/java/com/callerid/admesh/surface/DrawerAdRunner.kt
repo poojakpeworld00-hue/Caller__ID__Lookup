@@ -112,8 +112,13 @@ object DrawerAdRunner {
         }
     }
 
+    /** Hands this runner's fresh interstitial for [unitId] to the app-wide pool; null if none. */
+    fun takeInter(unitId: String): InterstitialAd? =
+        if (unitId.isNotBlank() && fresh(interAds, "inter", unitId)) interAds.remove(unitId) else null
+
     private fun isReady(spec: DrawerAdSpec): Boolean = when (spec.type) {
-        DrawerAdType.INTER -> fresh(interAds, "inter", spec.adUnitId)
+        // The app-wide preloaded interstitial of the same unit counts: no on-demand load for an ad in hand.
+        DrawerAdType.INTER -> fresh(interAds, "inter", spec.adUnitId) || FlowInterstitial.hasPreloaded(spec.adUnitId)
         DrawerAdType.APPOPEN -> fresh(appOpenAds, "appopen", spec.adUnitId)
         DrawerAdType.REWARDED -> fresh(rewardedAds, "rewarded", spec.adUnitId)
         DrawerAdType.FULLSCREEN_NATIVE -> fresh(nativeAds, "native", spec.adUnitId)
@@ -336,7 +341,7 @@ object DrawerAdRunner {
     }
 
     private fun showInter(activity: Activity, unitId: String, onShown: () -> Unit, onFailed: () -> Unit) {
-        val ad = interAds.remove(unitId) ?: return onFailed()
+        val ad = interAds.remove(unitId) ?: FlowInterstitial.takePreloaded(unitId) ?: return onFailed()
         ad.setOnPaidEventListener { PromoRevenueGauge.reportPaidEvent(activity, it) }
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {

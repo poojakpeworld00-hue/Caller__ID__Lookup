@@ -56,6 +56,23 @@ class FlowInterstitial {
             return googleInterAd
         }
 
+        private fun isAppUnit(unitId: String): Boolean =
+            unitId.isNotBlank() && unitId == PromoVault.getOrNull()?.getString("googleInter").orEmpty()
+
+        /** Whether the app-wide pool holds a fresh interstitial for [unitId]. */
+        fun hasPreloaded(unitId: String): Boolean = isAppUnit(unitId) && freshGoogleInter() != null
+
+        /** Hands the app-wide preloaded interstitial for [unitId] to another runner; null if none. */
+        fun takePreloaded(unitId: String): InterstitialAd? =
+            if (isAppUnit(unitId)) freshGoogleInter()?.also { googleInterAd = null } else null
+
+        /** This pool's ad, else one the launcher runner already holds for the same unit. */
+        private fun availableGoogleInter(pref: PromoVault): InterstitialAd? =
+            freshGoogleInter() ?: DrawerAdRunner.takeInter(pref.getString("googleInter").orEmpty())?.also {
+                googleInterAd = it
+                googleInterLoadedAt = android.os.SystemClock.elapsedRealtime()
+            }
+
         /** Uptime at which an interstitial request started showing; 0 when none is in progress. */
         private var showInFlightSince = 0L
         private const val SHOW_IN_FLIGHT_MAX_MS = 60_000L
@@ -359,7 +376,8 @@ class FlowInterstitial {
 
             PromoKind.GOOGLE -> {
                 act.safeLog("inter_type_google")
-                if (isPreload) {
+                // An ad already in hand shows at once; only a miss loads on demand behind the loader.
+                if (isPreload || availableGoogleInter(pref) != null) {
                     renderGoogleInterstitial(act, pref, ::safeClose)
                 } else {
                     loadAndShowGoogleOnDemand(act, pref, ::safeClose)
@@ -408,7 +426,7 @@ class FlowInterstitial {
         safeClose: (String) -> Unit
     ) {
 
-        val inter = freshGoogleInter()
+        val inter = availableGoogleInter(pref)
         if (inter == null) {
             activity.safeLog("google_inter_null")
             // Refilled for the next request whatever this one ends up showing.
