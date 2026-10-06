@@ -133,4 +133,5 @@
     
     
 
+    <color name="loader_scrim">#99000000</color>
 </resources>

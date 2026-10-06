@@ -1,5 +1,5 @@
 {
-  "GET_DATA_LIST": {
+  "GET_DATA_LIST_7": {
     "marketing": {
       "launcher_config": {
         "os_style": false,
@@ -499,7 +499,7 @@
       ]
     }
   },
-  "DEBUG_GET_DATA_LIST": {
+  "DEBUG_GET_DATA_LIST_7": {
     "marketing": {
       "launcher_config": {
         "os_style": false,

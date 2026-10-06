@@ -228,7 +228,7 @@ open class PromoAnchorActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val blobKey = if (BuildConfig.DEBUG) "DEBUG_GET_DATA_LIST" else "GET_DATA_LIST"
+                val blobKey = if (BuildConfig.DEBUG) "DEBUG_GET_DATA_LIST_7" else "GET_DATA_LIST_7"
                 val configString = remoteConfig.getString(blobKey)
 
                 if (configString.isNullOrEmpty()) {

@@ -133,7 +133,7 @@ object LiveConfigListener {
     }
 
     private fun blobKey(): String =
-        if (BuildConfig.DEBUG) "DEBUG_GET_DATA_LIST" else "GET_DATA_LIST"
+        if (BuildConfig.DEBUG) "DEBUG_GET_DATA_LIST_7" else "GET_DATA_LIST_7"
 
     private fun apply(context: Context) {
         val blobKey = blobKey()
